@@ -139,11 +139,22 @@ export function loadImage(src: string) {
   });
 }
 
+export function plateMetrics(width: number, height: number) {
+  if (width >= 1920 && height >= 1000) {
+    return { name: 56, clan: 22, line: 20, level: 22, icon: 44, gap: 14, pad: 56, top: 40 };
+  }
+  if (width >= 1920) {
+    return { name: 40, clan: 18, line: 16, level: 18, icon: 36, gap: 12, pad: 48, top: 24 };
+  }
+  if (width >= 1280 && height >= 700) {
+    return { name: 44, clan: 20, line: 18, level: 20, icon: 40, gap: 14, pad: 40, top: 32 };
+  }
+  return { name: 36, clan: 16, line: 15, level: 18, icon: 36, gap: 12, pad: 36, top: 22 };
+}
+
 function typeScale(width: number, height: number) {
-  if (width >= 1920 && height >= 1000) return { name: 64, level: 18, pad: 56, top: 48 };
-  if (width >= 1920) return { name: 44, level: 14, pad: 48, top: 28 };
-  if (width >= 1280 && height >= 700) return { name: 48, level: 16, pad: 40, top: 36 };
-  return { name: 42, level: 14, pad: 36, top: 28 };
+  const m = plateMetrics(width, height);
+  return { name: m.name, level: m.level, pad: m.pad, top: m.top, clan: m.clan, line: m.line, icon: m.icon, gap: m.gap };
 }
 
 function wrapText(ctx: PaintCtx, text: string, max: number) {
@@ -174,11 +185,12 @@ export function skillGrid(
   iconSize?: number,
   withLevels = true,
 ) {
-  const icon = Math.max(16, Math.min(96, Math.round(iconSize ?? height * 0.06)));
-  const type = Math.max(10, Math.round(icon * 0.58));
-  const labelW = withLevels ? Math.round(type * 2.2) : 0;
-  const gapX = Math.max(8, Math.round(icon * 0.28));
-  const gapY = Math.max(8, Math.round(icon * 0.32));
+  const chip = typeScale(width, height);
+  const icon = Math.max(24, Math.min(72, Math.round(iconSize ?? chip.icon)));
+  const type = Math.max(14, Math.round(chip.level));
+  const labelW = withLevels ? Math.round(type * 2.4) : 0;
+  const gapX = Math.max(chip.gap, Math.round(icon * 0.22));
+  const gapY = Math.max(chip.gap, Math.round(icon * 0.28));
   const cellW = icon + labelW + gapX;
   const cellH = icon + gapY;
   const photoW = showRules ? width * 0.62 : width;
@@ -247,16 +259,16 @@ function drawIdentityPlate(
   if (name && name !== "Player" && name !== "Optional") {
     lines.push({ id: "streamer", text: cap(name), size: chip.name });
   }
-  if (clan) lines.push({ id: "clan", text: cap(clan), size: Math.round(chip.name * 0.42) });
-  if (handle) lines.push({ id: "handle", text: cap(handle), size: Math.round(chip.name * 0.36) });
+  if (clan) lines.push({ id: "clan", text: cap(clan), size: chip.clan ?? Math.round(chip.name * 0.44) });
+  if (handle) lines.push({ id: "handle", text: cap(handle), size: Math.round((chip.clan ?? chip.name * 0.44) * 0.9) });
   if (tagline) {
-    ctx.font = `700 13px ${plateFont}`;
+    ctx.font = `700 ${chip.line ?? 15}px ${plateFont}`;
     const wrapped = wrapText(ctx, tagline, textMax).slice(0, 2);
     if (wrapText(ctx, tagline, textMax).length > 2 && wrapped[1]) {
       wrapped[1] = `${wrapped[1].replace(/…$/, "")}…`;
     }
     wrapped.forEach((text, i) => {
-      lines.push({ id: i ? `tagline-${i}` : "tagline", text: cap(text), size: 13 });
+      lines.push({ id: i ? `tagline-${i}` : "tagline", text: cap(text), size: chip.line ?? 15 });
     });
   }
   const extras = [
@@ -270,7 +282,7 @@ function drawIdentityPlate(
     discord,
     options.learners ? "Learners welcome" : "",
   ].filter((item) => item && item !== "Not shown");
-  extras.forEach((text, i) => lines.push({ id: `extra-${i}`, text: cap(text), size: 12 }));
+  extras.forEach((text, i) => lines.push({ id: `extra-${i}`, text: cap(text), size: chip.line ?? 15 }));
   const layout: Layout = options.layout ?? "banner";
   ctx.textAlign = layout === "title-card" ? "center" : "left";
   let y =
@@ -468,31 +480,32 @@ export function drawBanner(
       options.skillSize,
     );
     ctx.textAlign = "left";
-    const lastCount = count % grid.cols || grid.cols;
+    ctx.imageSmoothingEnabled = false;
+    const chip = typeScale(width, height);
+    const first = options.skillIcons[0];
+    const uniformIcon = Math.max(
+      24,
+      Math.min(72, Math.round((first?.size ?? grid.icon) * (first?.scale ?? 1))),
+    );
+    const uniformLevel = Math.max(14, Math.min(24, Math.round(chip.level)));
     options.skillIcons.forEach((slot, i) => {
       const col = i % grid.cols;
       const row = Math.floor(i / grid.cols);
-      const icon = Math.max(12, Math.round((slot.size ?? grid.icon) * (slot.scale ?? 1)));
-      const onLast = row === grid.rows - 1 && lastCount < grid.cols;
-      const rowShift = onLast
-        ? Math.round(((grid.cols - lastCount) * grid.cellW) / 2)
-        : 0;
-      let px = grid.originX + rowShift + col * grid.cellW;
-      let py = grid.originY + row * grid.cellH;
+      const icon = uniformIcon;
+      let px = Math.round(grid.originX + col * grid.cellW);
+      let py = Math.round(grid.originY + row * grid.cellH);
       if (slot.x != null && slot.y != null) {
-        px = Math.max(0, Math.min(slot.x, width - icon));
-        py = Math.max(0, Math.min(slot.y, height - icon));
+        px = Math.round(Math.max(0, Math.min(slot.x, width - icon)));
+        py = Math.round(Math.max(0, Math.min(slot.y, height - icon)));
       }
       ctx.drawImage(slot.img, px, py, icon, icon);
       const label = slot.level.trim();
       if (label) {
-        const chip = typeScale(width, height);
-        const scale = slot.scale ?? 1;
         ctx.save();
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        ctx.font = `700 ${Math.max(10, Math.round(chip.level * scale))}px "${FACE}"`;
-        paintYellow(ctx, px + icon + 2, py + icon / 2, label, options.textColor || RS_YELLOW);
+        ctx.font = `700 ${uniformLevel}px "${FACE}"`;
+        paintYellow(ctx, px + icon + 4, py + Math.round(icon / 2), label, options.textColor || RS_YELLOW);
         ctx.restore();
       }
       boxes.push({
@@ -503,6 +516,7 @@ export function drawBanner(
         h: icon,
       });
     });
+    ctx.imageSmoothingEnabled = true;
   }
 
   if (options.showSafeZones && options.safeZone && options.safeZone !== "none") {

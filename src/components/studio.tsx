@@ -6,7 +6,7 @@ import { TownHero } from "@/components/town-hero";
 import { OracleLine } from "@/components/oracle-line";
 import { OfficialPulse } from "@/components/official-pulse";
 import { StillPhoto } from "@/components/still-photo";
-import { drawBanner, ensurePlateFont, loadImage } from "@/lib/draw-banner";
+import { drawBanner, ensurePlateFont, loadImage, plateMetrics } from "@/lib/draw-banner";
 import { stillIndex } from "@/lib/still-clock";
 import { safeZoneRects, type SafeZone } from "@/lib/bannerFeatures";
 import { MARKS } from "@/lib/marks";
@@ -86,7 +86,7 @@ export function Studio() {
   const [sceneReady, setSceneReady] = useState(true);
   const [skillPack, setSkillPack] = useState<"OSRS" | "RS3">(boot.edition ?? saved.skillPack ?? "RS3");
   const [skillPlace, setSkillPlace] = useState<"name" | "bottom" | "top">("name");
-  const [skillSize, setSkillSize] = useState(saved.skillSize ?? 28);
+  const [skillSize, setSkillSize] = useState(saved.skillSize ?? 40);
   const [skillX] = useState<number | null>(null);
   const [skillY] = useState<number | null>(null);
   const [skillPicks, setSkillPicks] = useState<
@@ -279,8 +279,11 @@ export function Studio() {
 
   function applyStill(id: LocationId, nextView?: "a" | "b", src?: string) {
     const loc = LOCATIONS.find((item) => item.id === id);
-    const cardSrc = src || loc?.viewA || townPlateSrc(id);
-    if (!cardSrc) return;
+    const cardSrc = src || townPlateSrc(id) || loc?.viewA;
+    if (!cardSrc) {
+      setStatus("The picture is not here. Try another street.");
+      return;
+    }
     const samePlace = id === locationId && !customSrc;
     if (!samePlace) clearStampsAndText();
     pickLocation(id);
@@ -329,36 +332,38 @@ export function Studio() {
   }
 
   function packScaleMax(count: number) {
+    const m = plateMetrics(size.width, size.height);
     const cols = skillPack === "OSRS" ? 8 : 9;
     const rows = Math.max(1, Math.ceil(count / cols));
-    const padX = size.width * 0.06;
-    const padY = size.height * 0.36;
-    const base = 22;
-    const gap0 = 8;
-    const maxW = (size.width - 2 * padX) / (cols * (base + gap0) - gap0);
-    const maxH = (size.height - padY - 16) / (rows * (base + gap0) - gap0);
-    return Math.max(0.6, Math.min(maxW, maxH, 2.2));
+    const icon = m.icon;
+    const levelW = Math.round(m.level * 2.1);
+    const gap = m.gap;
+    const strideX = icon + levelW + gap;
+    const strideY = icon + gap;
+    const maxW = (size.width - 2 * m.pad) / Math.max(1, cols * strideX - gap);
+    const maxH = (size.height * 0.62) / Math.max(1, rows * strideY - gap);
+    return Math.max(0.8, Math.min(maxW, maxH, 2));
   }
 
   function packScale(count: number) {
-    const cap = packScaleMax(count);
-    const prefer = count >= 20 ? 0.7 : count >= 14 ? 0.85 : 1;
-    return Math.min(prefer, cap);
+    return Math.min(1, packScaleMax(count));
   }
 
   function layoutAllGrid(count: number, packScaleValue: number) {
+    const m = plateMetrics(size.width, size.height);
     const cols = skillPack === "OSRS" ? 8 : 9;
-    const cap = packScaleMax(count);
-    const scale = Math.max(0.6, Math.min(packScaleValue, cap));
-    const base = 22;
-    const gap0 = 8;
-    const cell = base * scale;
-    const gap = gap0 * scale;
+    const scale = Math.max(0.8, Math.min(packScaleValue, packScaleMax(count)));
+    const icon = Math.round(m.icon * scale);
+    const levelW = Math.round(m.level * 2.1 * scale);
+    const gap = Math.round(m.gap * scale);
+    const strideX = icon + levelW + gap;
+    const strideY = icon + gap;
     const rows = Math.max(1, Math.ceil(count / cols));
-    const gridW = cols * (cell + gap) - gap;
-    const originX = (size.width - gridW) / 2;
-    const originY = size.height * 0.36 + 12;
-    return { cols, cell, gap, originX, originY, scale };
+    const gridW = cols * strideX - gap;
+    const gridH = rows * strideY - gap;
+    const originX = Math.round((size.width - gridW) / 2);
+    const originY = Math.round(Math.max(m.top + m.name + 12, (size.height - gridH) / 2 + m.name * 0.35));
+    return { cols, rows, icon, levelW, gap, strideX, strideY, originX, originY, scale, cell: icon };
   }
 
   function placeAllPack(packScaleValue?: number) {
@@ -367,16 +372,23 @@ export function Studio() {
     const wanted = packScaleValue ?? packScale(pack.length);
     const grid = layoutAllGrid(pack.length, wanted);
     const next = [
-      ...pack.map((skill, i) => ({
-        id: skill.id,
-        game: skillPack,
-        level: boardLevels[skillPack][skill.id] ?? "",
-        x: grid.originX + (i % grid.cols) * (grid.cell + grid.gap),
-        y: grid.originY + Math.floor(i / grid.cols) * (grid.cell + grid.gap),
-        size: 22,
-        scale: grid.scale,
-        group: "skills-all",
-      })),
+      ...pack.map((skill, i) => {
+        const col = i % grid.cols;
+        const row = Math.floor(i / grid.cols);
+        const lastCount = pack.length % grid.cols || grid.cols;
+        const onLast = row === grid.rows - 1 && lastCount < grid.cols;
+        const rowShift = onLast ? Math.round(((grid.cols - lastCount) * grid.strideX) / 2) : 0;
+        return {
+          id: skill.id,
+          game: skillPack,
+          level: boardLevels[skillPack][skill.id] ?? "",
+          x: grid.originX + rowShift + col * grid.strideX,
+          y: grid.originY + row * grid.strideY,
+          size: grid.icon,
+          scale: 1,
+          group: "skills-all",
+        };
+      }),
       ...kept,
     ];
     skillPicksRef.current = next;
@@ -849,24 +861,45 @@ export function Studio() {
   }, [pickedSkill, pickedText, overIcon]);
 
   function downloadJpeg() {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        setSaveNote("Pete is not a miracle.");
-        return;
-      }
-      const who = sanitizeDisplayName(streamer);
-      const worldTag = sanitizeWorld(world) ? `-w${sanitizeWorld(world)}` : "";
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `banner-${edition.toLowerCase()}-${(who || "desk").replace(/\s+/g, "-")}${worldTag}-${location.id}-${size.width}x${size.height}.jpg`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-      if (!who) setSaveNote("Saved without a name.");
-      else if (size.width !== 1200 || size.height !== 480) setSaveNote(`Saved ${size.width}×${size.height}.`);
-      else setSaveNote(`Saved ${a.download}`);
-    }, "image/jpeg", 0.92);
+    const overlay = canvasRef.current;
+    const still = stillCacheRef.current;
+    if (!overlay) return;
+    const out = document.createElement("canvas");
+    out.width = size.width;
+    out.height = size.height;
+    const ctx = out.getContext("2d", { alpha: false });
+    if (!ctx) {
+      setSaveNote("Could not save. Try 1200×480.");
+      return;
+    }
+    ctx.fillStyle = "#1a1610";
+    ctx.fillRect(0, 0, out.width, out.height);
+    if (still && still.width && still.height) {
+      coverStill(ctx, still, out.width, out.height);
+    } else {
+      const plate = document.getElementById("still") as HTMLImageElement | null;
+      if (plate && plate.naturalWidth) coverStill(ctx, plate, out.width, out.height);
+    }
+    ctx.drawImage(overlay, 0, 0, out.width, out.height);
+    out.toBlob(
+      (blob) => {
+        if (!blob) {
+          setSaveNote("Could not save. Try 1200×480.");
+          return;
+        }
+        const who = sanitizeDisplayName(streamer);
+        const worldTag = sanitizeWorld(world) ? `-w${sanitizeWorld(world)}` : "";
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `banner-${edition.toLowerCase()}-${(who || "desk").replace(/\s+/g, "-")}${worldTag}-${location.id}-${size.width}x${size.height}.jpg`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        if (!who) setSaveNote("Saved without a name.");
+        else setSaveNote(`Saved ${size.width}×${size.height}.`);
+      },
+      "image/jpeg",
+      0.92,
+    );
   }
 
   function paintOnto(
@@ -1077,7 +1110,11 @@ export function Studio() {
               <div key={loc.id} className="overflow-hidden rounded-md border border-line hover:border-[#F5C400]" data-place-card data-slug={loc.id}>
                 <button
                   type="button"
-                  onClick={() => applyStill(loc.id, "a", src)}
+                  onClick={(e) => {
+                    const img = e.currentTarget.querySelector("img");
+                    const fromCard = img?.currentSrc || img?.getAttribute("src") || src;
+                    applyStill(loc.id, "a", fromCard || undefined);
+                  }}
                   className="block w-full text-left"
                 >
                   <StillPhoto
@@ -1601,12 +1638,14 @@ export function Studio() {
             className="h-8 rounded-md border border-line px-2 text-[10px]"
             onClick={() => {
               const pool = (visible.length ? visible : LOCATIONS.filter((loc) => loc.kind === kind && loc.edition === edition)).filter(
-                (loc) => Boolean(loc.viewA || loc.stills?.length || townPlateSrc(loc.id)),
+                (loc) => Boolean(townPlateSrc(loc.id) || loc.viewA || loc.stills?.length),
               );
               if (!pool.length) return;
               const pick = pool[Math.floor(Math.random() * pool.length)];
               const raw = pick.stills?.length ? pick.stills[stillIndex(pick.stills.length, peteNow)] : pick.viewA;
-              applyStill(pick.id, "a", stillAllowed(raw, pick.edition) ? raw : pick.viewA);
+              const src = townPlateSrc(pick.id) || (stillAllowed(raw, pick.edition) ? raw : pick.viewA);
+              if (!src) return;
+              applyStill(pick.id, "a", src);
             }}
           >
             Random
