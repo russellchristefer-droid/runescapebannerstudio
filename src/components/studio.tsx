@@ -8,7 +8,7 @@ import { OfficialPulse } from "@/components/official-pulse";
 import { StillPhoto } from "@/components/still-photo";
 import { drawBanner, ensurePlateFont, loadImage } from "@/lib/draw-banner";
 import { stillIndex } from "@/lib/still-clock";
-import { PRESETS, presetSlugs, safeZoneRects, type PresetId, type SafeZone } from "@/lib/bannerFeatures";
+import { safeZoneRects, type SafeZone } from "@/lib/bannerFeatures";
 import { MARKS } from "@/lib/marks";
 import { sanitizeSkillLevel, skillIdForHiscore, skillLevelCap, SKILLS } from "@/lib/skills";
 import {
@@ -294,42 +294,6 @@ export function Studio() {
     if (typeof document !== "undefined") {
       document.getElementById("desk")?.scrollIntoView({ block: "start", behavior: "smooth" });
     }
-  }
-
-  function applyPreset(id: PresetId) {
-    const preset = PRESETS[id];
-    const pack = preset.game === "osrs" ? "OSRS" : "RS3";
-    const slugs = presetSlugs(id);
-    const place =
-      LOCATIONS.find((loc) => slugs.includes(loc.id) && loc.edition === pack) ??
-      LOCATIONS.find((loc) => loc.edition === pack && slugs.some((s) => loc.id.includes(s)));
-    setSkillPack(pack);
-    setKind(place?.kind === "boss" ? "boss" : "town");
-    if (place) applyStill(place.id);
-    setTagline(preset.tagline);
-    setGrind(preset.grind);
-    const marks =
-      id === "iron-teach"
-        ? ["mark-osrs-im"]
-        : id === "fire-cape"
-          ? ["mark-osrs-fire"]
-          : id === "tob-night"
-            ? ["mark-osrs-im"]
-            : ["mark-rs3-im"];
-    const left = Math.round(size.width * 0.04);
-    setSkillPicks(
-      marks
-        .filter((mid) => MARKS.some((mark) => mark.id === mid && mark.editions.includes(pack)))
-        .map((mid, i) => ({
-          id: mid,
-          game: pack,
-          level: "",
-          x: left + i * (skillSize + 8),
-          y: Math.round(size.height * 0.3),
-          size: skillSize,
-          scale: 1,
-        })),
-    );
   }
 
   const catalog = [...SKILLS, ...MARKS, ...customMarks.map((mark) => ({
@@ -2085,18 +2049,6 @@ export function Studio() {
                 onClick={() => setGhostZone(zone)}
               >
                 {zone === "none" ? "Ghosts off" : zone === "twitch" ? "Twitch crop" : zone === "youtube" ? "YouTube crop" : "Discord crop"}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap justify-center gap-1">
-            {(Object.keys(PRESETS) as PresetId[]).map((id) => (
-              <button
-                key={id}
-                type="button"
-                className="h-8 rounded-md border border-line px-2 text-[10px] text-muted"
-                onClick={() => applyPreset(id)}
-              >
-                {PRESETS[id].label}
               </button>
             ))}
           </div>
