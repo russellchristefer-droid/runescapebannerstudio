@@ -1,0 +1,11 @@
+{
+  "note": "Jagex owns these stills. Hosted locally. File pages recorded.",
+  "stills": [
+    {"src": "/stills/hero/rsc-lumbridge.jpg", "era": "rsc", "filePage": "https://classic.runescape.wiki/w/File:Lumbridge.png"},
+    {"src": "/stills/hero/rsc-varrock.jpg", "era": "rsc", "filePage": "https://classic.runescape.wiki/w/File:Varrock.png"},
+    {"src": "/stills/hero/rsc-draynor.jpg", "era": "rsc", "filePage": "https://classic.runescape.wiki/w/File:Draynor_Village.png"},
+    {"src": "/stills/hero/rsc-edgeville.jpg", "era": "rsc", "filePage": "https://classic.runescape.wiki/w/File:Edgeville.png"},
+    {"src": "/stills/hero/rsc-wilderness.jpg", "era": "rsc", "filePage": "https://classic.runescape.wiki/w/File:Wilderness.png"},
+    {"src": "/stills/hero/rs3-ozan.jpg", "era": "rs3", "kind": "person", "filePage": "https://runescape.wiki/w/File:Ozan.png"}
+  ]
+}

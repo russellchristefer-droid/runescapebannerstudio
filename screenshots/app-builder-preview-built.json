@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Gielinor Banner Forge",
+      "hasCanvas": true,
+      "bodyTextLen": 422,
+      "bodyTextHash": "5fb02bf91322c4b4e3ee0301aa5264bc430d7fcd2423b5bf85e440af7da144ae",
+      "bodyTextPrefix": "STREAM OVERLAY KIT Gielinor Banner Forge Pick a scene, keep the ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Gielinor Banner Forge",
+      "hasCanvas": true,
+      "bodyTextLen": 422,
+      "bodyTextHash": "5fb02bf91322c4b4e3ee0301aa5264bc430d7fcd2423b5bf85e440af7da144ae",
+      "bodyTextPrefix": "STREAM OVERLAY KIT Gielinor Banner Forge Pick a scene, keep the ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}

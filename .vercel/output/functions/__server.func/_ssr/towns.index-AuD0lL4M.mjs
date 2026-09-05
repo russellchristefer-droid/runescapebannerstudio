@@ -1,0 +1,63 @@
+import { b as require_jsx_runtime } from "../_libs/@tanstack/react-router+[...].mjs";
+import { r as LOCATIONS } from "./locations-CLZLnwld.mjs";
+import { t as OfficialPulse } from "./official-pulse-Bm5wbKDQ.mjs";
+import { t as townNote } from "./town-notes-BW8dq-nk.mjs";
+import { s as BackLink } from "./router-DXmYNu76.mjs";
+import { n as PlaceGrid, t as PlaceCard } from "./place-card-WbDiWHO2.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/towns.index-AuD0lL4M.js
+var import_jsx_runtime = require_jsx_runtime();
+function TownIndex() {
+	const towns = LOCATIONS.filter((loc) => loc.kind === "town" && townNote(loc.id));
+	const rs3 = towns.filter((loc) => loc.edition === "RS3");
+	const osrs = towns.filter((loc) => loc.edition === "OSRS");
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "min-h-dvh bg-bg text-fg",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
+			className: "border-b border-line px-5 py-5 md:px-8",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BackLink, {}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					className: "page-h1 site-title mt-1",
+					children: "Towns"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					className: "mt-2 max-w-2xl text-center text-sm text-muted",
+					children: "Cities and landmarks · pick a game first."
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					className: "mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80",
+					"aria-hidden": "true"
+				})
+			]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
+			className: "mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(OfficialPulse, {}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+					className: "mb-3 text-sm tracking-[0.16em] text-parchment",
+					children: "Old School RuneScape"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlaceGrid, { children: osrs.map((loc) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlaceCard, {
+					to: "/towns/$id",
+					params: { id: loc.id },
+					src: loc.viewA,
+					name: loc.name,
+					kind: "Town",
+					game: "Old School RuneScape"
+				}, loc.id)) })] }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+					className: "mb-3 text-sm tracking-[0.16em] text-parchment",
+					children: "RuneScape 3"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlaceGrid, { children: rs3.map((loc) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlaceCard, {
+					to: "/towns/$id",
+					params: { id: loc.id },
+					src: loc.viewA,
+					name: loc.name,
+					kind: "Town",
+					game: "RuneScape 3"
+				}, loc.id)) })] })
+			]
+		})]
+	});
+}
+//#endregion
+export { TownIndex as component };

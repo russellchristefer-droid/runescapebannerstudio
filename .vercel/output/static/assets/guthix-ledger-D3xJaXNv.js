@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cltr0gcK.js";import{r as t,t as n}from"./ledgers-CLHYabvJ.js";var r=e();function i(){return(0,r.jsx)(t,{title:`Guthix ledger`,deck:`Old School RuneScape · methods only. Not in the main nav.`,game:n.game,wiki:n.wiki,f2p:n.f2p,members:n.members,foot:`Guthix does not count coins. The wiki does.`})}export{i as component};

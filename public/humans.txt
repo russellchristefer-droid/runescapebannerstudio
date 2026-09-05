@@ -1,0 +1,11 @@
+/* TEAM */
+Studio: RuneScape Banner Studio
+Note: Independent fan desk. Not Jagex.
+
+/* THANKS */
+Official wikis host many stills and icons under their own file-page terms.
+Jagex Limited owns the games, marks, stills, and interface art.
+
+/* SITE */
+Standards: HTML, CSS, canvas
+Language: en

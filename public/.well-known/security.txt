@@ -1,0 +1,5 @@
+Contact: mailto:?subject=SECURITY
+Expires: 2027-09-04T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://runescapebannerstudio.grok.me/.well-known/security.txt
+Policy: https://runescapebannerstudio.grok.me/legal

@@ -1,0 +1,1 @@
+var e=3e5;function t(t,n=Date.now()){return t<=0?0:Math.floor(n/e)%t}function n(t=Date.now()){return e-t%e}function r(e){let t=Math.max(0,Math.ceil(e/1e3)),n=Math.floor(t/60),r=t%60;return`${n}:${String(r).padStart(2,`0`)}`}export{t as i,r as n,n as r,e as t};

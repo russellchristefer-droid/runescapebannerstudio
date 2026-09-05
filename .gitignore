@@ -1,0 +1,15 @@
+node_modules/
+.node_modules.lock
+.node_modules.tmp.*
+.project_id
+.github_repo
+.env
+.env.*
+.grok/preview.log
+.grok/preview.pid
+.grok/app-env.json
+*.log
+dist/
+.output/
+.vinxi/
+.tanstack/
