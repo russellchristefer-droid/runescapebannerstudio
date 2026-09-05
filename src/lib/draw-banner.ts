@@ -54,7 +54,7 @@ export async function ensurePlateFont() {
   }
 }
 
-function paintRSYellow(
+export function paintRSYellow(
   ctx: PaintCtx,
   text: string,
   x: number,

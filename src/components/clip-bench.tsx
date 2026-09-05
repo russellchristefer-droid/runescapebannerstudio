@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { loadStudioSave } from "@/lib/studio-save";
-import { sanitizeClan, sanitizeDisplayName, sanitizeWorld, worldLabel } from "@/lib/rsText";
+import { sanitizeClan, sanitizeDisplayName, sanitizeHandle, sanitizeWorld, worldLabel } from "@/lib/rsText";
+import { paintRSYellow, ensurePlateFont } from "@/lib/draw-banner";
 import { LOCATIONS } from "@/lib/locations";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
 import {
@@ -72,7 +73,9 @@ export function ClipBench() {
   const [rotate, setRotate] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [lowerThird, setLowerThird] = useState(false);
-  const [lowerThirdLine, setLowerThirdLine] = useState("");
+  const [deskName, setDeskName] = useState("");
+  const [deskClan, setDeskClan] = useState("");
+  const [deskHandle, setDeskHandle] = useState("");
   const undoRef = useRef<{ inPoint: number; outPoint: number; aspect: ClipAspect; overlay: OverlayPos; muted: boolean }[]>([]);
   const redoRef = useRef<typeof undoRef.current>([]);
   const holdRef = useRef<number | null>(null);
@@ -97,7 +100,24 @@ export function ClipBench() {
   useEffect(() => {
     const saved = loadStudioSave();
     if (saved.edition === "RS3" || saved.edition === "OSRS") setEdition(saved.edition);
+    setDeskName(sanitizeDisplayName(saved.streamer ?? ""));
+    setDeskClan(sanitizeClan(saved.clan ?? ""));
+    setDeskHandle(sanitizeHandle(saved.handle ?? ""));
+    void ensurePlateFont();
+    const pull = () => {
+      const next = loadStudioSave();
+      setDeskName(sanitizeDisplayName(next.streamer ?? ""));
+      setDeskClan(sanitizeClan(next.clan ?? ""));
+      setDeskHandle(sanitizeHandle(next.handle ?? ""));
+    };
+    const onStore = (e: StorageEvent) => {
+      if (!e.key || e.key === "rsbs.desk.v1" || e.key === "rs-banner-studio") pull();
+    };
+    window.addEventListener("storage", onStore);
+    const tick = window.setInterval(pull, 1200);
     return () => {
+      window.removeEventListener("storage", onStore);
+      window.clearInterval(tick);
       releaseVideo(videoRef.current, objectUrl.current);
       objectUrl.current = null;
       if (bannerUrl.current) URL.revokeObjectURL(bannerUrl.current);
@@ -187,21 +207,19 @@ export function ClipBench() {
       ctx.drawImage(bannerImg.current, 0, y, w, barH);
       ctx.restore();
     }
-    const line = lowerThird ? sanitizeDisplayName(lowerThirdLine) : "";
-    const mark = CLIP_MARKS.find((item) => item.id === markId && item.id !== "none");
-    ctx.textAlign = "left";
-    ctx.font = `600 ${Math.round(h * 0.035)}px "Source Sans 3", sans-serif`;
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 3;
-    const textY = Math.round(h * 0.9);
-    if (line) {
-      ctx.strokeText(line, 36, textY);
-      ctx.fillStyle = "#ffff00";
-      ctx.fillText(line, 36, textY);
+    if (lowerThird) {
+      const line = sanitizeDisplayName(deskName);
+      const second = sanitizeClan(deskClan) || sanitizeHandle(deskHandle);
+      const nameSize = Math.max(18, Math.round(h * 0.055));
+      const subSize = Math.max(14, Math.round(h * 0.032));
+      const nameY = Math.round(h * 0.82);
+      if (line) paintRSYellow(ctx, line, 36, nameY, nameSize);
+      if (second) paintRSYellow(ctx, second, 36, nameY + nameSize + 6, subSize);
     }
+    const mark = CLIP_MARKS.find((item) => item.id === markId && item.id !== "none");
     if (mark?.src) {
       const img = markCache.current[mark.src];
-      if (img) ctx.drawImage(img, 36, textY - Math.round(h * 0.12), Math.round(h * 0.08), Math.round(h * 0.08));
+      if (img) ctx.drawImage(img, 36, Math.round(h * 0.72), Math.round(h * 0.08), Math.round(h * 0.08));
     }
     if (ghosts && ghost !== "none") drawSafeZoneGhosts(ctx, w, h, ghost);
     if (ghosts && aspect === "9x16" && w / h > 1) {
@@ -245,7 +263,7 @@ export function ClipBench() {
       if (rvfc?.cancelVideoFrameCallback) rvfc.cancelVideoFrameCallback(id);
       else window.cancelAnimationFrame(id);
     };
-  }, [aspect, overlay, lowerThird, lowerThirdLine, edition, loop, inPoint, outPoint, ghost, size.w, size.h, opacity, markId, fadeIn, fadeOut, speed, fps, now, rotate, zoom]);
+  }, [aspect, overlay, lowerThird, deskName, deskClan, deskHandle, edition, loop, inPoint, outPoint, ghost, size.w, size.h, opacity, markId, fadeIn, fadeOut, speed, fps, now, rotate, zoom]);
 
   function useDeskBanner() {
     const saved = loadStudioSave();
@@ -816,16 +834,7 @@ export function ClipBench() {
             Lower third
           </button>
           {lowerThird ? (
-            <input
-              value={lowerThirdLine}
-              onChange={(e) => setLowerThirdLine(sanitizeDisplayName(e.target.value))}
-              maxLength={12}
-              placeholder="Lower third"
-              aria-label="Lower third"
-              autoComplete="off"
-              spellCheck={false}
-              className="h-9 min-w-[8rem] rounded-md border border-line bg-raised px-2 text-sm text-fg"
-            />
+            <span className="self-center text-[10px] text-muted">Same as desk</span>
           ) : null}
           {(["16x9-1080", "16x9-720", "9x16", "1x1"] as ClipAspect[]).map((id) => (
             <button
