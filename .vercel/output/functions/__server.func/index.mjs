@@ -374,6 +374,16 @@ function createHeadInjector(ctx = {}) {
 	};
 }
 //#endregion
+//#region src/lib/headers.ts
+var SECURITY_HEADERS = {
+	"X-Content-Type-Options": "nosniff",
+	"Referrer-Policy": "strict-origin-when-cross-origin",
+	"X-Frame-Options": "DENY",
+	"Content-Security-Policy": "frame-ancestors 'none'",
+	"Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+	"Cross-Origin-Opener-Policy": "same-origin"
+};
+//#endregion
 //#region server/middleware/grok-pwa.ts
 /**
 * Deployed-app (Nitro) half of the platform PWA chrome. Auto-registered as
@@ -391,6 +401,11 @@ function createHeadInjector(ctx = {}) {
 *   This must be a middleware transforming `next()`: h3 discards the `response`
 *   runtime hook's return value, and `render:html` does not exist in Nitro v3.
 */
+function withSecurity(headers, path) {
+	for (const [key, value] of Object.entries(SECURITY_HEADERS)) headers.set(key, value);
+	if (path === "/healthz" || path.startsWith("/api/")) headers.set("x-robots-tag", "noindex");
+	return headers;
+}
 function requestHost(event) {
 	return event.req.headers.get("x-forwarded-host") ?? event.req.headers.get("host") ?? event.url.host;
 }
@@ -409,6 +424,7 @@ function injectHeadStreaming(response, host) {
 	}));
 	const headers = new Headers(response.headers);
 	headers.delete("content-length");
+	withSecurity(headers, "/");
 	return new Response(transformed, {
 		status: response.status,
 		statusText: response.statusText,

@@ -5,9 +5,7 @@ node_modules/
 .github_repo
 .env
 .env.*
-.grok/preview.log
-.grok/preview.pid
-.grok/app-env.json
+.grok/
 *.log
 dist/
 .output/
