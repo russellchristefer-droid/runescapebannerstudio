@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { HERO_STILLS, type HeroStill } from "@/lib/still-pool";
+import { OfficialPulse } from "@/components/official-pulse";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/classic")({
@@ -23,6 +24,13 @@ function ClassicPage() {
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main id="content" className="mx-auto max-w-5xl px-5 py-6 md:px-8">
+        <OfficialPulse
+          note="Official Classic worlds are closed. This page is memory."
+          links={[
+            { label: "RuneScape Classic wiki", href: "https://runescapeclassic.wiki/" },
+            { label: "History of RuneScape Classic", href: "https://runescape.wiki/w/RuneScape_Classic" },
+          ]}
+        />
         <h2 className="mb-3 text-sm font-semibold text-parchment">Places</h2>
         <ClassicGrid cards={places} />
 

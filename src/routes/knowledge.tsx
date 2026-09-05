@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { OfficialSites } from "@/components/official-sites";
-import { OfficialPulse } from "@/components/official-pulse";
 import { KNOWLEDGE_SITES } from "@/lib/knowledge-sites";
 
 import { pageTitle } from "@/lib/page-title";
@@ -23,7 +22,6 @@ function KnowledgePage() {
       </header>
       <main className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
         <OfficialSites />
-        <OfficialPulse />
         <section>
           <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">
             Old School RuneScape
