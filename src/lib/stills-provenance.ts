@@ -39,7 +39,7 @@ export type StillRecord = {
 };
 
 function gameName(loc: Location) {
-  return loc.edition === "OSRS" ? "Old School RuneScape" : "RuneScape 3";
+  return loc.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
 }
 
 function record(loc: Location, lighting: "dark" | "light"): StillRecord {

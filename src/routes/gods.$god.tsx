@@ -45,11 +45,11 @@ function GodPage() {
           {godStill(god, "RS3") ? (
             <GodFigure
               src={godStill(god, "RS3")!}
-              alt={`${brief.god} in RuneScape 3`}
-              caption="RuneScape 3"
+              alt={`${brief.god} in RuneScape`}
+              caption="RuneScape"
             />
           ) : (
-            <p className="text-sm text-muted">Still needed — RuneScape 3.</p>
+            <p className="text-sm text-muted">Still needed — RuneScape.</p>
           )}
         </div>
         <p className="text-sm text-muted">{brief.summary}</p>
@@ -62,7 +62,7 @@ function GodPage() {
             {brief.osrs}
           </p>
           <p className="mt-3 text-sm text-muted">
-            <span className="text-fg">RuneScape 3. </span>
+            <span className="text-fg">RuneScape. </span>
             {brief.rs3}
           </p>
           <p className="mt-3 text-sm">
@@ -101,7 +101,7 @@ function GodPage() {
               Senntisten ledger
             </summary>
             <p className="mt-3">
-              RuneScape 3 methods only. No GP/hour on this desk.{" "}
+              RuneScape methods only. No GP/hour on this desk.{" "}
               <Link to="/senntisten" className="text-parchment">
                 Open the Senntisten ledger
               </Link>

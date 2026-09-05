@@ -74,7 +74,7 @@ export function TodayDesk() {
           </ul>
         </article>
         <article>
-          <h3 className="mb-2 text-sm font-semibold">RuneScape 3</h3>
+          <h3 className="mb-2 text-sm font-semibold">RuneScape</h3>
           <ul className="space-y-1.5 text-xs text-muted">
             <li>
               Daily reset in {reset} (00:00 UTC). Challenges, ports, cache, Fort

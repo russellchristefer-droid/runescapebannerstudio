@@ -57,7 +57,7 @@ function BestiaryPage() {
       </header>
       <main className="mx-auto max-w-5xl px-5 py-6 md:px-8">
         <GameBlock title="Old School RuneScape" rows={osrs} />
-        <GameBlock title="RuneScape 3" rows={rs3} />
+        <GameBlock title="RuneScape" rows={rs3} />
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 export type LedgerRow = { name: string; what: string; href: string };
 
 export const RS3_LEDGER = {
-  game: "RuneScape 3" as const,
+  game: "RuneScape" as const,
   wiki: "https://runescape.wiki/w/Money_making_guide",
   f2p: [
     { name: "Killing cows", what: "Hides and raw beef in Lumbridge.", href: "https://runescape.wiki/w/Money_making_guide/Killing_cows" },

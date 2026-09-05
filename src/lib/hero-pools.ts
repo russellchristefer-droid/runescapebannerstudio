@@ -41,6 +41,6 @@ export function heroPool(chip: HeroChip): HeroShot[] {
 
 export function gameLabel(chip: HeroChip) {
   if (chip === "RSC") return "RuneScape Classic";
-  if (chip === "RS3") return "RuneScape 3";
+  if (chip === "RS3") return "RuneScape";
   return "Old School RuneScape";
 }

@@ -16,7 +16,7 @@ function BossNotePage() {
   const note = noteFor(id);
   const loc = LOCATIONS.find((item) => item.id === id);
   if (!note || !loc) throw notFound();
-  const game = note.edition === "OSRS" ? "Old School RuneScape" : "RuneScape 3";
+  const game = note.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   const team = /raid|duo|trio|5-man|team/i.test(note.role);
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -127,7 +127,7 @@ function SisterBoss({
   return (
     <p className="text-sm">
       <Link to="/bosses/$id" params={{ id: sister.id }} className="text-parchment">
-        {edition === "OSRS" ? "Same name in RuneScape 3" : "Same name in Old School RuneScape"}
+        {edition === "OSRS" ? "Same name in RuneScape" : "Same name in Old School RuneScape"}
       </Link>
     </p>
   );

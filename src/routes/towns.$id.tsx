@@ -112,7 +112,7 @@ function TownCycle({
   const i = stillIndex(pool.length, now);
   const src = pool[i] ?? loc.viewA;
   const next = pool[(i + 1) % pool.length];
-  const game = loc.edition === "OSRS" ? "Old School RuneScape" : "RuneScape 3";
+  const game = loc.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   return (
     <figure>
       <img
@@ -146,7 +146,7 @@ function SisterPlace({
   return (
     <p className="text-sm">
       <Link to="/towns/$id" params={{ id: sister.id }} className="text-parchment">
-        {edition === "OSRS" ? "Same name in RuneScape 3" : "Same name in Old School RuneScape"}
+        {edition === "OSRS" ? "Same name in RuneScape" : "Same name in Old School RuneScape"}
       </Link>
     </p>
   );
@@ -159,7 +159,7 @@ function StreetAndHour({ loc, wiki }: { loc: (typeof LOCATIONS)[number]; wiki?: 
   const line = lines[stillIndex(lines.length, now)] ?? lines[0];
   const notice = noticeFor(loc.id, game);
   const citizen = citizenFor(loc.id, game, now);
-  const gameLabel = game === "osrs" ? "Old School RuneScape" : "RuneScape 3";
+  const gameLabel = game === "osrs" ? "Old School RuneScape" : "RuneScape";
   const alt = `${citizen.role} of ${loc.name}, ${gameLabel}`;
   return (
     <>

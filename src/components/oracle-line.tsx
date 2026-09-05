@@ -64,7 +64,7 @@ export function OracleLine({
         </div>
         <img
           src="/stills/rs3/bob-the-cat.png"
-          alt="Bob the Cat, RuneScape 3"
+          alt="Bob the Cat, RuneScape"
           width={72}
           height={72}
           className="h-[72px] w-[72px] shrink-0 object-contain object-bottom"

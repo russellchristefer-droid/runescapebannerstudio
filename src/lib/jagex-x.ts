@@ -6,7 +6,7 @@ export type JagexX = {
 
 export const JAGEX_X_OFFICIAL: JagexX[] = [
   { name: "Old School RuneScape", handle: "OldSchoolRS", role: "Official Old School account" },
-  { name: "RuneScape", handle: "RuneScape", role: "Official RuneScape 3 account" },
+  { name: "RuneScape", handle: "RuneScape", role: "Official RuneScape account" },
   { name: "Jagex", handle: "Jagex", role: "Company account" },
 ];
 
@@ -23,5 +23,5 @@ export const JAGEX_X_MODS: JagexX[] = [
   { name: "Mod Nox", handle: "JagexNox", role: "Old School QA" },
   { name: "Mod Bruno", handle: "JagexBruno", role: "Old School QA" },
   { name: "Mod Archie", handle: "JagexArchie", role: "Influencer and events" },
-  { name: "Mod Ryan", handle: "JagexRyan", role: "RuneScape 3 creative" },
+  { name: "Mod Ryan", handle: "JagexRyan", role: "RuneScape creative" },
 ];

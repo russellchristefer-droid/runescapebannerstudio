@@ -35,7 +35,7 @@ function BriefPage() {
           <h2 className="section-h2">What it does</h2>
           <ul className="list-disc space-y-2 pl-5">
             <li>
-              <In to="/">Banner Studio</In> — title still of a town. Chips Classic / Old School / RuneScape 3 cycle that picture every five minutes. Bob sits under it. The desk below is one plate: pick a place, type a 12-letter display name (yellow on the JPEG only), stamp skills and marks, drag to move, wheel to resize, Look up Hiscores (Jagex first; Wise Old Man is Old School only). One Download under Postie Pete.
+              <In to="/">Banner Studio</In> — title still of a town. Chips Classic / Old School / RuneScape cycle that picture every five minutes. Bob sits under it. The desk below is one plate: pick a place, type a 12-letter display name (yellow on the JPEG only), stamp skills and marks, drag to move, wheel to resize, Look up Hiscores (Jagex first; Wise Old Man is Old School only). One Download under Postie Pete.
             </li>
             <li>
               Sizes — 1200×480 Twitch profile banner, 1280×720 YouTube thumb, 1920×1080 offline / player banner, 1920×480 wide panel. The preview can look smaller. The file is those pixels.

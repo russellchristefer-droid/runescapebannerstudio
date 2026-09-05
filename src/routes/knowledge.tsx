@@ -32,7 +32,7 @@ function KnowledgePage() {
         </section>
         <section>
           <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">
-            RuneScape 3
+            RuneScape
           </h2>
           <List sites={rs3} />
         </section>

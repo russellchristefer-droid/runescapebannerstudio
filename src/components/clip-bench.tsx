@@ -958,7 +958,7 @@ export function ClipBench() {
             if (mark && !mark.games.includes("RS3")) setMarkId("none");
           }}
         >
-          RuneScape 3
+          RuneScape
         </button>
       </div>
       <label className="mt-3 block max-w-sm text-xs text-muted">

@@ -78,13 +78,13 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     god: "Saradomin",
     title: "God of order",
     domain: "Order, law, and the human crownlands",
-    status: "Walks Gielinor in RuneScape 3 Sixth Age writing. Still worshipped in Old School.",
+    status: "Walks Gielinor in RuneScape Sixth Age writing. Still worshipped in Old School.",
     summary:
       "Saradomin is the face of order in both clients: White Knights, Entrana, Lumbridge church.",
     osrs:
       "In Old School RuneScape he is a prayer-god and a God Wars house. White Knights hold Falador. Entrana bans weapons at the Port Sarim boat. Commander Zilyana holds his chamber. There is no Sixth Age landfall and no walking Saradomin in that client.",
     rs3:
-      "RuneScape 3 published history treats him as a former justicar of Teragard who found the Elder Crown. After Sliske killed Guthix the Edicts fell and Saradomin returned. The Battle of Lumbridge is that return on the meadow.",
+      "RuneScape published history treats him as a former justicar of Teragard who found the Elder Crown. After Sliske killed Guthix the Edicts fell and Saradomin returned. The Battle of Lumbridge is that return on the meadow.",
     notes: [
       "Symbol: four-point star. Colours: blue and white.",
       "Entrana bans weapons in both clients. That is a stream rule, not flavour.",
@@ -92,7 +92,7 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     ],
     play: [
       "Banner: Falador, Lumbridge, Entrana, Grand Exchange.",
-      "Old School fight: Zilyana. RuneScape 3: the same house plus Sixth Age sites.",
+      "Old School fight: Zilyana. RuneScape: the same house plus Sixth Age sites.",
     ],
     source: "RuneScape Wiki: Saradomin/History, Entrana, The World Wakes.",
     wikiOsrs: "https://oldschool.runescape.wiki/w/Saradomin",
@@ -102,13 +102,13 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     god: "Zamorak",
     title: "God of chaos",
     domain: "Chaos, rebellion, and the breaking of empires",
-    status: "Active. Returned after the Edicts fell in RuneScape 3.",
+    status: "Active. Returned after the Edicts fell in RuneScape.",
     summary:
       "Zamorak was a Mahjarrat general of Zaros who used the Staff of Armadyl and rose.",
     osrs:
       "Old School keeps the chaos altar, the Wilderness cults, and K'ril Tsutsaroth. There is no Battle of Lumbridge crater and no Infernal Source world event in that client.",
     rs3:
-      "RuneScape 3 plays his return after the Edicts fell, the Battle of Lumbridge, and Zamorak, Lord of Chaos at the Infernal Source.",
+      "RuneScape plays his return after the Edicts fell, the Battle of Lumbridge, and Zamorak, Lord of Chaos at the Infernal Source.",
     notes: [
       "Not an Elder God. He stole godhood.",
       "K'ril Tsutsaroth leads his God Wars force.",
@@ -116,7 +116,7 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     ],
     play: [
       "Banner: Canifis, Edgeville, Darkmeyer.",
-      "Old School fight: K'ril. RuneScape 3: Zamorak Lord of Chaos at the Infernal Source.",
+      "Old School fight: K'ril. RuneScape: Zamorak Lord of Chaos at the Infernal Source.",
     ],
     source: "RuneScape Wiki: Zamorak, Staff of Armadyl, God Wars Dungeon.",
     wikiOsrs: "https://oldschool.runescape.wiki/w/Zamorak",
@@ -126,13 +126,13 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     god: "Guthix",
     title: "God of balance",
     domain: "Balance, nature, and the shaping of Gielinor",
-    status: "Slain in RuneScape 3 Fifth Age year 169. Still a prayer-god in Old School.",
+    status: "Slain in RuneScape Fifth Age year 169. Still a prayer-god in Old School.",
     summary:
       "Guthix found the blank plane, named it Gielinor, then slept. Tears of Guthix, Taverley, and Zanaris are the Guthix sites on this desk.",
     osrs:
       "Old School does not play The World Wakes. The Guthix altar and Juna’s cavern still work. He remains a prayer-god. The Edicts falling is not current history in that client.",
     rs3:
-      "In RuneScape 3 Sliske killed Guthix with the Staff of Armadyl in Fifth Age year 169. The Edicts fell. The Sixth Age began. Do not title a main-game stream as if he still walks.",
+      "In RuneScape Sliske killed Guthix with the Staff of Armadyl in Fifth Age year 169. The Edicts fell. The Sixth Age began. Do not title a main-game stream as if he still walks.",
     notes: [
       "Juna still keeps the Tears cavern in both clients.",
       "Old School does not play The World Wakes. The altar still works.",
@@ -149,20 +149,20 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     god: "Armadyl",
     title: "God of justice",
     domain: "Justice, peace, and the aviantese of Abbinah",
-    status: "Alive. Fought Bandos in The Bird and the Beast on RuneScape 3.",
+    status: "Alive. Fought Bandos in The Bird and the Beast on RuneScape.",
     summary:
       "Armadyl is a winged god from Abbinah. Kree'arra holds the Eyrie.",
     osrs:
       "Old School fights Kree'arra in the God Wars Dungeon. The Staff of Armadyl appears in Temple of Ikov. There is no Bird and the Beast world event in that client.",
     rs3:
-      "RuneScape 3 returned him after the Edicts. He killed Bandos in The Bird and the Beast. The Empyrean Citadel is the Armadyl still on this desk.",
+      "RuneScape returned him after the Edicts. He killed Bandos in The Bird and the Beast. The Empyrean Citadel is the Armadyl still on this desk.",
     notes: [
       "The Staff is the Siphon, one of twelve Elder Artefacts.",
       "Justice is the published theme. He is not an Elder God.",
     ],
     play: [
       "Banner: Empyrean Citadel.",
-      "Old School fight: Kree'arra. RuneScape 3: the same dungeon plus the citadel.",
+      "Old School fight: Kree'arra. RuneScape: the same dungeon plus the citadel.",
     ],
     source: "RuneScape Wiki: Armadyl, Empyrean Citadel, The Bird and the Beast.",
     wikiOsrs: "https://oldschool.runescape.wiki/w/Armadyl",
@@ -178,14 +178,14 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     osrs:
       "Old School still treats Bandos as a living God Wars faction. Graardor is the commander. Goblin Village argues mail colour. Lovakengj sits on this colour in Great Kourend.",
     rs3:
-      "RuneScape 3 ends his life in The Bird and the Beast. The Mighty Fall is the aftermath. Do not write that death onto an Old School card.",
+      "RuneScape ends his life in The Bird and the Beast. The Mighty Fall is the aftermath. Do not write that death onto an Old School card.",
     notes: [
       "Big High War God is the goblin name in quest text.",
       "Old School still treats Bandos as a living God Wars faction.",
     ],
     play: [
       "Banner: Goblin Village, Burthorpe, Lovakengj.",
-      "Old School fight: Graardor. RuneScape 3: Graardor plus Mazcab raids.",
+      "Old School fight: Graardor. RuneScape: Graardor plus Mazcab raids.",
     ],
     source: "RuneScape Wiki: Bandos, Goblin Village, The Bird and the Beast.",
     wikiOsrs: "https://oldschool.runescape.wiki/w/Bandos",
@@ -195,13 +195,13 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     god: "Seren",
     title: "Goddess of the elves",
     domain: "Crystal, harmony, and Tirannwn",
-    status: "Restored in RuneScape 3. Present in Old School Prifddinas.",
+    status: "Restored in RuneScape. Present in Old School Prifddinas.",
     summary:
       "Seren is crystal light. She led the elves to Tirannwn and built Prifddinas.",
     osrs:
       "Old School restores the city through Song of the Elves. Voice of Seren is not an Old School hour flip on this desk. The crystal city is post-SotE geography only.",
     rs3:
-      "RuneScape 3 restores Seren after she shattered herself rather than leave under the Edicts. Voice of Seren flips on the UTC hour in the clan districts. Fate of the Gods is her RS3 record with Zaros.",
+      "RuneScape restores Seren after she shattered herself rather than leave under the Edicts. Voice of Seren flips on the UTC hour in the clan districts. Fate of the Gods is her RS3 record with Zaros.",
     notes: [
       "Clan crystals are pieces of her city.",
       "Transcendent-tier in published rankings. Not an Elder God.",
@@ -218,20 +218,20 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     god: "Zaros",
     title: "Empty Lord",
     domain: "Control, fate, and the Second Age empire",
-    status: "Returned in RuneScape 3 (Fate of the Gods). Not a walking god in Old School.",
+    status: "Returned in RuneScape (Fate of the Gods). Not a walking god in Old School.",
     summary:
       "Zaros built Senntisten in the Second Age. Zamorak struck him with the Staff of Armadyl.",
     osrs:
       "Old School has Zarosian prayers, Nex, and Desert Treasure II. He does not walk the world. Fate of the Gods is not that client.",
     rs3:
-      "RuneScape 3 returns him in Fate of the Gods. Telos, Angel of Death, and Senntisten sit on this colour.",
+      "RuneScape returns him in Fate of the Gods. Telos, Angel of Death, and Senntisten sit on this colour.",
     notes: [
       "Nex and Azzanadra are published Zarosian champions.",
       "Old School has Zarosian prayers and archaeology, not Fate of the Gods.",
     ],
     play: [
       "Banner: Senntisten, War's Retreat, Heart of Gielinor.",
-      "Old School fight: Nex, Olm, DT2. RuneScape 3: Telos, AoD, Croesus.",
+      "Old School fight: Nex, Olm, DT2. RuneScape: Telos, AoD, Croesus.",
     ],
     source: "RuneScape Wiki: Zaros, Senntisten, Fate of the Gods.",
     wikiOsrs: "https://oldschool.runescape.wiki/w/Zaros",
@@ -247,14 +247,14 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     osrs:
       "Old School has no Sliske raid and no walking Sliske. Do not put him on an OSRS town card as a local god.",
     rs3:
-      "RuneScape 3: he took the Staff of Armadyl, killed Guthix, and ran the Heart contest. Sliske's Endgame ends that plot. Gregorovic and the City of Um sit here.",
+      "RuneScape: he took the Staff of Armadyl, killed Guthix, and ran the Heart contest. Sliske's Endgame ends that plot. Gregorovic and the City of Um sit here.",
     notes: [
       "Killing Guthix did not make him an Elder God.",
       "Gregorovic and the City of Um sit on this colour here.",
     ],
     play: [
       "Banner: Heart of Gielinor, City of Um, Sanctum of Rebirth.",
-      "RuneScape 3 fight: Rasial, Gregorovic. Old School has no Sliske raid.",
+      "RuneScape fight: Rasial, Gregorovic. Old School has no Sliske raid.",
     ],
     source: "RuneScape Wiki: Sliske, The World Wakes, Sliske's Endgame.",
     wikiOsrs: "https://oldschool.runescape.wiki/w/Sliske",
@@ -270,14 +270,14 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     osrs:
       "Old School: Al Kharid, Sophanem, Tombs of Amascut, Kalphite Queen. No Sixth Age Menaphos district plot required to banner the desert.",
     rs3:
-      "RuneScape 3: Menaphos names him. Kalphite King is the RS3 desert fight on this colour. Do not invent a God Wars seat for him.",
+      "RuneScape: Menaphos names him. Kalphite King is the RS3 desert fight on this colour. Do not invent a God Wars seat for him.",
     notes: [
       "Al Kharid, Menaphos, and Civitas Fortis sit on this colour here.",
       "Kalphite King and Queen are desert fights, not church rites.",
     ],
     play: [
       "Banner: Al Kharid, Menaphos, Fortis.",
-      "Old School fight: Tombs of Amascut, Kalphite Queen. RuneScape 3: Menaphos, Kalphite King.",
+      "Old School fight: Tombs of Amascut, Kalphite Queen. RuneScape: Menaphos, Kalphite King.",
     ],
     source: "RuneScape Wiki: Tumeken, Menaphos, Menaphite Pantheon.",
     wikiOsrs: "https://oldschool.runescape.wiki/w/Tumeken",
@@ -293,7 +293,7 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     osrs:
       "Old School Sophanem keeps funerary rites. Menaphos’s gates stay shut. Short record. Do not pad with RS3 district plot.",
     rs3:
-      "RuneScape 3 desert quests keep her beside Icthlarin. Sophanem and the river are the stills.",
+      "RuneScape desert quests keep her beside Icthlarin. Sophanem and the river are the stills.",
     notes: [
       "The River Elid is named for her.",
       "Sophanem's plague and pyramids sit in both desert questlines.",
@@ -316,7 +316,7 @@ export const GOD_BRIEFS: Record<God, GodBrief> = {
     osrs:
       "Old School reaches the island through Monkey Madness. Temple of Marimbo stands in Marim. She is not a God Wars four.",
     rs3:
-      "RuneScape 3 keeps the same island record. Do not invent a Sixth Age war for her.",
+      "RuneScape keeps the same island record. Do not invent a Sixth Age war for her.",
     notes: [
       "Temple of Marimbo stands in Marim.",
       "Stay inside that short record. Do not invent a Sixth Age war for her.",

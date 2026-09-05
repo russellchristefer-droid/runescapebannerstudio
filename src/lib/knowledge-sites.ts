@@ -16,7 +16,7 @@ export const KNOWLEDGE_SITES: KnowledgeSite[] = [
     name: "RuneScape Wiki",
     href: "https://runescape.wiki/",
     edition: "RS3",
-    use: "Same job for RuneScape 3. Rotations, relics, and patch notes live here first.",
+    use: "Same job for RuneScape. Rotations, relics, and patch notes live here first.",
   },
   {
     name: "Official Old School",
@@ -76,6 +76,6 @@ export const KNOWLEDGE_SITES: KnowledgeSite[] = [
     name: "r/runescape",
     href: "https://www.reddit.com/r/runescape/",
     edition: "RS3",
-    use: "Same for RuneScape 3.",
+    use: "Same for RuneScape.",
   },
 ];

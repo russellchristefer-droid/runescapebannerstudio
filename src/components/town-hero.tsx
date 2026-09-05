@@ -72,7 +72,7 @@ export function TownHero({
           [
             ["RSC", "Classic"],
             ["OSRS", "Old School"],
-            ["RS3", "RuneScape 3"],
+            ["RS3", "RuneScape"],
           ] as const
         ).map(([id, label]) => (
           <button

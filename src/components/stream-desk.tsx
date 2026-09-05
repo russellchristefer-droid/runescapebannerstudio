@@ -28,7 +28,7 @@ export function StreamDesk() {
         <h2 className="page-h1 m-0 text-left">Stream desk</h2>
         <p className="mt-2 max-w-3xl text-sm text-muted">
           This page does not go live for you. Encode in OBS or the official studio app. Capture the Jagex
-          client window, not the desktop. Category is Old School RuneScape or RuneScape — never “RuneScape 3”.
+          client window, not the desktop. Category is Old School RuneScape or RuneScape.
           Cut a kill on the clip bench above, then use the notes below to title, size, and start the stream.
         </p>
       </div>

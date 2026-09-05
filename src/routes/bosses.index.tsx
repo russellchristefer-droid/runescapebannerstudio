@@ -50,7 +50,7 @@ function BossIndex() {
           </PlaceGrid>
         </section>
         <section>
-          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">RuneScape 3</h2>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">RuneScape</h2>
           <PlaceGrid>
             {rs3.map((note) => {
               const loc = LOCATIONS.find((item) => item.id === note.id);
@@ -62,7 +62,7 @@ function BossIndex() {
                   src={loc?.viewA}
                   name={note.title}
                   kind="Boss"
-                  game="RuneScape 3"
+                  game="RuneScape"
                 />
               );
             })}

@@ -23,7 +23,7 @@ function GodsIndex() {
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Gods</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          Two sealed canons. Old School RuneScape first, then RuneScape 3. Not a Jagex page.
+          Two sealed canons. Old School RuneScape first, then RuneScape. Not a Jagex page.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
@@ -46,7 +46,7 @@ function GodsIndex() {
           </PlaceGrid>
         </section>
         <section>
-          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">RuneScape 3</h2>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">RuneScape</h2>
           <PlaceGrid>
             {GODS.map((god) => (
               <PlaceCard
@@ -56,7 +56,7 @@ function GodsIndex() {
                 src={stillFor(god, "RS3")}
                 name={GOD_BRIEFS[god].god}
                 kind="God"
-                game="RuneScape 3"
+                game="RuneScape"
               />
             ))}
           </PlaceGrid>

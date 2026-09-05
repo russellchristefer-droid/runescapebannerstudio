@@ -10,7 +10,7 @@ function SenntistenLedger() {
   return (
     <LedgerSheet
       title="Senntisten ledger"
-      deck="RuneScape 3 · methods only. Official wiki wins on the hour."
+      deck="RuneScape · methods only. Official wiki wins on the hour."
       game={RS3_LEDGER.game}
       wiki={RS3_LEDGER.wiki}
       f2p={RS3_LEDGER.f2p}

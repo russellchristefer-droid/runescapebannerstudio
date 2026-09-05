@@ -16,7 +16,6 @@ import {
   migrateBannerSizeId,
   GODS,
   LOCATIONS,
-  hasViewB,
   skyLabels,
   stillAllowed,
   townPlateSrc,
@@ -1049,7 +1048,7 @@ export function Studio() {
               }}
               className={`min-h-11 rounded-md border px-3 text-xs ${edition === item ? "border-parchment bg-raised" : "border-line"}`}
             >
-              {item === "RS3" ? "RuneScape 3" : "Old School RuneScape"}
+              {item === "RS3" ? "RuneScape" : "Old School RuneScape"}
             </button>
           ))}
         </div>
@@ -1488,31 +1487,6 @@ export function Studio() {
         <span className="rs-plate-probe" aria-hidden="true">
           CHRISTEFER
         </span>
-        <div className="mt-2 flex flex-wrap justify-center gap-1 px-2 py-2" style={{ background: "#1a1610" }}>
-          <button
-            type="button"
-            className={`h-7 rounded-md border px-2 text-[10px] ${view === "a" ? "border-parchment" : "border-line"}`}
-            onClick={() => {
-              setView("a");
-              setViewLocked(true);
-            }}
-          >
-            View A
-          </button>
-          <button
-            type="button"
-            disabled={!hasViewB(location)}
-            title={hasViewB(location) ? location.viewBLabel : "Only one view of this place"}
-            className={`h-7 rounded-md border px-2 text-[10px] disabled:opacity-40 ${view === "b" ? "border-parchment" : "border-line"}`}
-            onClick={() => {
-              if (!hasViewB(location)) return;
-              setView("b");
-              setViewLocked(true);
-            }}
-          >
-            View B
-          </button>
-        </div>
         {LOCATIONS.some((row) => row.name === location.name && row.edition !== location.edition && row.kind === location.kind) ? (
           <p className="mt-1 text-center text-[10px]">
             <button
@@ -1650,7 +1624,7 @@ export function Studio() {
                   }}
                   className={`h-7 rounded-md border px-2 text-[10px] ${skillPack === pack ? "border-parchment bg-[#241e16]" : "border-line"}`}
                 >
-                  {pack === "OSRS" ? "Old School" : "RuneScape 3"}
+                  {pack === "OSRS" ? "Old School" : "RuneScape"}
                 </button>
               ))}
               {(["name", "bottom", "top"] as const).map((id) => (

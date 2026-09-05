@@ -19,7 +19,7 @@ function StillPage() {
         <h1 className="page-h1 mt-1">Still</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted">
           One hosted photograph at a time from official wiki File pages.
-          Classic, Old School, and RuneScape 3. Places and people.
+          Classic, Old School, and RuneScape. Places and people.
           Same picture for everyone on the UTC five-minute mark.
           Identification only. Not a Jagex product.
         </p>

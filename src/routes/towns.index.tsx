@@ -45,7 +45,7 @@ function TownIndex() {
           </PlaceGrid>
         </section>
         <section>
-          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">RuneScape 3</h2>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">RuneScape</h2>
           <PlaceGrid>
             {rs3.map((loc) => (
               <PlaceCard
@@ -55,7 +55,7 @@ function TownIndex() {
                 src={loc.viewA}
                 name={loc.name}
                 kind="Town"
-                game="RuneScape 3"
+                game="RuneScape"
                 god={loc.god}
               />
             ))}

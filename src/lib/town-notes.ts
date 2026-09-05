@@ -8,7 +8,7 @@ export type TownNote = {
 const SHARED: Record<string, TownNote> = {
   lumbridge: {
     title: "Lumbridge",
-    region: "Misthalin · RuneScape 3",
+    region: "Misthalin · RuneScape",
     lore: [
       "Duke Horacio holds Lumbridge on the River Lum. Saradomin’s church and the castle mark the duchy.",
       "The Battle of Lumbridge tore the meadow when Zamorak and Saradomin made landfall. The crater and the rebuilt walls are part of that wound.",
@@ -74,7 +74,7 @@ const SHARED: Record<string, TownNote> = {
       "A still of Prifddinas is a clock-face, not a souvenir.",
     ],
     history: [
-      "RuneScape 3 Prifddinas is the restored clan city of the later age, with Voice of Seren as civic pulse.",
+      "RuneScape Prifddinas is the restored clan city of the later age, with Voice of Seren as civic pulse.",
       "It is not the Song of the Elves street plan copied from Old School.",
       "Elder-war and crystal-city plot belong on this slug only.",
       "The RuneScape wiki keeps which hour the city is in.",
@@ -377,7 +377,7 @@ const OSRS: Record<string, TownNote> = {
     ],
     history: [
       "Song of the Elves is the constitution of this city in Old School.",
-      "It is not the RuneScape 3 clan-district clock.",
+      "It is not the RuneScape clan-district clock.",
       "No Sixth Age weather is current here.",
       "The Old School wiki keeps the hour.",
     ],

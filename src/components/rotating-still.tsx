@@ -14,7 +14,7 @@ import { useEggGestures } from "@/hooks/use-egg-gestures";
 const FILTERS: { id: HeroFilter; label: string }[] = [
   { id: "rsc", label: "Classic" },
   { id: "osrs", label: "Old School" },
-  { id: "rs3", label: "RuneScape 3" },
+  { id: "rs3", label: "RuneScape" },
 ];
 
 export function RotatingStill({

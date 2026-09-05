@@ -186,7 +186,7 @@ export function HiscoresLookup({
               edition === "RS3" ? "border-parchment bg-raised" : "border-line hover:bg-white/[0.08]"
             }`}
           >
-            RuneScape™ 3
+            RuneScape™
           </button>
         </div>
       </form>
