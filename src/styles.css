@@ -1,10 +1,8 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "RuneScape UF";
-  src: url("/fonts/runescape-uf.ttf") format("truetype");
-  font-weight: 400 700;
-  font-style: normal;
+  font-family: "RS Chat Bold";
+  src: url("/fonts/rs-chat-bold.ttf") format("truetype");
   font-display: block;
 }
 
@@ -14,7 +12,7 @@
   height: 1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
-  font-family: "RuneScape UF";
+  font-family: "RS Chat Bold";
   font-weight: 700;
   pointer-events: none;
 }

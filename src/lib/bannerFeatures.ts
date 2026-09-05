@@ -121,7 +121,7 @@ export function drawSafeZoneGhosts(
 ) {
   ctx.save();
   ctx.setLineDash([7, 5]);
-  ctx.font = `${Math.max(12, h * 0.04)}px "Source Sans 3", sans-serif`;
+  ctx.font = `${Math.max(12, h * 0.04)}px "RS Chat Bold"`;
   ctx.textBaseline = "top";
   for (const r of safeZoneRects(zone)) {
     const x = r.x * w;

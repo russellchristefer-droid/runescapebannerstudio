@@ -16,8 +16,8 @@ type PaintCtx = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 export const TEXT_HD = 2;
 const RS_YELLOW = "#ffff00";
 const RS_INK = "#000000";
-const FACE = "RuneScape UF";
-const FACE_URL = "/fonts/runescape-uf.ttf";
+const FACE = "RS Chat Bold";
+const FACE_URL = "/fonts/rs-chat-bold.ttf";
 let plateFontReady = false;
 let plateFontTried = false;
 
@@ -32,16 +32,21 @@ export async function ensurePlateFont() {
   plateFontTried = true;
   try {
     const head = await fetch(FACE_URL, { method: "GET", cache: "force-cache" });
-    if (!head.ok) throw new Error("UF font missing — /fonts/runescape-uf.ttf is not 200");
+    if (!head.ok) throw new Error("Chat Bold missing — /fonts/rs-chat-bold.ttf is not 200");
+    const buf = await head.arrayBuffer();
+    if (buf.byteLength < 1000) throw new Error("Chat Bold missing — /fonts/rs-chat-bold.ttf is not 200");
     if ("FontFace" in window) {
-      const face = new FontFace(FACE, `url("${FACE_URL}")`, { weight: "400", style: "normal" });
-      const loaded = await face.load();
-      document.fonts.add(loaded);
+      for (const weight of ["400", "700"] as const) {
+        const face = new FontFace(FACE, buf, { weight, style: "normal" });
+        document.fonts.add(await face.load());
+      }
     }
     await document.fonts.load(`400 42px "${FACE}"`);
-    await document.fonts.load(`700 42px "${FACE}"`);
-    plateFontReady = document.fonts.check(`16px "${FACE}"`) || document.fonts.check(`42px "${FACE}"`);
-    if (!plateFontReady) throw new Error("UF font missing — /fonts/runescape-uf.ttf is not 200");
+    await document.fonts.load('700 42px "RS Chat Bold"');
+    if (!document.fonts.check('700 42px "RS Chat Bold"')) {
+      throw new Error("RS Chat Bold not loaded");
+    }
+    plateFontReady = true;
     return true;
   } catch {
     plateFontReady = false;
@@ -58,12 +63,12 @@ function paintRSYellow(
   color = RS_YELLOW,
 ) {
   ctx.save();
-  ctx.font = `700 ${Math.round(size)}px "${FACE}"`;
+  ctx.font = `700 ${Math.round(size)}px "RS Chat Bold"`;
   ctx.textBaseline = "top";
   ctx.imageSmoothingEnabled = false;
-  ctx.lineJoin = "miter";
+  ctx.lineJoin = "round";
   ctx.lineWidth = Math.max(3, size * 0.1);
-  ctx.strokeStyle = RS_INK;
+  ctx.strokeStyle = "#000";
   ctx.strokeText(text, x, y);
   ctx.fillStyle = color;
   ctx.fillText(text, x, y);
@@ -245,7 +250,7 @@ function drawIdentityPlate(
   if (clan) lines.push({ id: "clan", text: cap(clan), size: Math.round(chip.name * 0.42) });
   if (handle) lines.push({ id: "handle", text: cap(handle), size: Math.round(chip.name * 0.36) });
   if (tagline) {
-    ctx.font = `800 13px ${plateFont}`;
+    ctx.font = `700 13px ${plateFont}`;
     const wrapped = wrapText(ctx, tagline, textMax).slice(0, 2);
     if (wrapText(ctx, tagline, textMax).length > 2 && wrapped[1]) {
       wrapped[1] = `${wrapped[1].replace(/…$/, "")}…`;
@@ -281,7 +286,7 @@ function drawIdentityPlate(
     const inset = chip.pad;
     const x = pos ? pos.x + 4 : layout === "title-card" ? Math.round(options.width / 2) : inset;
     const yy = pos ? pos.y + size : y;
-    ctx.font = `800 ${size}px ${plateFont}`;
+    ctx.font = `700 ${size}px ${plateFont}`;
     fitYellow(ctx, line.text, x, yy, size, textMax, plateFont, "800", color, "chat");
     boxes.push({ id: line.id, x: x - 4, y: yy - size, w: textMax, h: size + 8 });
     y = yy + size + 8;

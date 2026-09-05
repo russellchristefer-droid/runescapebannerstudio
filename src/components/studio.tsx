@@ -1504,7 +1504,7 @@ export function Studio() {
           {location.name} · {size.width}×{size.height} JPEG · {size.note}
         </p>
         {plateFontOk ? null : (
-          <p className="mt-1 text-center text-[10px] text-[#c07050]">Font file missing</p>
+          <p className="mt-1 text-center text-[10px] text-[#c07050]">Chat Bold missing</p>
         )}
         <span className="rs-plate-probe" aria-hidden="true">
           CHRISTEFER

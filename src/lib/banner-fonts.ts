@@ -3,19 +3,19 @@ export const BANNER_FONTS = [
     id: "chat",
     name: "Chat",
     note: "RS3 public chat yellow",
-    stack: "'Source Sans 3', Arial, sans-serif",
+    stack: '"RS Chat Bold"',
   },
   {
     id: "bold",
     name: "Bold",
     note: "RS3 interface and level-up",
-    stack: "'Source Sans 3', Arial, sans-serif",
+    stack: '"RS Chat Bold"',
   },
   {
     id: "quill",
     name: "Quill",
     note: "Books and Old School dialogue",
-    stack: "Fondamento, 'Times New Roman', serif",
+    stack: '"RS Chat Bold"',
   },
 ] as const;
 

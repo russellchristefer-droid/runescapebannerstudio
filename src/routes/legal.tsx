@@ -62,8 +62,8 @@ function LegalPage() {
           <h2 className="mb-2 font-semibold text-parchment">Stills and icons</h2>
           <p>
             In-game pictures and skill/mark icons are Jagex copyright. Some files also have wiki
-            file-page terms. This studio does not grant those rights. Plate type: RuneScape UF (fan
-            replica by Nathan P). Public domain / GPL / OFL. Not a Jagex font file.
+            file-page terms. This studio does not grant those rights. Plate type: RS Chat Bold (fan
+            replica of in-game chat bold). Not a Jagex font file. Not RuneScape UF.
           </p>
         </section>
         <section>
