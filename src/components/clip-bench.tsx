@@ -79,6 +79,44 @@ export function ClipBench() {
   const redoRef = useRef<typeof undoRef.current>([]);
   const holdRef = useRef<number | null>(null);
   const hidden = useRef(false);
+  const paintArgs = useRef({
+    overlay,
+    lowerThird,
+    ltText,
+    deskName,
+    inPoint,
+    outPoint,
+    ghost,
+    fadeIn,
+    fadeOut,
+    speed,
+    fps,
+    now,
+    rotate,
+    zoom,
+    opacity,
+    markId,
+    loop,
+  });
+  paintArgs.current = {
+    overlay,
+    lowerThird,
+    ltText,
+    deskName,
+    inPoint,
+    outPoint,
+    ghost,
+    fadeIn,
+    fadeOut,
+    speed,
+    fps,
+    now,
+    rotate,
+    zoom,
+    opacity,
+    markId,
+    loop,
+  };
 
   function pushUndo() {
     undoRef.current = [
@@ -171,6 +209,7 @@ export function ClipBench() {
   function paint(canvas: HTMLCanvasElement, video: HTMLVideoElement, ghosts: boolean, w = size.w, h = size.h) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const s = paintArgs.current;
     canvas.width = w;
     canvas.height = h;
     ctx.fillStyle = "#1a1612";
@@ -178,43 +217,43 @@ export function ClipBench() {
     if (video.readyState >= 2 && video.videoWidth) {
       ctx.save();
       ctx.translate(w / 2, h / 2);
-      ctx.rotate((rotate * Math.PI) / 180);
-      ctx.scale(zoom, zoom);
+      ctx.rotate((s.rotate * Math.PI) / 180);
+      ctx.scale(s.zoom, s.zoom);
       ctx.translate(-w / 2, -h / 2);
       const box = coverRect(video.videoWidth, video.videoHeight, w, h);
       ctx.drawImage(video, box.sx, box.sy, box.sw, box.sh, 0, 0, w, h);
       ctx.restore();
     }
-    const t = video.currentTime || now;
-    const fadeInSec = (fadeIn / Math.max(1, fps)) / Math.max(0.25, speed);
-    const fadeOutSec = (fadeOut / Math.max(1, fps)) / Math.max(0.25, speed);
+    const t = video.currentTime || s.now;
+    const fadeInSec = (s.fadeIn / Math.max(1, s.fps)) / Math.max(0.25, s.speed);
+    const fadeOutSec = (s.fadeOut / Math.max(1, s.fps)) / Math.max(0.25, s.speed);
     let fade = 1;
-    if (fadeInSec > 0 && t < inPoint + fadeInSec) fade = Math.max(0, (t - inPoint) / fadeInSec);
-    if (fadeOutSec > 0 && t > outPoint - fadeOutSec) fade = Math.min(fade, Math.max(0, (outPoint - t) / fadeOutSec));
+    if (fadeInSec > 0 && t < s.inPoint + fadeInSec) fade = Math.max(0, (t - s.inPoint) / fadeInSec);
+    if (fadeOutSec > 0 && t > s.outPoint - fadeOutSec) fade = Math.min(fade, Math.max(0, (s.outPoint - t) / fadeOutSec));
     if (fade < 1) {
       ctx.fillStyle = `rgba(0,0,0,${1 - fade})`;
       ctx.fillRect(0, 0, w, h);
     }
-    if (overlay !== "off" && bannerImg.current) {
-      const barH = Math.round(h * (overlay === "top" ? 0.2 : 0.22));
-      const y = overlay === "top" ? 0 : h - barH;
+    if (s.overlay !== "off" && bannerImg.current) {
+      const barH = Math.round(h * (s.overlay === "top" ? 0.2 : 0.22));
+      const y = s.overlay === "top" ? 0 : h - barH;
       ctx.save();
-      ctx.globalAlpha = Math.min(1, Math.max(0.6, opacity / 100));
+      ctx.globalAlpha = Math.min(1, Math.max(0.6, s.opacity / 100));
       ctx.drawImage(bannerImg.current, 0, y, w, barH);
       ctx.restore();
     }
-    if (lowerThird) {
-      const line = sanitizeLine(ltText, 24) || sanitizeDisplayName(deskName);
+    if (s.lowerThird) {
+      const line = sanitizeLine(s.ltText, 24) || sanitizeDisplayName(s.deskName);
       const nameSize = 28;
       const nameY = Math.round(h * 0.82);
       if (line) paintRSYellow(ctx, line, 36, nameY, nameSize);
     }
-    const mark = CLIP_MARKS.find((item) => item.id === markId && item.id !== "none");
+    const mark = CLIP_MARKS.find((item) => item.id === s.markId && item.id !== "none");
     if (mark?.src) {
       const img = markCache.current[mark.src];
       if (img) ctx.drawImage(img, 36, Math.round(h * 0.72), Math.round(h * 0.08), Math.round(h * 0.08));
     }
-    if (ghosts && ghost !== "none") drawSafeZoneGhosts(ctx, w, h, ghost);
+    if (ghosts && s.ghost !== "none") drawSafeZoneGhosts(ctx, w, h, s.ghost);
     if (ghosts && aspect === "9x16" && w / h > 1) {
       const cropW = h * (9 / 16);
       const x = (w - cropW) / 2;
@@ -235,10 +274,11 @@ export function ClipBench() {
       }
       const video = videoRef.current;
       const canvas = canvasRef.current;
+      const s = paintArgs.current;
       if (video && canvas) {
         setNow(video.currentTime);
-        if (loop && outPoint > inPoint && video.currentTime >= outPoint - 0.04) {
-          video.currentTime = inPoint;
+        if (s.loop && s.outPoint > s.inPoint && video.currentTime >= s.outPoint - 0.04) {
+          video.currentTime = s.inPoint;
         }
         paint(canvas, video, true);
       }
@@ -256,7 +296,11 @@ export function ClipBench() {
       if (rvfc?.cancelVideoFrameCallback) rvfc.cancelVideoFrameCallback(id);
       else window.cancelAnimationFrame(id);
     };
-  }, [aspect, overlay, lowerThird, ltText, deskName, edition, loop, inPoint, outPoint, ghost, size.w, size.h, opacity, markId, fadeIn, fadeOut, speed, fps, now, rotate, zoom]);
+  }, [hasClip, size.w, size.h]);
+
+  useEffect(() => {
+    saveEditPrefs(aspect, overlay);
+  }, [aspect, overlay]);
 
   function useDeskBanner() {
     const saved = loadStudioSave();
@@ -320,7 +364,8 @@ export function ClipBench() {
   }
 
   function takeVideo(file: File) {
-    if (!file.type.startsWith("video/")) {
+    const looksVideo = file.type.startsWith("video/") || /\.(mp4|webm|mov|m4v|mkv)$/i.test(file.name);
+    if (!looksVideo) {
       setStatus("Could not read that file.");
       return;
     }
@@ -777,21 +822,26 @@ export function ClipBench() {
           <span>{timecode(now)}</span>
           <span>{duration ? timecode(Math.max(0, duration - now)) : "00:00.00"}</span>
         </div>
-        <div className="mt-2 grid grid-cols-3 gap-2">
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40" onClick={markIn}>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <button type="button" disabled={!hasClip} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40" onClick={markIn}>
             In
           </button>
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40" onClick={markOut}>
+          <button type="button" disabled={!hasClip} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40" onClick={markOut}>
             Out
           </button>
           <button
             type="button"
             disabled={busy || !hasClip}
             onClick={() => void exportClip(false)}
-            className="min-h-11 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40"
+            className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40"
           >
             {busy ? "Making clip…" : "Save clip"}
           </button>
+          {busy ? (
+            <button type="button" className="min-h-11 min-w-[5rem] rounded-md border border-line text-xs text-muted" onClick={cancelExport}>
+              Cancel
+            </button>
+          ) : null}
         </div>
         <div className="mt-2 flex flex-wrap gap-1">
           <button type="button" disabled={!hasClip} className="h-9 rounded-md border border-line px-2 text-[10px] text-muted disabled:opacity-40" onClick={splitAtPlayhead}>
@@ -799,6 +849,9 @@ export function ClipBench() {
           </button>
           <button type="button" disabled={!hasClip} className="h-9 rounded-md border border-line px-2 text-[10px] text-muted disabled:opacity-40" onClick={deleteRegion}>
             Delete region
+          </button>
+          <button type="button" className="h-9 rounded-md border border-line px-2 text-[10px] text-muted" onClick={undo}>
+            Undo
           </button>
           <button type="button" className={`h-9 rounded-md border px-2 text-[10px] ${snapOn ? "border-parchment" : "border-line"}`} onClick={() => setSnapOn((v) => !v)}>
             Snap seconds
