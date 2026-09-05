@@ -3,6 +3,7 @@ import { loadStudioSave } from "@/lib/studio-save";
 import { sanitizeClan, sanitizeDisplayName, sanitizeWorld, worldLabel } from "@/lib/rsText";
 import { LOCATIONS } from "@/lib/locations";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
+import { paintRSYellow } from "@/lib/draw-banner";
 import {
   CLIP_ASPECTS,
   CLIP_MARKS,
@@ -76,6 +77,8 @@ export function ClipBench() {
   const [clan, setClan] = useState("");
   const [world, setWorld] = useState("");
   const [markId, setMarkId] = useState("none");
+  const [ltOn, setLtOn] = useState(false);
+  const [ltText, setLtText] = useState("");
   const [moreOpen, setMoreOpen] = useState(false);
   const [lastFile, setLastFile] = useState<File | null>(null);
   const [canShareFile, setCanShareFile] = useState(false);
@@ -119,6 +122,8 @@ export function ClipBench() {
     markId,
     loop,
     aspect,
+    ltOn,
+    ltText,
   });
   paintArgs.current = {
     overlay,
@@ -136,6 +141,8 @@ export function ClipBench() {
     markId,
     loop,
     aspect,
+    ltOn,
+    ltText,
   };
 
   const size = CLIP_ASPECTS[aspect];
@@ -159,6 +166,7 @@ export function ClipBench() {
     if (saved.edition === "RS3" || saved.edition === "OSRS") setEdition(saved.edition);
     setName(sanitizeDisplayName(saved.streamer ?? ""));
     setClan(sanitizeClan(saved.clan ?? ""));
+    setLtText(sanitizeDisplayName(saved.streamer ?? ""));
     return () => {
       releaseVideo(videoRef.current, objectUrl.current);
       objectUrl.current = null;
@@ -179,7 +187,10 @@ export function ClipBench() {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (video) video.playbackRate = speed;
+    if (video) {
+      video.playbackRate = speed;
+      video.muted = muted;
+    }
     applyLiveGain(video?.currentTime ?? now);
   }, [muted, gainPct, speed, fadeIn, fadeOut, inPoint, outPoint, fps]);
 
@@ -262,6 +273,10 @@ export function ClipBench() {
     if (mark?.src) {
       const img = markCache.current[mark.src];
       if (img) ctx.drawImage(img, 36, Math.round(h * 0.72), Math.round(h * 0.08), Math.round(h * 0.08));
+    }
+    if (s.ltOn) {
+      const line = sanitizeDisplayName(s.ltText || "").slice(0, 24);
+      if (line) paintRSYellow(ctx, line, 36, h - Math.round(h * 0.12), Math.max(18, Math.round(h * 0.045)));
     }
     if (ghosts && s.ghost !== "none") drawSafeZoneGhosts(ctx, w, h, s.ghost);
     if (ghosts && s.aspect === "9x16" && w / h > 1) {
@@ -523,10 +538,8 @@ export function ClipBench() {
   }
 
   function snapValue(t: number) {
-    const framed = snapTime(t, fps);
-    if (!snapOn) return framed;
-    const windowSec = frameStep(fps) * 3;
-    return snapToPoints(framed, [0, duration, inPoint, outPoint, ...markers], windowSec);
+    if (snapOn) return Math.max(0, Math.min(duration || t, Math.round(t)));
+    return snapTime(t, fps || 30);
   }
 
   function seek(next: number) {
@@ -577,16 +590,27 @@ export function ClipBench() {
 
   function splitAtPlayhead() {
     pushUndo();
-    const t = snapTime(now, fps);
-    if (t - inPoint <= outPoint - t) setInPoint(Math.min(t, outPoint - frameStep(fps)));
-    else setOutPoint(Math.max(t, inPoint + frameStep(fps)));
+    const t = Math.max(0, Math.min(duration, snapTime(now, fps || 30)));
+    setOutPoint(Math.max(inPoint + (1 / (fps || 30)), t));
   }
 
   function deleteRegion() {
     pushUndo();
-    const t = snapTime(now, fps);
-    if (now - inPoint < outPoint - now) setInPoint(Math.min(outPoint - frameStep(fps), t));
-    else setOutPoint(Math.max(inPoint + frameStep(fps), t));
+    setInPoint(0);
+    setOutPoint(duration);
+    setStatus("In and Out cleared.");
+  }
+
+  function snapSeconds() {
+    const t = Math.round(now);
+    seek(t);
+    setSnapOn(true);
+  }
+
+  function fadeHalf() {
+    const frames = Math.max(1, Math.round((fps || 30) * 0.5));
+    setFadeIn(frames);
+    setFadeOut(frames);
   }
 
   function undo() {
@@ -670,56 +694,71 @@ export function ClipBench() {
 
   async function recordOnce(w: number, h: number) {
     const video = videoRef.current;
-    if (!video || !duration) throw new Error("empty");
+    if (!video?.src || !Number.isFinite(video.duration)) throw new Error("empty");
     const mime = clipMime();
-    if (!mime) throw new Error("mime");
+    if (typeof MediaRecorder === "undefined") throw new Error("mime");
+    const inT = Math.max(0, Math.min(inPoint, video.duration - 0.05));
+    const outT = Math.max(inT + 0.05, Math.min(outPoint || video.duration, video.duration));
     const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
+    canvas.style.position = "fixed";
+    canvas.style.left = "-9999px";
+    document.body.appendChild(canvas);
     const ctxTick = () => {
       paint(canvas, video, false, w, h);
       applyLiveGain(video.currentTime);
     };
-    video.muted = false;
-    video.volume = 1;
-    video.playbackRate = speed;
-    applyLiveGain(inPoint);
-    video.currentTime = inPoint;
+    video.muted = muted;
+    video.volume = muted ? 0 : 1;
+    video.playbackRate = speed === 1 ? 1 : speed;
+    video.currentTime = inT;
     await new Promise<void>((resolve) => {
       const ready = () => {
         video.removeEventListener("seeked", ready);
         resolve();
       };
       video.addEventListener("seeked", ready);
-      window.setTimeout(resolve, 400);
+      window.setTimeout(resolve, 500);
     });
-    await video.play().catch(() => undefined);
+    ctxTick();
     const recStream = canvas.captureStream(30);
     let mix: MediaStream = recStream;
     let audioOk = false;
     const processed = recDest.current?.stream.getAudioTracks() ?? [];
-    if (processed.length && !muted && speed === 1) {
-      mix = new MediaStream([...recStream.getVideoTracks(), ...processed]);
+    const capture =
+      (video as HTMLVideoElement & { captureStream?: () => MediaStream; mozCaptureStream?: () => MediaStream }).captureStream?.() ??
+      (video as HTMLVideoElement & { mozCaptureStream?: () => MediaStream }).mozCaptureStream?.();
+    const rawAudio = capture?.getAudioTracks() ?? [];
+    const audioTracks = processed.length ? processed : rawAudio;
+    if (audioTracks.length && !muted && speed === 1) {
+      mix = new MediaStream([...recStream.getVideoTracks(), ...audioTracks]);
       audioOk = true;
     }
     const chunks: BlobPart[] = [];
-    const recorder = new MediaRecorder(mix, { mimeType: mime });
+    let recorder: MediaRecorder;
+    try {
+      recorder = mime ? new MediaRecorder(mix, { mimeType: mime }) : new MediaRecorder(mix);
+    } catch {
+      canvas.remove();
+      throw new Error("mime");
+    }
     recorderRef.current = recorder;
     recorder.ondataavailable = (event) => {
       if (event.data.size) chunks.push(event.data);
     };
     const done = new Promise<Blob>((resolve, reject) => {
-      recorder.onstop = () => resolve(new Blob(chunks, { type: "video/webm" }));
+      recorder.onstop = () => resolve(new Blob(chunks, { type: recorder.mimeType || mime || "video/webm" }));
       recorder.onerror = () => reject(new Error("rec"));
     });
     recorder.start(200);
-    ctxTick();
+    await video.play().catch(() => undefined);
     await new Promise<void>((resolve) => {
       const watch = () => {
         ctxTick();
-        const spanOut = Math.max(0.05, outPoint - inPoint);
-        setExportPct(Math.min(100, Math.max(0, ((video.currentTime - inPoint) / spanOut) * 100)));
-        if (video.currentTime >= outPoint - 0.05 || video.ended || recorder.state === "inactive") {
+        const spanOut = Math.max(0.05, outT - inT);
+        setExportPct(Math.min(100, Math.max(0, ((video.currentTime - inT) / spanOut) * 100)));
+        if (video.currentTime >= outT - 0.04 || video.ended || recorder.state === "inactive") {
           video.pause();
           if (recorder.state !== "inactive") recorder.stop();
           resolve();
@@ -728,25 +767,36 @@ export function ClipBench() {
         window.requestAnimationFrame(watch);
       };
       watch();
+      window.setTimeout(() => {
+        video.pause();
+        if (recorder.state !== "inactive") recorder.stop();
+        resolve();
+      }, Math.min(120000, (outT - inT) * 1000 + 2000));
     });
     const blob = await done;
     recorderRef.current = null;
-    canvas.width = 1;
-    canvas.height = 1;
-    return { blob, audioOk };
+    canvas.remove();
+    if (blob.size < 64) throw new Error("empty-blob");
+    return { blob, audioOk, mime: recorder.mimeType || mime || "video/webm" };
   }
 
-  async function downloadBlob(blob: Blob, w: number, h: number) {
-    const fileName = clipFileName(edition, name, w, h);
-    const file = new File([blob], fileName, { type: blob.type || "video/webm" });
+  async function downloadBlob(blob: Blob, w: number, h: number, mime = blob.type) {
+    const fileName = clipFileName(edition, name, w, h, mime || "video/webm");
+    const file = new File([blob], fileName, { type: mime || blob.type || "video/webm" });
     setLastFile(file);
     setCanShareFile(Boolean(navigator.canShare?.({ files: [file] })));
     const href = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = href;
     a.download = fileName;
+    a.rel = "noopener";
+    a.style.display = "none";
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(href);
+    window.setTimeout(() => {
+      a.remove();
+      URL.revokeObjectURL(href);
+    }, 2500);
     return file;
   }
 
@@ -764,12 +814,13 @@ export function ClipBench() {
   }
 
   async function exportClip(pair = false) {
-    if (!hasClip) {
+    const video = videoRef.current;
+    if (!hasClip && !video?.src) {
       setStatus("Upload a clip first.");
       return;
     }
-    if (!clipMime()) {
-      setStatus("This browser cannot encode. Use Chrome or Edge.");
+    if (typeof MediaRecorder === "undefined") {
+      setStatus("This browser cannot export a clip.");
       return;
     }
     setBusy(true);
@@ -778,14 +829,17 @@ export function ClipBench() {
     try {
       const first = pair ? CLIP_ASPECTS["16x9-720"] : size;
       const one = await recordOnce(first.w, first.h);
-      await downloadBlob(one.blob, first.w, first.h);
+      await downloadBlob(one.blob, first.w, first.h, one.mime);
       if (pair) {
         const two = await recordOnce(1080, 1920);
-        await downloadBlob(two.blob, 1080, 1920);
+        await downloadBlob(two.blob, 1080, 1920, two.mime);
       }
       setStatus(one.audioOk ? "Clip saved on this device." : "Clip saved. No audio track in that file.");
-    } catch {
-      setStatus(clipMime() ? "Export stopped." : "This browser cannot encode. Use Chrome or Edge.");
+    } catch (err) {
+      const why = err instanceof Error ? err.message : "";
+      if (why === "mime") setStatus("This browser cannot export a clip.");
+      else if (why === "empty-blob") setStatus("Export wrote an empty file. Try Chrome or Edge.");
+      else setStatus("Export stopped.");
     } finally {
       setBusy(false);
       setExportPct(0);
@@ -838,7 +892,7 @@ export function ClipBench() {
         <div className="relative mx-auto w-full max-w-[960px] overflow-hidden bg-[#120f0c]" style={{ aspectRatio: "16 / 9" }}>
           {!hasClip ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
-              <p className="text-sm text-muted">{ready === "loading" ? "Reading clip…" : "Drop a kill clip here."}</p>
+              <p className="text-sm text-muted">{ready === "loading" ? "Reading clip…" : "No clip"}</p>
               <button
                 id="clip-upload"
                 type="button"
@@ -1052,17 +1106,55 @@ export function ClipBench() {
             Split
           </button>
           <button type="button" disabled={!hasClip} className={CHIP} onClick={deleteRegion}>
-            Delete range
+            Delete region
           </button>
-          <button type="button" className={CHIP} onClick={undo}>
-            Undo
+          <button type="button" disabled={!hasClip} className={snapOn ? CHIP_ON : CHIP} onClick={snapSeconds}>
+            Snap seconds
           </button>
-          <button type="button" className={snapOn ? CHIP_ON : CHIP} onClick={() => setSnapOn((v) => !v)}>
-            Snap
+          <button
+            type="button"
+            disabled={!hasClip}
+            className={CHIP}
+            onClick={() => {
+              pushUndo();
+              setRotate((v) => (v + 90) % 360);
+            }}
+          >
+            Rotate 90
+          </button>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => setZoom((v) => Math.min(2, +(v + 0.1).toFixed(2)))}>
+            Scale +
+          </button>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => setZoom((v) => Math.max(0.5, +(v - 0.1).toFixed(2)))}>
+            Scale −
+          </button>
+          <button type="button" className={fadeIn > 0 && fadeOut > 0 ? CHIP_ON : CHIP} onClick={fadeHalf}>
+            Fade 0.5s
           </button>
           <button type="button" className={loop ? CHIP_ON : CHIP} onClick={() => setLoop((v) => !v)}>
             Loop
           </button>
+          <button type="button" className={CHIP} onClick={undo}>
+            Undo
+          </button>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <button type="button" className={ltOn ? CHIP_ON : CHIP} onClick={() => setLtOn((v) => !v)}>
+            Lower third
+          </button>
+          <label className="inline-flex min-h-11 items-center gap-2 text-[11px] text-muted">
+            <span className="sr-only">Lower third text</span>
+            <input
+              value={ltText}
+              maxLength={24}
+              placeholder="Lower third"
+              spellCheck={false}
+              autoComplete="off"
+              className="min-h-11 w-40 rounded-md border border-[#c6a45a]/40 bg-[#120f0c] px-2 text-sm text-parchment"
+              onChange={(e) => setLtText(sanitizeDisplayName(e.target.value).slice(0, 24))}
+            />
+          </label>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -1132,7 +1224,7 @@ export function ClipBench() {
             <button type="button" className={CHIP} onClick={() => setZoom((v) => Math.min(2, +(v + 0.1).toFixed(2)))}>
               Scale +
             </button>
-            <button type="button" className={CHIP} onClick={() => setZoom((v) => Math.max(1, +(v - 0.1).toFixed(2)))}>
+            <button type="button" className={CHIP} onClick={() => setZoom((v) => Math.max(0.5, +(v - 0.1).toFixed(2)))}>
               Scale −
             </button>
             {([0.5, 1, 1.5, 2] as const).map((rate) => (

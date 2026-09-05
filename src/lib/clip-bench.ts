@@ -38,18 +38,24 @@ export const CLIP_CAPTIONS = [
 
 
 export function clipMime() {
+  if (typeof MediaRecorder === "undefined") return "";
   const types = [
     "video/webm;codecs=vp9,opus",
     "video/webm;codecs=vp8,opus",
     "video/webm",
+    "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+    "video/mp4",
   ];
-  if (typeof MediaRecorder === "undefined") return "";
   return types.find((type) => MediaRecorder.isTypeSupported(type)) ?? "";
 }
 
-export function clipFileName(edition: "OSRS" | "RS3", name: string, w: number, h: number) {
+export function clipExt(mime: string) {
+  return mime.includes("mp4") ? "mp4" : "webm";
+}
+
+export function clipFileName(edition: "OSRS" | "RS3", name: string, w: number, h: number, mime = "video/webm") {
   const game = edition === "OSRS" ? "osrs" : "rs3";
-  return `clip-${slugPart(sanitizeDisplayName(name) || "clip")}-${w}x${h}.webm`;
+  return `clip-${slugPart(sanitizeDisplayName(name) || "clip")}-${w}x${h}.${clipExt(mime)}`;
 }
 
 export function frameStep(fps: number) {
