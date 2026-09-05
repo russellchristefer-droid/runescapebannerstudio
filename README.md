@@ -1,5 +1,7 @@
 # RuneScape Banner Studio
 
+Hats: defensive only. Source backup is the private remote.
+
 Independent fan studio for **Twitch / YouTube / Discord** identification stills.
 Not a Jagex product. Not a game client. Not an official overlay.
 
