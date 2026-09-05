@@ -1,6 +1,6 @@
 # Hats (metaphor only)
 
-GitHub will not paint a word `Red` in red ink. These marks are the color.
+GitHub will not paint a word Red in red ink. These marks are the color.
 
 This origin does not scan, phish, or pop boxes.
 
