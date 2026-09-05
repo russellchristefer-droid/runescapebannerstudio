@@ -79,8 +79,9 @@ export function Studio() {
   });
   const [customSrc, setCustomSrc] = useState<string | null>(null);
   const [deskStillSrc, setDeskStillSrc] = useState<string | null>(() => {
-    const fromQuery = townPlateSrc(boot.locationId ?? saved.locationId ?? "falador");
-    return fromQuery ?? "/Falador.png";
+    const id = boot.locationId ?? saved.locationId ?? "falador";
+    const loc = LOCATIONS.find((row) => row.id === id);
+    return townPlateSrc(id) ?? loc?.viewA ?? "/Falador.png";
   });
   const [sceneReady, setSceneReady] = useState(true);
   const [skillPack, setSkillPack] = useState<"OSRS" | "RS3">(boot.edition ?? saved.skillPack ?? "RS3");
@@ -277,12 +278,13 @@ export function Studio() {
   }
 
   function applyStill(id: LocationId, nextView?: "a" | "b", src?: string) {
-    const plate = townPlateSrc(id);
-    if (!plate && !src) return;
-    const samePlace = id === locationId && !customSrc && !src;
+    const loc = LOCATIONS.find((item) => item.id === id);
+    const cardSrc = src || loc?.viewA || townPlateSrc(id);
+    if (!cardSrc) return;
+    const samePlace = id === locationId && !customSrc;
     if (!samePlace) clearStampsAndText();
     pickLocation(id);
-    setDeskStillSrc(plate || src || "/Falador.png");
+    setDeskStillSrc(cardSrc);
     setView(nextView ?? "a");
     setViewLocked(true);
     setCustomSrc((prev) => {
@@ -292,6 +294,7 @@ export function Studio() {
     setSceneReady(true);
     if (typeof document !== "undefined") {
       document.getElementById("desk")?.scrollIntoView({ block: "start", behavior: "smooth" });
+      canvasRef.current?.focus();
     }
   }
 
@@ -1071,10 +1074,10 @@ export function Studio() {
             const src = stillAllowed(raw, loc.edition) ? raw : loc.viewA;
             const lore = placeLore(loc);
             return (
-              <div key={loc.id} className="overflow-hidden rounded-md border border-line hover:border-[#F5C400]">
+              <div key={loc.id} className="overflow-hidden rounded-md border border-line hover:border-[#F5C400]" data-place-card data-slug={loc.id}>
                 <button
                   type="button"
-                  onClick={() => applyStill(loc.id)}
+                  onClick={() => applyStill(loc.id, "a", src)}
                   className="block w-full text-left"
                 >
                   <StillPhoto
@@ -1150,8 +1153,12 @@ export function Studio() {
             alt=""
             src={customSrc || deskStillSrc || location.viewA || "/Falador.png"}
             className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            onLoad={(e) => {
+              e.currentTarget.dataset.ok = e.currentTarget.currentSrc;
+            }}
             onError={(e) => {
-              if (!e.currentTarget.src.endsWith("Falador.png")) e.currentTarget.src = "/Falador.png";
+              const last = e.currentTarget.dataset.ok;
+              if (last && e.currentTarget.src !== last) e.currentTarget.src = last;
             }}
           />
           <canvas
@@ -1510,7 +1517,7 @@ export function Studio() {
                 );
                 if (!sister) return;
                 setSkillPack(sister.edition);
-                applyStill(sister.id);
+                applyStill(sister.id, "a", sister.viewA);
               }}
             >
               Same place in the other game
@@ -1593,11 +1600,13 @@ export function Studio() {
             type="button"
             className="h-8 rounded-md border border-line px-2 text-[10px]"
             onClick={() => {
-              const towns = (visible.length ? visible : LOCATIONS.filter((loc) => loc.kind === kind && loc.edition === edition)).filter(
-                (loc) => Boolean(townPlateSrc(loc.id)),
+              const pool = (visible.length ? visible : LOCATIONS.filter((loc) => loc.kind === kind && loc.edition === edition)).filter(
+                (loc) => Boolean(loc.viewA || loc.stills?.length || townPlateSrc(loc.id)),
               );
-              if (!towns.length) return;
-              applyStill(towns[Math.floor(Math.random() * towns.length)].id);
+              if (!pool.length) return;
+              const pick = pool[Math.floor(Math.random() * pool.length)];
+              const raw = pick.stills?.length ? pick.stills[stillIndex(pick.stills.length, peteNow)] : pick.viewA;
+              applyStill(pick.id, "a", stillAllowed(raw, pick.edition) ? raw : pick.viewA);
             }}
           >
             Random
