@@ -1481,6 +1481,18 @@ export function Studio() {
         <p className="mt-2 text-center text-[10px] text-muted">
           {location.name} · {size.width}×{size.height} JPEG · {size.note}
         </p>
+        <div className="mt-1 flex flex-wrap justify-center gap-1">
+          {(["none", "twitch", "youtube", "discord"] as const).map((zone) => (
+            <button
+              key={zone}
+              type="button"
+              className={`h-8 rounded-md border px-2 text-[10px] ${ghostZone === zone ? "border-parchment" : "border-line"}`}
+              onClick={() => setGhostZone(zone)}
+            >
+              {zone === "none" ? "Ghosts off" : zone === "twitch" ? "Twitch crop" : zone === "youtube" ? "YouTube crop" : "Discord crop"}
+            </button>
+          ))}
+        </div>
         {plateFontOk ? null : (
           <p className="mt-1 text-center text-[10px] text-[#c07050]">Chat Bold missing</p>
         )}
@@ -1978,64 +1990,15 @@ export function Studio() {
           <p className="max-w-sm text-center text-sm text-parchment">
             {postieLineAt(peteNow)}
           </p>
-          <p className="max-w-md text-center text-sm text-muted">
-            The file is ready.
-          </p>
           <p className="max-w-md text-center text-xs text-muted">
-            Download the picture — size is the chip you picked (1200×480 Twitch · 1280×720 YouTube · 1920×1080 offline · 1920×480 wide).
-            Copy desk link shares the place and size, not your display name.
+            One JPEG. Size is the chip you already picked.
           </p>
           <button
             type="button"
             onClick={downloadJpeg}
             className="min-h-11 rounded-md border border-parchment px-3 text-sm text-parchment"
           >
-            Download the picture
-          </button>
-          <div className="flex flex-wrap justify-center gap-1">
-            <button type="button" className="h-9 rounded-md border border-line px-2 text-[11px] text-muted" onClick={downloadPair}>
-              Twitch + YouTube
-            </button>
-            <button type="button" className="h-9 rounded-md border border-line px-2 text-[11px] text-muted" onClick={downloadHolding}>
-              Holding card
-            </button>
-            <button
-              type="button"
-              className="h-9 rounded-md border border-line px-2 text-[11px] text-muted"
-              onClick={() => {
-                const who = sanitizeDisplayName(streamer);
-                const w = sanitizeWorld(world);
-                const cat = edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
-                const line = [who, w ? `World ${w}` : "", cat].filter(Boolean).join(" · ");
-                void navigator.clipboard.writeText(line);
-                setSaveNote("Title copied.");
-              }}
-            >
-              Copy title
-            </button>
-          </div>
-          <div className="flex flex-wrap justify-center gap-1">
-            {(["none", "twitch", "youtube", "discord"] as const).map((zone) => (
-              <button
-                key={zone}
-                type="button"
-                className={`h-8 rounded-md border px-2 text-[10px] ${ghostZone === zone ? "border-parchment" : "border-line"}`}
-                onClick={() => setGhostZone(zone)}
-              >
-                {zone === "none" ? "Ghosts off" : zone === "twitch" ? "Twitch crop" : zone === "youtube" ? "YouTube crop" : "Discord crop"}
-              </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="min-h-11 rounded-md border border-line px-3 text-sm text-muted"
-            onClick={() => {
-              const path = deskSharePath(edition, location.id, size.id, skillPicks.map((row) => row.id));
-              void navigator.clipboard.writeText(`${window.location.origin}${path}`);
-              setSaveNote("Desk link copied.");
-            }}
-          >
-            Copy desk link
+            Download
           </button>
           <p className="sr-only" aria-live="polite">
             {saveNote}
