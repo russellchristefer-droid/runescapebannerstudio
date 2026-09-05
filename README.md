@@ -5,7 +5,7 @@ Hats: defensive only. Source backup is the private remote.
 Independent fan studio for **Twitch / YouTube / Discord** identification stills.
 Not a Jagex product. Not a game client. Not an official overlay.
 
-**Live:** [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
+**Live (no install):** [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
 
 ## What it does
 
@@ -13,6 +13,15 @@ Not a Jagex product. Not a game client. Not an official overlay.
 - Towns, gods, bosses, bestiary (non-boss), Classic gallery
 - History / Chronicle, streamers and YouTubers halls, clip bench
 - Hiscores lookup (public boards, fail-soft)
+
+## Platforms
+
+| You have | You run |
+| --- | --- |
+| Windows / macOS / Linux | Node 22+, then `npm install` and `npm run dev` |
+| Phone | Use the live site. Do not expect `npm` on iOS. |
+
+This is a **Node app**. It is not an iPhone App Store build and there is no `.exe` installer.
 
 ## Run on any computer
 
@@ -31,6 +40,16 @@ Open the URL Vite prints (**port 8080**).
 npm run build
 npm run preview
 ```
+
+**Windows:** install Node from [nodejs.org](https://nodejs.org) (22 LTS). Use PowerShell in the repo folder.
+
+**macOS:** Node 22 from nodejs.org or `brew install node@22`.
+
+**Linux:** Node 22 from NodeSource or your package manager.
+
+If `npm run dev` fails, delete `node_modules` and run `npm install` again.
+
+Line endings in this repo are `LF` (see `.gitattributes`) so Windows Git does not rewrite scripts as CRLF.
 
 ## Layout
 
