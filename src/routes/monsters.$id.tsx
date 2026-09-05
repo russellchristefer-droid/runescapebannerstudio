@@ -4,6 +4,7 @@ import { StillPhoto } from "@/components/still-photo";
 import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillSrc, monsterTaskLine, monsterWatchLine, sisterMonster } from "@/lib/monsters";
 import { deskOpenPath } from "@/lib/desk-link";
 import { writeStudioSave } from "@/lib/studio-save";
+import { OfficialPulse } from "@/components/official-pulse";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/monsters/$id")({
@@ -30,6 +31,13 @@ function MonsterPage() {
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto max-w-3xl px-5 py-6 md:px-8">
+        <OfficialPulse
+          note="Official wiki for this creature. Official news wins."
+          links={[
+            { label: `${row.name} · ${game} wiki`, href: row.wiki },
+            sister ? { label: `${sister.name} · ${sister.edition === "OSRS" ? "Old School RuneScape" : "RuneScape"} wiki`, href: sister.wiki } : null,
+          ].filter((row): row is { label: string; href: string } => Boolean(row))}
+        />
         {src ? (
           <StillPhoto
             src={src}

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { BackLink } from "@/components/back-link";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { townNote } from "@/lib/town-notes";
-import { LOCATIONS } from "@/lib/locations";
+import { LOCATIONS, type Location } from "@/lib/locations";
 import { godInk, GOD_SLUGS } from "@/lib/gods";
 import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
@@ -11,7 +11,22 @@ import { citizenFor } from "@/data/citizens";
 import { streetTalk } from "@/data/streetTalk";
 import { formatRemain, msUntilNext, stillIndex } from "@/lib/still-clock";
 import { deskOpenPath } from "@/lib/desk-link";
+import { OfficialPulse } from "@/components/official-pulse";
 import { writeStudioSave } from "@/lib/studio-save";
+
+function townWikiLinks(title: string, loc?: Location) {
+  const path = encodeURI(title.replace(/ /g, "_"));
+  const osrs = loc?.edition === "OSRS" ? placeLore(loc)?.sourceUrl : undefined;
+  const rs3 = loc?.edition === "RS3" ? placeLore(loc)?.sourceUrl : undefined;
+  const sister = loc
+    ? LOCATIONS.find((row) => row.name === loc.name && row.edition !== loc.edition && row.kind === "town")
+    : undefined;
+  const sisterUrl = sister ? placeLore(sister)?.sourceUrl : undefined;
+  return [
+    { label: `${title} · Old School wiki`, href: osrs || (loc?.edition !== "RS3" ? `https://oldschool.runescape.wiki/w/${path}` : sisterUrl) },
+    { label: `${title} · RuneScape wiki`, href: rs3 || (loc?.edition !== "OSRS" ? `https://runescape.wiki/w/${path}` : sisterUrl) },
+  ].filter((row): row is { label: string; href: string } => Boolean(row.href));
+}
 
 export const Route = createFileRoute("/towns/$id")({
   component: TownNotePage,
@@ -45,6 +60,10 @@ function TownNotePage() {
         <span className="mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8">
+        <OfficialPulse
+          note="Official wiki for this street. Official news wins."
+          links={townWikiLinks(note.title, loc)}
+        />
         {loc ? <TownCycle loc={loc} title={note.title} /> : null}
         <h2 className="text-sm font-semibold text-parchment">Lore</h2>
         {note.lore.map((para) => (

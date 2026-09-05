@@ -31,7 +31,13 @@ function GodPage() {
       </header>
 
       <main className="mx-auto flex max-w-3xl flex-col gap-6 px-5 py-6 md:px-8">
-        <OfficialPulse />
+        <OfficialPulse
+          note="Official wiki for this god. Official news wins."
+          links={[
+            { label: `${brief.god} · Old School wiki`, href: brief.wikiOsrs },
+            { label: `${brief.god} · RuneScape wiki`, href: brief.wikiRs3 },
+          ]}
+        />
         <div className="grid gap-3 sm:grid-cols-2">
           {godStill(god, "OSRS") ? (
             <GodFigure

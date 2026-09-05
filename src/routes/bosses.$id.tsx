@@ -1,11 +1,22 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { noteFor } from "@/lib/boss-notes";
-import { LOCATIONS } from "@/lib/locations";
+import { LOCATIONS, type Location } from "@/lib/locations";
 import { OfficialPulse } from "@/components/official-pulse";
 import { deskOpenPath } from "@/lib/desk-link";
 import { writeStudioSave } from "@/lib/studio-save";
 import { placeLore } from "@/lib/place-lore";
+
+function sisterWiki(loc: Location) {
+  const sister = LOCATIONS.find(
+    (row) => row.name === loc.name && row.edition !== loc.edition && row.kind === loc.kind,
+  );
+  if (!sister) return null;
+  const lore = placeLore(sister);
+  if (!lore) return null;
+  const game = sister.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
+  return { label: `${sister.name} · ${game} wiki`, href: lore.sourceUrl };
+}
 
 export const Route = createFileRoute("/bosses/$id")({
   component: BossNotePage,
@@ -29,7 +40,13 @@ function BossNotePage() {
         <span className="mt-2 mx-auto block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8">
-        <OfficialPulse />
+        <OfficialPulse
+          note="Official wiki for this fight. Official news wins."
+          links={[
+            placeLore(loc) ? { label: `${note.title} · ${game} wiki`, href: placeLore(loc)!.sourceUrl } : null,
+            sisterWiki(loc),
+          ].filter((row): row is { label: string; href: string } => Boolean(row))}
+        />
         <img
           src={loc.viewA}
           alt={`${note.title} arena, ${game}`}
