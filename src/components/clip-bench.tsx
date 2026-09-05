@@ -33,6 +33,7 @@ const CHIP_ON = "min-h-11 rounded-md border border-parchment bg-[#1a1610] px-3 t
 export function ClipBench() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
   const objectUrl = useRef<string | null>(null);
   const bannerUrl = useRef<string | null>(null);
   const bannerImg = useRef<CanvasImageSource | null>(null);
@@ -452,22 +453,33 @@ export function ClipBench() {
       setStatus("That file is over 500 MB. Cut it smaller first.");
       return;
     }
-    releaseVideo(videoRef.current, objectUrl.current);
+    const video = videoRef.current;
+    if (!video) {
+      setStatus("Could not read that file.");
+      return;
+    }
+    releaseVideo(video, objectUrl.current);
     const url = URL.createObjectURL(file);
     objectUrl.current = url;
-    const video = videoRef.current;
-    if (!video) return;
     setReady("loading");
+    setHasClip(false);
     setFileBytes(file.size);
     setPeak(0);
     setHold(0);
+    setPlaying(false);
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
     video.src = url;
+    video.playsInline = true;
+    video.preload = "metadata";
     video.onplay = () => setPlaying(true);
     video.onpause = () => setPlaying(false);
     video.onended = () => setPlaying(false);
     setFileLabel(file.name);
     video.onerror = () => {
       setReady("bad");
+      setHasClip(false);
       setStatus("Could not read that file.");
     };
     video.onloadedmetadata = () => {
@@ -497,12 +509,17 @@ export function ClipBench() {
       const tracks = (video as HTMLVideoElement & { audioTracks?: { length: number } }).audioTracks;
       setHasAudio(tracks ? tracks.length > 0 : true);
       hookAudio(video);
+      void video.play().then(() => video.pause()).catch(() => {});
       setStatus(
         dur > CLIP_WARN_SECONDS
           ? "This bench is for clips, not a whole slayer block."
           : `${file.name} · ${timecode(dur)} · ${video.videoWidth}×${video.videoHeight} · ${formatBytes(file.size)}`,
       );
     };
+  }
+
+  function openClipPicker() {
+    fileRef.current?.click();
   }
 
   function snapValue(t: number) {
@@ -792,6 +809,19 @@ export function ClipBench() {
 
   return (
     <div>
+      <input
+        id="clip-file"
+        ref={fileRef}
+        type="file"
+        accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
+        hidden
+        className="pointer-events-auto"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = "";
+          if (file) takeVideo(file);
+        }}
+      />
       <div
         className="bg-[#1a1610]"
         onDragOver={(e) => {
@@ -807,7 +837,17 @@ export function ClipBench() {
       >
         <div className="relative mx-auto w-full max-w-[960px] overflow-hidden bg-[#120f0c]" style={{ aspectRatio: "16 / 9" }}>
           {!hasClip ? (
-            <p className="absolute inset-0 z-10 flex items-center justify-center text-sm text-muted">Drop a kill clip here.</p>
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
+              <p className="text-sm text-muted">{ready === "loading" ? "Reading clip…" : "Drop a kill clip here."}</p>
+              <button
+                id="clip-upload"
+                type="button"
+                className="pointer-events-auto min-h-11 rounded-md border border-[#c6a45a] bg-[#241e16] px-4 text-sm text-parchment"
+                onClick={openClipPicker}
+              >
+                Upload video
+              </button>
+            </div>
           ) : null}
           <canvas ref={canvasRef} className="block h-full w-full object-contain" />
           {hasClip ? (
@@ -839,7 +879,7 @@ export function ClipBench() {
             </div>
           ) : null}
         </div>
-        <video ref={videoRef} className="hidden" playsInline preload="metadata" muted={muted} controls={false} />
+        <video ref={videoRef} className="pointer-events-none absolute h-px w-px opacity-0" playsInline preload="metadata" muted={muted} controls={false} />
         <div className="grid grid-cols-2 gap-x-3 gap-y-1 px-4 py-2 font-mono text-[11px] tabular-nums text-muted sm:grid-cols-4">
           <p>TC {hasClip ? timecode(now) : "00:00.00"}</p>
           <p>DUR {hasClip ? timecode(range) : "00:00.00"}</p>
@@ -987,33 +1027,23 @@ export function ClipBench() {
         </div>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openClipPicker}>
+            Upload video
+          </button>
           <button type="button" disabled={!hasClip} className={CHIP} onClick={markIn}>
             In
           </button>
           <button type="button" disabled={!hasClip} className={CHIP} onClick={markOut}>
             Out
           </button>
-          <button type="button" disabled={busy || !hasClip} className={CHIP} onClick={() => void exportClip(false)}>
-            {busy ? "Making clip…" : "Save clip"}
-          </button>
           {busy ? (
             <button type="button" className={CHIP} onClick={cancelExport}>
               Cancel
             </button>
           ) : (
-            <label className={`${CHIP} inline-flex cursor-pointer items-center justify-center`}>
-              Upload
-              <input
-                type="file"
-                accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
-                className="sr-only"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) takeVideo(file);
-                  e.target.value = "";
-                }}
-              />
-            </label>
+            <button type="button" disabled={!hasClip} className={CHIP} onClick={() => void exportClip(false)}>
+              Save clip
+            </button>
           )}
         </div>
 
