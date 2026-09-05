@@ -1639,35 +1639,6 @@ export function Studio() {
                   {pack === "OSRS" ? "Old School" : "RuneScape"}
                 </button>
               ))}
-              {(["name", "bottom", "top"] as const).map((id) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => {
-                    setSkillPlace(id);
-                    setSkillPicks((cur) =>
-                      cur.map((item, n) => {
-                        const mark = (item.size ?? skillSize) * (item.scale ?? 1);
-                        const left = Math.round(size.width * 0.04);
-                        const x =
-                          id === "name"
-                            ? left + n * (mark + 10)
-                            : Math.round(size.width * 0.08 + (n % 6) * (mark + 16));
-                        const y =
-                          id === "name"
-                            ? Math.round(size.height * 0.28)
-                            : id === "top"
-                              ? Math.round(size.height * 0.08)
-                              : Math.round(size.height * 0.55 + Math.floor(n / 6) * (mark + 16));
-                        return { ...item, x, y };
-                      }),
-                    );
-                  }}
-                  className={`h-7 rounded-md border px-2 text-[10px] ${skillPlace === id ? "border-parchment bg-[#241e16]" : "border-line"}`}
-                >
-                  {id === "name" ? "Under name" : id === "bottom" ? "Bottom" : "Top"}
-                </button>
-              ))}
               {BANNER_SIZES.map((box) => (
                 <button
                   key={box.id}
