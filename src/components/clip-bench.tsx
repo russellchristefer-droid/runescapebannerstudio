@@ -71,7 +71,8 @@ export function ClipBench() {
   const [volume, setVolume] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [zoom, setZoom] = useState(1);
-  const [titleOn, setTitleOn] = useState(false);
+  const [lowerThird, setLowerThird] = useState(false);
+  const [lowerThirdLine, setLowerThirdLine] = useState("");
   const undoRef = useRef<{ inPoint: number; outPoint: number; aspect: ClipAspect; overlay: OverlayPos; muted: boolean }[]>([]);
   const redoRef = useRef<typeof undoRef.current>([]);
   const holdRef = useRef<number | null>(null);
@@ -96,9 +97,6 @@ export function ClipBench() {
   useEffect(() => {
     const saved = loadStudioSave();
     if (saved.edition === "RS3" || saved.edition === "OSRS") setEdition(saved.edition);
-    if (saved.streamer) setName(sanitizeDisplayName(saved.streamer));
-    if (saved.clan) setClan(sanitizeClan(saved.clan));
-    if (saved.world) setWorld(sanitizeWorld(saved.world));
     return () => {
       releaseVideo(videoRef.current, objectUrl.current);
       objectUrl.current = null;
@@ -189,18 +187,13 @@ export function ClipBench() {
       ctx.drawImage(bannerImg.current, 0, y, w, barH);
       ctx.restore();
     }
-    const label = titleOn ? sanitizeDisplayName(name) : "";
-    const house = sanitizeClan(clan);
-    const worldLine = worldLabel(sanitizeWorld(world));
-    const cap =
-      caption === "None" ? "" : caption === "Custom" ? customCaption.slice(0, 48) : caption;
+    const line = lowerThird ? sanitizeDisplayName(lowerThirdLine) : "";
     const mark = CLIP_MARKS.find((item) => item.id === markId && item.id !== "none");
     ctx.textAlign = "left";
     ctx.font = `600 ${Math.round(h * 0.035)}px "Source Sans 3", sans-serif`;
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 3;
-    const textY = overlay === "top" ? Math.round(h * 0.28) : Math.round(h * 0.9);
-    const line = [label, house, worldLine, cap].filter(Boolean).join(" · ");
+    const textY = Math.round(h * 0.9);
     if (line) {
       ctx.strokeText(line, 36, textY);
       ctx.fillStyle = "#ffff00";
@@ -252,7 +245,7 @@ export function ClipBench() {
       if (rvfc?.cancelVideoFrameCallback) rvfc.cancelVideoFrameCallback(id);
       else window.cancelAnimationFrame(id);
     };
-  }, [aspect, overlay, name, clan, world, edition, loop, inPoint, outPoint, ghost, size.w, size.h, opacity, markId, caption, customCaption, fadeIn, fadeOut, speed, fps, now, rotate, zoom, titleOn]);
+  }, [aspect, overlay, lowerThird, lowerThirdLine, edition, loop, inPoint, outPoint, ghost, size.w, size.h, opacity, markId, fadeIn, fadeOut, speed, fps, now, rotate, zoom]);
 
   function useDeskBanner() {
     const saved = loadStudioSave();
@@ -679,7 +672,10 @@ export function ClipBench() {
         {!hasClip ? (
           <p className="px-4 py-16 text-center text-sm text-muted">No clip</p>
         ) : null}
-        <div className="mx-auto aspect-video max-h-[52vh] w-full max-w-[1280px] bg-[#1a1612]">
+        <div
+          className="mx-auto max-h-[52vh] w-full max-w-[1280px] bg-[#1a1612]"
+          style={{ aspectRatio: `${size.w} / ${size.h}` }}
+        >
           <canvas
             ref={canvasRef}
             width={size.w}
@@ -811,15 +807,35 @@ export function ClipBench() {
           <button type="button" className="h-9 rounded-md border border-line px-2 text-[10px] text-muted" onClick={() => { setFadeIn(Math.round(fps * 0.5)); setFadeOut(Math.round(fps * 0.5)); }}>
             Fade 0.5s
           </button>
-          <button type="button" className={`h-9 rounded-md border px-2 text-[10px] ${titleOn ? "border-parchment" : "border-line"}`} onClick={() => setTitleOn((v) => !v)}>
+          <button
+            type="button"
+            className={`h-9 rounded-md border px-2 text-[10px] ${lowerThird ? "border-parchment" : "border-line"}`}
+            onClick={() => setLowerThird((v) => !v)}
+            aria-pressed={lowerThird}
+          >
             Lower third
           </button>
+          {lowerThird ? (
+            <input
+              value={lowerThirdLine}
+              onChange={(e) => setLowerThirdLine(sanitizeDisplayName(e.target.value))}
+              maxLength={12}
+              placeholder="Lower third"
+              aria-label="Lower third"
+              autoComplete="off"
+              spellCheck={false}
+              className="h-9 min-w-[8rem] rounded-md border border-line bg-raised px-2 text-sm text-fg"
+            />
+          ) : null}
           {(["16x9-1080", "16x9-720", "9x16", "1x1"] as ClipAspect[]).map((id) => (
             <button
               key={id}
               type="button"
               className={`h-9 rounded-md border px-2 text-[10px] ${aspect === id ? "border-parchment" : "border-line"}`}
-              onClick={() => setAspect(id)}
+              onClick={() => {
+                setAspect(id);
+                setStatus(`${CLIP_ASPECTS[id].label} · ${CLIP_ASPECTS[id].w}×${CLIP_ASPECTS[id].h}`);
+              }}
             >
               {CLIP_ASPECTS[id].label}
             </button>
@@ -898,7 +914,7 @@ export function ClipBench() {
             className={`min-h-11 rounded-md border px-3 text-xs ${overlay === pos ? "border-parchment bg-raised" : "border-line"}`}
             onClick={() => setOverlay(pos)}
           >
-            {pos === "off" ? "Overlay off" : pos === "top" ? "Top bar" : "Lower-third"}
+            {pos === "off" ? "Overlay off" : pos === "top" ? "Banner top" : "Banner bottom"}
           </button>
         ))}
       </div>
