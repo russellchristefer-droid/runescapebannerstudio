@@ -128,7 +128,7 @@ export function Studio() {
   const [pickedSkill, setPickedSkill] = useState<string | null>(null);
   const [textPos, setTextPos] = useState<Record<string, { x: number; y: number }>>({});
   const [textScale, setTextScale] = useState<Record<string, number>>(saved.textScale ?? {});
-  const [saveNote, setSaveNote] = useState("");
+  const [plateCaption, setPlateCaption] = useState("");
   const [ghostZone, setGhostZone] = useState<SafeZone>("none");
   const [customMarks, setCustomMarks] = useState<{ id: string; name: string; src: string; game: "OSRS" | "RS3" }[]>([]);
   const markFileRef = useRef<HTMLInputElement>(null);
@@ -1192,6 +1192,7 @@ export function Studio() {
             className="pointer-events-none absolute inset-0 h-full w-full object-cover"
             onLoad={(e) => {
               e.currentTarget.dataset.ok = e.currentTarget.currentSrc;
+              setPlateCaption(`${location.name} · ${size.width}×${size.height} JPEG · ${size.note}`);
             }}
             onError={(e) => {
               const last = e.currentTarget.dataset.ok;
@@ -1523,7 +1524,7 @@ export function Studio() {
             : null}
         </div>
         <p className="mt-2 text-center text-[10px] text-muted">
-          {location.name} · {size.width}×{size.height} JPEG · {size.note}
+          {plateCaption || `${size.width}×${size.height} JPEG`}
         </p>
         <div className="mt-1 flex flex-wrap justify-center gap-1">
           {(["none", "twitch", "youtube", "discord"] as const).map((zone) => (
@@ -1538,7 +1539,7 @@ export function Studio() {
           ))}
         </div>
         {plateFontOk ? null : (
-          <p className="mt-1 text-center text-[10px] text-[#c07050]">Chat Bold missing</p>
+          <p className="mt-1 text-center text-[10px] text-[#c07050]">Font file missing</p>
         )}
         <span className="rs-plate-probe" aria-hidden="true">
           CHRISTEFER

@@ -868,8 +868,7 @@ export function ClipBench() {
         ref={fileRef}
         type="file"
         accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
-        hidden
-        className="pointer-events-auto"
+        className="sr-only"
         onChange={(e) => {
           const file = e.target.files?.[0];
           e.target.value = "";

@@ -8,22 +8,21 @@ export type HeroShot = {
 
 /** Curated wide town plates. No HUD, no bag, no welcome parchment. */
 export const HERO_OSRS: HeroShot[] = [
+  { src: "/Falador.png", name: "Falador", game: "OSRS" },
+  { src: "/Canifis.png", name: "Canifis", game: "OSRS" },
   { src: "/stills/osrs/osrs-lumbridge-a.jpg", name: "Lumbridge", game: "OSRS" },
   { src: "/stills/osrs/osrs-varrock-a.jpg", name: "Varrock", game: "OSRS" },
   { src: "/stills/osrs/osrs-falador-a.jpg", name: "Falador", game: "OSRS" },
   { src: "/locations/osrsedge.jpg", name: "Edgeville", game: "OSRS" },
-  { src: "/locations/osrscani.jpg", name: "Canifis", game: "OSRS" },
   { src: "/locations/osrsprif.jpg", name: "Prifddinas", game: "OSRS" },
-  { src: "/locations/hosidius.jpg", name: "Hosidius", game: "OSRS" },
 ];
 
 export const HERO_RS3: HeroShot[] = [
+  { src: "/Prifddinas.png", name: "Prifddinas", game: "RS3" },
+  { src: "/Menaphos.png", name: "Menaphos", game: "RS3" },
+  { src: "/Daemonheim.png", name: "Daemonheim", game: "RS3" },
   { src: "/stills/rs3/rs3-lumbridge-a.jpg", name: "Lumbridge", game: "RS3" },
-  { src: "/stills/rs3/rs3-varrock-a.jpg", name: "Varrock", game: "RS3" },
-  { src: "/stills/rs3/rs3-falador-a.jpg", name: "Falador", game: "RS3" },
-  { src: "/locations/prifddinas.jpg", name: "Prifddinas", game: "RS3" },
   { src: "/locations/senntisten.jpg", name: "Senntisten", game: "RS3" },
-  { src: "/locations/edgeville.jpg", name: "Edgeville", game: "RS3" },
 ];
 
 export const HERO_RSC: HeroShot[] = [

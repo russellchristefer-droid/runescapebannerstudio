@@ -30,24 +30,25 @@ export function TownHero({
   const [shown, setShown] = useState(shot?.src);
   const remain = PERIOD_MS - (clock % PERIOD_MS);
 
+  const [caption, setCaption] = useState(shot?.name ?? "");
+
   useEffect(() => {
     if (!shot?.src) return;
-    setShown(shot.src);
     const img = new Image();
-    img.src = shot.src;
+    img.onload = () => {
+      setShown(shot.src);
+      setCaption(shot.name);
+      if (edition !== "RSC") onTown?.(shot.name, edition);
+    };
     img.onerror = () => setSkip((count) => count + 1);
-    if (typeof img.decode === "function") void img.decode().catch(() => setSkip((count) => count + 1));
-  }, [shot?.src]);
+    img.src = shot.src;
+  }, [shot?.src, shot?.name, edition]);
 
   useEffect(() => {
     if (!next?.src) return;
     const img = new Image();
     img.src = next.src;
   }, [next?.src]);
-
-  useEffect(() => {
-    if (shot && edition !== "RSC") onTown?.(shot.name, edition);
-  }, [shot?.name, edition]);
 
   function pick(nextChip: HeroChip) {
     setEdition(nextChip);
@@ -63,7 +64,7 @@ export function TownHero({
   }
 
   const game = gameLabel(edition);
-  const name = shot?.name ?? "Town";
+  const name = caption || shot?.name || "Town";
 
   return (
     <section id="hero" className="border-b border-line bg-raised">
