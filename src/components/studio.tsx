@@ -772,6 +772,9 @@ export function Studio() {
     canvas.addEventListener("wheel", onWheel, { passive: false });
     return () => canvas.removeEventListener("wheel", onWheel);
   }, [pickedSkill, pickedText]);
+
+  useEffect(() => {
+    let gone = false;
     const folder = location.edition === "OSRS" ? "osrs" : "rs3";
     const bare = (src: string) => src.split("?")[0];
     const tries = [
