@@ -69,6 +69,30 @@ export function stillAllowed(path: string, edition: Edition) {
   return true;
 }
 
+/** Same-origin town plates that exist in public/. */
+export const TOWN_SRC: Record<string, string> = {
+  falador: "/Falador.png",
+  osrsfalador: "/Falador.png",
+  canifis: "/Canifis.png",
+  osrscani: "/Canifis.png",
+  catherby: "/Catherby.png",
+  osrscath: "/Catherby.png",
+  daemonheim: "/Daemonheim.png",
+  menaphos: "/Menaphos.png",
+  portsarim: "/Port_Sarim.png",
+  osrsport: "/Port_Sarim.png",
+  prifddinas: "/Prifddinas.png",
+  osrsprif: "/Prifddinas.png",
+  taverley: "/Taverley.png",
+  burthorpe: "/Burthorpe.png",
+  osrsburth: "/Burthorpe.png",
+  lostgrove: "/The_Lost_Grove.png",
+};
+
+export function townPlateSrc(id: string) {
+  return TOWN_SRC[id];
+}
+
 function loc(
   id: string,
   name: string,

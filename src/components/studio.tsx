@@ -19,7 +19,7 @@ import {
   hasViewB,
   skyLabels,
   stillAllowed,
-  townAtHour,
+  townPlateSrc,
   type BannerSizeId,
   type Edition,
   type God,
@@ -61,7 +61,7 @@ export function Studio() {
     return loc?.kind ?? "town";
   });
   const [godFilter, setGodFilter] = useState<God | "">("");
-  const [locationId, setLocationId] = useState<LocationId>(boot.locationId ?? saved.locationId ?? townAtHour().id);
+  const [locationId, setLocationId] = useState<LocationId>(boot.locationId ?? saved.locationId ?? "falador");
   const [view, setView] = useState<"a" | "b">(saved.view ?? "a");
   const [viewLocked, setViewLocked] = useState(false);
   const [poolSkip, setPoolSkip] = useState(0);
@@ -80,8 +80,8 @@ export function Studio() {
   });
   const [customSrc, setCustomSrc] = useState<string | null>(null);
   const [deskStillSrc, setDeskStillSrc] = useState<string | null>(() => {
-    const loc = boot.locationId ? LOCATIONS.find((row) => row.id === boot.locationId) : undefined;
-    return loc?.viewA ?? null;
+    const fromQuery = townPlateSrc(boot.locationId ?? saved.locationId ?? "falador");
+    return fromQuery ?? "/Falador.png";
   });
   const [sceneReady, setSceneReady] = useState(true);
   const [skillPack, setSkillPack] = useState<"OSRS" | "RS3">(boot.edition ?? saved.skillPack ?? "RS3");
@@ -278,12 +278,12 @@ export function Studio() {
   }
 
   function applyStill(id: LocationId, nextView?: "a" | "b", src?: string) {
+    const plate = townPlateSrc(id);
+    if (!plate && !src) return;
     const samePlace = id === locationId && !customSrc && !src;
     if (!samePlace) clearStampsAndText();
     pickLocation(id);
-    const loc = LOCATIONS.find((item) => item.id === id);
-    const file = src || (nextView === "b" && loc?.viewB ? loc.viewB : loc?.viewA) || null;
-    setDeskStillSrc(file);
+    setDeskStillSrc(plate || src || "/Falador.png");
     setView(nextView ?? "a");
     setViewLocked(true);
     setCustomSrc((prev) => {
@@ -761,7 +761,17 @@ export function Studio() {
   }
 
   useEffect(() => {
-    let gone = false;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const onWheel = (e: WheelEvent) => {
+      if (!pickedSkill && !pickedText) return;
+      e.preventDefault();
+      const step = e.shiftKey ? 0.25 : 0.08;
+      scaleSelected(e.deltaY > 0 ? -step : step);
+    };
+    canvas.addEventListener("wheel", onWheel, { passive: false });
+    return () => canvas.removeEventListener("wheel", onWheel);
+  }, [pickedSkill, pickedText]);
     const folder = location.edition === "OSRS" ? "osrs" : "rs3";
     const bare = (src: string) => src.split("?")[0];
     const tries = [
@@ -1098,7 +1108,7 @@ export function Studio() {
               <div key={loc.id} className="overflow-hidden rounded-md border border-line hover:border-[#F5C400]">
                 <button
                   type="button"
-                  onClick={() => applyStill(loc.id, "a", src)}
+                  onClick={() => applyStill(loc.id)}
                   className="block w-full text-left"
                 >
                   <StillPhoto
@@ -1159,6 +1169,7 @@ export function Studio() {
           }}
         >
         <div
+          id="plate"
           className="desk-preview-well relative mx-auto w-full overflow-hidden"
           ref={previewRef}
           style={{
@@ -1178,6 +1189,7 @@ export function Studio() {
             }}
           />
           <canvas
+            id="overlay"
             key="overlay-alpha"
             ref={canvasRef}
             width={size.width}
@@ -1628,7 +1640,9 @@ export function Studio() {
             type="button"
             className="h-8 rounded-md border border-line px-2 text-[10px]"
             onClick={() => {
-              const towns = visible.length ? visible : LOCATIONS.filter((loc) => loc.kind === kind && loc.edition === edition);
+              const towns = (visible.length ? visible : LOCATIONS.filter((loc) => loc.kind === kind && loc.edition === edition)).filter(
+                (loc) => Boolean(townPlateSrc(loc.id)),
+              );
               if (!towns.length) return;
               applyStill(towns[Math.floor(Math.random() * towns.length)].id);
             }}
