@@ -11,5 +11,7 @@ This origin does not scan, phish, or pop boxes.
 - 🔴 **Red** — we assume the desk will be poked; fail-soft Hiscores; no token on the JPEG
 - ⚫ **Black** — out of scope. If you wanted that, you are in the wrong repo.
 
+Operator: Christefer Lee Russell-Barnett · russell.christefer@gmail.com
+
 Backup: `russellchristefer-droid/runescapebannerstudio-private` (private).
 Public: this repo. Live: https://runescapebannerstudio.grok.me/

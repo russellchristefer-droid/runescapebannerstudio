@@ -11,6 +11,7 @@ export function SiteFooter() {
       <nav className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-parchment">
         <Link to="/brief">Brief</Link>
         <Link to="/legal">Legal</Link>
+        <a href="mailto:russell.christefer@gmail.com">russell.christefer@gmail.com</a>
         <a
           href="https://legal.jagex.com/docs/policies/fan-content-policy"
           target="_blank"
