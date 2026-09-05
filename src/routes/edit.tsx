@@ -24,8 +24,8 @@ function EditPage() {
         </div>
         <ol className="mt-4 list-decimal space-y-1 pl-5 text-sm text-muted">
           <li>Upload a clip you own.</li>
-          <li>Mark in and out.</li>
-          <li>Save the file. Pete does not work here.</li>
+          <li>Set In and Out on the timeline.</li>
+          <li>Pick a size, then Save clip. The file stays on this device.</li>
         </ol>
         <StreamDesk />
         <p className="mt-3 text-xs text-faint">Banners are on the home desk.</p>

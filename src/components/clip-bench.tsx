@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { loadStudioSave } from "@/lib/studio-save";
-import { sanitizeClan, sanitizeDisplayName, sanitizeLine, sanitizeWorld, worldLabel } from "@/lib/rsText";
-import { paintRSYellow, ensurePlateFont } from "@/lib/draw-banner";
+import { sanitizeClan, sanitizeDisplayName, sanitizeWorld, worldLabel } from "@/lib/rsText";
 import { LOCATIONS } from "@/lib/locations";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
 import {
@@ -25,6 +24,10 @@ import {
 
 type OverlayPos = "off" | "top" | "lower";
 
+const CHIP =
+  "min-h-11 rounded-md border border-[#c6a45a]/40 bg-[#1a1610] px-3 text-[11px] text-parchment disabled:opacity-40";
+const CHIP_ON = "min-h-11 rounded-md border border-parchment bg-[#1a1610] px-3 text-[11px] text-parchment";
+
 export function ClipBench() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -33,7 +36,20 @@ export function ClipBench() {
   const bannerImg = useRef<CanvasImageSource | null>(null);
   const markCache = useRef<Record<string, HTMLImageElement>>({});
   const recorderRef = useRef<MediaRecorder | null>(null);
-  const [status, setStatus] = useState("Load a local clip.");
+  const hidden = useRef(false);
+  const holdRef = useRef<number | null>(null);
+  const lastUi = useRef(0);
+  const actions = useRef({
+    togglePlay: () => {},
+    seek: (_t: number) => {},
+    markIn: () => {},
+    markOut: () => {},
+    undo: () => {},
+    redo: () => {},
+    dropMarker: () => {},
+  });
+
+  const [status, setStatus] = useState("Drop a clip you own, or upload one.");
   const [fileLabel, setFileLabel] = useState("");
   const [native, setNative] = useState("");
   const [duration, setDuration] = useState(0);
@@ -60,7 +76,6 @@ export function ClipBench() {
   const [fadeOut, setFadeOut] = useState(0);
   const [markers, setMarkers] = useState<number[]>([]);
   const [busy, setBusy] = useState(false);
-  const [hadAudio, setHadAudio] = useState(true);
   const [hasClip, setHasClip] = useState(false);
   const [fps, setFps] = useState(30);
   const [viewStart, setViewStart] = useState(0);
@@ -69,18 +84,11 @@ export function ClipBench() {
   const [volume, setVolume] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [zoom, setZoom] = useState(1);
-  const [lowerThird, setLowerThird] = useState(false);
-  const [ltText, setLtText] = useState("");
-  const [deskName, setDeskName] = useState("");
   const undoRef = useRef<{ inPoint: number; outPoint: number; aspect: ClipAspect; overlay: OverlayPos; muted: boolean }[]>([]);
   const redoRef = useRef<typeof undoRef.current>([]);
-  const holdRef = useRef<number | null>(null);
-  const hidden = useRef(false);
+
   const paintArgs = useRef({
     overlay,
-    lowerThird,
-    ltText,
-    deskName,
     inPoint,
     outPoint,
     ghost,
@@ -94,12 +102,10 @@ export function ClipBench() {
     opacity,
     markId,
     loop,
+    aspect,
   });
   paintArgs.current = {
     overlay,
-    lowerThird,
-    ltText,
-    deskName,
     inPoint,
     outPoint,
     ghost,
@@ -113,13 +119,14 @@ export function ClipBench() {
     opacity,
     markId,
     loop,
+    aspect,
   };
 
+  const size = CLIP_ASPECTS[aspect];
+  const range = Math.max(0, outPoint - inPoint);
+
   function pushUndo() {
-    undoRef.current = [
-      ...undoRef.current.slice(-19),
-      { inPoint, outPoint, aspect, overlay, muted },
-    ];
+    undoRef.current = [...undoRef.current.slice(-19), { inPoint, outPoint, aspect, overlay, muted }];
     redoRef.current = [];
   }
 
@@ -134,21 +141,9 @@ export function ClipBench() {
   useEffect(() => {
     const saved = loadStudioSave();
     if (saved.edition === "RS3" || saved.edition === "OSRS") setEdition(saved.edition);
-    setDeskName(sanitizeDisplayName(saved.streamer ?? ""));
-    setLtText((prev) => prev || sanitizeDisplayName(saved.streamer ?? ""));
-    void ensurePlateFont();
-    const pull = () => {
-      const next = loadStudioSave();
-      setDeskName(sanitizeDisplayName(next.streamer ?? ""));
-    };
-    const onStore = (e: StorageEvent) => {
-      if (!e.key || e.key === "rsbs.desk.v1" || e.key === "rs-banner-studio") pull();
-    };
-    window.addEventListener("storage", onStore);
-    const tick = window.setInterval(pull, 1200);
+    setName(sanitizeDisplayName(saved.streamer ?? ""));
+    setClan(sanitizeClan(saved.clan ?? ""));
     return () => {
-      window.removeEventListener("storage", onStore);
-      window.clearInterval(tick);
       releaseVideo(videoRef.current, objectUrl.current);
       objectUrl.current = null;
       if (bannerUrl.current) URL.revokeObjectURL(bannerUrl.current);
@@ -165,7 +160,8 @@ export function ClipBench() {
     if (!video) return;
     video.muted = muted;
     video.volume = muted ? 0 : volume;
-  }, [muted, volume]);
+    video.playbackRate = speed;
+  }, [muted, volume, speed]);
 
   useEffect(() => {
     if (!busy) return;
@@ -191,25 +187,28 @@ export function ClipBench() {
   useEffect(() => {
     const onVis = () => {
       hidden.current = document.hidden;
-      if (document.hidden) {
-        videoRef.current?.pause();
-        const rec = recorderRef.current;
-        if (rec && rec.state !== "inactive") rec.stop();
-      }
+      if (document.hidden) videoRef.current?.pause();
     };
     document.addEventListener("visibilitychange", onVis);
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  const size = CLIP_ASPECTS[aspect];
+  function previewSize(exportW: number, exportH: number) {
+    const cap = 960;
+    const scale = Math.min(1, cap / Math.max(exportW, exportH));
+    return {
+      w: Math.max(320, Math.round(exportW * scale)),
+      h: Math.max(180, Math.round(exportH * scale)),
+    };
+  }
 
   function paint(canvas: HTMLCanvasElement, video: HTMLVideoElement, ghosts: boolean, w = size.w, h = size.h) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const s = paintArgs.current;
-    canvas.width = w;
-    canvas.height = h;
-    ctx.fillStyle = "#1a1612";
+    if (canvas.width !== w) canvas.width = w;
+    if (canvas.height !== h) canvas.height = h;
+    ctx.fillStyle = "#120f0c";
     ctx.fillRect(0, 0, w, h);
     if (video.readyState >= 2 && video.videoWidth) {
       ctx.save();
@@ -239,19 +238,13 @@ export function ClipBench() {
       ctx.drawImage(bannerImg.current, 0, y, w, barH);
       ctx.restore();
     }
-    if (s.lowerThird) {
-      const line = sanitizeLine(s.ltText, 24) || sanitizeDisplayName(s.deskName);
-      const nameSize = 28;
-      const nameY = Math.round(h * 0.82);
-      if (line) paintRSYellow(ctx, line, 36, nameY, nameSize);
-    }
     const mark = CLIP_MARKS.find((item) => item.id === s.markId && item.id !== "none");
     if (mark?.src) {
       const img = markCache.current[mark.src];
       if (img) ctx.drawImage(img, 36, Math.round(h * 0.72), Math.round(h * 0.08), Math.round(h * 0.08));
     }
     if (ghosts && s.ghost !== "none") drawSafeZoneGhosts(ctx, w, h, s.ghost);
-    if (ghosts && aspect === "9x16" && w / h > 1) {
+    if (ghosts && s.aspect === "9x16" && w / h > 1) {
       const cropW = h * (9 / 16);
       const x = (w - cropW) / 2;
       ctx.fillStyle = "rgba(0,0,0,0.35)";
@@ -273,27 +266,29 @@ export function ClipBench() {
       const canvas = canvasRef.current;
       const s = paintArgs.current;
       if (video && canvas) {
-        setNow(video.currentTime);
-        if (s.loop && s.outPoint > s.inPoint && video.currentTime >= s.outPoint - 0.04) {
+        const t = video.currentTime;
+        if (s.loop && s.outPoint > s.inPoint && t >= s.outPoint - 0.04) {
           video.currentTime = s.inPoint;
         }
-        paint(canvas, video, true);
+        const preview = previewSize(CLIP_ASPECTS[s.aspect].w, CLIP_ASPECTS[s.aspect].h);
+        paint(canvas, video, true, preview.w, preview.h);
+        const stamp = performance.now();
+        if (stamp - lastUi.current > 80) {
+          lastUi.current = stamp;
+          setNow(t);
+        }
       }
-      const rvfc = video as HTMLVideoElement & {
-        requestVideoFrameCallback?: (cb: () => void) => number;
-      };
+      const rvfc = video as HTMLVideoElement & { requestVideoFrameCallback?: (cb: () => void) => number };
       id = rvfc?.requestVideoFrameCallback ? rvfc.requestVideoFrameCallback(tick) : window.requestAnimationFrame(tick);
     };
     tick();
     return () => {
       live = false;
-      const rvfc = videoRef.current as HTMLVideoElement & {
-        cancelVideoFrameCallback?: (n: number) => void;
-      };
+      const rvfc = videoRef.current as HTMLVideoElement & { cancelVideoFrameCallback?: (n: number) => void };
       if (rvfc?.cancelVideoFrameCallback) rvfc.cancelVideoFrameCallback(id);
       else window.cancelAnimationFrame(id);
     };
-  }, [hasClip, size.w, size.h]);
+  }, [hasClip]);
 
   useEffect(() => {
     saveEditPrefs(aspect, overlay);
@@ -321,6 +316,7 @@ export function ClipBench() {
       if (overlay === "off") setOverlay("lower");
       setStatus("Desk still loaded as overlay.");
     };
+    img.onerror = () => setStatus("That still did not load.");
     img.src = src;
   }
 
@@ -329,22 +325,22 @@ export function ClipBench() {
     canvas.width = 1200;
     canvas.height = 480;
     const video = videoRef.current;
-    if (video) paint(canvas, video, false, 1200, 480);
+    if (video && hasClip) paint(canvas, video, false, 1200, 480);
     else {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       ctx.fillStyle = "#1a1612";
       ctx.fillRect(0, 0, 1200, 480);
       if (bannerImg.current) ctx.drawImage(bannerImg.current, 0, 0, 1200, 480);
-      const line = [sanitizeDisplayName(name), sanitizeClan(clan), worldLabel(sanitizeWorld(world))]
-        .filter(Boolean)
-        .join(" · ");
-      ctx.font = `600 28px "Source Sans 3", sans-serif`;
-      ctx.strokeStyle = "#000";
-      ctx.lineWidth = 3;
-      ctx.strokeText(line, 48, 420);
-      ctx.fillStyle = "#efe0c4";
-      ctx.fillText(line, 48, 420);
+      const line = [sanitizeDisplayName(name), sanitizeClan(clan), worldLabel(sanitizeWorld(world))].filter(Boolean).join(" · ");
+      if (line) {
+        ctx.font = `600 28px "Source Sans 3", sans-serif`;
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 3;
+        ctx.strokeText(line, 48, 420);
+        ctx.fillStyle = "#efe0c4";
+        ctx.fillText(line, 48, 420);
+      }
     }
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
     if (!blob) return;
@@ -357,7 +353,7 @@ export function ClipBench() {
     const file = new File([blob], a.download, { type: "image/jpeg" });
     setLastFile(file);
     setCanShareFile(Boolean(navigator.canShare?.({ files: [file] })));
-    setStatus("Holding card saved. Nothing uploaded.");
+    setStatus("Holding card saved on this device.");
   }
 
   function takeVideo(file: File) {
@@ -392,9 +388,12 @@ export function ClipBench() {
       setOutPoint(dur);
       setViewStart(0);
       setViewEnd(dur);
+      setNow(0);
       setFps(30);
       setMarkers([]);
       setSpeed(1);
+      setRotate(0);
+      setZoom(1);
       video.playbackRate = 1;
       undoRef.current = [];
       redoRef.current = [];
@@ -408,26 +407,6 @@ export function ClipBench() {
     };
   }
 
-  async function takeBanner(file: File) {
-    if (!file.type.startsWith("image/")) return;
-    if (bannerUrl.current) URL.revokeObjectURL(bannerUrl.current);
-    const url = URL.createObjectURL(file);
-    bannerUrl.current = url;
-    try {
-      const prev = bannerImg.current;
-      if (prev && "close" in prev && typeof prev.close === "function") prev.close();
-      bannerImg.current = await createImageBitmap(file);
-      setStatus("Banner overlay loaded.");
-    } catch {
-      const img = new Image();
-      img.onload = () => {
-        bannerImg.current = img;
-        setStatus("Banner overlay loaded.");
-      };
-      img.src = url;
-    }
-  }
-
   function snapValue(t: number) {
     const framed = snapTime(t, fps);
     if (!snapOn) return framed;
@@ -439,13 +418,15 @@ export function ClipBench() {
     const video = videoRef.current;
     if (!video) return;
     const max = duration || video.duration || 0;
-    video.currentTime = Math.max(0, Math.min(max, snapValue(next)));
+    const t = Math.max(0, Math.min(max, snapValue(next)));
+    video.currentTime = t;
+    setNow(t);
   }
 
   function dropMarker() {
     setMarkers((cur) => {
       if (cur.length >= 8) return cur;
-      const t = snapOn ? Math.round(now) : snapTime(now, fps);
+      const t = snapTime(now, fps);
       if (cur.some((m) => Math.abs(m - t) < 0.05)) return cur;
       return [...cur, t].sort((a, b) => a - b);
     });
@@ -455,42 +436,41 @@ export function ClipBench() {
     const video = videoRef.current;
     if (!video || !hasClip) return;
     if (video.paused) {
-      if (video.currentTime < inPoint || video.currentTime >= outPoint) video.currentTime = inPoint;
+      if (video.currentTime < inPoint || video.currentTime >= outPoint - 0.04) video.currentTime = inPoint;
       void video.play();
-      setPlaying(true);
     } else {
       video.pause();
-      setPlaying(false);
     }
   }
 
   function markIn() {
     pushUndo();
-    const t = snapOn ? Math.round(now) : snapTime(now, fps);
+    const t = snapTime(now, fps);
     const [a, b] = orderInOut(t, outPoint);
     setInPoint(a);
-    setOutPoint(b);
+    setOutPoint(Math.max(a + frameStep(fps), b));
   }
 
   function markOut() {
     pushUndo();
-    const t = snapOn ? Math.round(now) : snapTime(now, fps);
+    const t = snapTime(now, fps);
     const [a, b] = orderInOut(inPoint, t);
     setInPoint(a);
-    setOutPoint(b);
+    setOutPoint(Math.max(a + frameStep(fps), b));
   }
 
   function splitAtPlayhead() {
     pushUndo();
-    const t = snapOn ? Math.round(now) : snapTime(now, fps);
-    if (t - inPoint <= outPoint - t) setInPoint(Math.min(t, outPoint - 0.05));
-    else setOutPoint(Math.max(t, inPoint + 0.05));
+    const t = snapTime(now, fps);
+    if (t - inPoint <= outPoint - t) setInPoint(Math.min(t, outPoint - frameStep(fps)));
+    else setOutPoint(Math.max(t, inPoint + frameStep(fps)));
   }
 
   function deleteRegion() {
     pushUndo();
-    if (now - inPoint < outPoint - now) setInPoint(Math.min(outPoint - 0.05, snapOn ? Math.round(now) : now));
-    else setOutPoint(Math.max(inPoint + 0.05, snapOn ? Math.round(now) : now));
+    const t = snapTime(now, fps);
+    if (now - inPoint < outPoint - now) setInPoint(Math.min(outPoint - frameStep(fps), t));
+    else setOutPoint(Math.max(inPoint + frameStep(fps), t));
   }
 
   function undo() {
@@ -507,12 +487,15 @@ export function ClipBench() {
     applySnap(last);
   }
 
+  actions.current = { togglePlay, seek, markIn, markOut, undo, redo, dropMarker };
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT")) return;
       const video = videoRef.current;
-      if (!video) return;
+      if (!video || !hasClip) return;
+      const a = actions.current;
       if (e.key === "Escape") {
         video.pause();
         recorderRef.current?.stop();
@@ -520,67 +503,54 @@ export function ClipBench() {
       }
       if (e.key === " " || e.key === "k" || e.key === "K") {
         e.preventDefault();
-        togglePlay();
+        a.togglePlay();
       }
       if (e.key === "j" || e.key === "J") {
         e.preventDefault();
-        seek(video.currentTime - 2);
+        a.seek((video.currentTime || 0) - 2);
         window.clearInterval(holdRef.current ?? 0);
-        holdRef.current = window.setInterval(() => seek((videoRef.current?.currentTime ?? 0) - 2), 150);
+        holdRef.current = window.setInterval(() => a.seek((videoRef.current?.currentTime ?? 0) - 2), 150);
       }
       if (e.key === "l" || e.key === "L") {
         e.preventDefault();
-        seek(video.currentTime + 2);
+        a.seek((video.currentTime || 0) + 2);
         window.clearInterval(holdRef.current ?? 0);
-        holdRef.current = window.setInterval(() => seek((videoRef.current?.currentTime ?? 0) + 2), 150);
+        holdRef.current = window.setInterval(() => a.seek((videoRef.current?.currentTime ?? 0) + 2), 150);
       }
-      if (e.key === ",") {
+      if (e.key === "," || e.key === "[") {
         e.preventDefault();
-        seek(video.currentTime - frameStep(fps));
+        a.seek((video.currentTime || 0) - frameStep(fps));
       }
-      if (e.key === ".") {
+      if (e.key === "." || e.key === "]") {
         e.preventDefault();
-        seek(video.currentTime + frameStep(fps));
-      }
-      if (e.key === "+" || e.key === "=") {
-        const span = Math.max(5, (viewEnd || duration) - viewStart);
-        const mid = (viewStart + (viewEnd || duration)) / 2;
-        const next = Math.max(5, span * 0.7);
-        setViewStart(Math.max(0, mid - next / 2));
-        setViewEnd(Math.min(duration, mid + next / 2));
-      }
-      if (e.key === "-" || e.key === "_") {
-        setViewStart(0);
-        setViewEnd(duration);
+        a.seek((video.currentTime || 0) + frameStep(fps));
       }
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") {
         e.preventDefault();
-        if (e.shiftKey) redo();
-        else undo();
+        if (e.shiftKey) a.redo();
+        else a.undo();
       }
-      if (e.key === "i" || e.key === "I") markIn();
-      if (e.key === "o" || e.key === "O") markOut();
-      if (e.key === "[") seek(video.currentTime - frameStep(fps));
-      if (e.key === "]") seek(video.currentTime + frameStep(fps));
+      if (e.key === "i" || e.key === "I") a.markIn();
+      if (e.key === "o" || e.key === "O") a.markOut();
       if (e.key === "m" || e.key === "M") {
         e.preventDefault();
-        dropMarker();
+        a.dropMarker();
       }
     };
-    window.addEventListener("keydown", onKey);
     const onUp = (e: KeyboardEvent) => {
       if (e.key === "j" || e.key === "J" || e.key === "l" || e.key === "L") {
         if (holdRef.current) window.clearInterval(holdRef.current);
         holdRef.current = null;
       }
     };
+    window.addEventListener("keydown", onKey);
     window.addEventListener("keyup", onUp);
     return () => {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("keyup", onUp);
       if (holdRef.current) window.clearInterval(holdRef.current);
     };
-  }, [duration, inPoint, outPoint]);
+  }, [hasClip, fps]);
 
   async function recordOnce(w: number, h: number) {
     const video = videoRef.current;
@@ -595,6 +565,14 @@ export function ClipBench() {
     video.volume = muted ? 0 : volume;
     video.playbackRate = speed;
     video.currentTime = inPoint;
+    await new Promise<void>((resolve) => {
+      const ready = () => {
+        video.removeEventListener("seeked", ready);
+        resolve();
+      };
+      video.addEventListener("seeked", ready);
+      window.setTimeout(resolve, 400);
+    });
     await video.play().catch(() => undefined);
     const recStream = canvas.captureStream(30);
     let mix: MediaStream = recStream;
@@ -602,14 +580,13 @@ export function ClipBench() {
     try {
       const captured = (video as HTMLVideoElement & { captureStream?: () => MediaStream }).captureStream?.();
       const tracks = captured?.getAudioTracks() ?? [];
-      if (tracks.length && !muted) {
+      if (tracks.length && !muted && speed === 1) {
         mix = new MediaStream([...recStream.getVideoTracks(), ...tracks]);
         audioOk = true;
       }
     } catch {
       audioOk = false;
     }
-    setHadAudio(audioOk);
     const chunks: BlobPart[] = [];
     const recorder = new MediaRecorder(mix, { mimeType: mime });
     recorderRef.current = recorder;
@@ -621,13 +598,12 @@ export function ClipBench() {
       recorder.onerror = () => reject(new Error("rec"));
     });
     recorder.start(200);
-    const pump = window.setInterval(ctxTick, 33);
+    ctxTick();
     await new Promise<void>((resolve) => {
       const watch = () => {
         ctxTick();
         if (video.currentTime >= outPoint - 0.05 || video.ended || recorder.state === "inactive") {
           video.pause();
-          window.clearInterval(pump);
           if (recorder.state !== "inactive") recorder.stop();
           resolve();
           return;
@@ -666,11 +642,15 @@ export function ClipBench() {
         text: "Clip from RuneScape Banner Studio (fan desk, not Jagex).",
       });
     } catch {
-      /* user cancelled */
+      /* cancelled */
     }
   }
 
   async function exportClip(pair = false) {
+    if (!hasClip) {
+      setStatus("Upload a clip first.");
+      return;
+    }
     if (!clipMime()) {
       setStatus("This browser cannot encode. Use Chrome or Edge.");
       return;
@@ -685,11 +665,7 @@ export function ClipBench() {
         const two = await recordOnce(1080, 1920);
         await downloadBlob(two.blob, 1080, 1920);
       }
-      setStatus(
-        one.audioOk
-          ? "WebM saved on this device. Nothing uploaded."
-          : "No audio track. WebM saved muted.",
-      );
+      setStatus(one.audioOk ? "Clip saved on this device." : "Clip saved. No audio track in that file.");
     } catch {
       setStatus(clipMime() ? "Export stopped." : "This browser cannot encode. Use Chrome or Edge.");
     } finally {
@@ -708,6 +684,9 @@ export function ClipBench() {
     setStatus("Export cancelled.");
   }
 
+  const span = Math.max(0.001, (viewEnd || duration) - viewStart);
+  const pct = (t: number) => `${Math.min(100, Math.max(0, ((t - viewStart) / span) * 100))}%`;
+
   return (
     <div>
       <div
@@ -719,125 +698,159 @@ export function ClipBench() {
         onDrop={(e) => {
           e.preventDefault();
           const file = e.dataTransfer.files[0];
-          if (file) takeVideo(file);
+          if (file?.type.startsWith("image/")) void takeBanner(file);
+          else if (file) takeVideo(file);
         }}
       >
-        <div className="relative mx-auto w-full max-w-[960px] bg-[#120f0c]" style={{ aspectRatio: "16 / 9" }}>
+        <div className="relative mx-auto w-full max-w-[960px] overflow-hidden bg-[#120f0c]" style={{ aspectRatio: "16 / 9" }}>
           {!hasClip ? (
-            <p className="absolute inset-0 z-10 flex items-center justify-center text-sm text-muted">No clip</p>
+            <p className="absolute inset-0 z-10 flex items-center justify-center text-sm text-muted">Drop a kill clip here.</p>
           ) : null}
-          <canvas
-            ref={canvasRef}
-            width={size.w}
-            height={size.h}
-            className="block h-full w-full object-contain"
-          />
+          <canvas ref={canvasRef} className="block h-full w-full object-contain" />
         </div>
         <video ref={videoRef} className="hidden" playsInline preload="metadata" muted={muted} controls={false} />
-        <p className="px-4 py-2 text-center text-[11px] text-muted">
-          {fileLabel || "No file"}
-          {duration ? ` · ${timecode(duration)}` : ""}
+        <p className="px-4 py-2 text-center font-mono text-[11px] tabular-nums text-muted">
+          {hasClip
+            ? `In ${timecode(inPoint)} · Out ${timecode(outPoint)} · ${timecode(range)} · ${size.w}×${size.h}`
+            : "No file"}
+          {fileLabel ? ` · ${fileLabel}` : ""}
           {native ? ` · ${native}` : ""}
-          {` · ${size.w}×${size.h}`}
         </p>
       </div>
 
       <div className="space-y-3 bg-[#241e16] px-3 py-3">
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now - 2)}>
-            −2s
-          </button>
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now - frameStep(fps))}>
-            Frame −
-          </button>
-          <button
-            type="button"
-            disabled={!hasClip || playing}
-            className={
-              hasClip
-                ? "min-h-12 min-w-12 rounded-md border border-[#c6a45a] bg-[#9b1b1b] px-5 text-sm font-semibold text-[#efe0c4] hover:bg-[#b42323] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c6a45a] disabled:opacity-40"
-                : "min-h-12 min-w-12 rounded-md border border-[#3a3228] bg-[#2a241c] px-5 text-sm text-faint"
-            }
-            onClick={() => {
-              if (!playing) togglePlay();
-            }}
-          >
-            Play
-          </button>
-          <button
-            type="button"
-            disabled={!hasClip || !playing}
-            className="min-h-12 rounded-md border border-[#c6a45a]/40 px-4 text-sm text-parchment disabled:opacity-40"
-            onClick={() => {
-              if (playing) togglePlay();
-            }}
-          >
-            Pause
-          </button>
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now + frameStep(fps))}>
-            Frame +
-          </button>
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now + 2)}>
-            +2s
-          </button>
-        </div>
-
-        <div className="relative h-8 overflow-hidden rounded-md bg-[#120f0c]">
+        <div className="relative h-9 overflow-hidden rounded-md bg-[#120f0c]">
+          {duration > 0 ? (
+            <>
+              <div
+                className="pointer-events-none absolute inset-y-1 rounded-sm bg-[#c6a45a]/25"
+                style={{ left: pct(inPoint), width: `calc(${pct(outPoint)} - ${pct(inPoint)})` }}
+              />
+              {markers.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  className="absolute top-1 z-10 h-7 w-0.5 bg-[#e4c36a]"
+                  style={{ left: pct(m) }}
+                  aria-label={`Marker ${timecode(m)}`}
+                  onClick={() => seek(m)}
+                />
+              ))}
+              <div className="pointer-events-none absolute top-1 bottom-1 w-0.5 bg-[#efe4c8]" style={{ left: pct(now) }} />
+              <div className="pointer-events-none absolute top-1 h-7 w-0.5 bg-[#c6a45a]" style={{ left: pct(inPoint) }} />
+              <div className="pointer-events-none absolute top-1 h-7 w-0.5 bg-[#c6a45a]" style={{ left: pct(outPoint) }} />
+            </>
+          ) : (
+            <div className="pointer-events-none absolute inset-y-1 left-1 right-1 rounded-sm bg-[#2a241c]" />
+          )}
           <input
             type="range"
             min={viewStart}
             max={viewEnd || duration || 1}
             step={frameStep(fps)}
             value={Math.min(viewEnd || duration || 1, Math.max(viewStart, now))}
+            disabled={!hasClip}
             onChange={(e) => seek(Number(e.target.value))}
             onDoubleClick={() => {
               setViewStart(0);
               setViewEnd(duration);
             }}
-            className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+            className="absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
             aria-label="Timeline"
           />
-          <div className="pointer-events-none absolute inset-y-1 left-0 right-0 mx-1 rounded-sm bg-[#2a241c]" />
-          {duration > 0 ? (
-            <>
-              <div className="pointer-events-none absolute top-1 bottom-1 w-0.5 bg-[#c6a45a]" style={{ left: `${Math.min(100, Math.max(0, (now / duration) * 100))}%` }} />
-              <div className="pointer-events-none absolute top-1 h-6 w-0.5 bg-[#c6a45a]" style={{ left: `${Math.min(100, Math.max(0, (inPoint / duration) * 100))}%` }} />
-              <div className="pointer-events-none absolute top-1 h-6 w-0.5 bg-[#c6a45a]" style={{ left: `${Math.min(100, Math.max(0, (outPoint / duration) * 100))}%` }} />
-            </>
-          ) : null}
         </div>
         <div className="flex justify-between font-mono text-[11px] tabular-nums text-faint">
           <span>{timecode(now)}</span>
-          <span>{duration ? timecode(Math.max(0, duration - now)) : "00:00.00"}</span>
+          <span>{duration ? `−${timecode(Math.max(0, duration - now))}` : "00:00.00"}</span>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <button type="button" disabled={!hasClip} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#1a1610] text-xs text-parchment disabled:opacity-40" onClick={markIn}>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => seek(now - 2)}>
+            −2s
+          </button>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => seek(now - frameStep(fps))}>
+            Frame −
+          </button>
+          <button
+            type="button"
+            disabled={!hasClip}
+            className={
+              hasClip
+                ? "min-h-12 min-w-16 rounded-md border border-[#c6a45a] bg-[#9b1b1b] px-5 text-sm font-semibold text-[#efe0c4] hover:bg-[#b42323] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c6a45a]"
+                : "min-h-12 min-w-16 rounded-md border border-[#3a3228] bg-[#2a241c] px-5 text-sm text-faint"
+            }
+            onClick={togglePlay}
+          >
+            {playing ? "Pause" : "Play"}
+          </button>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => seek(now + frameStep(fps))}>
+            Frame +
+          </button>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => seek(now + 2)}>
+            +2s
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={markIn}>
             In
           </button>
-          <button type="button" disabled={!hasClip} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#1a1610] text-xs text-parchment disabled:opacity-40" onClick={markOut}>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={markOut}>
             Out
           </button>
-          <button type="button" disabled={busy || !hasClip} onClick={() => void exportClip(false)} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#1a1610] text-xs text-parchment disabled:opacity-40">
+          <button type="button" disabled={busy || !hasClip} className={CHIP} onClick={() => void exportClip(false)}>
             {busy ? "Making clip…" : "Save clip"}
           </button>
           {busy ? (
-            <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs text-muted" onClick={cancelExport}>
+            <button type="button" className={CHIP} onClick={cancelExport}>
               Cancel
             </button>
-          ) : null}
+          ) : (
+            <label className={`${CHIP} inline-flex cursor-pointer items-center justify-center`}>
+              Upload
+              <input
+                type="file"
+                accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
+                className="sr-only"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) takeVideo(file);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-1">
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted disabled:opacity-40" onClick={splitAtPlayhead}>Split</button>
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted disabled:opacity-40" onClick={deleteRegion}>Delete region</button>
-          <button type="button" className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted" onClick={undo}>Undo</button>
-          <button type="button" className={`min-h-11 rounded-md border px-2 text-[11px] ${snapOn ? "border-parchment" : "border-line"}`} onClick={() => setSnapOn((v) => !v)}>Snap seconds</button>
-          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted disabled:opacity-40" onClick={() => { pushUndo(); setRotate((v) => (v + 90) % 360); }}>Rotate 90</button>
-          <button type="button" className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted" onClick={() => setZoom((v) => Math.min(2, v + 0.1))}>Scale +</button>
-          <button type="button" className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted" onClick={() => setZoom((v) => Math.max(1, v - 0.1))}>Scale −</button>
-          <button type="button" className={`min-h-11 rounded-md border px-2 text-[11px] ${muted ? "border-parchment" : "border-line"}`} onClick={() => setMuted((v) => !v)}>Mute</button>
-          <button type="button" className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted" onClick={() => { setFadeIn(Math.round(fps * 0.5)); setFadeOut(Math.round(fps * 0.5)); }}>Fade 0.5s</button>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={splitAtPlayhead}>
+            Split
+          </button>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={deleteRegion}>
+            Delete range
+          </button>
+          <button type="button" className={CHIP} onClick={undo}>
+            Undo
+          </button>
+          <button type="button" className={snapOn ? CHIP_ON : CHIP} onClick={() => setSnapOn((v) => !v)}>
+            Snap
+          </button>
+          <button type="button" className={loop ? CHIP_ON : CHIP} onClick={() => setLoop((v) => !v)}>
+            Loop
+          </button>
+          <button type="button" className={muted ? CHIP_ON : CHIP} onClick={() => setMuted((v) => !v)}>
+            Mute
+          </button>
+          <button
+            type="button"
+            className={CHIP}
+            onClick={() => {
+              setFadeIn(Math.round(fps * 0.5));
+              setFadeOut(Math.round(fps * 0.5));
+            }}
+          >
+            Fade 0.5s
+          </button>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -845,7 +858,7 @@ export function ClipBench() {
             <button
               key={id}
               type="button"
-              className={`min-h-11 rounded-md border px-3 text-[11px] ${aspect === id ? "border-parchment bg-[#1a1610]" : "border-line"}`}
+              className={aspect === id ? CHIP_ON : CHIP}
               onClick={() => {
                 setAspect(id);
                 setStatus(`${CLIP_ASPECTS[id].label} · ${CLIP_ASPECTS[id].w}×${CLIP_ASPECTS[id].h}`);
@@ -854,83 +867,102 @@ export function ClipBench() {
               {CLIP_ASPECTS[id].label}
             </button>
           ))}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            className={`min-h-11 rounded-md border px-3 text-[11px] ${lowerThird ? "border-parchment bg-[#1a1610]" : "border-line"}`}
-            onClick={() => setLowerThird((v) => !v)}
-            aria-pressed={lowerThird}
-          >
-            Lower third
-          </button>
-          <label className="inline-flex min-h-11 items-center gap-2 text-[11px] text-muted">
-            Lower third
-            <input
-              id="lt"
-              value={ltText}
-              maxLength={24}
-              placeholder="Same letters as the desk"
-              spellCheck={false}
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              enterKeyHint="done"
-              className="h-11 min-w-[12rem] rounded-md border border-line bg-[#1a1610] px-2 text-base text-parchment"
-              onChange={(e) => setLtText(sanitizeLine(e.target.value, 24))}
-            />
-          </label>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <label className="inline-flex min-h-11 cursor-pointer items-center rounded-md border border-[#c6a45a]/50 px-3 text-xs text-parchment">
-            Upload video
-            <input
-              type="file"
-              accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
-              className="sr-only"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) takeVideo(file);
-                e.target.value = "";
-              }}
-            />
-          </label>
           {lastFile && canShareFile ? (
-            <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs text-parchment" onClick={() => void shareLast()}>
+            <button type="button" className={CHIP} onClick={() => void shareLast()}>
               Share
             </button>
           ) : null}
-          <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs text-muted" onClick={() => setMoreOpen((v) => !v)}>
+          <button type="button" className={CHIP} onClick={() => setMoreOpen((v) => !v)}>
             {moreOpen ? "Hide more" : "More"}
           </button>
         </div>
         <p className="text-[11px] text-muted">{status}</p>
+        <p className="text-[11px] text-faint">Space play · I / O marks · J / L skip · , . frames. Don’t export a Bank PIN.</p>
       </div>
 
       {moreOpen ? (
-        <div className="border-t border-[#c6a45a]/40 bg-[#1a1610] px-4 py-4">
+        <div className="space-y-3 border-t border-[#c6a45a]/40 bg-[#1a1610] px-4 py-4">
           <div className="flex flex-wrap gap-2">
-            <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={useDeskBanner}>
+            <button type="button" className={CHIP} onClick={useDeskBanner}>
               Use desk banner
             </button>
             {(["off", "top", "lower"] as const).map((pos) => (
-              <button
-                key={pos}
-                type="button"
-                className={`min-h-11 rounded-md border px-3 text-xs ${overlay === pos ? "border-parchment bg-raised" : "border-line"}`}
-                onClick={() => setOverlay(pos)}
-              >
+              <button key={pos} type="button" className={overlay === pos ? CHIP_ON : CHIP} onClick={() => setOverlay(pos)}>
                 {pos === "off" ? "Banner off" : pos === "top" ? "Banner top" : "Banner bottom"}
               </button>
             ))}
-            <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={() => void holdingCard()}>
+            <button type="button" className={CHIP} onClick={() => void holdingCard()}>
               Holding card
             </button>
+            <button type="button" disabled={!hasClip} className={CHIP} onClick={() => void exportClip(true)}>
+              Save 16:9 + 9:16
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className={CHIP}
+              onClick={() => {
+                pushUndo();
+                setRotate((v) => (v + 90) % 360);
+              }}
+            >
+              Rotate 90
+            </button>
+            <button type="button" className={CHIP} onClick={() => setZoom((v) => Math.min(2, +(v + 0.1).toFixed(2)))}>
+              Scale +
+            </button>
+            <button type="button" className={CHIP} onClick={() => setZoom((v) => Math.max(1, +(v - 0.1).toFixed(2)))}>
+              Scale −
+            </button>
+            {([0.5, 1, 1.5, 2] as const).map((rate) => (
+              <button
+                key={rate}
+                type="button"
+                className={speed === rate ? CHIP_ON : CHIP}
+                onClick={() => setSpeed(rate)}
+              >
+                {rate}×
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className={edition === "OSRS" ? CHIP_ON : CHIP} onClick={() => setEdition("OSRS")}>
+              Old School
+            </button>
+            <button type="button" className={edition === "RS3" ? CHIP_ON : CHIP} onClick={() => setEdition("RS3")}>
+              RuneScape
+            </button>
+            {CLIP_MARKS.filter((m) => m.games.includes(edition)).map((m) => (
+              <button key={m.id} type="button" className={markId === m.id ? CHIP_ON : CHIP} onClick={() => setMarkId(m.id)}>
+                {m.name}
+              </button>
+            ))}
           </div>
         </div>
       ) : null}
     </div>
   );
+
+  async function takeBanner(file: File) {
+    if (!file.type.startsWith("image/")) return;
+    if (bannerUrl.current) URL.revokeObjectURL(bannerUrl.current);
+    const url = URL.createObjectURL(file);
+    bannerUrl.current = url;
+    try {
+      const prev = bannerImg.current;
+      if (prev && "close" in prev && typeof prev.close === "function") prev.close();
+      bannerImg.current = await createImageBitmap(file);
+      if (overlay === "off") setOverlay("lower");
+      setStatus("Banner overlay loaded.");
+    } catch {
+      const img = new Image();
+      img.onload = () => {
+        bannerImg.current = img;
+        if (overlay === "off") setOverlay("lower");
+        setStatus("Banner overlay loaded.");
+      };
+      img.src = url;
+    }
+  }
 }
