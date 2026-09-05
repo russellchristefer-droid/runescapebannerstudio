@@ -21,101 +21,70 @@ function HistoryPage() {
             There are two ways to keep Gielinor. One is the bank: stacks, prices, the vulgar
             arithmetic of appetite. The other is the sill — a narrow stone in Varrock where a
             domestic tom has watched palaces inflate and slums persist and called neither of
-            them the point. This desk writes from the sill. If that sounds like a boast, good.
-            Boasts are cheap. Looking is not.
+            them the point. This desk writes from the sill. Boasts are cheap. Looking is not.
           </p>
           <p>
-            Begin at Lumbridge, which is not a capital but a pedagogic weather. The castle
-            teaches grammar before it teaches politics: river, chapel, gate, the road that
-            pretends the world is simple. In the 2007-era client that grammar still holds.
-            In the later client the same name is a palimpsest over war, a rebuild sitting on
-            a crater like a polite lie. Keep the two Lumbridges unmingled or you are only
-            touring your own confusion. The player who cannot tell them apart is not seasoned.
-            They are merely loud.
+            Before that sill had a city under it there was a student draught with another
+            name. In January 2001 the thing opened as RuneScape: tiles, slow combat, a map
+            that felt hand-sized and then, suddenly, not. Players learned Lumbridge because
+            the client pointed their gaze at a castle and named it beginning.
           </p>
           <p>
-            Varrock is the first city that behaves like a city: agora, rumour, palace, drain.
-            Gertrude’s household is the unfashionable centre. Bob — yes, that Bob — is not a
-            mascot. He is deixis. He says <em>here</em>. The Grand Exchange later taught the
-            square a second dialect, in which a price is a public sentence. Famous names have
-            passed through that dialect like weather. The early hiscores myth, the single
-            glyph at the top of a board, taught a generation that time could be spectated.
-            Zezima was not a person so much as a tense: the present perfect of grind. Later
-            iron theatre — constraint as serial, swamp as vow — taught another generation
-            that refusal could be content. This story will not rummage their bins. Public
-            work is enough.
+            The early years accreted quests, members’ gates, and a folk economy around paper
+            crowns from Christmas crackers. That relic-talk is memory, not a shop this desk
+            runs. In 2004 the body of the game was remade — what the crowd still calls RS2.
+            Cameras lifted. Crowds thickened. The world learned to look expensive.
           </p>
           <p>
-            Falador performs virtue in limestone. Knights, party room, the old joke that
-            piety and slapstick share a postcode. In 2006 the party room entered common
-            record as a rupture: a glitch-massacre the street never quite stopped
-            citing, proof that even white walls can host a farce with casualties. The sill
-            does not moralise it. The sill files it under <em>the game can surprise the
-            city</em>.
+            Mid-decade the street minted its civic jokes and its civic wounds. In June 2006
+            the Falador Party Room turned celebration into a glitch-massacre the crowd never
+            stopped citing: piety and slapstick sharing a postcode, with a casualty list.
+            Wilderness law and trade law became politics — what may be taken, what may be
+            sold, whether a ditch is a border or a dare. Bots and bans entered the weather.
+            So did hiscores as spectacle: a single name at the top of a board teaching grind
+            as theatre. Zezima was less a person than a tense. This story will not rummage
+            anyone’s bins. Public work is enough.
           </p>
           <p>
-            The Wilderness remains the honest contract: skull, ditch, the ethics of the
-            right-click. Law has moved; memory has not. Players who inhabit it as a theme park
-            learn an expensive semiotics. Players who inhabit it as a sermon learn a different
-            one. Neither lesson confers a rank.
+            The map kept growing: new rooms, new gods’ floors, God Wars as a building you
+            could die in. High detail split tastes the way cosmetics always do. Then 2012’s
+            Evolution of Combat broke the paragraph. A large public refused the new grammar.
+            In 2013 a poll returned a 2007-era client as Old School RuneScape — own hiscores,
+            own Wednesday, own Twitch category. The other client kept the name RuneScape and
+            walked into world events. From that year the history is braided, not single.
           </p>
           <p>
-            In 2013 the old grammar was voted back into a living client. That poll is the
-            nearest thing this art has to a constitution. Old School is not nostalgia as
-            product stills; it is a maintained dialect. RuneScape, the later tongue, kept
-            empire, hour-cities, archaeology of Senntisten, Prifddinas turning like a clock.
-            Voice of Seren is a civic pulse. This desk will not stencil clan names onto it
-            to look initiated. Initiation is standing there when the hour changes.
+            Keep the two Lumbridges unmingled. In Old School the castle is still a first
+            theorem: river, chapel, gate, the road that pretends the world is simple. In
+            RuneScape the same name is a rebuild over war. Export the crater onto an Old
+            School still and you are only touring your own confusion. Varrock is agora and
+            drain in both grammars; Gertrude’s household stays the unfashionable centre; Bob
+            says <em>here</em>. Falador still performs virtue in limestone. The Wilderness
+            remains the honest contract: skull, ditch, the ethics of the right-click. Law
+            has moved. Memory has not.
           </p>
           <p>
-            Streamers and guide-voices became the chorus: quest steps spoken like liturgy,
-            raids as public labour, the iron vow as spectator sport. You know the names.
-            They do not need this page to enlarge them, and this page does not need their
-            private weather. Gossip is a low-resolution history. The high-resolution history
-            is a street that still exists in two engines at once.
+            Old School’s public years were polls, Deadman, raids as labour (Chambers, Theatre,
+            Tombs), leagues as carnival, iron as vow, mobile in the pocket, sailing as a long
+            argument that became a skill. RuneScape’s public years were world events,
+            Prifddinas as an hour-city, Senntisten as archaeology of empire, Invention and
+            later Necromancy as new combat grammars, Treasure Hunter as a standing quarrel,
+            boss ladders that treat enrage as a dialect. Voice of Seren is a civic pulse on
+            that client only. This desk will not stencil clan names onto it. Neither list is
+            complete. Both are true as weather.
           </p>
           <p>
-            So the writer of the sill will say the only arrogant thing that is also accurate:
-            most people bank. A few look. The JPEG you make on this desk is not a coronation.
-            It is a window. Twelve glyphs make a name. A cat makes a witness. If you require
-            a dictionary to walk these sentences, good — the map was never the territory,
-            and the territory was never your bank.
+            Streamers and guide-voices became a chorus without becoming a government: quest
+            steps spoken like liturgy, raids as public labour, the iron vow as spectator
+            sport. You know the names. They do not need this page to enlarge them. Gossip is
+            low-resolution history. The high-resolution history is a street that still exists
+            in two engines at once.
           </p>
           <p>
-            The first grammar was RuneScape Classic: 2001, a Cambridge-made world, tiles and
-            patience. In 2004 the engine was remade (RS2) and the map learned height and a
-            thicker crowd. Party hats — Christmas crackers from an early holiday — escaped
-            into folklore as a currency of absurd prestige. That is not this desk selling
-            hats. That is a culture inventing a relic out of a paper crown.
-          </p>
-          <p>
-            In June 2006 the Falador Party Room entered common memory when a glitch turned
-            celebration into a massacre the street never stopped citing. It is one of the
-            few civic jokes that is also a casualty list. File it as true weather, not as
-            a punchline this page owns.
-          </p>
-          <p>
-            Trade and the Wilderness were bound and unbound more than once; free trade’s
-            absence and return are part of the political memory of the game, as is the
-            long argument over what a world is for: risk, spectacle, or a market with a
-            ditch attached.
-          </p>
-          <p>
-            Evolution of Combat (2012) split the tongue. A large public refused the new
-            grammar. In 2013 a poll brought a 2007-era client back as Old School RuneScape —
-            a living dialect with its own hiscores, its own Wednesday, its own category
-            name. The later client kept the name RuneScape and walked into world events,
-            the Battle of Lumbridge, hour-cities, archaeology. Two games, two clocks.
-          </p>
-          <p>
-            Mobile carried both dialects into pockets. Leagues, Deadman, and seasonal
-            theatres became public festivals. Ironman — officially a mode, culturally a vow —
-            taught constraint as a spectator form. None of that is a secret. It is simply
-            what the crowd already knows and the banks already priced.
-          </p>
-          <p>
-            Creators became a chorus without becoming a government: guide-liturgy, raid
-            labour, serial iron. This story names the function, not a private life.
+            The present is two live games, two categories — Old School RuneScape and
+            RuneScape — two wikis, one midnight UTC when shops restock and worlds hitch. A
+            JPEG from this desk is a window, not a coronation. Twelve glyphs make a name. A
+            cat makes a witness. Most people bank. A few look.
           </p>
           <p>
             When official news and this story disagree, official news wins. When the wiki
@@ -123,69 +92,16 @@ function HistoryPage() {
             follow the cat.
           </p>
           <p>
-            Street-level commentary inhabits the town pages: each inner sheet is lore for that
-            client, then a short history of that grammar, then the live wiki. Start at{" "}
+            Street-level notes live on the town sheets: lore for that client, a short history
+            of that grammar, then the live wiki. Start at{" "}
             <Link to="/towns" className="text-parchment">
               Towns
             </Link>
-            . The long story stays here. The map stays there.
-          </p>
-          <p>
-            Before the sill had Varrock under it there was a prototype with another name,
-            a student-made draught of a world. In January 2001 the thing opened as RuneScape.
-            Tiles. Slow combat. A map that felt hand-sized and then, suddenly, not. Players
-            learned to inhabit Lumbridge because the client oriented the gaze at a castle
-            and named it beginning.
-          </p>
-          <p>
-            The early years accreted: more quests, more members’ gates, more rumour
-            that a paper hat from a Christmas cracker could outlast a city. That relic-economy
-            is folk memory, not a shop this desk runs. 2004 remade the body of the game (what
-            the crowd still calls RS2). Cameras lifted. Crowds thickened. The world learned
-            to look expensive.
-          </p>
-          <p>
-            Mid-decade the street minted its civic jokes and its civic wounds. Falador’s
-            party room, 2006, remains the glitch the street never stopped citing. Wilderness
-            law and trade law became politics: what may be taken, what may be sold, whether
-            a ditch is a border or a dare. Bots and bans entered the public weather. So did
-            hiscores as spectacle — a single name at the top of a board teaching grind as
-            theatre.
-          </p>
-          <p>
-            High detail arrived later in that decade and split tastes the way all cosmetics
-            do. The map kept accreting: new continents, new gods’ rooms, new ways to stand
-            in the way of a boss. God Wars ceased to be rumour and became a building you could
-            die in. The later age would add more buildings. The 2007-era snapshot would
-            keep a particular weather frozen enough to vote back to life.
-          </p>
-          <p>
-            2012’s Evolution of Combat is the sentence that broke the paragraph. A large
-            public refused the new grammar. In 2013 a poll returned a 2007-era client as Old School RuneScape:
-            own hiscores, own category, own Wednesday. The other client kept the name
-            RuneScape and walked into world events — Lumbridge as battlefield and rebuild,
-            hour-cities, archaeology, a Sixth Age that must never be pasted onto an Old
-            School still. From here the history is braided, not single.
-          </p>
-          <p>
-            Old School’s public years were polls, Deadman, raids as labour (Chambers, Theatre,
-            Tombs), leagues as carnival, iron as vow, mobile in the pocket, sailing as a
-            long argument that became a skill. RuneScape’s public years were world events,
-            Prifddinas as clock, Invention and later Necromancy as new grammars of combat,
-            Treasure Hunter as a standing quarrel, boss ladders that treat enrage as a
-            dialect. Neither list is complete. Both are true as weather.
-          </p>
-          <p>
-            Creators became a chorus: the guide-voice that said turn west when it meant east,
-            the iron serial, the raid caller, the official streams on two Twitch names.
-            This story still will not open their cupboards. Function is enough. The crowd
-            already knows who they were watching.
-          </p>
-          <p>
-            And the present is simply two live games, two categories, two wikis, one
-            midnight UTC when shops restock and worlds hitch. The sill is still in Varrock.
-            The bank is still a louder room. This page remains a fan looking, not a government
-            speaking.
+            . Ages and doors sit on{" "}
+            <Link to="/chronicle" className="text-parchment">
+              Chronicle
+            </Link>
+            . The long story stays here.
           </p>
         </article>
         <p className="mt-8 flex flex-wrap gap-x-3 gap-y-1 text-sm text-parchment">
@@ -197,9 +113,6 @@ function HistoryPage() {
           </a>
           <Link to="/">Desk</Link>
           <Link to="/chronicle">Chronicle</Link>
-          <Link to="/egg" className="text-faint">
-            There is a box here
-          </Link>
         </p>
       </main>
     </div>
