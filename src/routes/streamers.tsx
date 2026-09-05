@@ -31,8 +31,19 @@ function gameLabel(game: Channel["game"]) {
   return game === "osrs" ? "Old School RuneScape" : "RuneScape";
 }
 
-function Row({ row, live, showGame }: { row: Channel; live: Record<string, Badge>; showGame?: boolean }) {
+function Row({
+  row,
+  live,
+  showGame,
+  viewers,
+}: {
+  row: Channel;
+  live: Record<string, Badge>;
+  showGame?: boolean;
+  viewers?: Record<string, number>;
+}) {
   const badge = row.twitch ? live[row.twitch.toLowerCase()] ?? null : null;
+  const count = row.twitch ? viewers?.[row.twitch.toLowerCase()] : undefined;
   return (
     <li className="flex flex-col gap-1 px-1 py-2 sm:flex-row sm:items-center sm:justify-between">
       <span className="text-sm">
@@ -40,7 +51,9 @@ function Row({ row, live, showGame }: { row: Channel; live: Record<string, Badge
         {row.official ? <span className="ml-2 text-[10px] text-faint">Official</span> : null}
         {showGame ? <span className="ml-2 text-[10px] text-faint">{gameLabel(row.game)}</span> : null}
         {badge === "live" ? (
-          <span className="ml-2 rounded-sm border border-parchment px-1.5 py-0.5 text-[10px] text-parchment">Live</span>
+          <span className="ml-2 rounded-sm border border-parchment px-1.5 py-0.5 text-[10px] text-parchment">
+            Live{typeof count === "number" ? ` · ${count}` : ""}
+          </span>
         ) : null}
         {badge === "offline" ? <span className="ml-2 text-[10px] text-faint">Offline</span> : null}
       </span>
@@ -64,6 +77,7 @@ function Row({ row, live, showGame }: { row: Channel; live: Record<string, Badge
 
 function StreamersPage() {
   const [livePeople, setLivePeople] = useState<Channel[]>([]);
+  const [viewers, setViewers] = useState<Record<string, number>>({});
   const [probe, setProbe] = useState<"off" | "ok" | "down">("down");
   const [q, setQ] = useState("");
   const [cut, setCut] = useState<"all" | "osrs" | "rs3" | "live">("all");
@@ -100,11 +114,14 @@ function StreamersPage() {
           const list = Array.isArray(data) ? data : Array.isArray(data.rows) ? data.rows : [];
           const next: Channel[] = [];
           const seen = new Set<string>();
+          const counts: Record<string, number> = {};
           for (const row of list) {
             if (!row || typeof row !== "object") continue;
             const handle = String((row as { handle?: string }).handle ?? "").toLowerCase().replace(/^@/, "");
             if (!handle || (row as { live?: unknown }).live !== true) continue;
             const game = (row as { game?: string }).game === "rs3" ? "rs3" : "osrs";
+            const watch = Number((row as { viewers?: number }).viewers);
+            if (Number.isFinite(watch)) counts[handle] = watch;
             const known = CHANNELS.find((item) => item.twitch?.toLowerCase() === handle);
             if (known) {
               if (seen.has(known.id)) continue;
@@ -123,6 +140,7 @@ function StreamersPage() {
             });
           }
           setLivePeople(next);
+          setViewers(counts);
           setProbe("ok");
         })
         .catch(() => {
@@ -132,11 +150,14 @@ function StreamersPage() {
         .finally(() => window.clearTimeout(timer));
     };
     poll();
-    const id = window.setInterval(poll, 120_000);
-    document.addEventListener("visibilitychange", poll);
+    const id = window.setInterval(poll, 60_000);
+    const onVis = () => {
+      if (document.visibilityState === "visible") poll();
+    };
+    document.addEventListener("visibilitychange", onVis);
     return () => {
       window.clearInterval(id);
-      document.removeEventListener("visibilitychange", poll);
+      document.removeEventListener("visibilitychange", onVis);
       ctrl?.abort();
     };
   }, []);
@@ -158,7 +179,7 @@ function StreamersPage() {
     if (row.twitch && liveHandles.has(row.twitch.toLowerCase())) officialLive[row.twitch.toLowerCase()] = "live";
   }
   const liveNow = livePeople
-    .filter((row) => !row.official && match(row) && (cut === "all" || cut === "live" || row.game === cut))
+    .filter((row) => match(row) && (cut === "all" || cut === "live" || row.game === cut))
     .sort((a, b) => a.name.localeCompare(b.name));
   const liveBadges: Record<string, Badge> = {};
   for (const row of liveNow) {
@@ -234,7 +255,7 @@ function StreamersPage() {
           <h2 className="mb-3 text-sm font-semibold text-parchment">Official</h2>
           <ul className="flex flex-col gap-2">
             {official.map((row) => (
-              <Row key={row.id} row={row} live={officialLive} showGame />
+              <Row key={row.id} row={row} live={officialLive} showGame viewers={viewers} />
             ))}
           </ul>
         </section>
@@ -253,7 +274,7 @@ function StreamersPage() {
             <h2 className="mb-3 text-sm font-semibold text-parchment">Live now</h2>
             <ul className="flex flex-col gap-2">
               {liveNow.map((row) => (
-                <Row key={row.id} row={row} live={liveBadges} showGame />
+                <Row key={row.id} row={row} live={liveBadges} showGame viewers={viewers} />
               ))}
             </ul>
           </section>

@@ -1,8 +1,9 @@
+import { readFileSync } from "node:fs";
 import { CHANNELS } from "@/data/channels";
 
 const cache = new Map<string, { at: number; up: string | null }>();
 const TTL = 45_000;
-const BOARD_TTL = 120_000;
+const BOARD_TTL = 60_000;
 let boardMemo: { at: number; payload: TwitchBoard } | null = null;
 let appToken: { value: string; at: number } | null = null;
 
@@ -11,6 +12,9 @@ export type TwitchBoardRow = {
   live: boolean | "unknown";
   displayName?: string;
   game?: "osrs" | "rs3";
+  viewers?: number;
+  title?: string;
+  gameName?: string;
 };
 export type TwitchBoard = { off?: boolean; ok: boolean; rows: TwitchBoardRow[] };
 
@@ -28,7 +32,7 @@ function liveDisabled() {
   return flag === "false" || flag === "0";
 }
 
-function gameForHandle(handle: string) {
+function gameForHandle(handle: string): "osrs" | "rs3" | null {
   const row = CHANNELS.find((item) => cleanLogin(item.twitch ?? "") === handle);
   return row?.game ?? null;
 }
@@ -39,7 +43,21 @@ function categoryGame(name: string): "osrs" | "rs3" | null {
   return null;
 }
 
+function listedLogins() {
+  try {
+    const raw = readFileSync(new URL("../../public/streamers.json", import.meta.url), "utf8");
+    const rows = JSON.parse(raw) as { twitch?: string }[];
+    const fromFile = rows.map((row) => cleanLogin(row.twitch ?? "")).filter(Boolean);
+    if (fromFile.length) return fromFile;
+  } catch {
+    /* fall through */
+  }
+  return CHANNELS.map((row) => cleanLogin(row.twitch ?? "")).filter(Boolean);
+}
+
 async function helixToken() {
+  const preset = process.env.TWITCH_APP_TOKEN ?? "";
+  if (preset) return preset;
   const id = process.env.TWITCH_CLIENT_ID ?? "";
   const secret = process.env.TWITCH_CLIENT_SECRET ?? "";
   if (!id || !secret) return "";
@@ -103,61 +121,49 @@ export async function fetchTwitchLive(logins: string[]) {
   }
 }
 
-async function helixGames(clientId: string, token: string) {
-  const url = new URL("https://api.twitch.tv/helix/games");
-  url.searchParams.append("name", "Old School RuneScape");
-  url.searchParams.append("name", "RuneScape");
-  const res = await fetch(url, {
-    headers: { "Client-Id": clientId, Authorization: `Bearer ${token}` },
-    signal: AbortSignal.timeout(3_000),
-  });
-  if (!res.ok) throw new Error("games");
-  const body = (await res.json()) as { data?: { id?: string; name?: string }[] };
-  const ids: { id: string; game: "osrs" | "rs3" }[] = [];
-  for (const row of body.data ?? []) {
-    const game = categoryGame(row.name ?? "");
-    if (game && row.id) ids.push({ id: row.id, game });
-  }
-  return ids;
-}
-
-async function helixStreamsForGame(
-  clientId: string,
-  token: string,
-  gameId: string,
-  cap: number,
-) {
-  const out: { handle: string; displayName: string }[] = [];
-  let cursor = "";
-  while (out.length < cap) {
+async function helixByLogins(clientId: string, token: string, logins: string[]) {
+  const rows: TwitchBoardRow[] = [];
+  for (let i = 0; i < logins.length; i += 20) {
+    const slice = logins.slice(i, i + 20);
     const url = new URL("https://api.twitch.tv/helix/streams");
-    url.searchParams.set("game_id", gameId);
-    url.searchParams.set("first", String(Math.min(100, cap - out.length)));
-    if (cursor) url.searchParams.set("after", cursor);
+    for (const login of slice) url.searchParams.append("user_login", login);
     const res = await fetch(url, {
       headers: { "Client-Id": clientId, Authorization: `Bearer ${token}` },
-      signal: AbortSignal.timeout(3_000),
+      signal: AbortSignal.timeout(4_000),
     });
     if (!res.ok) throw new Error("streams");
     const body = (await res.json()) as {
-      data?: { user_login?: string; user_name?: string }[];
-      pagination?: { cursor?: string };
+      data?: {
+        user_login?: string;
+        user_name?: string;
+        viewer_count?: number;
+        title?: string;
+        game_name?: string;
+      }[];
     };
-    const batch = body.data ?? [];
-    if (!batch.length) break;
-    for (const stream of batch) {
+    for (const stream of body.data ?? []) {
       const handle = cleanLogin(stream.user_login ?? "");
       if (!handle) continue;
-      out.push({ handle, displayName: String(stream.user_name ?? handle).slice(0, 32) });
-      if (out.length >= cap) break;
+      const gameName = String(stream.game_name ?? "");
+      const cat = categoryGame(gameName);
+      const expected = gameForHandle(handle);
+      if (expected && cat && expected !== cat) continue;
+      if (!cat) continue;
+      rows.push({
+        handle,
+        displayName: String(stream.user_name ?? handle).slice(0, 32),
+        game: cat,
+        live: true,
+        viewers: Number(stream.viewer_count) || 0,
+        title: String(stream.title ?? "").slice(0, 80),
+        gameName,
+      });
     }
-    cursor = body.pagination?.cursor ?? "";
-    if (!cursor) break;
   }
-  return out;
+  return rows;
 }
 
-export async function fetchTwitchLiveBoard(_logins: string[]): Promise<TwitchBoard> {
+export async function fetchTwitchLiveBoard(logins: string[]): Promise<TwitchBoard> {
   if (liveDisabled()) return { off: true, ok: false, rows: [] };
   if (boardMemo && Date.now() - boardMemo.at < BOARD_TTL) return boardMemo.payload;
 
@@ -168,22 +174,9 @@ export async function fetchTwitchLiveBoard(_logins: string[]): Promise<TwitchBoa
   }
 
   try {
-    const games = await helixGames(id, token);
-    const rows: TwitchBoardRow[] = [];
-    const seen = new Set<string>();
-    for (const game of games) {
-      const streams = await helixStreamsForGame(id, token, game.id, 40);
-      for (const stream of streams) {
-        if (seen.has(stream.handle)) continue;
-        seen.add(stream.handle);
-        rows.push({
-          handle: stream.handle,
-          displayName: stream.displayName,
-          game: game.game,
-          live: true,
-        });
-      }
-    }
+    const asked = [...new Set((logins ?? []).map(cleanLogin).filter(Boolean))];
+    const pool = asked.length ? asked : listedLogins();
+    const rows = await helixByLogins(id, token, pool.slice(0, 80));
     const payload: TwitchBoard = { ok: true, rows };
     boardMemo = { at: Date.now(), payload };
     return payload;
