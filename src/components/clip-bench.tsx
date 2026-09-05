@@ -6,7 +6,6 @@ import { LOCATIONS } from "@/lib/locations";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
 import {
   CLIP_ASPECTS,
-  CLIP_CAPTIONS,
   CLIP_MARKS,
   CLIP_MAX_BYTES,
   CLIP_WARN_SECONDS,
@@ -52,8 +51,6 @@ export function ClipBench() {
   const [clan, setClan] = useState("");
   const [world, setWorld] = useState("");
   const [markId, setMarkId] = useState("none");
-  const [caption, setCaption] = useState("None");
-  const [customCaption, setCustomCaption] = useState("");
   const [moreOpen, setMoreOpen] = useState(false);
   const [lastFile, setLastFile] = useState<File | null>(null);
   const [canShareFile, setCanShareFile] = useState(false);
@@ -714,7 +711,7 @@ export function ClipBench() {
   return (
     <div>
       <div
-        className="border-b border-[#c6a45a]/40 bg-[#2a2218]"
+        className="bg-[#1a1610]"
         onDragOver={(e) => {
           e.preventDefault();
           e.dataTransfer.dropEffect = "copy";
@@ -725,13 +722,10 @@ export function ClipBench() {
           if (file) takeVideo(file);
         }}
       >
-        {!hasClip ? (
-          <p className="px-4 py-16 text-center text-sm text-muted">No clip</p>
-        ) : null}
-        <div
-          className="mx-auto max-h-[52vh] w-full max-w-[1280px] bg-[#1a1612]"
-          style={{ aspectRatio: `${size.w} / ${size.h}` }}
-        >
+        <div className="relative mx-auto w-full max-w-[960px] bg-[#120f0c]" style={{ aspectRatio: "16 / 9" }}>
+          {!hasClip ? (
+            <p className="absolute inset-0 z-10 flex items-center justify-center text-sm text-muted">No clip</p>
+          ) : null}
           <canvas
             ref={canvasRef}
             width={size.w}
@@ -740,52 +734,55 @@ export function ClipBench() {
           />
         </div>
         <video ref={videoRef} className="hidden" playsInline preload="metadata" muted={muted} controls={false} />
-        <p className="px-4 py-2 text-[11px] text-faint">
+        <p className="px-4 py-2 text-center text-[11px] text-muted">
           {fileLabel || "No file"}
           {duration ? ` · ${timecode(duration)}` : ""}
           {native ? ` · ${native}` : ""}
+          {` · ${size.w}×${size.h}`}
         </p>
       </div>
-      <div className="flex flex-wrap items-center justify-center gap-2 bg-[#241e16] px-3 py-3">
-        <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now - 2)}>
-          −2s
-        </button>
-        <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now - frameStep(fps))}>
-          Frame −
-        </button>
-        <button
-          type="button"
-          disabled={!hasClip || playing}
-          className={
-            hasClip
-              ? "min-h-12 min-w-12 rounded-md border border-[#c6a45a] bg-[#9b1b1b] px-5 text-sm font-semibold text-[#efe0c4] hover:bg-[#b42323] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c6a45a] disabled:opacity-40"
-              : "min-h-12 min-w-12 rounded-md border border-[#3a3228] bg-[#2a241c] px-5 text-sm text-faint"
-          }
-          onClick={() => {
-            if (!playing) togglePlay();
-          }}
-        >
-          Play
-        </button>
-        <button
-          type="button"
-          disabled={!hasClip || !playing}
-          className="min-h-12 rounded-md border border-[#c6a45a]/40 px-4 text-sm text-parchment disabled:opacity-40"
-          onClick={() => {
-            if (playing) togglePlay();
-          }}
-        >
-          Pause
-        </button>
-        <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now + frameStep(fps))}>
-          Frame +
-        </button>
-        <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now + 2)}>
-          +2s
-        </button>
-      </div>
-      <div className="bg-[#1a1610] px-3 pb-3">
-        <div className="relative h-8 overflow-hidden rounded-b-md bg-[#120f0c]">
+
+      <div className="space-y-3 bg-[#241e16] px-3 py-3">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now - 2)}>
+            −2s
+          </button>
+          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now - frameStep(fps))}>
+            Frame −
+          </button>
+          <button
+            type="button"
+            disabled={!hasClip || playing}
+            className={
+              hasClip
+                ? "min-h-12 min-w-12 rounded-md border border-[#c6a45a] bg-[#9b1b1b] px-5 text-sm font-semibold text-[#efe0c4] hover:bg-[#b42323] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c6a45a] disabled:opacity-40"
+                : "min-h-12 min-w-12 rounded-md border border-[#3a3228] bg-[#2a241c] px-5 text-sm text-faint"
+            }
+            onClick={() => {
+              if (!playing) togglePlay();
+            }}
+          >
+            Play
+          </button>
+          <button
+            type="button"
+            disabled={!hasClip || !playing}
+            className="min-h-12 rounded-md border border-[#c6a45a]/40 px-4 text-sm text-parchment disabled:opacity-40"
+            onClick={() => {
+              if (playing) togglePlay();
+            }}
+          >
+            Pause
+          </button>
+          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now + frameStep(fps))}>
+            Frame +
+          </button>
+          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-[#c6a45a]/40 px-3 text-[11px] text-parchment disabled:opacity-40" onClick={() => seek(now + 2)}>
+            +2s
+          </button>
+        </div>
+
+        <div className="relative h-8 overflow-hidden rounded-md bg-[#120f0c]">
           <input
             type="range"
             min={viewStart}
@@ -803,83 +800,72 @@ export function ClipBench() {
           <div className="pointer-events-none absolute inset-y-1 left-0 right-0 mx-1 rounded-sm bg-[#2a241c]" />
           {duration > 0 ? (
             <>
-              <div
-                className="pointer-events-none absolute top-1 bottom-1 w-0.5 bg-[#c6a45a]"
-                style={{ left: `${Math.min(100, Math.max(0, (now / duration) * 100))}%` }}
-              />
-              <div
-                className="pointer-events-none absolute top-1 h-6 w-0.5 bg-[#c6a45a]"
-                style={{ left: `${Math.min(100, Math.max(0, (inPoint / duration) * 100))}%` }}
-              />
-              <div
-                className="pointer-events-none absolute top-1 h-6 w-0.5 bg-[#c6a45a]"
-                style={{ left: `${Math.min(100, Math.max(0, (outPoint / duration) * 100))}%` }}
-              />
+              <div className="pointer-events-none absolute top-1 bottom-1 w-0.5 bg-[#c6a45a]" style={{ left: `${Math.min(100, Math.max(0, (now / duration) * 100))}%` }} />
+              <div className="pointer-events-none absolute top-1 h-6 w-0.5 bg-[#c6a45a]" style={{ left: `${Math.min(100, Math.max(0, (inPoint / duration) * 100))}%` }} />
+              <div className="pointer-events-none absolute top-1 h-6 w-0.5 bg-[#c6a45a]" style={{ left: `${Math.min(100, Math.max(0, (outPoint / duration) * 100))}%` }} />
             </>
           ) : null}
         </div>
-        <div className="mt-1 flex justify-between font-mono text-[11px] tabular-nums text-faint">
+        <div className="flex justify-between font-mono text-[11px] tabular-nums text-faint">
           <span>{timecode(now)}</span>
           <span>{duration ? timecode(Math.max(0, duration - now)) : "00:00.00"}</span>
         </div>
-        <div className="mt-2 flex flex-wrap gap-2">
-          <button type="button" disabled={!hasClip} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40" onClick={markIn}>
+
+        <div className="flex flex-wrap gap-2">
+          <button type="button" disabled={!hasClip} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#1a1610] text-xs text-parchment disabled:opacity-40" onClick={markIn}>
             In
           </button>
-          <button type="button" disabled={!hasClip} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40" onClick={markOut}>
+          <button type="button" disabled={!hasClip} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#1a1610] text-xs text-parchment disabled:opacity-40" onClick={markOut}>
             Out
           </button>
-          <button
-            type="button"
-            disabled={busy || !hasClip}
-            onClick={() => void exportClip(false)}
-            className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#241e16] text-xs text-parchment disabled:opacity-40"
-          >
+          <button type="button" disabled={busy || !hasClip} onClick={() => void exportClip(false)} className="min-h-11 min-w-[5rem] flex-1 rounded-md border border-[#c6a45a] bg-[#1a1610] text-xs text-parchment disabled:opacity-40">
             {busy ? "Making clip…" : "Save clip"}
           </button>
           {busy ? (
-            <button type="button" className="min-h-11 min-w-[5rem] rounded-md border border-line text-xs text-muted" onClick={cancelExport}>
+            <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs text-muted" onClick={cancelExport}>
               Cancel
             </button>
           ) : null}
         </div>
-        <div className="mt-2 flex flex-wrap gap-1">
-          <button type="button" disabled={!hasClip} className="h-9 rounded-md border border-line px-2 text-[10px] text-muted disabled:opacity-40" onClick={splitAtPlayhead}>
-            Split
-          </button>
-          <button type="button" disabled={!hasClip} className="h-9 rounded-md border border-line px-2 text-[10px] text-muted disabled:opacity-40" onClick={deleteRegion}>
-            Delete region
-          </button>
-          <button type="button" className="h-9 rounded-md border border-line px-2 text-[10px] text-muted" onClick={undo}>
-            Undo
-          </button>
-          <button type="button" className={`h-9 rounded-md border px-2 text-[10px] ${snapOn ? "border-parchment" : "border-line"}`} onClick={() => setSnapOn((v) => !v)}>
-            Snap seconds
-          </button>
-          <button type="button" disabled={!hasClip} className="h-9 rounded-md border border-line px-2 text-[10px] text-muted disabled:opacity-40" onClick={() => { pushUndo(); setRotate((v) => (v + 90) % 360); }}>
-            Rotate 90
-          </button>
-          <button type="button" className="h-9 rounded-md border border-line px-2 text-[10px] text-muted" onClick={() => setZoom((v) => Math.min(2, v + 0.1))}>
-            Scale +
-          </button>
-          <button type="button" className="h-9 rounded-md border border-line px-2 text-[10px] text-muted" onClick={() => setZoom((v) => Math.max(1, v - 0.1))}>
-            Scale −
-          </button>
-          <button type="button" className={`h-9 rounded-md border px-2 text-[10px] ${muted ? "border-parchment" : "border-line"}`} onClick={() => setMuted((v) => !v)}>
-            Mute
-          </button>
-          <button type="button" className="h-9 rounded-md border border-line px-2 text-[10px] text-muted" onClick={() => { setFadeIn(Math.round(fps * 0.5)); setFadeOut(Math.round(fps * 0.5)); }}>
-            Fade 0.5s
-          </button>
+
+        <div className="flex flex-wrap gap-1">
+          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted disabled:opacity-40" onClick={splitAtPlayhead}>Split</button>
+          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted disabled:opacity-40" onClick={deleteRegion}>Delete region</button>
+          <button type="button" className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted" onClick={undo}>Undo</button>
+          <button type="button" className={`min-h-11 rounded-md border px-2 text-[11px] ${snapOn ? "border-parchment" : "border-line"}`} onClick={() => setSnapOn((v) => !v)}>Snap seconds</button>
+          <button type="button" disabled={!hasClip} className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted disabled:opacity-40" onClick={() => { pushUndo(); setRotate((v) => (v + 90) % 360); }}>Rotate 90</button>
+          <button type="button" className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted" onClick={() => setZoom((v) => Math.min(2, v + 0.1))}>Scale +</button>
+          <button type="button" className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted" onClick={() => setZoom((v) => Math.max(1, v - 0.1))}>Scale −</button>
+          <button type="button" className={`min-h-11 rounded-md border px-2 text-[11px] ${muted ? "border-parchment" : "border-line"}`} onClick={() => setMuted((v) => !v)}>Mute</button>
+          <button type="button" className="min-h-11 rounded-md border border-line px-2 text-[11px] text-muted" onClick={() => { setFadeIn(Math.round(fps * 0.5)); setFadeOut(Math.round(fps * 0.5)); }}>Fade 0.5s</button>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {(["16x9-1080", "16x9-720", "9x16", "1x1"] as ClipAspect[]).map((id) => (
+            <button
+              key={id}
+              type="button"
+              className={`min-h-11 rounded-md border px-3 text-[11px] ${aspect === id ? "border-parchment bg-[#1a1610]" : "border-line"}`}
+              onClick={() => {
+                setAspect(id);
+                setStatus(`${CLIP_ASPECTS[id].label} · ${CLIP_ASPECTS[id].w}×${CLIP_ASPECTS[id].h}`);
+              }}
+            >
+              {CLIP_ASPECTS[id].label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            className={`h-9 rounded-md border px-2 text-[10px] ${lowerThird ? "border-parchment" : "border-line"}`}
+            className={`min-h-11 rounded-md border px-3 text-[11px] ${lowerThird ? "border-parchment bg-[#1a1610]" : "border-line"}`}
             onClick={() => setLowerThird((v) => !v)}
             aria-pressed={lowerThird}
           >
             Lower third
           </button>
-          <label className="inline-flex min-h-11 items-center gap-2 text-[10px] text-muted">
+          <label className="inline-flex min-h-11 items-center gap-2 text-[11px] text-muted">
             Lower third
             <input
               id="lt"
@@ -895,341 +881,56 @@ export function ClipBench() {
               onChange={(e) => setLtText(sanitizeLine(e.target.value, 24))}
             />
           </label>
-          {(["16x9-1080", "16x9-720", "9x16", "1x1"] as ClipAspect[]).map((id) => (
-            <button
-              key={id}
-              type="button"
-              className={`h-9 rounded-md border px-2 text-[10px] ${aspect === id ? "border-parchment" : "border-line"}`}
-              onClick={() => {
-                setAspect(id);
-                setStatus(`${CLIP_ASPECTS[id].label} · ${CLIP_ASPECTS[id].w}×${CLIP_ASPECTS[id].h}`);
-              }}
-            >
-              {CLIP_ASPECTS[id].label}
-            </button>
-          ))}
         </div>
-        <p className="mt-2 text-[11px] text-muted">Don’t export a Bank PIN.</p>
-        <label className="mt-2 inline-flex min-h-11 cursor-pointer items-center rounded-md border border-[#c6a45a]/50 px-3 text-xs text-parchment">
-          Upload video
-          <input
-            type="file"
-            accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
-            className="sr-only"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) takeVideo(file);
-              e.target.value = "";
-            }}
-          />
-        </label>
-        {lastFile ? (
-          <div className="mt-3 flex flex-col gap-2">
-            <button
-              type="button"
-              className="min-h-11 max-w-sm rounded-md border border-[#c6a45a]/50 px-3 text-sm text-parchment"
-              onClick={() => {
-                const href = URL.createObjectURL(lastFile);
-                const a = document.createElement("a");
-                a.href = href;
-                a.download = lastFile.name;
-                a.click();
-                URL.revokeObjectURL(href);
+
+        <div className="flex flex-wrap items-center gap-2">
+          <label className="inline-flex min-h-11 cursor-pointer items-center rounded-md border border-[#c6a45a]/50 px-3 text-xs text-parchment">
+            Upload video
+            <input
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
+              className="sr-only"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) takeVideo(file);
+                e.target.value = "";
               }}
-            >
-              Save file
+            />
+          </label>
+          {lastFile && canShareFile ? (
+            <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs text-parchment" onClick={() => void shareLast()}>
+              Share
             </button>
-            {canShareFile ? (
-              <button type="button" className="min-h-11 max-w-sm rounded-md border border-[#c6a45a]/50 px-3 text-sm text-parchment" onClick={() => void shareLast()}>
-                Share
-              </button>
-            ) : null}
-          </div>
-        ) : null}
-        <button
-          type="button"
-          className="mt-3 min-h-11 rounded-md border border-[#c6a45a]/50 px-3 text-xs text-parchment"
-          onClick={() => setMoreOpen((v) => !v)}
-        >
-          {moreOpen ? "Hide more" : "More"}
-        </button>
+          ) : null}
+          <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs text-muted" onClick={() => setMoreOpen((v) => !v)}>
+            {moreOpen ? "Hide more" : "More"}
+          </button>
+        </div>
+        <p className="text-[11px] text-muted">{status}</p>
       </div>
+
       {moreOpen ? (
-      <div className="border-t border-[#c6a45a]/50 bg-[#1a1610] px-4 py-4 md:grid md:grid-cols-2 md:gap-4">
-      <div className="mt-4 flex flex-wrap gap-2">
-        <label className="min-h-11 rounded-md border border-line px-3 py-2 text-xs text-parchment">
-          Overlay still
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            className="sr-only"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) takeBanner(file);
-              e.target.value = "";
-            }}
-          />
-        </label>
-        <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={useDeskBanner}>
-          Use desk banner
-        </button>
-      </div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {(["off", "top", "lower"] as const).map((pos) => (
-          <button
-            key={pos}
-            type="button"
-            className={`min-h-11 rounded-md border px-3 text-xs ${overlay === pos ? "border-parchment bg-raised" : "border-line"}`}
-            onClick={() => setOverlay(pos)}
-          >
-            {pos === "off" ? "Overlay off" : pos === "top" ? "Banner top" : "Banner bottom"}
-          </button>
-        ))}
-      </div>
-      <label className="mt-3 block max-w-sm text-xs text-muted">
-        Overlay opacity {opacity}%
-        <input
-          type="range"
-          min={60}
-          max={100}
-          value={opacity}
-          onChange={(e) => setOpacity(Number(e.target.value))}
-          className="mt-1 w-full"
-        />
-      </label>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {(Object.keys(CLIP_ASPECTS) as ClipAspect[]).map((id) => (
-          <button
-            key={id}
-            type="button"
-            className={`min-h-11 rounded-md border px-3 text-xs ${aspect === id ? "border-parchment bg-raised" : "border-line"}`}
-            onClick={() => setAspect(id)}
-          >
-            {CLIP_ASPECTS[id].label}
-          </button>
-        ))}
-      </div>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {(["none", "twitch", "youtube"] as const).map((id) => (
-          <button
-            key={id}
-            type="button"
-            className={`min-h-11 rounded-md border px-3 text-xs ${ghost === id ? "border-parchment bg-raised" : "border-line"}`}
-            onClick={() => setGhost(id)}
-          >
-            {id === "none" ? "No ghost" : id === "twitch" ? "Twitch chat ghost" : "YouTube bar ghost"}
-          </button>
-        ))}
-      </div>
-      <div className="mt-2 flex flex-wrap gap-2">
-        <button
-          type="button"
-          className={`min-h-11 rounded-md border px-3 text-xs ${edition === "OSRS" ? "border-parchment bg-raised" : "border-line"}`}
-          onClick={() => {
-            setEdition("OSRS");
-            const mark = CLIP_MARKS.find((item) => item.id === markId);
-            if (mark && !mark.games.includes("OSRS")) setMarkId("none");
-          }}
-        >
-          Old School
-        </button>
-        <button
-          type="button"
-          className={`min-h-11 rounded-md border px-3 text-xs ${edition === "RS3" ? "border-parchment bg-raised" : "border-line"}`}
-          onClick={() => {
-            setEdition("RS3");
-            const mark = CLIP_MARKS.find((item) => item.id === markId);
-            if (mark && !mark.games.includes("RS3")) setMarkId("none");
-          }}
-        >
-          RuneScape
-        </button>
-      </div>
-      <label className="mt-3 block max-w-sm text-xs text-muted">
-        Display name
-        <input
-          value={name}
-          onChange={(e) => setName(sanitizeDisplayName(e.target.value))}
-          maxLength={12}
-          autoComplete="off"
-          spellCheck={false}
-          className="mt-1 h-11 w-full rounded-md border border-line bg-raised px-3 text-base text-fg"
-        />
-      </label>
-      <label className="mt-2 block max-w-sm text-xs text-muted">
-        Clan
-        <input
-          value={clan}
-          onChange={(e) => setClan(sanitizeClan(e.target.value))}
-          maxLength={24}
-          autoComplete="off"
-          spellCheck={false}
-          className="mt-1 h-11 w-full rounded-md border border-line bg-raised px-3 text-base text-fg"
-        />
-      </label>
-      <label className="mt-2 block max-w-sm text-xs text-muted">
-        World
-        <input
-          value={world}
-          onChange={(e) => setWorld(sanitizeWorld(e.target.value))}
-          inputMode="numeric"
-          autoComplete="off"
-          className="mt-1 h-11 w-full rounded-md border border-line bg-raised px-3 text-base text-fg"
-        />
-      </label>
-      <p className="mt-3 text-xs tracking-[0.16em] text-parchment">MARK</p>
-      <div className="mt-1 flex flex-wrap gap-2">
-        {CLIP_MARKS.filter((item) => item.games.includes(edition)).map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={`min-h-11 rounded-md border px-3 text-xs ${markId === item.id ? "border-parchment bg-raised" : "border-line"}`}
-            onClick={() => setMarkId(item.id)}
-          >
-            {item.name}
-          </button>
-        ))}
-      </div>
-      <p className="mt-3 text-xs tracking-[0.16em] text-parchment">CAPTION</p>
-      <div className="mt-1 flex flex-wrap gap-2">
-        {CLIP_CAPTIONS.map((item) => (
-          <button
-            key={item}
-            type="button"
-            className={`min-h-11 rounded-md border px-3 text-xs ${caption === item ? "border-parchment bg-raised" : "border-line"}`}
-            onClick={() => setCaption(item)}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
-      {caption === "Custom" ? (
-        <input
-          value={customCaption}
-          onChange={(e) => setCustomCaption(e.target.value.slice(0, 48))}
-          maxLength={48}
-          className="mt-2 h-11 w-full max-w-sm rounded-md border border-line bg-raised px-3 text-base text-fg"
-          placeholder="Custom caption"
-        />
+        <div className="border-t border-[#c6a45a]/40 bg-[#1a1610] px-4 py-4">
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={useDeskBanner}>
+              Use desk banner
+            </button>
+            {(["off", "top", "lower"] as const).map((pos) => (
+              <button
+                key={pos}
+                type="button"
+                className={`min-h-11 rounded-md border px-3 text-xs ${overlay === pos ? "border-parchment bg-raised" : "border-line"}`}
+                onClick={() => setOverlay(pos)}
+              >
+                {pos === "off" ? "Banner off" : pos === "top" ? "Banner top" : "Banner bottom"}
+              </button>
+            ))}
+            <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={() => void holdingCard()}>
+              Holding card
+            </button>
+          </div>
+        </div>
       ) : null}
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={undo}>
-          Undo
-        </button>
-        <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={redo}>
-          Redo
-        </button>
-      </div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button type="button" className={`min-h-11 rounded-md border px-3 text-xs ${snapOn ? "border-parchment bg-raised" : "border-line"}`} onClick={() => setSnapOn((v) => !v)}>
-          {snapOn ? "Snap on" : "Snap off"}
-        </button>
-        {([0.5, 1, 1.5, 2] as const).map((rate) => (
-          <button
-            key={rate}
-            type="button"
-            className={`min-h-11 rounded-md border px-3 text-xs ${speed === rate ? "border-parchment bg-raised" : "border-line"}`}
-            onClick={() => {
-              setSpeed(rate);
-              if (videoRef.current) {
-                videoRef.current.playbackRate = rate;
-                if (rate !== 1) videoRef.current.muted = true;
-              }
-            }}
-          >
-            {rate}×
-          </button>
-        ))}
-      </div>
-      <p className="mt-2 text-xs text-muted">Fade in</p>
-      <div className="flex flex-wrap gap-2">
-        {[0, 6, 12].map((n) => (
-          <button key={`fi${n}`} type="button" className={`min-h-11 rounded-md border px-3 text-xs ${fadeIn === n ? "border-parchment bg-raised" : "border-line"}`} onClick={() => setFadeIn(n)}>
-            {n}f
-          </button>
-        ))}
-      </div>
-      <p className="mt-2 text-xs text-muted">Fade out</p>
-      <div className="flex flex-wrap gap-2">
-        {[0, 6, 12].map((n) => (
-          <button key={`fo${n}`} type="button" className={`min-h-11 rounded-md border px-3 text-xs ${fadeOut === n ? "border-parchment bg-raised" : "border-line"}`} onClick={() => setFadeOut(n)}>
-            {n}f
-          </button>
-        ))}
-      </div>
-      <p className="mt-2 text-xs text-muted">Markers · M</p>
-      <div className="flex flex-wrap gap-2">
-        <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={dropMarker}>
-          Add mark
-        </button>
-        {markers.map((mark) => (
-          <button
-            key={mark}
-            type="button"
-            className="min-h-11 rounded-md border border-[#e2c15a] px-3 text-xs text-[#e2c15a]"
-            onClick={() => seek(mark)}
-          >
-            {timecode(mark)}
-          </button>
-        ))}
-      </div>
-      <p className="mt-2 text-xs text-muted">Export size</p>
-      <div className="flex flex-wrap gap-2">
-        <button type="button" className={`min-h-11 rounded-md border px-3 text-xs ${aspect === "16x9-1080" ? "border-parchment bg-raised" : "border-line"}`} onClick={() => setAspect("16x9-1080")}>
-          YouTube 1080
-        </button>
-        <button type="button" className={`min-h-11 rounded-md border px-3 text-xs ${aspect === "16x9-720" ? "border-parchment bg-raised" : "border-line"}`} onClick={() => setAspect("16x9-720")}>
-          Twitch 720
-        </button>
-        <button type="button" className={`min-h-11 rounded-md border px-3 text-xs ${aspect === "9x16" ? "border-parchment bg-raised" : "border-line"}`} onClick={() => setAspect("9x16")}>
-          TikTok 9:16
-        </button>
-        <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={() => void holdingCard()}>
-          Holding card
-        </button>
-      </div>
-      <div className="mt-2 h-2 w-40 overflow-hidden rounded-sm border border-line bg-raised">
-        <div className="h-full bg-parchment" style={{ width: `${muted || speed !== 1 ? 0 : 40}%` }} />
-      </div>
-      <button type="button" className="mt-2 min-h-11 rounded-md border border-line px-3 text-xs" onClick={() => setMuted((v) => !v)}>
-        {muted || speed !== 1 ? "Muted" : "Sound on"}
-      </button>
-      <p className="mt-4 text-xs text-muted">
-        One game. Category is Old School RuneScape or RuneScape. PIN off-screen.
-      </p>
-      <div className="mt-2 flex max-w-sm flex-col gap-2">
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => void exportClip(false)}
-          className="min-h-11 rounded-md border border-parchment px-3 text-sm text-parchment disabled:opacity-40"
-        >
-          {busy ? "Making clip…" : "Export WebM"}
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => void exportClip(true)}
-          className="min-h-11 rounded-md border border-line px-3 text-sm disabled:opacity-40"
-        >
-          Download 16:9 + 9:16
-        </button>
-        <button
-          type="button"
-          onClick={() => void holdingCard()}
-          className="min-h-11 rounded-md border border-line px-3 text-sm"
-        >
-          Holding card 1200×480
-        </button>
-        {busy ? (
-          <button type="button" className="min-h-11 rounded-md border border-line px-3 text-xs" onClick={cancelExport}>
-            Cancel
-          </button>
-        ) : null}
-      </div>
-      </div>
-      ) : null}
-      <p className="mt-2 text-xs text-muted">{status}</p>
     </div>
   );
 }
