@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { loadStudioSave } from "@/lib/studio-save";
-import { sanitizeClan, sanitizeDisplayName, sanitizeHandle, sanitizeWorld, worldLabel } from "@/lib/rsText";
+import { sanitizeClan, sanitizeDisplayName, sanitizeLine, sanitizeWorld, worldLabel } from "@/lib/rsText";
 import { paintRSYellow, ensurePlateFont } from "@/lib/draw-banner";
 import { LOCATIONS } from "@/lib/locations";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
@@ -73,9 +73,8 @@ export function ClipBench() {
   const [rotate, setRotate] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [lowerThird, setLowerThird] = useState(false);
+  const [ltText, setLtText] = useState("");
   const [deskName, setDeskName] = useState("");
-  const [deskClan, setDeskClan] = useState("");
-  const [deskHandle, setDeskHandle] = useState("");
   const undoRef = useRef<{ inPoint: number; outPoint: number; aspect: ClipAspect; overlay: OverlayPos; muted: boolean }[]>([]);
   const redoRef = useRef<typeof undoRef.current>([]);
   const holdRef = useRef<number | null>(null);
@@ -101,14 +100,11 @@ export function ClipBench() {
     const saved = loadStudioSave();
     if (saved.edition === "RS3" || saved.edition === "OSRS") setEdition(saved.edition);
     setDeskName(sanitizeDisplayName(saved.streamer ?? ""));
-    setDeskClan(sanitizeClan(saved.clan ?? ""));
-    setDeskHandle(sanitizeHandle(saved.handle ?? ""));
+    setLtText((prev) => prev || sanitizeDisplayName(saved.streamer ?? ""));
     void ensurePlateFont();
     const pull = () => {
       const next = loadStudioSave();
       setDeskName(sanitizeDisplayName(next.streamer ?? ""));
-      setDeskClan(sanitizeClan(next.clan ?? ""));
-      setDeskHandle(sanitizeHandle(next.handle ?? ""));
     };
     const onStore = (e: StorageEvent) => {
       if (!e.key || e.key === "rsbs.desk.v1" || e.key === "rs-banner-studio") pull();
@@ -208,13 +204,10 @@ export function ClipBench() {
       ctx.restore();
     }
     if (lowerThird) {
-      const line = sanitizeDisplayName(deskName);
-      const second = sanitizeClan(deskClan) || sanitizeHandle(deskHandle);
-      const nameSize = Math.max(18, Math.round(h * 0.055));
-      const subSize = Math.max(14, Math.round(h * 0.032));
+      const line = sanitizeLine(ltText, 24) || sanitizeDisplayName(deskName);
+      const nameSize = 28;
       const nameY = Math.round(h * 0.82);
       if (line) paintRSYellow(ctx, line, 36, nameY, nameSize);
-      if (second) paintRSYellow(ctx, second, 36, nameY + nameSize + 6, subSize);
     }
     const mark = CLIP_MARKS.find((item) => item.id === markId && item.id !== "none");
     if (mark?.src) {
@@ -263,7 +256,7 @@ export function ClipBench() {
       if (rvfc?.cancelVideoFrameCallback) rvfc.cancelVideoFrameCallback(id);
       else window.cancelAnimationFrame(id);
     };
-  }, [aspect, overlay, lowerThird, deskName, deskClan, deskHandle, edition, loop, inPoint, outPoint, ghost, size.w, size.h, opacity, markId, fadeIn, fadeOut, speed, fps, now, rotate, zoom]);
+  }, [aspect, overlay, lowerThird, ltText, deskName, edition, loop, inPoint, outPoint, ghost, size.w, size.h, opacity, markId, fadeIn, fadeOut, speed, fps, now, rotate, zoom]);
 
   function useDeskBanner() {
     const saved = loadStudioSave();
@@ -833,9 +826,22 @@ export function ClipBench() {
           >
             Lower third
           </button>
-          {lowerThird ? (
-            <span className="self-center text-[10px] text-muted">Same as desk</span>
-          ) : null}
+          <label className="inline-flex min-h-11 items-center gap-2 text-[10px] text-muted">
+            Lower third
+            <input
+              id="lt"
+              value={ltText}
+              maxLength={24}
+              placeholder="Same letters as the desk"
+              spellCheck={false}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              enterKeyHint="done"
+              className="h-11 min-w-[12rem] rounded-md border border-line bg-[#1a1610] px-2 text-base text-parchment"
+              onChange={(e) => setLtText(sanitizeLine(e.target.value, 24))}
+            />
+          </label>
           {(["16x9-1080", "16x9-720", "9x16", "1x1"] as ClipAspect[]).map((id) => (
             <button
               key={id}
