@@ -121,6 +121,18 @@ export function saveEditPrefs(aspect: ClipAspect, overlay: "off" | "top" | "lowe
   }
 }
 
+export function peakDb(peak: number) {
+  if (!Number.isFinite(peak) || peak <= 0.001) return "-∞";
+  return `${Math.max(-60, 20 * Math.log10(peak)).toFixed(1)}`;
+}
+
+export function formatBytes(n: number) {
+  if (!Number.isFinite(n) || n <= 0) return "";
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`;
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export function releaseVideo(video: HTMLVideoElement | null, url: string | null) {
   if (video) {
     video.pause();

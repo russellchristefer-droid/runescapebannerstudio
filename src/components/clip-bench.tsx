@@ -11,7 +11,9 @@ import {
   clipFileName,
   clipMime,
   coverRect,
+  formatBytes,
   frameStep,
+  peakDb,
   loadEditPrefs,
   orderInOut,
   releaseVideo,
@@ -39,6 +41,12 @@ export function ClipBench() {
   const hidden = useRef(false);
   const holdRef = useRef<number | null>(null);
   const lastUi = useRef(0);
+  const audioCtx = useRef<AudioContext | null>(null);
+  const analyser = useRef<AnalyserNode | null>(null);
+  const audioSrc = useRef<MediaElementAudioSourceNode | null>(null);
+  const gainNode = useRef<GainNode | null>(null);
+  const recDest = useRef<MediaStreamAudioDestinationNode | null>(null);
+  const meterBuf = useRef<Uint8Array | null>(null);
   const actions = useRef({
     togglePlay: () => {},
     seek: (_t: number) => {},
@@ -57,7 +65,7 @@ export function ClipBench() {
   const [inPoint, setInPoint] = useState(0);
   const [outPoint, setOutPoint] = useState(0);
   const [loop, setLoop] = useState(true);
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [aspect, setAspect] = useState<ClipAspect>(() => loadEditPrefs().aspect ?? "16x9-720");
   const [overlay, setOverlay] = useState<OverlayPos>(() => loadEditPrefs().overlay ?? "off");
@@ -82,8 +90,15 @@ export function ClipBench() {
   const [viewEnd, setViewEnd] = useState(0);
   const [opacity, setOpacity] = useState(100);
   const [volume, setVolume] = useState(1);
+  const [gainPct, setGainPct] = useState(100);
   const [rotate, setRotate] = useState(0);
   const [zoom, setZoom] = useState(1);
+  const [peak, setPeak] = useState(0);
+  const [hold, setHold] = useState(0);
+  const [exportPct, setExportPct] = useState(0);
+  const [fileBytes, setFileBytes] = useState(0);
+  const [ready, setReady] = useState<"empty" | "loading" | "ready" | "bad">("empty");
+  const [hasAudio, setHasAudio] = useState(false);
   const undoRef = useRef<{ inPoint: number; outPoint: number; aspect: ClipAspect; overlay: OverlayPos; muted: boolean }[]>([]);
   const redoRef = useRef<typeof undoRef.current>([]);
 
@@ -152,16 +167,20 @@ export function ClipBench() {
       if (prev && "close" in prev && typeof (prev as ImageBitmap).close === "function") {
         (prev as ImageBitmap).close();
       }
+      void audioCtx.current?.close();
+      audioCtx.current = null;
+      analyser.current = null;
+      audioSrc.current = null;
+      gainNode.current = null;
+      recDest.current = null;
     };
   }, []);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
-    video.muted = muted;
-    video.volume = muted ? 0 : volume;
-    video.playbackRate = speed;
-  }, [muted, volume, speed]);
+    if (video) video.playbackRate = speed;
+    applyLiveGain(video?.currentTime ?? now);
+  }, [muted, gainPct, speed, fadeIn, fadeOut, inPoint, outPoint, fps]);
 
   useEffect(() => {
     if (!busy) return;
@@ -276,6 +295,21 @@ export function ClipBench() {
         if (stamp - lastUi.current > 80) {
           lastUi.current = stamp;
           setNow(t);
+          applyLiveGain(t);
+          const node = analyser.current;
+          const buf = meterBuf.current;
+          if (node && buf) {
+            node.getByteTimeDomainData(buf as Uint8Array<ArrayBuffer>);
+            let max = 0;
+            for (let i = 0; i < buf.length; i++) {
+              const v = Math.abs(buf[i] - 128) / 128;
+              if (v > max) max = v;
+            }
+            setPeak(max);
+            setHold((prev) => (max > prev ? max : prev * 0.92));
+          } else {
+            setPeak(0);
+          }
         }
       }
       const rvfc = video as HTMLVideoElement & { requestVideoFrameCallback?: (cb: () => void) => number };
@@ -356,6 +390,58 @@ export function ClipBench() {
     setStatus("Holding card saved on this device.");
   }
 
+  function fadeMul(t: number) {
+    const fadeInSec = (fadeIn / Math.max(1, fps)) / Math.max(0.25, speed);
+    const fadeOutSec = (fadeOut / Math.max(1, fps)) / Math.max(0.25, speed);
+    let fade = 1;
+    if (fadeInSec > 0 && t < inPoint + fadeInSec) fade = Math.max(0, (t - inPoint) / fadeInSec);
+    if (fadeOutSec > 0 && t > outPoint - fadeOutSec) fade = Math.min(fade, Math.max(0, (outPoint - t) / fadeOutSec));
+    return fade;
+  }
+
+  function applyLiveGain(t: number) {
+    const node = gainNode.current;
+    if (!node) return;
+    const base = muted || speed !== 1 ? 0 : Math.max(0, Math.min(2, gainPct / 100));
+    node.gain.value = base * fadeMul(t);
+  }
+
+  function hookAudio(video: HTMLVideoElement) {
+    try {
+      const AC = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AC) return;
+      if (!audioCtx.current || audioCtx.current.state === "closed") {
+        audioCtx.current = new AC();
+        audioSrc.current = null;
+        gainNode.current = null;
+        analyser.current = null;
+        recDest.current = null;
+      }
+      const ctx = audioCtx.current;
+      if (!audioSrc.current) audioSrc.current = ctx.createMediaElementSource(video);
+      if (!gainNode.current) gainNode.current = ctx.createGain();
+      if (!analyser.current) {
+        analyser.current = ctx.createAnalyser();
+        analyser.current.fftSize = 256;
+        meterBuf.current = new Uint8Array(analyser.current.fftSize);
+      }
+      if (!recDest.current) recDest.current = ctx.createMediaStreamDestination();
+      audioSrc.current.disconnect();
+      gainNode.current.disconnect();
+      audioSrc.current.connect(gainNode.current);
+      gainNode.current.connect(analyser.current);
+      gainNode.current.connect(ctx.destination);
+      gainNode.current.connect(recDest.current);
+      video.muted = false;
+      video.volume = 1;
+      applyLiveGain(video.currentTime || 0);
+      void ctx.resume();
+    } catch {
+      analyser.current = null;
+      gainNode.current = null;
+    }
+  }
+
   function takeVideo(file: File) {
     const looksVideo = file.type.startsWith("video/") || /\.(mp4|webm|mov|m4v|mkv)$/i.test(file.name);
     if (!looksVideo) {
@@ -371,15 +457,23 @@ export function ClipBench() {
     objectUrl.current = url;
     const video = videoRef.current;
     if (!video) return;
+    setReady("loading");
+    setFileBytes(file.size);
+    setPeak(0);
+    setHold(0);
     video.src = url;
     video.onplay = () => setPlaying(true);
     video.onpause = () => setPlaying(false);
     video.onended = () => setPlaying(false);
     setFileLabel(file.name);
-    video.onerror = () => setStatus("Could not read that file.");
+    video.onerror = () => {
+      setReady("bad");
+      setStatus("Could not read that file.");
+    };
     video.onloadedmetadata = () => {
       const dur = video.duration || 0;
       if (!Number.isFinite(dur) || dur <= 0) {
+        setReady("bad");
         setStatus("Could not read that file.");
         return;
       }
@@ -399,10 +493,14 @@ export function ClipBench() {
       redoRef.current = [];
       setNative(`${video.videoWidth}×${video.videoHeight}`);
       setHasClip(true);
+      setReady("ready");
+      const tracks = (video as HTMLVideoElement & { audioTracks?: { length: number } }).audioTracks;
+      setHasAudio(tracks ? tracks.length > 0 : true);
+      hookAudio(video);
       setStatus(
         dur > CLIP_WARN_SECONDS
           ? "This bench is for clips, not a whole slayer block."
-          : `${file.name} · ${timecode(dur)} · ${video.videoWidth}×${video.videoHeight}`,
+          : `${file.name} · ${timecode(dur)} · ${video.videoWidth}×${video.videoHeight} · ${formatBytes(file.size)}`,
       );
     };
   }
@@ -437,6 +535,7 @@ export function ClipBench() {
     if (!video || !hasClip) return;
     if (video.paused) {
       if (video.currentTime < inPoint || video.currentTime >= outPoint - 0.04) video.currentTime = inPoint;
+      void audioCtx.current?.resume();
       void video.play();
     } else {
       video.pause();
@@ -560,10 +659,14 @@ export function ClipBench() {
     const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
-    const ctxTick = () => paint(canvas, video, false, w, h);
-    video.muted = muted || speed !== 1;
-    video.volume = muted ? 0 : volume;
+    const ctxTick = () => {
+      paint(canvas, video, false, w, h);
+      applyLiveGain(video.currentTime);
+    };
+    video.muted = false;
+    video.volume = 1;
     video.playbackRate = speed;
+    applyLiveGain(inPoint);
     video.currentTime = inPoint;
     await new Promise<void>((resolve) => {
       const ready = () => {
@@ -577,15 +680,10 @@ export function ClipBench() {
     const recStream = canvas.captureStream(30);
     let mix: MediaStream = recStream;
     let audioOk = false;
-    try {
-      const captured = (video as HTMLVideoElement & { captureStream?: () => MediaStream }).captureStream?.();
-      const tracks = captured?.getAudioTracks() ?? [];
-      if (tracks.length && !muted && speed === 1) {
-        mix = new MediaStream([...recStream.getVideoTracks(), ...tracks]);
-        audioOk = true;
-      }
-    } catch {
-      audioOk = false;
+    const processed = recDest.current?.stream.getAudioTracks() ?? [];
+    if (processed.length && !muted && speed === 1) {
+      mix = new MediaStream([...recStream.getVideoTracks(), ...processed]);
+      audioOk = true;
     }
     const chunks: BlobPart[] = [];
     const recorder = new MediaRecorder(mix, { mimeType: mime });
@@ -602,6 +700,8 @@ export function ClipBench() {
     await new Promise<void>((resolve) => {
       const watch = () => {
         ctxTick();
+        const spanOut = Math.max(0.05, outPoint - inPoint);
+        setExportPct(Math.min(100, Math.max(0, ((video.currentTime - inPoint) / spanOut) * 100)));
         if (video.currentTime >= outPoint - 0.05 || video.ended || recorder.state === "inactive") {
           video.pause();
           if (recorder.state !== "inactive") recorder.stop();
@@ -656,6 +756,7 @@ export function ClipBench() {
       return;
     }
     setBusy(true);
+    setExportPct(0);
     setStatus("Making clip…");
     try {
       const first = pair ? CLIP_ASPECTS["16x9-720"] : size;
@@ -670,6 +771,7 @@ export function ClipBench() {
       setStatus(clipMime() ? "Export stopped." : "This browser cannot encode. Use Chrome or Edge.");
     } finally {
       setBusy(false);
+      setExportPct(0);
     }
   }
 
@@ -681,6 +783,7 @@ export function ClipBench() {
     }
     videoRef.current?.pause();
     setBusy(false);
+    setExportPct(0);
     setStatus("Export cancelled.");
   }
 
@@ -707,21 +810,66 @@ export function ClipBench() {
             <p className="absolute inset-0 z-10 flex items-center justify-center text-sm text-muted">Drop a kill clip here.</p>
           ) : null}
           <canvas ref={canvasRef} className="block h-full w-full object-contain" />
+          {hasClip ? (
+            <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-2 font-mono text-[10px] tabular-nums text-[#efe4c8]">
+              <div className="flex items-start justify-between gap-2">
+                <span className={busy ? "rounded-sm bg-[#9b1b1b] px-1.5 py-0.5 font-semibold tracking-widest" : "rounded-sm bg-black/55 px-1.5 py-0.5"}>
+                  {busy ? "REC" : playing ? "PLAY" : "STOP"}
+                </span>
+                <span className="rounded-sm bg-black/55 px-1.5 py-0.5">{timecode(now)}</span>
+                <span className="rounded-sm bg-black/55 px-1.5 py-0.5">
+                  {muted ? "MUTE" : `${gainPct}%`} · {peakDb(hold)} dBFS
+                </span>
+              </div>
+              <div className="flex items-end justify-between gap-2">
+                <span className="rounded-sm bg-black/55 px-1.5 py-0.5">
+                  IN {timecode(inPoint)} · OUT {timecode(outPoint)}
+                </span>
+                <span className="relative flex h-16 w-3 flex-col-reverse overflow-hidden rounded-sm bg-black/55 ring-1 ring-[#c6a45a]/40">
+                  <span
+                    className="w-full"
+                    style={{
+                      height: `${Math.min(100, peak * 100)}%`,
+                      background: peak > 0.95 ? "#9b1b1b" : peak > 0.7 ? "#c6a45a" : "#7a9b3a",
+                    }}
+                  />
+                  <span className="absolute left-0 w-full bg-[#efe4c8]" style={{ bottom: `${Math.min(100, hold * 100)}%`, height: 2 }} />
+                </span>
+              </div>
+            </div>
+          ) : null}
         </div>
         <video ref={videoRef} className="hidden" playsInline preload="metadata" muted={muted} controls={false} />
-        <p className="px-4 py-2 text-center font-mono text-[11px] tabular-nums text-muted">
-          {hasClip
-            ? `In ${timecode(inPoint)} · Out ${timecode(outPoint)} · ${timecode(range)} · ${size.w}×${size.h}`
-            : "No file"}
-          {fileLabel ? ` · ${fileLabel}` : ""}
-          {native ? ` · ${native}` : ""}
-        </p>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 px-4 py-2 font-mono text-[11px] tabular-nums text-muted sm:grid-cols-4">
+          <p>TC {hasClip ? timecode(now) : "00:00.00"}</p>
+          <p>DUR {hasClip ? timecode(range) : "00:00.00"}</p>
+          <p>SRC {native || "—"}</p>
+          <p>
+            OUT {size.w}×{size.h}
+          </p>
+          <p>IN {hasClip ? timecode(inPoint) : "00:00.00"}</p>
+          <p>OUT {hasClip ? timecode(outPoint) : "00:00.00"}</p>
+          <p>
+            PK {peakDb(hold)} dBFS{hold > 0.95 ? " CLIP" : ""}
+          </p>
+          <p>
+            {ready === "ready" ? "READY" : ready === "loading" ? "LOAD" : ready === "bad" ? "BAD FILE" : "IDLE"}
+            {muted ? " · MUTE" : ` · ${gainPct}%`}
+            {loop ? " · LOOP" : ""}
+            {speed !== 1 ? ` · ${speed}×` : ""}
+          </p>
+        </div>
       </div>
 
       <div className="space-y-3 bg-[#241e16] px-3 py-3">
         <div className="relative h-9 overflow-hidden rounded-md bg-[#120f0c]">
           {duration > 0 ? (
             <>
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-2">
+                {Array.from({ length: 9 }, (_, i) => (
+                  <span key={i} className="flex-1 border-l border-[#c6a45a]/25" />
+                ))}
+              </div>
               <div
                 className="pointer-events-none absolute inset-y-1 rounded-sm bg-[#c6a45a]/25"
                 style={{ left: pct(inPoint), width: `calc(${pct(outPoint)} - ${pct(inPoint)})` }}
@@ -791,6 +939,53 @@ export function ClipBench() {
           </button>
         </div>
 
+        <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#c6a45a]/25 bg-[#1a1610] px-2 py-2">
+          <p className="w-full text-[10px] tracking-wide text-faint sm:w-auto">Sound</p>
+          <button type="button" className={muted ? CHIP_ON : CHIP} onClick={() => setMuted((v) => !v)}>
+            Mute
+          </button>
+          <label className="inline-flex min-h-11 items-center gap-2 text-[11px] text-muted">
+            Gain
+            <input
+              type="range"
+              min={0}
+              max={200}
+              step={1}
+              value={gainPct}
+              disabled={muted}
+              onChange={(e) => setGainPct(Number(e.target.value))}
+              className="h-11 w-36 accent-[#c6a45a]"
+              aria-label="Gain percent"
+            />
+            <span className="w-10 font-mono tabular-nums text-parchment">{gainPct}%</span>
+          </label>
+          <button
+            type="button"
+            className={fadeIn > 0 ? CHIP_ON : CHIP}
+            onClick={() => setFadeIn((v) => (v > 0 ? 0 : Math.round(fps * 0.5)))}
+          >
+            Fade in
+          </button>
+          <button
+            type="button"
+            className={fadeOut > 0 ? CHIP_ON : CHIP}
+            onClick={() => setFadeOut((v) => (v > 0 ? 0 : Math.round(fps * 0.5)))}
+          >
+            Fade out
+          </button>
+          <span className="relative inline-flex h-11 w-4 overflow-hidden rounded-sm border border-[#c6a45a]/40 bg-[#120f0c]" title={`${peakDb(hold)} dBFS`} aria-label={`Peak ${peakDb(hold)} dBFS`}>
+            <span
+              className="absolute bottom-0 w-full"
+              style={{
+                height: `${Math.min(100, peak * 100)}%`,
+                background: peak > 0.95 ? "#9b1b1b" : peak > 0.7 ? "#c6a45a" : "#7a9b3a",
+              }}
+            />
+            <span className="absolute w-full bg-[#efe4c8]" style={{ bottom: `${Math.min(100, hold * 100)}%`, height: 2 }} />
+          </span>
+          <span className="font-mono text-[11px] tabular-nums text-muted">{peakDb(hold)} dB</span>
+        </div>
+
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           <button type="button" disabled={!hasClip} className={CHIP} onClick={markIn}>
             In
@@ -838,19 +1033,6 @@ export function ClipBench() {
           <button type="button" className={loop ? CHIP_ON : CHIP} onClick={() => setLoop((v) => !v)}>
             Loop
           </button>
-          <button type="button" className={muted ? CHIP_ON : CHIP} onClick={() => setMuted((v) => !v)}>
-            Mute
-          </button>
-          <button
-            type="button"
-            className={CHIP}
-            onClick={() => {
-              setFadeIn(Math.round(fps * 0.5));
-              setFadeOut(Math.round(fps * 0.5));
-            }}
-          >
-            Fade 0.5s
-          </button>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -876,7 +1058,15 @@ export function ClipBench() {
             {moreOpen ? "Hide more" : "More"}
           </button>
         </div>
-        <p className="text-[11px] text-muted">{status}</p>
+        <p className="text-[11px] text-muted" aria-live="polite">
+          {busy ? `Making clip… ${Math.round(exportPct)}%` : status}
+          {fileLabel && !busy ? ` · ${fileLabel}` : ""}
+        </p>
+        {busy ? (
+          <div className="h-1 overflow-hidden rounded-sm bg-[#120f0c]" role="progressbar" aria-valuenow={Math.round(exportPct)} aria-valuemin={0} aria-valuemax={100}>
+            <div className="h-full bg-[#9b1b1b]" style={{ width: `${exportPct}%` }} />
+          </div>
+        ) : null}
         <p className="text-[11px] text-faint">Space play · I / O marks · J / L skip · , . frames. Don’t export a Bank PIN.</p>
       </div>
 
