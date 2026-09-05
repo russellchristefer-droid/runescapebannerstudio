@@ -1238,19 +1238,6 @@ export function ClipBench() {
               </button>
             ))}
           </div>
-          <div className="flex flex-wrap gap-2">
-            <button type="button" className={edition === "OSRS" ? CHIP_ON : CHIP} onClick={() => setEdition("OSRS")}>
-              Old School
-            </button>
-            <button type="button" className={edition === "RS3" ? CHIP_ON : CHIP} onClick={() => setEdition("RS3")}>
-              RuneScape
-            </button>
-            {CLIP_MARKS.filter((m) => m.games.includes(edition)).map((m) => (
-              <button key={m.id} type="button" className={markId === m.id ? CHIP_ON : CHIP} onClick={() => setMarkId(m.id)}>
-                {m.name}
-              </button>
-            ))}
-          </div>
         </div>
       ) : null}
     </div>
