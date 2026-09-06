@@ -129,6 +129,7 @@ export function Studio() {
   const [textPos, setTextPos] = useState<Record<string, { x: number; y: number }>>({});
   const [textScale, setTextScale] = useState<Record<string, number>>(saved.textScale ?? {});
   const [plateCaption, setPlateCaption] = useState("");
+  const [saveNote, setSaveNote] = useState("");
   const [ghostZone, setGhostZone] = useState<SafeZone>("none");
   const [customMarks, setCustomMarks] = useState<{ id: string; name: string; src: string; game: "OSRS" | "RS3" }[]>([]);
   const markFileRef = useRef<HTMLInputElement>(null);
