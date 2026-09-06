@@ -23,6 +23,8 @@ function EditPage() {
         </div>
         <ol className="mt-4 list-decimal space-y-1 pl-5 text-sm text-muted">
           <li>Upload a clip you own.</li>
+          <li>Set In and Out on the timeline.</li>
+          <li>Pick a size, then Save clip. The file stays on this device.</li>
           <li>Don't export a Bank PIN.</li>
         </ol>
         <StreamDesk />
