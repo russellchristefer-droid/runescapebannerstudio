@@ -18,7 +18,17 @@ export function UseOnBanner({
     <a
       href={still.deskHref(edition, placeId)}
       className="min-h-11 text-sm text-parchment [touch-action:manipulation]"
-      onClick={() => still.putOnDesk({ locationId: placeId, edition })}
+      onClick={(event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+        event.preventDefault();
+        still.putOnDesk({ locationId: placeId, edition });
+        const desk = document.getElementById("desk");
+        if (desk) {
+          desk.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+        window.location.assign(still.deskHref(edition, placeId));
+      }}
     >
       {label}
     </a>

@@ -7,6 +7,8 @@ import { LOCATIONS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
 import { PlaceRail } from "@/components/place-rail";
 import { UseOnBanner } from "@/components/use-on-banner";
+import { VisitPlaces, godPath, bossPath, townPath } from "@/components/place-chip";
+import { townNote } from "@/lib/town-notes";
 
 export const Route = createFileRoute("/bosses/$id")({
   head: ({ params }) => {
@@ -59,6 +61,22 @@ function BossNotePage() {
         <BossSheet sheet={sheet} />
 
         <SisterBoss name={loc.name} edition={loc.edition} id={loc.id} />
+        <section>
+          <h2 className="text-sm font-semibold text-parchment">Places to visit</h2>
+          <VisitPlaces
+            items={[
+              { href: godPath(loc.god), label: loc.god },
+              ...LOCATIONS.filter((row) => row.kind === "town" && row.god === loc.god && townNote(row.id))
+                .slice(0, 6)
+                .map((row) => ({ href: townPath(row.id), label: row.name })),
+              ...LOCATIONS.filter(
+                (row) => row.kind === "boss" && row.edition === loc.edition && noteFor(row.id),
+              )
+                .slice(0, 8)
+                .map((row) => ({ href: bossPath(row.id), label: row.name, current: row.id === loc.id })),
+            ]}
+          />
+        </section>
         <UseOnBanner src={loc.viewA} edition={loc.edition} placeId={loc.id} />
       </main>
     </div>

@@ -1093,21 +1093,14 @@ export function Studio() {
             const href = loc.kind === "boss" ? bossPath(loc.id) : townPath(loc.id);
             return (
               <div key={loc.id} className="overflow-hidden rounded-md border border-line hover:border-[#F5C400]" data-place-card data-slug={loc.id}>
-                <button
-                  type="button"
-                  className="block w-full text-left [touch-action:manipulation]"
-                  onClick={() => {
-                    applyStill(loc.id, "a", src);
-                    document.getElementById("desk")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }}
-                >
+                <AppLink href={href} className="block [touch-action:manipulation]">
                   <StillPhoto
                     src={src}
                     alt={`${loc.name}, ${loc.region}`}
                     priority={i < 2}
                     className="aspect-video w-full object-cover [content-visibility:auto]"
                   />
-                </button>
+                </AppLink>
                 <AppLink href={href} className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">
                   {loc.name}
                 </AppLink>

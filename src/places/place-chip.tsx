@@ -1,5 +1,4 @@
 import type { CSSProperties, ReactNode } from "react";
-import { useRouter } from "@tanstack/react-router";
 import { GOD_SLUGS } from "@/lib/gods";
 import type { God } from "@/lib/locations";
 
@@ -7,7 +6,7 @@ function sameOriginPath(href: string) {
   return href.startsWith("/") && !href.startsWith("//") && !href.startsWith("/#");
 }
 
-/** Real <a href> that stays inside the studio chrome. pointerup for phones. */
+/** Real <a href>. No preventDefault — the browser follows the path. */
 export function AppLink({
   href,
   children,
@@ -21,31 +20,8 @@ export function AppLink({
   style?: CSSProperties;
   current?: boolean;
 }) {
-  const router = useRouter();
-  function go() {
-    if (!sameOriginPath(href)) return;
-    router.history.push(href);
-  }
   return (
-    <a
-      href={href}
-      aria-current={current ? "page" : undefined}
-      className={className}
-      style={style}
-      onClick={(event) => {
-        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
-        if (!sameOriginPath(href)) return;
-        event.preventDefault();
-        go();
-      }}
-      onPointerUp={(event) => {
-        if (event.pointerType !== "touch") return;
-        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        if (!sameOriginPath(href)) return;
-        event.preventDefault();
-        go();
-      }}
-    >
+    <a href={href} aria-current={current ? "page" : undefined} className={className} style={style}>
       {children}
     </a>
   );
