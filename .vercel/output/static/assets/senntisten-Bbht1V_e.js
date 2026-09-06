@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-Cltr0gcK.js";import{n as t,r as n}from"./ledgers-CLHYabvJ.js";var r=e();function i(){return(0,r.jsx)(n,{title:`Senntisten ledger`,deck:`RuneScape 3 · methods only. Official wiki wins on the hour.`,game:t.game,wiki:t.wiki,f2p:t.f2p,members:t.members,foot:`This desk does not price the GE. Open the wiki for this hour.`})}export{i as component};

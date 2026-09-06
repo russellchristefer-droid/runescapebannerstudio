@@ -24,17 +24,10 @@ import {
   renderInstallPageHtml,
   renderWebManifest,
 } from "../../scripts/grok-pwa-shared.mjs";
-import { SECURITY_HEADERS } from "../../src/lib/headers";
 
 interface GrokPwaEvent {
   url: URL;
   req: { method: string; headers: Headers };
-}
-
-function withSecurity(headers: Headers, path: string) {
-  for (const [key, value] of Object.entries(SECURITY_HEADERS)) headers.set(key, value);
-  if (path === "/healthz" || path.startsWith("/api/")) headers.set("x-robots-tag", "noindex");
-  return headers;
 }
 
 function requestHost(event: GrokPwaEvent): string {
@@ -60,7 +53,6 @@ function injectHeadStreaming(response: Response, host: string): Response {
   );
   const headers = new Headers(response.headers);
   headers.delete("content-length");
-  withSecurity(headers, "/");
   return new Response(transformed, {
     status: response.status,
     statusText: response.statusText,

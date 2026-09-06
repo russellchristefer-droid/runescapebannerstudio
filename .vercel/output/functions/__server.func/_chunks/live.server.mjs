@@ -1,7 +1,432 @@
+import { readFileSync } from "node:fs";
+//#region src/data/channels.ts
+var CHANNELS = [
+	{
+		id: "official-osrs",
+		name: "Old School RuneScape",
+		game: "osrs",
+		twitch: "oldschoolrs",
+		x: "OldSchoolRS",
+		instagram: "oldschool.runescape",
+		official: true,
+		era: "official"
+	},
+	{
+		id: "official-rs",
+		name: "RuneScape",
+		game: "rs3",
+		twitch: "runescape",
+		x: "RuneScape",
+		facebook: "RuneScape",
+		official: true,
+		era: "official"
+	},
+	{
+		id: "sparcmac",
+		name: "Sparc Mac",
+		game: "osrs",
+		twitch: "sparcmac",
+		era: "foundation"
+	},
+	{
+		id: "woox",
+		name: "Woox",
+		game: "osrs",
+		twitch: "wooxsolo",
+		era: "foundation"
+	},
+	{
+		id: "framed",
+		name: "Framed",
+		game: "osrs",
+		twitch: "framed",
+		era: "foundation"
+	},
+	{
+		id: "b0aty",
+		name: "B0aty",
+		game: "osrs",
+		twitch: "b0aty",
+		era: "current"
+	},
+	{
+		id: "faux",
+		name: "Faux",
+		game: "osrs",
+		twitch: "faux",
+		era: "current"
+	},
+	{
+		id: "sick_nerd",
+		name: "Sick_Nerd",
+		game: "osrs",
+		twitch: "sick_nerd",
+		era: "current"
+	},
+	{
+		id: "mr_mammal",
+		name: "Mr Mammal",
+		game: "osrs",
+		twitch: "mr_mammal",
+		era: "current"
+	},
+	{
+		id: "purpp",
+		name: "Purpp",
+		game: "osrs",
+		twitch: "purpp",
+		era: "current"
+	},
+	{
+		id: "dino_xx",
+		name: "Dino_xx",
+		game: "osrs",
+		twitch: "dino_xx",
+		era: "current"
+	},
+	{
+		id: "sardaco",
+		name: "Sardaco",
+		game: "osrs",
+		twitch: "sardaco",
+		era: "current"
+	},
+	{
+		id: "widega",
+		name: "Widega_",
+		game: "osrs",
+		twitch: "widega_",
+		era: "current"
+	},
+	{
+		id: "mmorpg",
+		name: "Mmorpg",
+		game: "osrs",
+		twitch: "mmorpg",
+		era: "current"
+	},
+	{
+		id: "gnomonkey",
+		name: "Gnomonkey",
+		game: "osrs",
+		twitch: "gnomonkey",
+		era: "current"
+	},
+	{
+		id: "westham",
+		name: "Westham",
+		game: "osrs",
+		twitch: "westham",
+		era: "current"
+	},
+	{
+		id: "alfie",
+		name: "Alfie",
+		game: "osrs",
+		twitch: "alfie",
+		era: "current"
+	},
+	{
+		id: "skillspecs",
+		name: "Skill Specs",
+		game: "osrs",
+		twitch: "skillspecs",
+		era: "current"
+	},
+	{
+		id: "tastylife",
+		name: "TastyLife",
+		game: "osrs",
+		twitch: "tastylife",
+		era: "current"
+	},
+	{
+		id: "roidie",
+		name: "Roidie",
+		game: "osrs",
+		twitch: "roidie",
+		era: "current"
+	},
+	{
+		id: "coxie",
+		name: "Coxie",
+		game: "osrs",
+		twitch: "coxie",
+		era: "current"
+	},
+	{
+		id: "muts",
+		name: "Muts",
+		game: "osrs",
+		twitch: "muts",
+		era: "current"
+	},
+	{
+		id: "soup",
+		name: "Soup",
+		game: "osrs",
+		twitch: "soup",
+		era: "current"
+	},
+	{
+		id: "odablock",
+		name: "Odablock",
+		game: "osrs",
+		twitch: "odablock",
+		era: "current"
+	},
+	{
+		id: "settled",
+		name: "Settled",
+		game: "osrs",
+		twitch: "settled",
+		era: "current"
+	},
+	{
+		id: "cengineer",
+		name: "C Engineer",
+		game: "osrs",
+		twitch: "cengineer",
+		era: "current"
+	},
+	{
+		id: "christefer",
+		name: "Christefer_1",
+		game: "osrs",
+		twitch: "christefer_1",
+		era: "current"
+	},
+	{
+		id: "alkan",
+		name: "Alkan",
+		game: "osrs",
+		twitch: "alkan",
+		era: "current"
+	},
+	{
+		id: "solomission",
+		name: "SoloMission",
+		game: "osrs",
+		twitch: "solomission",
+		era: "current"
+	},
+	{
+		id: "rice",
+		name: "Rice Cup",
+		game: "osrs",
+		twitch: "ricecup",
+		era: "current"
+	},
+	{
+		id: "ditter",
+		name: "DitterBitter",
+		game: "osrs",
+		twitch: "ditterbitter",
+		era: "current"
+	},
+	{
+		id: "verzide",
+		name: "Verzide",
+		game: "osrs",
+		twitch: "verzide",
+		era: "current"
+	},
+	{
+		id: "kempq",
+		name: "KempQ",
+		game: "osrs",
+		twitch: "kempq",
+		era: "current"
+	},
+	{
+		id: "gunschilli",
+		name: "Gunschilli",
+		game: "osrs",
+		twitch: "gunschilli",
+		era: "current"
+	},
+	{
+		id: "unit",
+		name: "Unit",
+		game: "osrs",
+		twitch: "unitthetv",
+		era: "current"
+	},
+	{
+		id: "bruzz",
+		name: "Bruzz",
+		game: "osrs",
+		twitch: "bruzz",
+		era: "current"
+	},
+	{
+		id: "jepk",
+		name: "Jepk",
+		game: "osrs",
+		twitch: "jepk",
+		era: "current"
+	},
+	{
+		id: "manked",
+		name: "Manked",
+		game: "osrs",
+		twitch: "manked",
+		era: "current"
+	},
+	{
+		id: "tpapaslice",
+		name: "TpapaSLICE",
+		game: "osrs",
+		twitch: "tpapaslice",
+		era: "current"
+	},
+	{
+		id: "jillyfish",
+		name: "jillyfish",
+		game: "osrs",
+		twitch: "jillyfish",
+		era: "current"
+	},
+	{
+		id: "palumor",
+		name: "Palumor",
+		game: "osrs",
+		twitch: "palumor",
+		era: "current"
+	},
+	{
+		id: "thersguy",
+		name: "TheRSGuy",
+		game: "rs3",
+		twitch: "thersguy",
+		x: "TheRSguyy",
+		era: "current"
+	},
+	{
+		id: "evscape",
+		name: "EvScape",
+		game: "rs3",
+		twitch: "evscape",
+		era: "current"
+	},
+	{
+		id: "itrolledu",
+		name: "iTrolledU",
+		game: "rs3",
+		twitch: "itrolledu",
+		era: "current"
+	},
+	{
+		id: "maikeru",
+		name: "Maikeru",
+		game: "rs3",
+		twitch: "maikeru",
+		era: "current"
+	},
+	{
+		id: "molgoatkirby",
+		name: "molgoatkirby",
+		game: "rs3",
+		twitch: "molgoatkirby",
+		era: "current"
+	},
+	{
+		id: "wazzy",
+		name: "Wazzy",
+		game: "rs3",
+		twitch: "wazzy",
+		era: "current"
+	},
+	{
+		id: "sr_bigboaby",
+		name: "SR_BigBoaby",
+		game: "rs3",
+		twitch: "sr_bigboaby",
+		era: "current"
+	},
+	{
+		id: "willmissit",
+		name: "WillMissIt",
+		game: "rs3",
+		twitch: "rswillmissit",
+		era: "current"
+	},
+	{
+		id: "couchy",
+		name: "couchy",
+		game: "rs3",
+		twitch: "couchy",
+		era: "current"
+	},
+	{
+		id: "rageface",
+		name: "Rageface",
+		game: "rs3",
+		twitch: "rageface",
+		era: "current"
+	},
+	{
+		id: "heirloom",
+		name: "Heirloom",
+		game: "rs3",
+		twitch: "heirloom",
+		era: "current"
+	},
+	{
+		id: "grodoto",
+		name: "Grodoto",
+		game: "rs3",
+		twitch: "grodoto",
+		era: "current"
+	},
+	{
+		id: "spongers",
+		name: "SpongeRS",
+		game: "rs3",
+		twitch: "spongers",
+		era: "current"
+	},
+	{
+		id: "imnooblet",
+		name: "ImNooblet",
+		game: "rs3",
+		twitch: "imnooblet",
+		era: "current"
+	},
+	{
+		id: "mukluk",
+		name: "Mukluk",
+		game: "rs3",
+		twitch: "mukluk",
+		era: "current"
+	},
+	{
+		id: "puprs",
+		name: "PupRs",
+		game: "rs3",
+		twitch: "puprs",
+		era: "current"
+	},
+	{
+		id: "hexis",
+		name: "Hexis",
+		game: "rs3",
+		twitch: "hexis",
+		era: "current"
+	},
+	{
+		id: "acidia",
+		name: "Acidia",
+		game: "rs3",
+		twitch: "acidia",
+		era: "current"
+	}
+];
+//#endregion
 //#region src/lib/live.server.ts
 var cache = /* @__PURE__ */ new Map();
 var TTL = 45e3;
-var BOARD_TTL = 12e4;
+var BOARD_TTL = 6e4;
 var boardMemo = null;
 var appToken = null;
 function cleanLogin(raw) {
@@ -13,12 +438,25 @@ function liveDisabled() {
 	const flag = String(process.env.TWITCH_LIVE ?? process.env.VITE_TWITCH_LIVE ?? "").toLowerCase();
 	return flag === "false" || flag === "0";
 }
+function gameForHandle(handle) {
+	return CHANNELS.find((item) => cleanLogin(item.twitch ?? "") === handle)?.game ?? null;
+}
 function categoryGame(name) {
 	if (name === "Old School RuneScape") return "osrs";
 	if (name === "RuneScape") return "rs3";
 	return null;
 }
+function listedLogins() {
+	try {
+		const raw = readFileSync(new URL("../../public/streamers.json", import.meta.url), "utf8");
+		const fromFile = JSON.parse(raw).map((row) => cleanLogin(row.twitch ?? "")).filter(Boolean);
+		if (fromFile.length) return fromFile;
+	} catch {}
+	return CHANNELS.map((row) => cleanLogin(row.twitch ?? "")).filter(Boolean);
+}
 async function helixToken() {
+	const preset = process.env.TWITCH_APP_TOKEN ?? "";
+	if (preset) return preset;
 	const id = process.env.TWITCH_CLIENT_ID ?? "";
 	const secret = process.env.TWITCH_CLIENT_SECRET ?? "";
 	if (!id || !secret) return "";
@@ -85,63 +523,43 @@ async function fetchTwitchLive(logins) {
 		return {};
 	}
 }
-async function helixGames(clientId, token) {
-	const url = new URL("https://api.twitch.tv/helix/games");
-	url.searchParams.append("name", "Old School RuneScape");
-	url.searchParams.append("name", "RuneScape");
-	const res = await fetch(url, {
-		headers: {
-			"Client-Id": clientId,
-			Authorization: `Bearer ${token}`
-		},
-		signal: AbortSignal.timeout(3e3)
-	});
-	if (!res.ok) throw new Error("games");
-	const body = await res.json();
-	const ids = [];
-	for (const row of body.data ?? []) {
-		const game = categoryGame(row.name ?? "");
-		if (game && row.id) ids.push({
-			id: row.id,
-			game
-		});
-	}
-	return ids;
-}
-async function helixStreamsForGame(clientId, token, gameId, cap) {
-	const out = [];
-	let cursor = "";
-	while (out.length < cap) {
+async function helixByLogins(clientId, token, logins) {
+	const rows = [];
+	for (let i = 0; i < logins.length; i += 20) {
+		const slice = logins.slice(i, i + 20);
 		const url = new URL("https://api.twitch.tv/helix/streams");
-		url.searchParams.set("game_id", gameId);
-		url.searchParams.set("first", String(Math.min(100, cap - out.length)));
-		if (cursor) url.searchParams.set("after", cursor);
+		for (const login of slice) url.searchParams.append("user_login", login);
 		const res = await fetch(url, {
 			headers: {
 				"Client-Id": clientId,
 				Authorization: `Bearer ${token}`
 			},
-			signal: AbortSignal.timeout(3e3)
+			signal: AbortSignal.timeout(4e3)
 		});
 		if (!res.ok) throw new Error("streams");
 		const body = await res.json();
-		const batch = body.data ?? [];
-		if (!batch.length) break;
-		for (const stream of batch) {
+		for (const stream of body.data ?? []) {
 			const handle = cleanLogin(stream.user_login ?? "");
 			if (!handle) continue;
-			out.push({
+			const gameName = String(stream.game_name ?? "");
+			const cat = categoryGame(gameName);
+			const expected = gameForHandle(handle);
+			if (expected && cat && expected !== cat) continue;
+			if (!cat) continue;
+			rows.push({
 				handle,
-				displayName: String(stream.user_name ?? handle).slice(0, 32)
+				displayName: String(stream.user_name ?? handle).slice(0, 32),
+				game: cat,
+				live: true,
+				viewers: Number(stream.viewer_count) || 0,
+				title: String(stream.title ?? "").slice(0, 80),
+				gameName
 			});
-			if (out.length >= cap) break;
 		}
-		cursor = body.pagination?.cursor ?? "";
-		if (!cursor) break;
 	}
-	return out;
+	return rows;
 }
-async function fetchTwitchLiveBoard(_logins) {
+async function fetchTwitchLiveBoard(logins) {
 	if (liveDisabled()) return {
 		off: true,
 		ok: false,
@@ -156,25 +574,10 @@ async function fetchTwitchLiveBoard(_logins) {
 		rows: []
 	};
 	try {
-		const games = await helixGames(id, token);
-		const rows = [];
-		const seen = /* @__PURE__ */ new Set();
-		for (const game of games) {
-			const streams = await helixStreamsForGame(id, token, game.id, 40);
-			for (const stream of streams) {
-				if (seen.has(stream.handle)) continue;
-				seen.add(stream.handle);
-				rows.push({
-					handle: stream.handle,
-					displayName: stream.displayName,
-					game: game.game,
-					live: true
-				});
-			}
-		}
+		const asked = [...new Set((logins ?? []).map(cleanLogin).filter(Boolean))];
 		const payload = {
 			ok: true,
-			rows
+			rows: await helixByLogins(id, token, (asked.length ? asked : listedLogins()).slice(0, 80))
 		};
 		boardMemo = {
 			at: Date.now(),
@@ -189,4 +592,4 @@ async function fetchTwitchLiveBoard(_logins) {
 	}
 }
 //#endregion
-export { fetchTwitchLiveBoard as n, fetchTwitchLive as t };
+export { fetchTwitchLiveBoard as n, CHANNELS as r, fetchTwitchLive as t };

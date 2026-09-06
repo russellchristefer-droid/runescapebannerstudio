@@ -1,0 +1,89 @@
+import { b as require_jsx_runtime, v as Link } from "../_libs/@tanstack/react-router+[...].mjs";
+import { S as BackLink } from "./router-D8oIjQ4W.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/history-DU2U0Yz2.js
+var import_jsx_runtime = require_jsx_runtime();
+function HistoryPage() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "min-h-dvh bg-bg text-fg",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", {
+			className: "border-b border-line px-5 py-5 md:px-8",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BackLink, {})
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
+			id: "content",
+			className: "mx-auto max-w-3xl px-5 py-6 md:px-8",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("article", {
+				className: "history-story flex flex-col gap-5 text-sm leading-relaxed text-muted",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+						className: "page-h1 site-title m-0",
+						children: "The sill and the bank"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "text-sm text-parchment",
+						children: "A fan story of public memory. Not Jagex. Not a certificate."
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "font-flavor text-base text-parchment",
+						children: "There are two ways to keep Gielinor. One is the bank: stacks, prices, the vulgar arithmetic of appetite. The other is the sill — a narrow stone in Varrock where a domestic tom has watched palaces inflate and slums persist and called neither of them the point. This desk writes from the sill. Boasts are cheap. Looking is not."
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Before that sill had a city under it there was a student draught with another name. In January 2001 the thing opened as RuneScape: tiles, slow combat, a map that felt hand-sized and then, suddenly, not. Players learned Lumbridge because the client pointed their gaze at a castle and named it beginning." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "The early years accreted quests, members’ gates, and a folk economy around paper crowns from Christmas crackers. That relic-talk is memory, not a shop this desk runs. In 2004 the body of the game was remade — what the crowd still calls RS2. Cameras lifted. Crowds thickened. The world learned to look expensive." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Mid-decade the street minted its civic jokes and its civic wounds. In June 2006 the Falador Party Room turned celebration into a glitch-massacre the crowd never stopped citing: piety and slapstick sharing a postcode, with a casualty list. Wilderness law and trade law became politics — what may be taken, what may be sold, whether a ditch is a border or a dare. Bots and bans entered the weather. So did hiscores as spectacle: a single name at the top of a board teaching grind as theatre. Zezima was less a person than a tense. This story will not rummage anyone’s bins. Public work is enough." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "The map kept growing: new rooms, new gods’ floors, God Wars as a building you could die in. High detail split tastes the way cosmetics always do. Then 2012’s Evolution of Combat broke the paragraph. A large public refused the new grammar. In 2013 a poll returned a 2007-era client as Old School RuneScape — own hiscores, own Wednesday, own Twitch category. The other client kept the name RuneScape and walked into world events. From that year the history is braided, not single." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+						"Keep the two Lumbridges unmingled. In Old School the castle is still a first theorem: river, chapel, gate, the road that pretends the world is simple. In RuneScape the same name is a rebuild over war. Export the crater onto an Old School still and you are only touring your own confusion. Varrock is agora and drain in both grammars; Gertrude’s household stays the unfashionable centre; Bob says ",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: "here" }),
+						". Falador still performs virtue in limestone. The Wilderness remains the honest contract: skull, ditch, the ethics of the right-click. Law has moved. Memory has not."
+					] }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Old School’s public years were polls, Deadman, raids as labour (Chambers, Theatre, Tombs), leagues as carnival, iron as vow, mobile in the pocket, sailing as a long argument that became a skill. RuneScape’s public years were world events, Prifddinas as an hour-city, Senntisten as archaeology of empire, Invention and later Necromancy as new combat grammars, Treasure Hunter as a standing quarrel, boss ladders that treat enrage as a dialect. Voice of Seren is a civic pulse on that client only. This desk will not stencil clan names onto it. Neither list is complete. Both are true as weather." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Streamers and guide-voices became a chorus without becoming a government: quest steps spoken like liturgy, raids as public labour, the iron vow as spectator sport. You know the names. They do not need this page to enlarge them. Gossip is low-resolution history. The high-resolution history is a street that still exists in two engines at once." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "The present is two live games, two categories — Old School RuneScape and RuneScape — two wikis, one midnight UTC when shops restock and worlds hitch. A JPEG from this desk is a window, not a coronation. Twelve glyphs make a name. A cat makes a witness. Most people bank. A few look." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "When official news and this story disagree, official news wins. When the wiki and this story disagree, the wiki keeps the hour. When Bob and the bank disagree, follow the cat." }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+						"Street-level notes live on the town sheets: lore for that client, a short history of that grammar, then the live wiki. Start at",
+						" ",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+							to: "/towns",
+							className: "text-parchment",
+							children: "Towns"
+						}),
+						". Ages and doors sit on",
+						" ",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+							to: "/chronicle",
+							className: "text-parchment",
+							children: "Chronicle"
+						}),
+						". The long story stays here."
+					] })
+				]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+				className: "mt-8 flex flex-wrap gap-x-3 gap-y-1 text-sm text-parchment",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+						href: "https://oldschool.runescape.wiki/",
+						target: "_blank",
+						rel: "noopener noreferrer",
+						children: "Old School wiki"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+						href: "https://runescape.wiki/",
+						target: "_blank",
+						rel: "noopener noreferrer",
+						children: "RuneScape wiki"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+						to: "/",
+						children: "Desk"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+						to: "/chronicle",
+						children: "Chronicle"
+					})
+				]
+			})]
+		})]
+	});
+}
+//#endregion
+export { HistoryPage as component };

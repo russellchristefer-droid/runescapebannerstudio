@@ -1,0 +1,1 @@
+import{t as e}from"./store-BhSGmIdw.js";import{t}from"./desk-link-DeMgEECI.js";function n(n){function r(t){n&&e({stillSrc:n,locationId:t?.locationId,edition:t?.edition})}function i(e,r){return n?t(e,r,{still:n}):`/#desk`}return{src:n,putOnDesk:r,deskHref:i}}export{n as t};

@@ -1,0 +1,310 @@
+import { b as require_jsx_runtime, y as useRouter } from "../_libs/@tanstack/react-router+[...].mjs";
+import { n as GODS } from "./locations-DGhympWJ.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/place-chip-CCVXVkdy.js
+var import_jsx_runtime = require_jsx_runtime();
+/** Prayer-book / God Wars colours from the live clients. */
+var GOD_INK = {
+	Saradomin: "#3a6fd4",
+	Zamorak: "#c62828",
+	Guthix: "#3d8b3d",
+	Armadyl: "#c5d4e8",
+	Bandos: "#8b6914",
+	Seren: "#5ec8d4",
+	Zaros: "#7b3fa0",
+	Sliske: "#c4a35a",
+	Tumeken: "#d4a017",
+	Elidinis: "#2a9b8f",
+	Marimbo: "#b85c38"
+};
+function godInk(god) {
+	return GOD_INK[god] ?? "#e0b45c";
+}
+var GOD_SLUGS = {
+	Saradomin: "saradomin",
+	Zamorak: "zamorak",
+	Guthix: "guthix",
+	Armadyl: "armadyl",
+	Bandos: "bandos",
+	Seren: "seren",
+	Zaros: "zaros",
+	Sliske: "sliske",
+	Tumeken: "tumeken",
+	Elidinis: "elidinis",
+	Marimbo: "marimbo"
+};
+function godFromSlug(slug) {
+	const lower = slug.toLowerCase();
+	return GODS.find((god) => GOD_SLUGS[god] === lower);
+}
+var GOD_HOME = {
+	saradomin: {
+		osrs: "falador",
+		rs3: "falador"
+	},
+	zamorak: {
+		osrs: "edgeville",
+		rs3: "edgeville"
+	},
+	guthix: {
+		osrs: "tav",
+		rs3: "taverley"
+	},
+	armadyl: {
+		osrs: "falador",
+		rs3: "falador"
+	},
+	bandos: {
+		osrs: "gob",
+		rs3: "goblin"
+	},
+	seren: {
+		osrs: "prif",
+		rs3: "prifddinas"
+	},
+	zaros: { rs3: "senntisten" },
+	sliske: { rs3: "senntisten" },
+	tumeken: {
+		osrs: "alk",
+		rs3: "menaphos"
+	},
+	elidinis: {
+		osrs: "soph",
+		rs3: "sophanem"
+	},
+	marimbo: { osrs: "ape" }
+};
+var GOD_BRIEFS = {
+	Saradomin: {
+		god: "Saradomin",
+		title: "God of order",
+		domain: "Order, law, and the human crownlands",
+		status: "Walks Gielinor in RuneScape Sixth Age writing. Prayer-god and GWD house in Old School.",
+		summary: "You already know the four-point star. White Knights, Entrana dock, Lumbridge chapel. Two clients, two landfalls. Do not mix them.",
+		osrs: "Prayer book and a God Wars house. Falador is the garrison. Entrana strips weapons at the Port Sarim boat — that is a dock rule, not flavour. Zilyana holds the chamber. There is no walking Saradomin and no Lumbridge crater. Leave the Battle of Lumbridge title home.",
+		rs3: "Published history: a Teragard justicar who found the Elder Crown. Sliske killed Guthix, the Edicts fell, he made landfall on the Lumbridge meadow. The crater is current geography on this client. Confirm the hour on the wiki if a stream still titles him as absent.",
+		notes: [
+			"Symbol: four-point star. Ink: blue and white.",
+			"Entrana bans weapons in both clients. The monk at the slip is the wipe for that trip.",
+			"Commander Zilyana is the fight that belongs. Not a world event."
+		],
+		play: ["Banner: Falador, Lumbridge, Entrana.", "Old School fight: Zilyana. RuneScape: the same house, plus the meadow the other client never dug."],
+		source: "RuneScape Wiki: Saradomin/History, Entrana, The World Wakes.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Saradomin",
+		wikiRs3: "https://runescape.wiki/w/Saradomin"
+	},
+	Zamorak: {
+		god: "Zamorak",
+		title: "God of chaos",
+		domain: "Chaos, rebellion, and the breaking of empires",
+		status: "Active. Returned after the Edicts fell in RuneScape.",
+		summary: "Mahjarrat general. Staff of Armadyl. Godhood stolen, not inherited. Chaos altar and K'ril are the floor you already know.",
+		osrs: "Chaos altar, Wilderness cults, K'ril Tsutsaroth. Canifis sits on this colour. There is no Battle of Lumbridge crater and no Infernal Source world event. Leave those titles off an Old School card.",
+		rs3: "Landfall after the Edicts. Battle of Lumbridge is the meadow. Zamorak, Lord of Chaos is the Infernal Source exam. A VOD from 2013 is not this pull. Confirm the live page if the Source is closed.",
+		notes: [
+			"Not an Elder God. He stole the seat.",
+			"K'ril Tsutsaroth leads the God Wars force.",
+			"Canifis, Darkmeyer, Edgeville ditch. The wild is weather, not a church."
+		],
+		play: ["Banner: Canifis, Edgeville, Darkmeyer.", "Old School fight: K'ril. RuneScape: K'ril plus Lord of Chaos at the Source."],
+		source: "RuneScape Wiki: Zamorak, Staff of Armadyl, God Wars Dungeon.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Zamorak",
+		wikiRs3: "https://runescape.wiki/w/Zamorak"
+	},
+	Guthix: {
+		god: "Guthix",
+		title: "God of balance",
+		domain: "Balance, nature, and the shaping of Gielinor",
+		status: "Slain in RuneScape Fifth Age year 169. Prayer-god in Old School.",
+		summary: "Found the blank plane. Named it. Slept. Tears, Taverley, Zanaris. He does not walk the main game. Do not title the stream as if he does.",
+		osrs: "The World Wakes is not this client. The altar still works. Juna still keeps the cave under the swamp. He is a prayer-god. The Edicts falling is not current history here. Leave the Sixth Age sermon home.",
+		rs3: "Sliske killed him with the Staff of Armadyl in Fifth Age year 169. The Edicts fell. The Sixth Age is that death. Do not title a main-game hour “Guthix lives.” Juna’s cave is still a shrine. Confirm status on the wiki if a clip disagrees.",
+		notes: ["Juna keeps the Tears cavern in both clients. A true story of the week is the key.", "Balance is the creed. It is not a raid invocation."],
+		play: ["Banner: Zanaris, Tears of Guthix, Taverley, Tree Gnome Stronghold.", "No walking Guthix on either desk. The wiki is the status."],
+		source: "RuneScape Wiki: Guthix, Edicts of Guthix, The World Wakes.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Guthix",
+		wikiRs3: "https://runescape.wiki/w/Guthix"
+	},
+	Armadyl: {
+		god: "Armadyl",
+		title: "God of justice",
+		domain: "Justice, peace, and the aviantese of Abbinah",
+		status: "Alive. Killed Bandos in The Bird and the Beast on RuneScape.",
+		summary: "Winged god from Abbinah. Kree'arra holds the Eyrie. The Staff is an Elder Artefact, not a souvenir.",
+		osrs: "Kree'arra is the room. Temple of Ikov names the Staff. There is no Bird and the Beast world event and no Empyrean hour on this client. Leave that death off an Old School card.",
+		rs3: "Returned after the Edicts. Killed Bandos in The Bird and the Beast. Empyrean Citadel is the still. Sliske later walked those halls. Confirm the citadel state on the wiki.",
+		notes: ["The Staff of Armadyl is the Siphon, one of twelve Elder Artefacts.", "Justice is the published theme. He is not an Elder God."],
+		play: ["Banner: Empyrean Citadel on RuneScape. Falador walls if you only have the star.", "Old School fight: Kree'arra. RuneScape: the same dungeon plus the citadel."],
+		source: "RuneScape Wiki: Armadyl, Empyrean Citadel, The Bird and the Beast.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Armadyl",
+		wikiRs3: "https://runescape.wiki/w/Armadyl"
+	},
+	Bandos: {
+		god: "Bandos",
+		title: "God of war",
+		domain: "War, strength, and the goblin nations",
+		status: "Killed by Armadyl in The Bird and the Beast. Still worshipped in Old School.",
+		summary: "Brought goblins, ogres, and orks. Graardor holds the Stronghold. Big High War God is the name the huts still shout.",
+		osrs: "Living God Wars faction. Graardor is the commander. Goblin Village argues mail colour. Lovakengj sits on this colour in Great Kourend. There is no Bird and the Beast death on this client. Leave that funeral home.",
+		rs3: "Armadyl killed him in The Bird and the Beast. The Mighty Fall is the aftermath. Mazcab is later work. Do not write that death onto an Old School card.",
+		notes: ["Big High War God is quest text, not slang this desk invented.", "Old School still treats the house as alive. That is the grammar."],
+		play: ["Banner: Goblin Village, Burthorpe, Lovakengj.", "Old School fight: Graardor. RuneScape: Graardor plus Mazcab when the wiki still names it."],
+		source: "RuneScape Wiki: Bandos, Goblin Village, The Bird and the Beast.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Bandos",
+		wikiRs3: "https://runescape.wiki/w/Bandos"
+	},
+	Seren: {
+		god: "Seren",
+		title: "Goddess of the elves",
+		domain: "Crystal, harmony, and Tirannwn",
+		status: "Restored in RuneScape. Present in Old School after Song of the Elves.",
+		summary: "Crystal light. Led the elves to Tirannwn. Built Prifddinas. The city is grown, not administered.",
+		osrs: "Song of the Elves is the constitution. Eight clans, Tower of Voices, city grown back from a seed. Voice of Seren is not an Old School hour flip on this desk. Leave the clan-clock home.",
+		rs3: "Shattered herself rather than leave under the Edicts. Restored later. Voice of Seren flips on the UTC hour in the clan districts — confirm the pair on Today, do not invent it for a banner. Fate of the Gods is the record with Zaros.",
+		notes: ["Clan crystals are pieces of the city.", "Transcendent-tier in published rankings. Not an Elder God."],
+		play: ["Banner: Prifddinas, Lletya, Gauntlet.", "Check Voice of Seren on Today before you title a crystal hour. Old School has no such hour."],
+		source: "RuneScape Wiki: Seren, Prifddinas, Fate of the Gods.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Seren",
+		wikiRs3: "https://runescape.wiki/w/Seren"
+	},
+	Zaros: {
+		god: "Zaros",
+		title: "Empty Lord",
+		domain: "Control, fate, and the Second Age empire",
+		status: "Returned in RuneScape (Fate of the Gods). Does not walk Old School.",
+		summary: "Built Senntisten in the Second Age. Zamorak struck him with the Staff. The empire is a ruin that keeps getting dug.",
+		osrs: "Zarosian prayers, Nex, Desert Treasure II, Olm as a later echo. He does not walk the world. Fate of the Gods is not this client. Leave the walking Empty Lord off the card.",
+		rs3: "Fate of the Gods returns him. Telos, Angel of Death, Senntisten, Croesus in the elder-war vault. A 4k enrage clip is not this paragraph. Confirm the live page.",
+		notes: ["Nex and Azzanadra are published Zarosian champions.", "Old School has the prayers and the archaeology. Not the walking god."],
+		play: ["Banner: Senntisten, War's Retreat, Heart of Gielinor.", "Old School fight: Nex, DT2. RuneScape: Telos, AoD, Croesus."],
+		source: "RuneScape Wiki: Zaros, Senntisten, Fate of the Gods.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Zaros",
+		wikiRs3: "https://runescape.wiki/w/Zaros"
+	},
+	Sliske: {
+		god: "Sliske",
+		title: "Mahjarrat of the Shadow Realm",
+		domain: "Deception, the Shadow Realm, and contests among gods",
+		status: "Killed in Sliske's Endgame. Not a founder god.",
+		summary: "Mahjarrat. Antagonist. Not a church. He took a staff and ended an age. That is the file, not a shrine.",
+		osrs: "No Sliske raid. No walking Sliske. Do not put him on an Old School town card as a local god. Shadow-realm flavour in later quests is not a house.",
+		rs3: "Took the Staff of Armadyl. Killed Guthix. Ran the Heart contest. Sliske's Endgame ends the plot. Gregorovic and the City of Um sit on this colour. Rasial is the later exam, not a Sliske altar.",
+		notes: ["Killing Guthix did not make him an Elder God.", "Gregorovic and the City of Um sit here. Treat them as rooms, not a diocese."],
+		play: ["Banner: Heart of Gielinor, City of Um, Sanctum of Rebirth.", "RuneScape fight: Rasial, Gregorovic. Old School has no Sliske raid."],
+		source: "RuneScape Wiki: Sliske, The World Wakes, Sliske's Endgame.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Sliske",
+		wikiRs3: "https://runescape.wiki/w/Sliske"
+	},
+	Tumeken: {
+		god: "Tumeken",
+		title: "God of the sun",
+		domain: "Sun, light, and the Menaphite pantheon",
+		status: "Spent or fragmented in published desert myth. Menaphos still names him.",
+		summary: "Sun of the Kharidian pantheon. Husband of Elidinis. The sand already knows the name. Do not invent a God Wars seat.",
+		osrs: "Al Kharid, Sophanem, Tombs of Amascut, Kalphite Queen. Menaphos stays shut. No Sixth Age district plot is required to banner the desert. Leave the golden city gates closed.",
+		rs3: "Menaphos names him. Four districts, a Pharaoh, the cult of sun and river. Kalphite King is the desert fight on this colour. Confirm district hours on the wiki. Do not invent a GWD throne.",
+		notes: ["Al Kharid, Menaphos, and Civitas Fortis sit on this colour here.", "Kalphite King and Queen are desert fights, not church rites."],
+		play: ["Banner: Al Kharid, Menaphos, Fortis.", "Old School fight: Tombs of Amascut, Kalphite Queen. RuneScape: Menaphos, Kalphite King."],
+		source: "RuneScape Wiki: Tumeken, Menaphos, Menaphite Pantheon.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Tumeken",
+		wikiRs3: "https://runescape.wiki/w/Tumeken"
+	},
+	Elidinis: {
+		god: "Elidinis",
+		title: "Goddess of fertility and the river",
+		domain: "Growth, water, and Sophanem",
+		status: "Active in published desert lore.",
+		summary: "Tumeken's consort. The River Elid is named for her. Sophanem kept the funerary rites when the golden city shut.",
+		osrs: "Sophanem keeps the rites. Icthlarin's Little Helper and Contact! are the doors. Menaphos’s gates stay shut. Short record. Do not pad with RS3 district plot.",
+		rs3: "Desert quests keep her beside Icthlarin. Sophanem and the river are the stills. The plague and the pyramids are the civic file. Confirm the live page before you title a river hour.",
+		notes: ["The River Elid is named for her.", "Sophanem's plague and pyramids sit in both desert questlines."],
+		play: ["Banner: Sophanem.", "Read the desert quest notes before you title a Sophanem hour."],
+		source: "RuneScape Wiki: Elidinis, Sophanem, River Elid.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Elidinis",
+		wikiRs3: "https://runescape.wiki/w/Elidinis"
+	},
+	Marimbo: {
+		god: "Marimbo",
+		title: "Goddess of monkeys and revelry",
+		domain: "Ape Atoll, drink, and simian kind",
+		status: "Alive in published lore. Thinner record than the God Wars four.",
+		summary: "Goddess of monkeys. Ape Atoll and Marim. You already know the greegree. She is not a God Wars four.",
+		osrs: "Monkey Madness is the crossing. Temple of Marimbo stands in Marim. Humans who land uninvited are sport. Stay inside that record.",
+		rs3: "Same island record. Do not invent a Sixth Age war for her. The atoll is a kingdom, not a curiosity and not a world event.",
+		notes: ["Temple of Marimbo stands in Marim.", "Stay inside the short record. Do not invent a Sixth Age war."],
+		play: ["Banner: Ape Atoll.", "Quest line first. The island is the still."],
+		source: "RuneScape Wiki: Marimbo, Ape Atoll, Marim.",
+		wikiOsrs: "https://oldschool.runescape.wiki/w/Marimbo",
+		wikiRs3: "https://runescape.wiki/w/Marimbo"
+	}
+};
+function sameOriginPath(href) {
+	return href.startsWith("/") && !href.startsWith("//") && !href.startsWith("/#");
+}
+/** Real <a href> that stays inside the studio chrome. pointerup for phones. */
+function AppLink({ href, children, className, style, current }) {
+	const router = useRouter();
+	function go() {
+		if (!sameOriginPath(href)) return;
+		router.history.push(href);
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+		href,
+		"aria-current": current ? "page" : void 0,
+		className,
+		style,
+		onClick: (event) => {
+			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+			if (!sameOriginPath(href)) return;
+			event.preventDefault();
+			go();
+		},
+		onPointerUp: (event) => {
+			if (event.pointerType !== "touch") return;
+			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+			if (!sameOriginPath(href)) return;
+			event.preventDefault();
+			go();
+		},
+		children
+	});
+}
+function PlaceChip({ href, children, current, style }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AppLink, {
+		href,
+		current,
+		style,
+		className: `inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border px-3 text-xs [touch-action:manipulation] ${current ? "border-parchment bg-raised text-parchment" : "border-line text-muted"}`,
+		children
+	});
+}
+function VisitPlaces({ items }) {
+	const seen = /* @__PURE__ */ new Set();
+	const chips = items.filter((item) => {
+		if (!item.href || item.href === "#" || !sameOriginPath(item.href)) return false;
+		if (seen.has(item.href)) return false;
+		seen.add(item.href);
+		return true;
+	});
+	if (!chips.length) return null;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+		"aria-label": "Places to visit",
+		className: "flex flex-wrap gap-2",
+		children: chips.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlaceChip, {
+			href: item.href,
+			current: item.current,
+			style: item.color ? { color: item.color } : void 0,
+			children: item.label
+		}, item.href))
+	});
+}
+function godPath(god) {
+	return `/gods/${GOD_SLUGS[god]}`;
+}
+function townPath(id) {
+	return `/towns/${id}`;
+}
+function bossPath(id) {
+	return `/bosses/${id}`;
+}
+//#endregion
+export { PlaceChip as a, godFromSlug as c, townPath as d, GOD_SLUGS as i, godInk as l, GOD_BRIEFS as n, VisitPlaces as o, GOD_HOME as r, bossPath as s, AppLink as t, godPath as u };

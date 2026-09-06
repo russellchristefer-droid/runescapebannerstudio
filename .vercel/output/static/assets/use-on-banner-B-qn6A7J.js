@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cltr0gcK.js";import{t}from"./use-still-BioZTvsZ.js";var n=e();function r({src:e,edition:r,placeId:i,label:a=`Use on banner`}){let o=t(e);return!e||!i?null:(0,n.jsx)(`a`,{href:o.deskHref(r,i),className:`min-h-11 text-sm text-parchment [touch-action:manipulation]`,onClick:()=>o.putOnDesk({locationId:i,edition:r}),children:a})}export{r as t};
