@@ -162,7 +162,7 @@ function liveProxyPlugin(): Plugin {
       server.middlewares.use(async (req, res, next) => {
         const rawUrl = req.url ?? "";
         const [pathOnly, query = ""] = rawUrl.split("?");
-        if (pathOnly !== "/api/live" && pathOnly !== "/api/twitch-live") {
+        if (pathOnly !== "/api/live" && pathOnly !== "/api/twitch-live" && pathOnly !== "/api/youtube-live") {
           next();
           return;
         }
@@ -173,6 +173,17 @@ function liveProxyPlugin(): Plugin {
             .map((s) => s.trim())
             .filter(Boolean)
             .slice(0, 60);
+          if (pathOnly === "/api/youtube-live") {
+            const tube = (await server.ssrLoadModule("/src/lib/youtube.server.ts")) as {
+              fetchYoutubeBoard: () => Promise<{ off?: boolean; ok: boolean; rows: unknown[] }>;
+            };
+            const board = await tube.fetchYoutubeBoard();
+            res.statusCode = 200;
+            res.setHeader("content-type", "application/json; charset=utf-8");
+            res.setHeader("cache-control", "public, max-age=180");
+            res.end(JSON.stringify(board));
+            return;
+          }
           if (pathOnly === "/api/twitch-live") {
             const mod = (await server.ssrLoadModule("/src/lib/live.server.ts")) as {
               fetchTwitchLiveBoard: (
