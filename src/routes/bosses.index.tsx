@@ -23,7 +23,7 @@ function BossIndex() {
         <BackLink />
         <h1 className="page-h1 mt-1">Bosses</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          Arenas and raids · pick a game first.
+          How to start, what to bring, the fight, the wipe. Live meta still points at the wiki for this hour.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>

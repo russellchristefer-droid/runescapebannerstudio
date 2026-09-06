@@ -9,7 +9,33 @@ export type BossNote = {
   kit: string[];
   route: string[];
   method: string[];
+  wipe?: string;
+  wiki?: string;
 };
+
+export function bossWiki(note: BossNote) {
+  if (note.wiki) return note.wiki;
+  const page = note.title.replace(/ /g, "_");
+  return note.edition === "OSRS"
+    ? `https://oldschool.runescape.wiki/w/${page}`
+    : `https://runescape.wiki/w/${page}`;
+}
+
+export function bossStrategy(note: BossNote) {
+  const live = bossWiki(note);
+  if (note.edition === "OSRS") return `${live}/Strategies`;
+  return live;
+}
+
+export function bossPvme(note: BossNote) {
+  if (note.edition !== "RS3") return null;
+  return "https://pvme.io/";
+}
+
+export function bossWipe(note: BossNote) {
+  return note.wipe ?? note.method[0] ?? "Confirm the wipe on the wiki for this hour.";
+}
+
 
 export const BOSS_NOTES: Record<string, BossNote> = {
   toa: {
@@ -38,6 +64,8 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "Add one invocation rack only after a clean raid. A clean 50 teaches more than a wipe 200.",
       "One talker. Watch a VOD of your seat the night before. Time the raid, then cut one minute, not five.",
     ],
+    wipe: "Kephri dung or a Zebak wave you did not jug. Wardens is rarely the first wipe.",
+    wiki: "https://oldschool.runescape.wiki/w/Tombs_of_Amascut",
   },
   vorkath: {
     id: "vorkath",
@@ -93,6 +121,8 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "A 4:30 Maiden does not save a 12-minute Verzik. Film your seat.",
       "Hard mode is a different exam. Do not add it to a first purple night.",
     ],
+    wipe: "A Maiden crab on the wrong side, or a Sotetseg maze tile nobody called.",
+    wiki: "https://oldschool.runescape.wiki/w/Theatre_of_Blood",
   },
   corp: {
     id: "corp",
@@ -184,6 +214,8 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     method: [
       "A 60-wave attempt with notes beats ten 20-wave panics. Write the wipe. Change one thing.",
     ],
+    wipe: "A stacked blob on a ranger, or Zuk Jad healers you did not tag before the next set.",
+    wiki: "https://oldschool.runescape.wiki/w/Inferno",
   },
   nightmare: {
     id: "nightmare",
@@ -319,6 +351,8 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     method: [
       "Add 25% only after two clean kills. A wipe streak is a note problem, not an RNG problem.",
     ],
+    wipe: "Wrong font colour. The room ends the pull; the HP bar does not.",
+    wiki: "https://runescape.wiki/w/Telos,_the_Warden",
   },
   raksha: {
     id: "raksha",
@@ -421,6 +455,8 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     method: [
       "A missed conjure is a reset. The HP bar follows the cycle.",
     ],
+    wipe: "Living Death window dropped on a volley. The cycle is the fight.",
+    wiki: "https://runescape.wiki/w/Rasial,_the_First_Necromancer",
   },
   araxxor: {
     id: "araxxor",
@@ -564,6 +600,8 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     method: [
       "A clean trio teaches more than a messy mass. Add scale after Olm is boring.",
     ],
+    wipe: "Teleport crystal in the middle, or a claw you hit while praying the head.",
+    wiki: "https://oldschool.runescape.wiki/w/Chambers_of_Xeric",
   },
   colosseum: {
     id: "colosseum",
@@ -905,6 +943,8 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     method: [
       "Open the wiki the morning of. The instance is the exam.",
     ],
+    wipe: "A wing mechanic you did not own. Last boss is not the first wipe.",
+    wiki: "https://runescape.wiki/w/Sanctum_of_Rebirth",
   },
   bm: {
     id: "bm",
