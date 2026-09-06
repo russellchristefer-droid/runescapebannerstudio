@@ -244,3 +244,36 @@ code {
   background: #1a140c;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.plate-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #1a1610 0%, #241e16 50%, #1a1610 100%);
+  background-size: 200% 100%;
+  animation: plate-sheen 1.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate-skeleton {
+    animation: none;
+    background: #1a1610;
+  }
+}
+
+@keyframes plate-sheen {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+

@@ -32,17 +32,23 @@ export function PlaceCard({
   const alt = `${name} in ${game}`;
   const href = hrefFor(to, params);
   const [gone, setGone] = useState(false);
-  if (!src || gone) return null;
+  if (!src) return null;
   return (
     <li className="[contain-intrinsic-size:auto_220px] [content-visibility:auto]">
       <div className="overflow-hidden rounded-md border border-line bg-raised hover:border-[#F5C400]">
         <AppLink href={href} className="block [touch-action:manipulation]">
-          <StillPhoto
-            src={src}
-            alt={alt}
-            className="aspect-video w-full bg-surface object-cover [content-visibility:auto]"
-            onError={() => setGone(true)}
-          />
+          {gone ? (
+            <span className="flex aspect-video w-full items-center justify-center bg-[#1a1610] text-[11px] text-faint">
+              Still needed
+            </span>
+          ) : (
+            <StillPhoto
+              src={src}
+              alt={alt}
+              className="aspect-video w-full bg-surface object-cover [content-visibility:auto]"
+              onError={() => setGone(true)}
+            />
+          )}
         </AppLink>
         <AppLink href={href} className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">
           {name}

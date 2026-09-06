@@ -131,6 +131,8 @@ export function Studio() {
   const [textPos, setTextPos] = useState<Record<string, { x: number; y: number }>>({});
   const [textScale, setTextScale] = useState<Record<string, number>>(saved.textScale ?? {});
   const [plateCaption, setPlateCaption] = useState("");
+  const [plateReady, setPlateReady] = useState(false);
+  const [ariaLive, setAriaLive] = useState("");
   const [workworkLine, setWorkworkLine] = useState<string | null>(null);
   const [goldStar, setGoldStar] = useState(false);
   const [saveNote, setSaveNote] = useState("");
@@ -289,6 +291,9 @@ export function Studio() {
     customSrc ??
     deskStillSrc ??
     (viewLocked ? (view === "b" && location.viewB ? location.viewB : location.viewA) : safeCycle);
+  useEffect(() => {
+    setPlateReady(false);
+  }, [sceneSrc]);
 
   function clearStampsAndText() {
     setSkillPicks([]);
@@ -547,7 +552,7 @@ export function Studio() {
         return;
       }
       const lead = skillPicks.find((row) => row.id === pickedSkill);
-      const stepBase = e.shiftKey ? 8 : 2;
+      const stepBase = e.shiftKey ? 10 : 2;
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
         e.preventDefault();
         const dir = e.key.replace("Arrow", "").toLowerCase() as "up" | "down" | "left" | "right";
@@ -562,6 +567,7 @@ export function Studio() {
             if (dir === "right") x = Math.min(size.width - 40, x + step);
             if (dir === "up") y = Math.max(8, y - step);
             if (dir === "down") y = Math.min(size.height - 16, y + step);
+            setAriaLive(`Name moved to ${Math.round(x)}, ${Math.round(y)}`);
             return { ...cur, [pickedText]: { x, y } };
           });
           return;
@@ -578,6 +584,7 @@ export function Studio() {
             if (dir === "right") x = Math.min(size.width - mark, x + step);
             if (dir === "up") y = Math.max(0, y - step);
             if (dir === "down") y = Math.min(size.height - mark, y + step);
+            if (item.id === pickedSkill) setAriaLive(`Stamp moved to ${Math.round(x)}, ${Math.round(y)}`);
             return { ...item, x, y, scale: item.scale ?? 1 };
           }),
         );
@@ -1212,19 +1219,22 @@ export function Studio() {
             boxShadow: "inset 0 8px 18px rgba(0,0,0,0.35)",
           }}
         >
+          {plateReady ? null : <div className="plate-skeleton pointer-events-none" aria-hidden="true" />}
           <img
             id="still"
             alt=""
-            src={customSrc || deskStillSrc || location.viewA || "/Falador.png"}
+            src={sceneSrc || "/Falador.png"}
             className="pointer-events-none absolute inset-0 h-full w-full object-cover"
             decoding="async"
             onLoad={(e) => {
               e.currentTarget.dataset.ok = e.currentTarget.currentSrc;
+              setPlateReady(true);
               setPlateCaption(`${location.name} · ${size.width}×${size.height} JPEG · ${size.note}`);
             }}
             onError={(e) => {
               const last = e.currentTarget.dataset.ok;
               if (last && e.currentTarget.src !== last) e.currentTarget.src = last;
+              else setPlateReady(true);
             }}
           />
           {goldStar ? (
@@ -1557,6 +1567,9 @@ export function Studio() {
         <p className="mt-2 text-center text-[10px] text-muted">
           {plateCaption || `${size.width}×${size.height} JPEG`}
         </p>
+        <div id="aria-live" className="sr-only" aria-live="polite" aria-atomic="true">
+          {ariaLive}
+        </div>
         {workworkLine ? <p className="mt-1 text-center text-[11px] text-faint">{workworkLine}</p> : null}
         <div className="mt-1 flex flex-wrap justify-center gap-1">
           <button
