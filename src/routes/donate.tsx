@@ -12,7 +12,7 @@ function DonatePage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Cash App</h1>
       </header>
-      <main className="mx-auto flex max-w-2xl flex-col gap-4 px-5 py-8 md:px-8">
+      <main id="content" className="mx-auto flex max-w-2xl flex-col gap-4 px-5 py-8 md:px-8">
         <p className="text-sm text-muted">
           Christefer Lee Russell-Barnett. Optional tip for the person who built this fan studio. Not Jagex.
           Not a guild bank.

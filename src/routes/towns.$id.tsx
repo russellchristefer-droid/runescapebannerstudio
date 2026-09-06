@@ -54,7 +54,7 @@ function TownNotePage() {
           <PlaceRail section="towns" />
         </div>
       </header>
-      <main className="mx-auto flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8">
+      <main id="content" className="mx-auto flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8">
         <OfficialPulse
           note="Official wiki for this street. Official news wins."
           links={townWikiLinks(note.title, loc)}
