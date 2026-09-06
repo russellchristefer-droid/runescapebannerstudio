@@ -1,6 +1,6 @@
 export { ClipBench } from "./clip-bench";
 export { StreamDesk } from "./stream-desk";
-export { bindClipBench, clip } from "./clipBench";
+export { attachSound, detachSound, setMute, setGain, setFade, armFades } from "./clipSound";
 export {
   CLIP_ASPECTS,
   clipFileName,

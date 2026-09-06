@@ -4,6 +4,7 @@ import { sanitizeClan, sanitizeDisplayName, sanitizeWorld, worldLabel } from "@/
 import { LOCATIONS } from "@/lib/locations";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
 import { paintRSYellow } from "@/lib/draw-banner";
+import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTracks } from "./clipSound";
 import {
   CLIP_ASPECTS,
   CLIP_MARKS,
@@ -175,12 +176,7 @@ export function ClipBench() {
       if (prev && "close" in prev && typeof (prev as ImageBitmap).close === "function") {
         (prev as ImageBitmap).close();
       }
-      void audioCtx.current?.close();
-      audioCtx.current = null;
-      analyser.current = null;
-      audioSrc.current = null;
-      gainNode.current = null;
-      recDest.current = null;
+      detachSound();
     };
   }, []);
 
@@ -188,8 +184,11 @@ export function ClipBench() {
     const video = videoRef.current;
     if (video) {
       video.playbackRate = speed;
-      video.muted = muted;
+      video.muted = false;
     }
+    setMute(muted);
+    setGain(Math.max(0, Math.min(2, gainPct / 100)));
+    setFade(fadeIn > 0 ? 0.5 : 0, fadeOut > 0 ? 0.5 : 0);
     applyLiveGain(video?.currentTime ?? now);
   }, [muted, gainPct, speed, fadeIn, fadeOut, inPoint, outPoint, fps]);
 
@@ -422,39 +421,10 @@ export function ClipBench() {
   }
 
   function hookAudio(video: HTMLVideoElement) {
-    try {
-      const AC = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!AC) return;
-      if (!audioCtx.current || audioCtx.current.state === "closed") {
-        audioCtx.current = new AC();
-        audioSrc.current = null;
-        gainNode.current = null;
-        analyser.current = null;
-        recDest.current = null;
-      }
-      const ctx = audioCtx.current;
-      if (!audioSrc.current) audioSrc.current = ctx.createMediaElementSource(video);
-      if (!gainNode.current) gainNode.current = ctx.createGain();
-      if (!analyser.current) {
-        analyser.current = ctx.createAnalyser();
-        analyser.current.fftSize = 256;
-        meterBuf.current = new Uint8Array(analyser.current.fftSize);
-      }
-      if (!recDest.current) recDest.current = ctx.createMediaStreamDestination();
-      audioSrc.current.disconnect();
-      gainNode.current.disconnect();
-      audioSrc.current.connect(gainNode.current);
-      gainNode.current.connect(analyser.current);
-      gainNode.current.connect(ctx.destination);
-      gainNode.current.connect(recDest.current);
-      video.muted = false;
-      video.volume = 1;
-      applyLiveGain(video.currentTime || 0);
-      void ctx.resume();
-    } catch {
-      analyser.current = null;
-      gainNode.current = null;
-    }
+    attachSound(video);
+    setMute(muted);
+    setGain(Math.max(0, Math.min(2, gainPct / 100)));
+    setFade(fadeIn > 0 ? 0.5 : 0, fadeOut > 0 ? 0.5 : 0);
   }
 
   function takeVideo(file: File) {
@@ -708,10 +678,14 @@ export function ClipBench() {
       paint(canvas, video, false, w, h);
       applyLiveGain(video.currentTime);
     };
-    video.muted = muted;
-    video.volume = muted ? 0 : 1;
+    video.muted = false;
+    video.volume = 1;
     video.playbackRate = speed === 1 ? 1 : speed;
     video.currentTime = inT;
+    setMute(muted);
+    setGain(Math.max(0, Math.min(2, gainPct / 100)));
+    setFade(fadeIn > 0 ? 0.5 : 0, fadeOut > 0 ? 0.5 : 0);
+    armFades(video, inT, outT);
     await new Promise<void>((resolve) => {
       const ready = () => {
         video.removeEventListener("seeked", ready);
@@ -724,7 +698,7 @@ export function ClipBench() {
     const recStream = canvas.captureStream(30);
     let mix: MediaStream = recStream;
     let audioOk = false;
-    const processed = recDest.current?.stream.getAudioTracks() ?? [];
+    const processed = soundTracks();
     const capture =
       (video as HTMLVideoElement & { captureStream?: () => MediaStream; mozCaptureStream?: () => MediaStream }).captureStream?.() ??
       (video as HTMLVideoElement & { mozCaptureStream?: () => MediaStream }).mozCaptureStream?.();
@@ -931,7 +905,7 @@ export function ClipBench() {
             </div>
           ) : null}
         </div>
-        <video ref={videoRef} className="pointer-events-none absolute h-px w-px opacity-0" playsInline preload="none" muted={muted} controls={false} />
+        <video ref={videoRef} className="pointer-events-none absolute h-px w-px opacity-0" playsInline preload="none" muted={false} controls={false} />
         <div className="grid grid-cols-2 gap-x-3 gap-y-1 px-4 py-2 font-mono text-[11px] tabular-nums text-muted sm:grid-cols-4">
           <p>TC {hasClip ? timecode(now) : "00:00.00"}</p>
           <p>DUR {hasClip ? timecode(range) : "00:00.00"}</p>
@@ -1065,6 +1039,12 @@ export function ClipBench() {
           >
             Fade out
           </button>
+          <span
+            id="pk"
+            className="inline-block h-2 w-28 origin-left rounded-sm bg-[#c6a45a]"
+            style={{ transform: "scaleX(0)" }}
+            aria-hidden="true"
+          />
           <span className="relative inline-flex h-11 w-4 overflow-hidden rounded-sm border border-[#c6a45a]/40 bg-[#120f0c]" title={`${peakDb(hold)} dBFS`} aria-label={`Peak ${peakDb(hold)} dBFS`}>
             <span
               className="absolute bottom-0 w-full"
