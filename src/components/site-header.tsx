@@ -10,6 +10,7 @@ export const STUDIO_NAV = [
   ["/classic", "Classic"],
   ["/gods", "Gods"],
   ["/bosses", "Bosses"],
+  ["/pvp", "PvP"],
   ["/monsters", "Bestiary"],
   ["/towns", "Towns"],
   ["/knowledge", "Sites"],

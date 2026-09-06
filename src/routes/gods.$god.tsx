@@ -1,11 +1,17 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useRef } from "react";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
-import { GOD_BRIEFS, GOD_SLUGS, deskGodPath, godFromSlug } from "@/lib/gods";
+import { GOD_BRIEFS, GOD_HOME, godFromSlug } from "@/lib/gods";
 import { godStill, godStillLine } from "@/lib/god-stills";
 import { GODS, LOCATIONS } from "@/lib/locations";
 import { BackLink } from "@/components/back-link";
 import { OfficialPulse } from "@/components/official-pulse";
+import { VisitPlaces, AppLink, godPath, townPath, bossPath } from "@/components/place-chip";
+import { deskOpenPath } from "@/lib/desk-link";
+import { writeStudioSave } from "@/lib/studio-save";
+import { townNote } from "@/lib/town-notes";
+import { noteFor } from "@/lib/boss-notes";
+import { godInk } from "@/lib/gods";
 
 export const Route = createFileRoute("/gods/$god")({
   component: GodPage,
@@ -16,9 +22,14 @@ function GodPage() {
   const god = godFromSlug(slug);
   if (!god) throw notFound();
   const brief = GOD_BRIEFS[god];
-  const towns = LOCATIONS.filter((loc) => loc.god === god);
-  const osrsDesk = deskGodPath(slug, "osrs");
-  const rs3Desk = deskGodPath(slug, "rs3");
+  const towns = LOCATIONS.filter((loc) => loc.god === god && loc.kind === "town" && townNote(loc.id));
+  const fights = LOCATIONS.filter((loc) => loc.god === god && loc.kind === "boss" && noteFor(loc.id));
+  const osrsStill = godStill(god, "OSRS");
+  const rs3Still = godStill(god, "RS3");
+  const osrsHome = GOD_HOME[slug]?.osrs;
+  const rs3Home = GOD_HOME[slug]?.rs3;
+  const osrsDesk = osrsHome ? deskOpenPath("OSRS", osrsHome, { still: osrsStill, marks: [slug] }) : "";
+  const rs3Desk = rs3Home ? deskOpenPath("RS3", rs3Home, { still: rs3Still, marks: [slug] }) : "";
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -126,50 +137,60 @@ function GodPage() {
         {(osrsDesk || rs3Desk) ? (
           <p className="flex flex-wrap gap-3 text-sm">
             {osrsDesk ? (
-              <a href={osrsDesk} className="text-parchment">
-                Use on a banner · Old School
+              <a
+                href={osrsDesk}
+                className="text-parchment"
+                onClick={() => {
+                  writeStudioSave({ locationId: osrsHome, edition: "OSRS", skillPicks: [], stillSrc: osrsStill });
+                }}
+              >
+                Use on banner · Old School
               </a>
             ) : null}
             {rs3Desk ? (
-              <a href={rs3Desk} className="text-parchment">
-                Use on a banner · RuneScape
+              <a
+                href={rs3Desk}
+                className="text-parchment"
+                onClick={() => {
+                  writeStudioSave({ locationId: rs3Home, edition: "RS3", skillPicks: [], stillSrc: rs3Still });
+                }}
+              >
+                Use on banner · RuneScape
               </a>
             ) : null}
           </p>
         ) : null}
         <section>
-          <h2 className="mb-3 text-sm font-medium text-muted">
-            Towns you can banner
-          </h2>
-          <div className="grid gap-2 sm:grid-cols-2">
+          <h2 className="mb-3 text-sm font-medium text-muted">Places to visit</h2>
+          <VisitPlaces
+            items={[
+              ...GODS.map((item) => ({
+                href: godPath(item),
+                label: item,
+                current: item === god,
+                color: godInk(item),
+              })),
+              ...towns.map((loc) => ({
+                href: townPath(loc.id),
+                label: `${loc.name}${loc.edition === "OSRS" ? " · OSRS" : ""}`,
+              })),
+              ...fights.slice(0, 6).map((loc) => ({
+                href: bossPath(loc.id),
+                label: loc.name,
+              })),
+            ]}
+          />
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
             {towns.map((loc) => (
-              <Link
-                key={loc.id}
-                to="/"
-                className="px-1 py-2 text-sm"
-              >
+              <AppLink key={loc.id} href={townPath(loc.id)} className="min-h-11 px-1 py-2 text-sm [touch-action:manipulation]">
                 <div className="font-medium">{loc.name}</div>
                 <div className="text-xs text-faint">
-                  {loc.edition} · {loc.region}
+                  {loc.edition} · {loc.region.replace(/\s·\sOSRS$/, "")}
                 </div>
-              </Link>
+              </AppLink>
             ))}
           </div>
         </section>
-        <nav className="flex flex-wrap gap-2 text-xs">
-          {GODS.map((item) => (
-            <Link
-              key={item}
-              to="/gods/$god"
-              params={{ god: GOD_SLUGS[item] }}
-              className={`rounded-md border px-3 py-1.5 ${
-                item === god ? "border-parchment bg-raised" : "border-line"
-              }`}
-            >
-              {item}
-            </Link>
-          ))}
-        </nav>
         <p className="text-xs text-faint">
           Fan desk notes. Live page: the official wiki for this game.{" "}
           <a href={brief.wikiOsrs} target="_blank" rel="noopener noreferrer" className="text-parchment">

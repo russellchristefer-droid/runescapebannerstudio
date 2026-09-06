@@ -50,6 +50,9 @@ function BriefPage() {
               <In to="/bosses">Bosses</In> — arenas and raid rooms. Hunt notes. Live method on the wiki.
             </li>
             <li>
+              <In to="/pvp">PvP</In> — two canons. Wilderness, PvP worlds, LMS, Bounty Hunter. Risk is the tax. Official rules win.
+            </li>
+            <li>
               <In to="/monsters">Bestiary</In> — slayer and common creatures only. Not bosses. Where, task, hunt, wiki.
             </li>
             <li>

@@ -7,6 +7,9 @@ import { deskOpenPath } from "@/lib/desk-link";
 import { LOCATIONS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
 import { writeStudioSave } from "@/lib/studio-save";
+import { VisitPlaces, godPath, bossPath, townPath } from "@/components/place-chip";
+import { godInk } from "@/lib/gods";
+import { townNote } from "@/lib/town-notes";
 
 export const Route = createFileRoute("/bosses/$id")({
   head: ({ params }) => {
@@ -56,18 +59,42 @@ function BossNotePage() {
         <BossSheet sheet={sheet} />
 
         <SisterBoss name={loc.name} edition={loc.edition} id={loc.id} />
+        <section>
+          <h2 className="text-sm font-semibold text-parchment">Places to visit</h2>
+          <VisitPlaces
+            items={[
+              { href: godPath(loc.god), label: loc.god, color: godInk(loc.god) },
+              ...LOCATIONS.filter((row) => row.kind === "town" && row.god === loc.god && townNote(row.id))
+                .slice(0, 6)
+                .map((row) => ({
+                  href: townPath(row.id),
+                  label: `${row.name}${row.edition === "OSRS" ? " · OSRS" : ""}`,
+                })),
+              ...LOCATIONS.filter(
+                (row) => row.kind === "boss" && row.edition === loc.edition && noteFor(row.id),
+              )
+                .slice(0, 8)
+                .map((row) => ({
+                  href: bossPath(row.id),
+                  label: row.name,
+                  current: row.id === loc.id,
+                })),
+            ]}
+          />
+        </section>
         <a
-          href={deskOpenPath(loc.edition, loc.id)}
-          className="text-sm text-parchment"
+          href={deskOpenPath(loc.edition, loc.id, { still: loc.viewA })}
+          className="min-h-11 text-sm text-parchment [touch-action:manipulation]"
           onClick={() =>
             writeStudioSave({
               locationId: loc.id,
               edition: loc.edition,
               skillPicks: [],
+              stillSrc: loc.viewA,
             })
           }
         >
-          Use this place on a banner
+          Use on banner
         </a>
       </main>
     </div>

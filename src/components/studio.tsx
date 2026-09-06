@@ -21,11 +21,10 @@ import {
   townPlateSrc,
   type BannerSizeId,
   type Edition,
-  type God,
   type LocationId,
   type SceneKind,
 } from "@/lib/locations";
-import { godInk, GOD_SLUGS } from "@/lib/gods";
+import { godInk } from "@/lib/gods";
 import { loreLead, placeLore } from "@/lib/place-lore";
 import { EggToast } from "@/components/egg-toast";
 import { useDeskEggs } from "@/hooks/use-desk-eggs";
@@ -35,6 +34,9 @@ import { postieLineAt, PETE_LINES, peteThreshold } from "@/lib/postie";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { loadStudioSave, writeStudioSave } from "@/lib/studio-save";
 import { deskSharePath, readDeskQuery } from "@/lib/desk-link";
+import { PlaceChip, AppLink, godPath, townPath, bossPath } from "@/components/place-chip";
+import { noteFor } from "@/lib/boss-notes";
+import { townNote } from "@/lib/town-notes";
 import {
   looksLikeStaffName,
   sanitizeClan,
@@ -59,7 +61,6 @@ export function Studio() {
     const loc = boot.locationId ? LOCATIONS.find((row) => row.id === boot.locationId) : undefined;
     return loc?.kind ?? "town";
   });
-  const [godFilter, setGodFilter] = useState<God | "">("");
   const [locationId, setLocationId] = useState<LocationId>(boot.locationId ?? saved.locationId ?? "falador");
   const [view, setView] = useState<"a" | "b">(saved.view ?? "a");
   const [viewLocked, setViewLocked] = useState(false);
@@ -79,6 +80,8 @@ export function Studio() {
   });
   const [customSrc, setCustomSrc] = useState<string | null>(null);
   const [deskStillSrc, setDeskStillSrc] = useState<string | null>(() => {
+    if (boot.still) return boot.still;
+    if (saved.stillSrc) return saved.stillSrc;
     const id = boot.locationId ?? saved.locationId ?? "falador";
     const loc = LOCATIONS.find((row) => row.id === id);
     return townPlateSrc(id) ?? loc?.viewA ?? "/Falador.png";
@@ -542,10 +545,11 @@ export function Studio() {
         textScale,
         locationId,
         view,
+        stillSrc: deskStillSrc ?? undefined,
       });
     }, 400);
     return () => window.clearTimeout(id);
-  }, [streamer, clan, handle, tagline, world, discord, grind, edition, sizeId, skillPack, skillSize, locationId, view, skillPicks, textScale]);
+  }, [streamer, clan, handle, tagline, world, discord, grind, edition, sizeId, skillPack, skillSize, locationId, view, skillPicks, textScale, deskStillSrc]);
 
   const skillPicksRef = useRef(skillPicks);
   if (!draggingRef.current && !scalingRef.current) skillPicksRef.current = skillPicks;
@@ -1048,9 +1052,9 @@ export function Studio() {
   }
 
   const visible = LOCATIONS.filter((loc) => {
-    if (loc.kind !== kind || loc.edition !== edition) return false;
-    if (godFilter && loc.god !== godFilter) return false;
-    return true;
+    if (loc.edition !== edition) return false;
+    if (loc.kind === "boss") return Boolean(noteFor(loc.id));
+    return Boolean(townNote(loc.id));
   });
 
   return (
@@ -1064,16 +1068,10 @@ export function Studio() {
       <section className="page-band py-6">
         <h2 className="section-h2">Places to visit</h2>
         <div className="mb-3 flex flex-wrap justify-center gap-2">
-          {(["town", "boss"] as const).map((id) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setKind(id)}
-              className={`min-h-11 rounded-md border px-3 text-xs ${kind === id ? "border-parchment bg-raised" : "border-line"}`}
-            >
-              {id === "town" ? "Towns" : "Bosses"}
-            </button>
-          ))}
+          <PlaceChip href="/towns">Towns</PlaceChip>
+          <PlaceChip href="/bosses">Bosses</PlaceChip>
+          <PlaceChip href="/pvp">PvP</PlaceChip>
+          <PlaceChip href="/gods">Gods</PlaceChip>
           {(["RS3", "OSRS"] as const).map((item) => (
             <button
               key={item}
@@ -1092,33 +1090,20 @@ export function Studio() {
         </div>
         <div className="mb-3 flex flex-wrap justify-center gap-1">
           {GODS.map((god) => (
-            <button
-              key={god}
-              type="button"
-              onClick={() => setGodFilter((cur) => (cur === god ? "" : god))}
-              className={`min-h-11 rounded-md border px-2 text-[10px] ${godFilter === god ? "border-parchment" : "border-line"}`}
-              style={{ color: godInk(god) }}
-            >
+            <PlaceChip key={god} href={godPath(god)} style={{ color: godInk(god) }}>
               {god}
-            </button>
+            </PlaceChip>
           ))}
         </div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
           {visible.slice(0, placeCap).map((loc, i) => {
             const raw = loc.stills?.length ? loc.stills[stillIndex(loc.stills.length, peteNow)] : loc.viewA;
             const src = stillAllowed(raw, loc.edition) ? raw : loc.viewA;
+            const href = loc.kind === "boss" ? bossPath(loc.id) : townPath(loc.id);
             const lore = placeLore(loc);
             return (
               <div key={loc.id} className="overflow-hidden rounded-md border border-line hover:border-[#F5C400]" data-place-card data-slug={loc.id}>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    const img = e.currentTarget.querySelector("img");
-                    const fromCard = img?.currentSrc || img?.getAttribute("src") || src;
-                    applyStill(loc.id, "a", fromCard || undefined);
-                  }}
-                  className="block w-full text-left"
-                >
+                <AppLink href={href} className="block w-full text-left [touch-action:manipulation]">
                   <StillPhoto
                     src={src}
                     alt={`${loc.name}, ${loc.region}`}
@@ -1128,28 +1113,19 @@ export function Studio() {
                   <span className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">
                     {loc.name}
                   </span>
-                </button>
+                </AppLink>
                 <p className="px-2 pb-1.5 text-center text-[10px] text-faint">
                   {loc.region.replace(/\s·\sOSRS$/, "")} ·{" "}
-                  <Link
-                    to="/gods/$god"
-                    params={{ god: GOD_SLUGS[loc.god] }}
-                    className="no-underline"
-                    style={{ color: godInk(loc.god) }}
-                  >
+                  <AppLink href={godPath(loc.god)} className="no-underline" style={{ color: godInk(loc.god) }}>
                     {loc.god}
-                  </Link>
+                  </AppLink>
                 </p>
                 {lore ? (
                   <p className="px-2 pb-2 text-center text-[10px] text-muted">
                     {loreLead(lore.brief)}{" "}
-                    <Link
-                      to={loc.kind === "boss" ? "/bosses/$id" : "/towns/$id"}
-                      params={{ id: loc.id }}
-                      className="text-parchment"
-                    >
+                    <AppLink href={href} className="text-parchment">
                       Lore
-                    </Link>
+                    </AppLink>
                   </p>
                 ) : null}
               </div>

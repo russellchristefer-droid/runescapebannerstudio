@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
+import { VisitPlaces } from "@/components/place-chip";
 import { GOD_BRIEFS, GOD_SLUGS } from "@/lib/gods";
 import { godStill, godStillLine } from "@/lib/god-stills";
 import { GODS } from "@/lib/locations";
@@ -25,6 +26,16 @@ function GodsIndex() {
           Two sealed canons. Prayer book and God Wars on one client. Landfall and edicts on the other. Wiki keeps the hour.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <div className="mt-3 flex justify-center">
+          <VisitPlaces
+            items={[
+              { href: "/gods", label: "Gods", current: true },
+              { href: "/towns", label: "Towns" },
+              { href: "/bosses", label: "Bosses" },
+              { href: "/pvp", label: "PvP" },
+            ]}
+          />
+        </div>
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
         <section>

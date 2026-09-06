@@ -94,13 +94,14 @@ function MonsterPage() {
             <>
               {" · "}
               <a
-                href={deskOpenPath(row.edition, row.placeId)}
+                href={deskOpenPath(row.edition, row.placeId, { still: src })}
                 className="text-parchment"
                 onClick={() =>
                   writeStudioSave({
                     locationId: row.placeId,
                     edition: row.edition,
                     skillPicks: [],
+                    stillSrc: src,
                   })
                 }
               >

@@ -3,7 +3,7 @@ import { BackLink } from "@/components/back-link";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { townNote } from "@/lib/town-notes";
 import { LOCATIONS, townStillLine, type Location } from "@/lib/locations";
-import { godInk, GOD_SLUGS } from "@/lib/gods";
+import { godInk } from "@/lib/gods";
 import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
 import { citizenFor } from "@/data/citizens";
@@ -12,6 +12,8 @@ import { stillIndex } from "@/lib/still-clock";
 import { deskOpenPath } from "@/lib/desk-link";
 import { OfficialPulse } from "@/components/official-pulse";
 import { writeStudioSave } from "@/lib/studio-save";
+import { VisitPlaces, AppLink, godPath, townPath, bossPath } from "@/components/place-chip";
+import { noteFor } from "@/lib/boss-notes";
 
 function townWikiLinks(title: string, loc?: Location) {
   const path = encodeURI(title.replace(/ /g, "_"));
@@ -44,14 +46,9 @@ function TownNotePage() {
         {loc ? (
           <p className="mt-1 text-center text-sm text-muted">
             {loc.region.replace(/\s·\sOSRS$/, "")} ·{" "}
-            <Link
-              to="/gods/$god"
-              params={{ god: GOD_SLUGS[loc.god] }}
-              className="no-underline"
-              style={{ color: godInk(loc.god) }}
-            >
+            <AppLink href={godPath(loc.god)} className="no-underline" style={{ color: godInk(loc.god) }}>
               {loc.god}
-            </Link>
+            </AppLink>
           </p>
         ) : (
           <p className="mt-1 text-sm text-muted">{note.region}</p>
@@ -96,18 +93,44 @@ function TownNotePage() {
         {loc ? (
           <SisterPlace id={loc.id} name={loc.name} edition={loc.edition} />
         ) : null}
+        {loc ? (
+          <section>
+            <h2 className="text-sm font-semibold text-parchment">Places to visit</h2>
+            <VisitPlaces
+              items={[
+                { href: godPath(loc.god), label: loc.god, color: godInk(loc.god) },
+                ...LOCATIONS.filter(
+                  (row) =>
+                    row.id !== loc.id &&
+                    row.kind === "town" &&
+                    row.god === loc.god &&
+                    townNote(row.id),
+                )
+                  .slice(0, 8)
+                  .map((row) => ({
+                    href: townPath(row.id),
+                    label: `${row.name}${row.edition === "OSRS" ? " · OSRS" : ""}`,
+                    current: row.id === loc.id,
+                  })),
+                ...LOCATIONS.filter((row) => row.kind === "boss" && row.god === loc.god && noteFor(row.id))
+                  .slice(0, 4)
+                  .map((row) => ({ href: bossPath(row.id), label: row.name })),
+              ]}
+            />
+          </section>
+        ) : null}
         <p className="text-xs text-faint">
           Fan desk notes. Live page: the official wiki for this game.
         </p>
         <a
-          href={loc ? deskOpenPath(loc.edition, loc.id) : "/#desk"}
-          className="text-sm text-parchment"
+          href={loc ? deskOpenPath(loc.edition, loc.id, { still: loc.viewA }) : "/#desk"}
+          className="min-h-11 text-sm text-parchment [touch-action:manipulation]"
           onClick={() => {
             if (!loc) return;
-            writeStudioSave({ locationId: loc.id, edition: loc.edition, skillPicks: [] });
+            writeStudioSave({ locationId: loc.id, edition: loc.edition, skillPicks: [], stillSrc: loc.viewA });
           }}
         >
-          Use this town on a banner
+          Use on banner
         </a>
       </main>
     </div>

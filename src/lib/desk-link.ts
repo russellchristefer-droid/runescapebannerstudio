@@ -18,6 +18,14 @@ export function aliasMark(raw: string, edition: Edition) {
   return loose?.id ?? "";
 }
 
+const STILL_PATH = /^\/(?!\/)[A-Za-z0-9_./-]+\.(png|jpe?g|webp)$/i;
+
+export function cleanStillPath(raw: string | undefined) {
+  if (!raw) return undefined;
+  const path = raw.split("?")[0];
+  return STILL_PATH.test(path) ? path : undefined;
+}
+
 export function readDeskQuery() {
   if (typeof window === "undefined") return {};
   const q = new URLSearchParams(window.location.search);
@@ -41,7 +49,8 @@ export function readDeskQuery() {
     .map((part) => aliasMark(part, pack))
     .filter(Boolean)
     .slice(0, 12);
-  return { edition, sizeId, locationId, marks };
+  const still = cleanStillPath(q.get("still") ?? undefined);
+  return { edition, sizeId, locationId, marks, still };
 }
 
 export function deskSharePath(edition: Edition, placeId: string, size: BannerSizeId, markIds: string[] = []) {
@@ -56,8 +65,19 @@ export function deskSharePath(edition: Edition, placeId: string, size: BannerSiz
   return marks ? `${q}&marks=${encodeURIComponent(marks)}` : q;
 }
 
-export function deskOpenPath(edition: Edition, placeId: string) {
+export function deskOpenPath(
+  edition: Edition,
+  placeId: string,
+  extra?: { still?: string; marks?: string[] },
+) {
   const game = edition === "OSRS" ? "osrs" : "rs3";
   const slug = placeId.replace(/^(osrs|rs3)/, "") || placeId;
-  return `/?game=${game}&place=${encodeURIComponent(slug)}#desk`;
+  const q = new URLSearchParams();
+  q.set("game", game);
+  q.set("place", slug);
+  const still = cleanStillPath(extra?.still);
+  if (still) q.set("still", still);
+  const marks = (extra?.marks ?? []).filter(Boolean).slice(0, 12).join(",");
+  if (marks) q.set("marks", marks);
+  return `/?${q.toString()}#desk`;
 }

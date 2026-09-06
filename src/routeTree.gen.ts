@@ -23,6 +23,7 @@ import { Route as JmodsRouteImport } from './routes/jmods'
 import { Route as KnowledgeRouteImport } from './routes/knowledge'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as LumbRouteImport } from './routes/lumb'
+import { Route as PvpRouteImport } from './routes/pvp'
 import { Route as SenntistenRouteImport } from './routes/senntisten'
 import { Route as StillRouteImport } from './routes/still'
 import { Route as StoryRouteImport } from './routes/story'
@@ -107,6 +108,11 @@ const LegalRoute = LegalRouteImport.update({
 const LumbRoute = LumbRouteImport.update({
   id: '/lumb',
   path: '/lumb',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PvpRoute = PvpRouteImport.update({
+  id: '/pvp',
+  path: '/pvp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SenntistenRoute = SenntistenRouteImport.update({
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/knowledge': typeof KnowledgeRoute
   '/legal': typeof LegalRoute
   '/lumb': typeof LumbRoute
+  '/pvp': typeof PvpRoute
   '/senntisten': typeof SenntistenRoute
   '/still': typeof StillRoute
   '/story': typeof StoryRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/knowledge': typeof KnowledgeRoute
   '/legal': typeof LegalRoute
   '/lumb': typeof LumbRoute
+  '/pvp': typeof PvpRoute
   '/senntisten': typeof SenntistenRoute
   '/still': typeof StillRoute
   '/story': typeof StoryRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/knowledge': typeof KnowledgeRoute
   '/legal': typeof LegalRoute
   '/lumb': typeof LumbRoute
+  '/pvp': typeof PvpRoute
   '/senntisten': typeof SenntistenRoute
   '/still': typeof StillRoute
   '/story': typeof StoryRoute
@@ -296,6 +305,7 @@ export interface FileRouteTypes {
     | '/knowledge'
     | '/legal'
     | '/lumb'
+    | '/pvp'
     | '/senntisten'
     | '/still'
     | '/story'
@@ -327,6 +337,7 @@ export interface FileRouteTypes {
     | '/knowledge'
     | '/legal'
     | '/lumb'
+    | '/pvp'
     | '/senntisten'
     | '/still'
     | '/story'
@@ -358,6 +369,7 @@ export interface FileRouteTypes {
     | '/knowledge'
     | '/legal'
     | '/lumb'
+    | '/pvp'
     | '/senntisten'
     | '/still'
     | '/story'
@@ -390,6 +402,7 @@ export interface RootRouteChildren {
   KnowledgeRoute: typeof KnowledgeRoute
   LegalRoute: typeof LegalRoute
   LumbRoute: typeof LumbRoute
+  PvpRoute: typeof PvpRoute
   SenntistenRoute: typeof SenntistenRoute
   StillRoute: typeof StillRoute
   StoryRoute: typeof StoryRoute
@@ -505,6 +518,13 @@ declare module '@tanstack/react-router' {
       path: '/lumb'
       fullPath: '/lumb'
       preLoaderRoute: typeof LumbRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pvp': {
+      id: '/pvp'
+      path: '/pvp'
+      fullPath: '/pvp'
+      preLoaderRoute: typeof PvpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/senntisten': {
@@ -630,6 +650,7 @@ const rootRouteChildren: RootRouteChildren = {
   KnowledgeRoute: KnowledgeRoute,
   LegalRoute: LegalRoute,
   LumbRoute: LumbRoute,
+  PvpRoute: PvpRoute,
   SenntistenRoute: SenntistenRoute,
   StillRoute: StillRoute,
   StoryRoute: StoryRoute,

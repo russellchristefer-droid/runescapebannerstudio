@@ -23,6 +23,7 @@ export type StudioSave = {
   skillPicks?: { id: string; game?: "OSRS" | "RS3"; level: string; x?: number; y?: number; size?: number; scale?: number; group?: string }[];
   textScale?: Record<string, number>;
   locationId?: string;
+  stillSrc?: string;
   view?: "a" | "b";
   skybox?: "nightstone" | "aura" | "a" | "b" | "dark" | "light";
 };
@@ -84,6 +85,9 @@ export function loadStudioSave(): StudioSave {
       skillPicks: picks,
       textScale,
       locationId: clip(data.locationId, 32),
+      stillSrc: /^\/(?!\/)[A-Za-z0-9_./-]+\.(png|jpe?g|webp)(\?.*)?$/i.test(data.stillSrc ?? "")
+        ? clip(data.stillSrc, 180)
+        : undefined,
       view:
         data.view === "a" || data.view === "b"
           ? data.view

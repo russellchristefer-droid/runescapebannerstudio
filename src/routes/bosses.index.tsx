@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
+import { VisitPlaces } from "@/components/place-chip";
 import { BOSS_NOTES } from "@/lib/boss-notes";
 import { LOCATIONS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
@@ -26,6 +27,16 @@ function BossIndex() {
           Working sheets. Combat, slayer, unlock, instance, death. OSRS tiers, bag, supplies, spec, skip, bank. Sanity only where the fight uses it. RS3 camp, ultimates, familiar. Team seats only on group fights. Three links.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <div className="mt-3 flex justify-center">
+          <VisitPlaces
+            items={[
+              { href: "/gods", label: "Gods" },
+              { href: "/towns", label: "Towns" },
+              { href: "/bosses", label: "Bosses", current: true },
+              { href: "/pvp", label: "PvP" },
+            ]}
+          />
+        </div>
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
         <section>

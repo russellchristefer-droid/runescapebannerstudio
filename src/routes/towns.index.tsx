@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
+import { VisitPlaces } from "@/components/place-chip";
 import { LOCATIONS, townStillLine } from "@/lib/locations";
 import { townNote } from "@/lib/town-notes";
 import { pageMeta } from "@/lib/page-title";
@@ -23,6 +24,16 @@ function TownIndex() {
           Two grammars. Same name is not the same street. Pick a client first.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <div className="mt-3 flex justify-center">
+          <VisitPlaces
+            items={[
+              { href: "/gods", label: "Gods" },
+              { href: "/towns", label: "Towns", current: true },
+              { href: "/bosses", label: "Bosses" },
+              { href: "/pvp", label: "PvP" },
+            ]}
+          />
+        </div>
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
         <section>

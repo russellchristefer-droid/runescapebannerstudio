@@ -1,8 +1,15 @@
-import { Link } from "@tanstack/react-router";
 import { StillPhoto } from "@/components/still-photo";
+import { AppLink } from "@/components/place-chip";
 import { godInk } from "@/lib/gods";
 
 type PlaceTo = "/towns/$id" | "/bosses/$id" | "/gods/$god" | "/monsters/$id";
+
+function hrefFor(to: PlaceTo, params: { id?: string; god?: string }) {
+  if (to === "/gods/$god") return `/gods/${params.god ?? ""}`;
+  if (to === "/towns/$id") return `/towns/${params.id ?? ""}`;
+  if (to === "/bosses/$id") return `/bosses/${params.id ?? ""}`;
+  return `/monsters/${params.id ?? ""}`;
+}
 
 export function PlaceCard({
   to,
@@ -25,12 +32,12 @@ export function PlaceCard({
 }) {
   const label = kind === "Town" && god ? god : kind;
   const alt = `${name} in ${game}`;
+  const href = hrefFor(to, params);
   return (
     <li className="[contain-intrinsic-size:auto_220px] [content-visibility:auto]">
-      <Link
-        to={to}
-        params={params as { id: string } & { god: string }}
-        className="block overflow-hidden rounded-md border border-line bg-raised hover:border-[#F5C400]"
+      <AppLink
+        href={href}
+        className="block min-h-11 overflow-hidden rounded-md border border-line bg-raised [touch-action:manipulation] hover:border-[#F5C400]"
       >
         {src ? (
           <StillPhoto src={src} alt={alt} className="aspect-video w-full bg-surface object-cover [content-visibility:auto]" />
@@ -47,7 +54,7 @@ export function PlaceCard({
           )}{" "}
           · {game}
         </p>
-      </Link>
+      </AppLink>
     </li>
   );
 }
