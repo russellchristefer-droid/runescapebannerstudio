@@ -271,8 +271,14 @@ function drawIdentityPlate(
     const x = pos ? pos.x + 4 : layout === "title-card" ? Math.round(options.width / 2) : inset;
     const yy = pos ? pos.y + size : y;
     ctx.font = `700 ${size}px ${plateFont}`;
-    fitYellow(ctx, line.text, x, yy, size, textMax, plateFont, "800", color, "chat");
-    boxes.push({ id: line.id, x: x - 4, y: yy - size, w: textMax, h: size + 8 });
+    const nameLine = line.id === "streamer";
+    if (nameLine) {
+      paintRSYellow(ctx, line.text, x, yy, size, color);
+    } else {
+      fitYellow(ctx, line.text, x, yy, size, textMax, plateFont, "800", color, "chat");
+    }
+    const hitW = Math.max(36, Math.ceil(ctx.measureText(line.text).width) + 8);
+    boxes.push({ id: line.id, x: x - 4, y: yy - size, w: hitW, h: size + 8 });
     y = yy + size + 8;
   }
   return y;

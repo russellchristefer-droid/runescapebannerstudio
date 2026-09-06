@@ -754,7 +754,7 @@ export function Studio() {
     if (!pickedText) return;
     const box = boxesRef.current.find((row) => row.id === pickedText);
     const old = textScaleRef.current[pickedText] ?? 1;
-    const nextScale = Math.min(2, Math.max(0.75, old + delta));
+    const nextScale = Math.min(3, Math.max(0.5, old + delta));
     if (box) {
       const cx = box.x + box.w / 2;
       const cy = box.y + box.h / 2;
@@ -1253,6 +1253,38 @@ export function Studio() {
               const y = ((e.clientY - rect.top) / rect.height) * size.height;
               const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 120 : 1;
               const factor = Math.exp(-e.deltaY * unit * 0.0024);
+              const textOver = [...boxesRef.current].reverse().find((box) => {
+                if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
+                return x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
+              });
+              if (textOver || pickedText) {
+                const textId = textOver?.id ?? pickedText;
+                if (textId && (!pickedSkill || textOver)) {
+                  e.preventDefault();
+                  setPickedText(textId);
+                  setPickedSkill(null);
+                  const old = textScaleRef.current[textId] ?? 1;
+                  const next = e.shiftKey
+                    ? Math.min(3, Math.max(0.5, old + (e.deltaY > 0 ? -0.25 : 0.25)))
+                    : Math.min(3, Math.max(0.5, old * factor));
+                  const box = boxesRef.current.find((row) => row.id === textId);
+                  if (box) {
+                    const ratio = next / Math.max(0.01, old);
+                    textPosRef.current = {
+                      ...textPosRef.current,
+                      [textId]: {
+                        x: box.x + box.w / 2 - (box.w * ratio) / 2,
+                        y: box.y + box.h / 2 - (box.h * ratio) / 2,
+                      },
+                    };
+                    setTextPos(textPosRef.current);
+                  }
+                  textScaleRef.current = { ...textScaleRef.current, [textId]: next };
+                  setTextScale({ ...textScaleRef.current });
+                  requestPaint();
+                  return;
+                }
+              }
               let skillId = pickedSkill;
               if (!skillId) {
                 const hit = [...skillPicksRef.current].reverse().find((item) => {
@@ -1276,44 +1308,6 @@ export function Studio() {
                 applyStampScale(skillId, next);
                 return;
               }
-              let textId = pickedText;
-              if (!textId) {
-                const hit = [...boxesRef.current].reverse().find((box) => {
-                  if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
-                  const hw = Math.max(28, box.w);
-                  const hh = Math.max(28, box.h);
-                  return x >= box.x && x <= box.x + hw && y >= box.y && y <= box.y + hh;
-                });
-                if (hit) {
-                  textId = hit.id;
-                  setPickedText(hit.id);
-                  setPickedSkill(null);
-                }
-              }
-              if (!textId) return;
-              e.preventDefault();
-              const old = textScaleRef.current[textId] ?? 1;
-              const next = e.shiftKey
-                ? Math.min(2, Math.max(0.75, old + (e.deltaY > 0 ? -0.25 : 0.25)))
-                : Math.min(2, Math.max(0.75, old * factor));
-              const box = boxesRef.current.find((row) => row.id === textId);
-              if (box) {
-                const ratio = next / Math.max(0.01, old);
-                textPosRef.current = {
-                  ...textPosRef.current,
-                  [textId]: {
-                    x: box.x + box.w / 2 - (box.w * ratio) / 2,
-                    y: box.y + box.h / 2 - (box.h * ratio) / 2,
-                  },
-                };
-              }
-              textScaleRef.current = { ...textScaleRef.current, [textId]: next };
-              requestPaint();
-              window.clearTimeout(scaleTimer.current);
-              scaleTimer.current = window.setTimeout(() => {
-                setTextPos(textPosRef.current);
-                setTextScale({ ...textScaleRef.current });
-              }, 140);
             }}
             onPointerDown={(e) => {
               const canvas = canvasRef.current;
@@ -1362,6 +1356,27 @@ export function Studio() {
                 setArmedSkill(null);
                 return;
               }
+              const textHit = [...boxesRef.current].reverse().find((box) => {
+                if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
+                return x >= box.x && x <= box.x + Math.max(28, box.w) && y >= box.y && y <= box.y + Math.max(28, box.h);
+              });
+              if (textHit) {
+                setPickedText(textHit.id);
+                setPickedSkill(null);
+                if (e.detail >= 2) return;
+                setGrabbing(true);
+                draggingRef.current = true;
+                dragRef.current = {
+                  id: textHit.id,
+                  x0: textHit.x,
+                  y0: textHit.y,
+                  px: e.clientX,
+                  py: e.clientY,
+                  kind: "text",
+                };
+                (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
+                return;
+              }
               const skillHit = [...skillPicksRef.current].reverse().find((item) => {
                 if (item.x == null || item.y == null) return false;
                 const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
@@ -1387,58 +1402,36 @@ export function Studio() {
                 (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
                 return;
               }
-              const textHit = [...boxesRef.current].reverse().find((box) => {
-                if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
-                const hw = Math.max(28, box.w);
-                const hh = Math.max(28, box.h);
-                return x >= box.x && x <= box.x + hw && y >= box.y && y <= box.y + hh;
-              });
-              if (!textHit) {
-                if (pickedSkill) {
-                  const lead = skillPicksRef.current.find((item) => item.id === pickedSkill);
-                  if (lead) {
-                    const mark = Math.max(28, (lead.size ?? skillSize) * (lead.scale ?? 1));
-                    const px = Math.max(0, Math.min(size.width - mark, x));
-                    const py = Math.max(0, Math.min(size.height - mark, y));
-                    const mates = packMates(pickedSkill).filter((item) => item.x != null && item.y != null);
-                    const dx = px - (lead.x ?? 0);
-                    const dy = py - (lead.y ?? 0);
-                    setSkillPicks((cur) =>
-                      cur.map((item) => {
-                        const mate = mates.find((row) => row.id === item.id);
-                        if (!mate || item.x == null || item.y == null) {
-                          if (item.id !== pickedSkill) return item;
-                          return { ...item, x: px, y: py, scale: item.scale ?? 1 };
-                        }
-                        const extent = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
-                        return {
-                          ...item,
-                          scale: item.scale ?? 1,
-                          x: Math.max(0, Math.min(size.width - extent, item.x + dx)),
-                          y: Math.max(0, Math.min(size.height - extent, item.y + dy)),
-                        };
-                      }),
-                    );
-                  }
-                  return;
+              if (pickedSkill) {
+                const lead = skillPicksRef.current.find((item) => item.id === pickedSkill);
+                if (lead) {
+                  const mark = Math.max(28, (lead.size ?? skillSize) * (lead.scale ?? 1));
+                  const px = Math.max(0, Math.min(size.width - mark, x));
+                  const py = Math.max(0, Math.min(size.height - mark, y));
+                  const mates = packMates(pickedSkill).filter((item) => item.x != null && item.y != null);
+                  const dx = px - (lead.x ?? 0);
+                  const dy = py - (lead.y ?? 0);
+                  setSkillPicks((cur) =>
+                    cur.map((item) => {
+                      const mate = mates.find((row) => row.id === item.id);
+                      if (!mate || item.x == null || item.y == null) {
+                        if (item.id !== pickedSkill) return item;
+                        return { ...item, x: px, y: py, scale: item.scale ?? 1 };
+                      }
+                      const extent = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
+                      return {
+                        ...item,
+                        scale: item.scale ?? 1,
+                        x: Math.max(0, Math.min(size.width - extent, item.x + dx)),
+                        y: Math.max(0, Math.min(size.height - extent, item.y + dy)),
+                      };
+                    }),
+                  );
                 }
-                setPickedSkill(null);
-                setPickedText(null);
                 return;
               }
-              setPickedText(textHit.id);
               setPickedSkill(null);
-              setGrabbing(true);
-              draggingRef.current = true;
-              dragRef.current = {
-                id: textHit.id,
-                x0: textHit.x,
-                y0: textHit.y,
-                px: e.clientX,
-                py: e.clientY,
-                kind: "text",
-              };
-              (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
+              setPickedText(null);
             }}
             onPointerMove={(e) => {
               const canvas = canvasRef.current;
