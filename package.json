@@ -1,6 +1,11 @@
 {
   "name": "app-builder-workspace",
   "private": true,
+  "homepage": "https://runescapebannerstudio.grok.me/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/russellchristefer-droid/runescapebannerstudio.git"
+  },
   "sideEffects": false,
   "type": "module",
   "engines": {

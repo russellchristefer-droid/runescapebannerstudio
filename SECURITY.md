@@ -15,5 +15,6 @@ Inventory icons from the Old School wiki, identification only.
 
 Operator: Christefer Lee Russell-Barnett · russell.christefer@gmail.com
 
-Backup: `russellchristefer-droid/runescapebannerstudio-private` (private).
-Public: this repo. Live: https://runescapebannerstudio.grok.me/
+Backup: [russellchristefer-droid/runescapebannerstudio-private](https://github.com/russellchristefer-droid/runescapebannerstudio-private) (private).
+Public: [russellchristefer-droid/runescapebannerstudio](https://github.com/russellchristefer-droid/runescapebannerstudio).
+Live: [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)

@@ -5,13 +5,17 @@ Hats: defensive only. Source backup is the private remote.
 Independent fan studio for **Twitch / YouTube / Discord** identification stills.
 Not a Jagex product. Not a game client. Not an official overlay.
 
-**Live (no install):** [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
+**Live:** [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
+
+**Repos**
+- Public: [russellchristefer-droid/runescapebannerstudio](https://github.com/russellchristefer-droid/runescapebannerstudio)
+- Private backup: [russellchristefer-droid/runescapebannerstudio-private](https://github.com/russellchristefer-droid/runescapebannerstudio-private)
 
 ## What it does
 
 - Banner desk: town still + display name (12 letters) + skills / marks + export at 1200×480, 1280×720, 1920×1080, 1920×480
-- Towns, gods, bosses, bestiary (non-boss), Classic gallery
-- History / Chronicle, streamers and YouTubers halls, clip bench
+- [Towns](https://runescapebannerstudio.grok.me/towns), [gods](https://runescapebannerstudio.grok.me/gods), [bosses](https://runescapebannerstudio.grok.me/bosses), [bestiary](https://runescapebannerstudio.grok.me/monsters), [Classic](https://runescapebannerstudio.grok.me/classic)
+- [PvP](https://runescapebannerstudio.grok.me/pvp) (Old School only), [clips](https://runescapebannerstudio.grok.me/edit), [streamers](https://runescapebannerstudio.grok.me/streamers), [YouTubers](https://runescapebannerstudio.grok.me/youtubers)
 - Hiscores lookup (public boards, fail-soft)
 
 ## Platforms
@@ -34,7 +38,7 @@ npm install
 npm run dev
 ```
 
-Open the URL Vite prints (**port 8080**).
+Open the URL the app prints.
 
 ```bash
 npm run build
@@ -49,7 +53,7 @@ npm run preview
 
 If `npm run dev` fails, delete `node_modules` and run `npm install` again.
 
-Line endings in this repo are `LF` (see `.gitattributes`) so Windows Git does not rewrite scripts as CRLF.
+Line endings in this repo are `LF` (see [.gitattributes](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/.gitattributes)) so Windows Git does not rewrite scripts as CRLF.
 
 ## Layout
 
@@ -62,8 +66,13 @@ Line endings in this repo are `LF` (see `.gitattributes`) so Windows Git does no
 
 ## Policy
 
-Stills are identification. Official news and the wiki win on numbers. See `/legal` and Jagex [Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
+Stills are identification. Official news and the wiki win on numbers.
+
+- [Legal](https://runescapebannerstudio.grok.me/legal)
+- [SECURITY.md](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/SECURITY.md)
+- [NOTICE](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/NOTICE)
+- Jagex [Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy)
 
 ## License
 
-See `LICENSE` and `NOTICE`. RuneScape © Jagex. Fan typefaces credited in `/legal`.
+See [LICENSE](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/LICENSE) and [NOTICE](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/NOTICE). RuneScape © Jagex. Fan typefaces credited on Legal.
