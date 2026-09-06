@@ -307,7 +307,7 @@ function drawIdentityPlate(
     const pos = options.textPos[line.id];
     const inset = chip.pad;
     const nameLine = line.id === "streamer";
-    const packPos = nameLine ? options.nameAnchor : null;
+    const packPos = nameLine ? (pos ?? options.nameAnchor ?? null) : null;
     const x = packPos
       ? packPos.x
       : pos
@@ -491,9 +491,11 @@ export function drawBanner(
   const name = sanitizeDisplayName(options.streamer);
   const nameSize = Math.max(8, Math.round(typeScale(width, height).name * Math.min(3, Math.max(0.5, options.textScale?.streamer ?? 1))));
   const nameAnchor =
-    name && name !== "Player" && name !== "Optional"
-      ? layoutName(ctx, options.skillIcons, name, nameSize)
-      : null;
+    options.textPos.streamer
+      ? options.textPos.streamer
+      : name && name !== "Player" && name !== "Optional"
+        ? layoutName(ctx, options.skillIcons, name, nameSize)
+        : null;
   drawIdentityPlate(ctx, { ...options, nameAnchor }, textMax, height, font, boxes, weight, inkStyle);
 
   if (options.skillIcons.length) {

@@ -414,7 +414,7 @@ export function Studio() {
     setSkillPicks((cur) => {
       const pack = cur.filter((item) => !isMark(item.id) && item.x != null && item.y != null);
       if (!pack.length) return cur;
-      return cur.map((item) => {
+      const next = cur.map((item) => {
         if (item.x == null || item.y == null || isMark(item.id)) return item;
         const mark = Math.max(12, (item.size ?? skillSize) * (item.scale ?? 1));
         return {
@@ -423,7 +423,10 @@ export function Studio() {
           y: Math.max(0, Math.min(size.height - mark, item.y + dy)),
         };
       });
+      skillPicksRef.current = next;
+      return next;
     });
+    queueMicrotask(() => centerNameOverStamps(skillPicksRef.current));
     const lead = skillPicksRef.current.find((item) => !isMark(item.id) && item.x != null);
     if (lead?.x != null && lead.y != null) {
       setAriaLive(`Pack moved to ${Math.round(lead.x + dx)}, ${Math.round(lead.y + dy)}`);
@@ -568,6 +571,22 @@ export function Studio() {
         const dir = e.key.replace("Arrow", "").toLowerCase() as "up" | "down" | "left" | "right";
         const dx = dir === "left" ? -stepBase : dir === "right" ? stepBase : 0;
         const dy = dir === "up" ? -stepBase : dir === "down" ? stepBase : 0;
+        if (pickedText) {
+          setTextPos((cur) => {
+            const pos = cur[pickedText] ?? { x: 36, y: 24 };
+            const next = {
+              ...cur,
+              [pickedText]: {
+                x: Math.max(0, Math.min(size.width - 24, pos.x + dx)),
+                y: Math.max(0, Math.min(size.height - 24, pos.y + dy)),
+              },
+            };
+            textPosRef.current = next;
+            return next;
+          });
+          setAriaLive(`Name moved`);
+          return;
+        }
         nudgePack(dx, dy);
       }
     };
@@ -1558,7 +1577,7 @@ export function Studio() {
             className={`min-h-11 rounded-md border px-2 text-[10px] ${ghostZone === "none" ? "border-parchment" : "border-line"}`}
             onClick={() => setGhostZone((zone) => (zone === "none" ? "twitch" : "none"))}
           >
-            Ghosts off
+            Ghosts {ghostZone === "none" ? "off" : "on"}
           </button>
           <button
             type="button"
