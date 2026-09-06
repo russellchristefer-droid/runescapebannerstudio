@@ -56,6 +56,8 @@ function BossNotePage() {
           src={loc.viewA}
           alt={`${note.title} arena, ${game}`}
           className="aspect-[21/9] w-full rounded-md border border-line object-cover bg-surface"
+          loading="eager"
+          decoding="async"
         />
 
         <BossSheet sheet={sheet} />

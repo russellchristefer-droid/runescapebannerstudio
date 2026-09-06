@@ -931,7 +931,7 @@ export function ClipBench() {
             </div>
           ) : null}
         </div>
-        <video ref={videoRef} className="pointer-events-none absolute h-px w-px opacity-0" playsInline preload="metadata" muted={muted} controls={false} />
+        <video ref={videoRef} className="pointer-events-none absolute h-px w-px opacity-0" playsInline preload="none" muted={muted} controls={false} />
         <div className="grid grid-cols-2 gap-x-3 gap-y-1 px-4 py-2 font-mono text-[11px] tabular-nums text-muted sm:grid-cols-4">
           <p>TC {hasClip ? timecode(now) : "00:00.00"}</p>
           <p>DUR {hasClip ? timecode(range) : "00:00.00"}</p>

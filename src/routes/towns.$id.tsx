@@ -138,6 +138,9 @@ function TownCycle({
         src={src}
         alt={`${title} in ${game}`}
         className="aspect-[21/9] w-full rounded-md border border-line object-cover"
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
       />
       <figcaption className="mt-1 text-xs text-faint">
         {townStillLine(loc.id)}
@@ -187,6 +190,8 @@ function StreetAndHour({ loc, wiki }: { loc: (typeof LOCATIONS)[number]; wiki?: 
             alt={alt}
             width={72}
             height={72}
+            loading="lazy"
+            decoding="async"
             className="h-[72px] w-[72px] shrink-0 object-contain object-bottom"
             onError={(e) => {
               e.currentTarget.remove();

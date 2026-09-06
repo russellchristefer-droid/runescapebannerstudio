@@ -97,6 +97,7 @@ export function TownHero({
             height={480}
             alt={`${name}, town, ${game}`}
             fetchPriority="high"
+            decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (

@@ -174,6 +174,8 @@ function GodFigure({ src, alt, caption }: { src: string; alt: string; caption: s
         src={src}
         alt={alt}
         className="aspect-video w-full rounded-md border border-line bg-surface object-cover"
+        loading="lazy"
+        decoding="async"
       />
       <figcaption className="mt-1 text-center text-[11px] text-faint">{caption}</figcaption>
     </figure>

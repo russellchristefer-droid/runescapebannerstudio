@@ -1147,6 +1147,7 @@ export function Studio() {
             alt=""
             src={customSrc || deskStillSrc || location.viewA || "/Falador.png"}
             className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            decoding="async"
             onLoad={(e) => {
               e.currentTarget.dataset.ok = e.currentTarget.currentSrc;
               setPlateCaption(`${location.name} · ${size.width}×${size.height} JPEG · ${size.note}`);
