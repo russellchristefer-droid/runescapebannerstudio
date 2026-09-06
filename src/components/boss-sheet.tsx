@@ -72,6 +72,7 @@ function FactRow({ header }: { header: FightHeader }) {
   const rows: [string, string][] = [
     ["Combat", header.combat],
     ["Slayer", header.slayer],
+    ["Unlock", header.unlock],
     ["Style", header.weakness],
     ["Instance", header.instance],
     ["Death", header.death],
@@ -164,6 +165,16 @@ export function BossSheet({ sheet }: { sheet: FightSheet }) {
           <Block title="Spec / thrall / death charge">
             <p className="text-sm text-muted">{sheet.osrs.spec}</p>
           </Block>
+          {sheet.osrs.sanity ? (
+            <Block title="Sanity">
+              <p className="text-sm text-muted">{sheet.osrs.sanity}</p>
+            </Block>
+          ) : null}
+          {sheet.osrs.bank ? (
+            <Block title="Bank / trip">
+              <p className="text-sm text-muted">{sheet.osrs.bank}</p>
+            </Block>
+          ) : null}
           <Block title="Skip">
             <p className="text-sm text-muted">{sheet.osrs.skip}</p>
           </Block>

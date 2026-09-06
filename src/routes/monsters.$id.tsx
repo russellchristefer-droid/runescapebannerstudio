@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { StillPhoto } from "@/components/still-photo";
-import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillSrc, monsterTaskLine, monsterWatchLine, sisterMonster } from "@/lib/monsters";
+import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillLine, monsterStillSrc, monsterTaskLine, monsterWatchLine, sisterMonster } from "@/lib/monsters";
 import { deskOpenPath } from "@/lib/desk-link";
 import { writeStudioSave } from "@/lib/studio-save";
 import { OfficialPulse } from "@/components/official-pulse";
@@ -19,7 +19,7 @@ function MonsterPage() {
   const game = row.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   const src = monsterStillSrc(row);
   const sister = sisterMonster(row);
-  const note = "The creature is in the room. You are the variable.";
+  const note = "You already know the room. The creature is the constant. You are the variable.";
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
@@ -48,6 +48,7 @@ function MonsterPage() {
           <p className="border border-[#c6a45a] bg-surface px-3 py-10 text-center text-sm text-muted">Even the beast declined to appear.</p>
         )}
         <p className="mt-2 text-center font-[Fondamento] text-lg text-parchment">{note}</p>
+        <p className="mt-1 text-center text-[11px] text-muted">{monsterStillLine(row)}</p>
         <p className="mt-1 text-center text-[11px] text-muted">{row.slayer ? "Slayer" : "Monster"} · {game}</p>
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <section>

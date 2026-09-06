@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
-import { LOCATIONS } from "@/lib/locations";
+import { LOCATIONS, townStillLine } from "@/lib/locations";
 import { townNote } from "@/lib/town-notes";
 import { pageMeta } from "@/lib/page-title";
 
@@ -20,7 +20,7 @@ function TownIndex() {
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Towns</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          Cities and landmarks · pick a game first.
+          Two grammars. Same name is not the same street. Pick a client first.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
@@ -38,6 +38,7 @@ function TownIndex() {
                 kind="Town"
                 game="Old School RuneScape"
                 god={loc.god}
+                caption={townStillLine(loc.id)}
               />
             ))}
           </PlaceGrid>
@@ -55,6 +56,7 @@ function TownIndex() {
                 kind="Town"
                 game="RuneScape"
                 god={loc.god}
+                caption={townStillLine(loc.id)}
               />
             ))}
           </PlaceGrid>

@@ -52,7 +52,7 @@ export type Location = {
   stills: string[];
 };
 
-export const ASSET_REV = "20260904i";
+export const ASSET_REV = "20260905a";
 
 function asset(path: string) {
   return `${path}?v=${ASSET_REV}`;
@@ -69,29 +69,100 @@ export function stillAllowed(path: string, edition: Edition) {
   return true;
 }
 
-/** Same-origin town plates that exist in public/. */
-export const TOWN_SRC: Record<string, string> = {
-  falador: "/Falador.png",
+/** Sharpest same-canon in-world plate. Root PNG only when that file is this client. */
+const SHARP_TOWN: Record<string, string> = {
   osrsfalador: "/Falador.png",
   canifis: "/Canifis.png",
-  osrscani: "/Canifis.png",
   catherby: "/Catherby.png",
-  osrscath: "/Catherby.png",
   daemonheim: "/Daemonheim.png",
   menaphos: "/Menaphos.png",
   portsarim: "/Port_Sarim.png",
-  osrsport: "/Port_Sarim.png",
   prifddinas: "/Prifddinas.png",
-  osrsprif: "/Prifddinas.png",
   taverley: "/Taverley.png",
   burthorpe: "/Burthorpe.png",
-  osrsburth: "/Burthorpe.png",
   lostgrove: "/The_Lost_Grove.png",
 };
 
+/** Same-origin town plates that exist in public/. Card and plate share this path. */
+export const TOWN_SRC: Record<string, string> = SHARP_TOWN;
+
 export function townPlateSrc(id: string) {
-  return TOWN_SRC[id];
+  return SHARP_TOWN[id] ? asset(SHARP_TOWN[id]) : undefined;
 }
+
+export function townStillLine(id: string) {
+  return TOWN_LINE[id] ?? "In-world still. Same file on the card and the plate.";
+}
+
+const TOWN_LINE: Record<string, string> = {
+  lumbridge: "The crater is current geography. Leave the courtyard sermon home.",
+  osrslumbridge: "You already know the courtyard. Leave the crater home.",
+  falador: "White walls on the later client. Not the partyhat yard.",
+  osrsfalador: "Partyhats on the cobbles. This is the yard.",
+  varrock: "Palace and square on the later stones.",
+  osrsvarrock: "The square. You already know the fountain.",
+  prifddinas: "A still of Prifddinas is a clock-face. Leave the wrong clan home.",
+  osrsprif: "Song of the Elves built this. No Voice of Seren hour here.",
+  canifis: "Werewolf street. Later engine, same damp.",
+  osrscani: "Slayer Tower is the upstairs problem. The village is the door.",
+  catherby: "Fishing tiles and a range. You already know the dock.",
+  osrscath: "The range and the spots. Leave a city title home.",
+  portsarim: "Boats and the Entrana rule start here.",
+  osrsport: "The boat to Entrana. Bank the blade first.",
+  taverley: "Druids and the dungeon mouth.",
+  osrstav: "Taverley dungeon is the lane under this.",
+  burthorpe: "Games Room. Imperial Guard yard.",
+  osrsburth: "Death Plateau starts up that path.",
+  daemonheim: "The ring. Floors live downstairs.",
+  menaphos: "Four districts. Confirm the gate on the wiki.",
+  lostgrove: "Solak’s wood. Leave the GP/hour title home.",
+  tears: "Juna keeps the cave. The tears are the hour.",
+  osrstears: "The cave under the swamp. He does not walk.",
+  zanaris: "Lost City on the later stones.",
+  osrszanaris: "Dramen staff, then the market.",
+  ardougne: "West clocktower. East market.",
+  osrsard: "Two towns, one wall. Pick a gate.",
+  gnome: "Stronghold canopy. Giant toads stay in the maze.",
+  osrsgnome: "Spirit trees and the stronghold.",
+  seers: "Camelot is next door. The bank is here.",
+  osrsseers: "The bank and the court. Leave Camelot’s title home.",
+  anachronia: "The island after the island.",
+  yanille: "Wizards’ Guild. You already know the door.",
+  osrsyan: "Watchtower road. Guild upstairs.",
+  draynor: "Willow trees and a locked shed.",
+  grandexchange: "This desk does not print a price.",
+  empyrean: "Armadyl’s hall after the edicts.",
+  senntisten: "Zarosian stone. The cathedral is the still.",
+  sophanem: "Plague city. The gate is the lesson.",
+  osrssoph: "The gate and the plague. Leave Menaphos home.",
+  apeatoll: "Greegree first. Marimbo’s island.",
+  osrsape: "You already know the greegree.",
+  goblin: "Big High War God lives in the huts.",
+  osrsgob: "Goblin Diplomacy is politics. This is the yard.",
+  heart: "Four houses. Confirm the wing on the wiki.",
+  entrana: "The wipe is the item you forgot to bank.",
+  osrsent: "The wipe is the item you forgot to bank.",
+  cityofum: "Necromancy dock. Rasial is on Bosses.",
+  warsretreat: "Hub, not a kill. Leave the GP/hour title home.",
+  darkmeyer: "Vyrewatch streets. Darkmeyer is not Canifis.",
+  hosidius: "Kourend farm belt. Favour is the old word.",
+  shayzien: "The camp. Lizardmen stay on the hill.",
+  lovakengj: "Blast mine and the forge.",
+  arceuus: "Dark altar. Library hours stay on the wiki.",
+  piscarilius: "The port house. Thieving tiles if the page still says so.",
+  fortis: "Varlamore capital. Colosseum is on Bosses.",
+  edgeville: "Wilderness wall. The ditch is the grammar.",
+  osrsedge: "The ditch. Protect item if you step over.",
+  alkharid: "Palace and the desert gate.",
+  osrsalk: "Silk and the gate. Leave Menaphos home.",
+  rellekka: "Fremennik dock. Longhall first.",
+  osrsrel: "The longhall. Waterbirth is a boat, not this street.",
+  keldagrim: "Under the mountain. Consortium halls.",
+  phasmatys: "Ectoplasm and the dock.",
+  lletya: "Refugee camp before the city stands.",
+  fortforinthry: "The fort after the fort.",
+  waiko: "The Arc. Voyages, not a mainland bank.",
+};
 
 function loc(
   id: string,
@@ -106,8 +177,13 @@ function loc(
     extra.viewA ??
     (kind === "boss"
       ? asset(`/stills/${edition === "OSRS" ? "osrs" : "rs3"}/boss-${id}.jpg`)
-      : asset(`/locations/${id}.jpg`));
-  const viewB = extra.viewB && stillAllowed(extra.viewB, edition) ? extra.viewB : undefined;
+      : townPlateSrc(id) ?? asset(`/locations/${id}.jpg`));
+  const viewB =
+    extra.viewB && stillAllowed(extra.viewB, edition)
+      ? extra.viewB
+      : kind === "town"
+        ? asset(`/locations/${id}-nightstone.jpg`)
+        : undefined;
   const safeA = stillAllowed(viewA, edition) ? viewA : viewA;
   const extras = (extra.stills ?? []).filter((src) => stillAllowed(src, edition));
   const stills = [safeA, viewB, ...extras].filter((src, i, arr): src is string => Boolean(src) && arr.indexOf(src) === i);
@@ -132,26 +208,15 @@ function loc(
 
 export const LOCATIONS: Location[] = [
   loc("lumbridge", "Lumbridge", "Misthalin", "Saradomin", "RS3", "town", {
-    viewA: asset("/locations/rs3-lumbridge-a.jpg"),
-    viewB: asset("/locations/rs3-lumbridge-b.jpg"),
-    viewALabel: "A",
-    viewBLabel: "B",
-    source: "wiki-file",
+    source: "studio-capture",
     filePage: "https://runescape.wiki/w/File:Lumbridge.png",
-    stills: [asset("/locations/lumbridge.jpg"), asset("/locations/lumbridge-nightstone.jpg")],
   }),
   loc("falador", "Falador", "Asgarnia", "Saradomin", "RS3", "town", {
-    viewA: asset("/locations/rs3-falador-a.jpg"),
-    viewALabel: "A",
-    source: "wiki-file",
+    source: "studio-capture",
     filePage: "https://runescape.wiki/w/File:Falador.png",
   }),
   loc("varrock", "Varrock", "Misthalin", "Saradomin", "RS3", "town", {
-    viewA: asset("/locations/rs3-varrock-a.jpg"),
-    viewB: asset("/locations/rs3-varrock-b.jpg"),
-    viewALabel: "Square",
-    viewBLabel: "Palace",
-    source: "wiki-file",
+    source: "studio-capture",
     filePage: "https://runescape.wiki/w/File:Varrock.png",
   }),
   loc("prifddinas", "Prifddinas", "Tirannwn", "Seren", "RS3", "town"),
@@ -193,28 +258,15 @@ export const LOCATIONS: Location[] = [
   loc("warsretreat", "War's Retreat", "Otherworld", "Zaros", "RS3", "town"),
   loc("darkmeyer", "Darkmeyer", "Morytania", "Zamorak", "RS3", "town"),
   loc("osrslumbridge", "Lumbridge", "Misthalin · OSRS", "Saradomin", "OSRS", "town", {
-    viewA: asset("/locations/osrs-lumbridge-a.jpg"),
-    viewB: asset("/locations/osrs-lumbridge-b.jpg"),
-    viewALabel: "A",
-    viewBLabel: "B",
-    source: "wiki-file",
+    source: "studio-capture",
     filePage: "https://oldschool.runescape.wiki/w/File:Lumbridge.png",
-    stills: [asset("/locations/osrslumbridge.jpg"), asset("/locations/osrslumbridge-nightstone.jpg")],
   }),
   loc("osrsfalador", "Falador", "Asgarnia · OSRS", "Saradomin", "OSRS", "town", {
-    viewA: asset("/locations/osrs-falador-a.jpg"),
-    viewB: asset("/locations/osrs-falador-b.jpg"),
-    viewALabel: "A",
-    viewBLabel: "B",
-    source: "wiki-file",
+    source: "studio-capture",
     filePage: "https://oldschool.runescape.wiki/w/File:Falador.png",
   }),
   loc("osrsvarrock", "Varrock", "Misthalin · OSRS", "Saradomin", "OSRS", "town", {
-    viewA: asset("/locations/osrs-varrock-a.jpg"),
-    viewB: asset("/locations/osrs-varrock-b.jpg"),
-    viewALabel: "Square",
-    viewBLabel: "Palace",
-    source: "wiki-file",
+    source: "studio-capture",
     filePage: "https://oldschool.runescape.wiki/w/File:Varrock_Square.png",
   }),
   loc("hosidius", "Hosidius", "Great Kourend · OSRS", "Saradomin", "OSRS", "town"),
@@ -236,8 +288,9 @@ export const LOCATIONS: Location[] = [
     viewBLabel: "Chasm",
   }),
   loc("osrszanaris", "Zanaris", "Lost City · OSRS", "Guthix", "OSRS", "town", {
-    viewA: asset("/locations/osrs-zanaris-a.jpg"),
-    viewALabel: "Market",
+    viewB: asset("/locations/osrs-zanaris-a.jpg"),
+    viewALabel: "Canopy",
+    viewBLabel: "Market",
   }),
   loc("osrsard", "Ardougne", "Kandarin · OSRS", "Saradomin", "OSRS", "town"),
   loc("osrsgnome", "Tree Gnome Stronghold", "Kandarin · OSRS", "Guthix", "OSRS", "town"),

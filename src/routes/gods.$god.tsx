@@ -2,7 +2,7 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useRef } from "react";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
 import { GOD_BRIEFS, GOD_SLUGS, deskGodPath, godFromSlug } from "@/lib/gods";
-import { godStill } from "@/lib/god-stills";
+import { godStill, godStillLine } from "@/lib/god-stills";
 import { GODS, LOCATIONS } from "@/lib/locations";
 import { BackLink } from "@/components/back-link";
 import { OfficialPulse } from "@/components/official-pulse";
@@ -43,7 +43,7 @@ function GodPage() {
             <GodFigure
               src={godStill(god, "OSRS")!}
               alt={`${brief.god} in Old School RuneScape`}
-              caption="Old School RuneScape"
+              caption={godStillLine(god, "OSRS")}
             />
           ) : (
             <p className="text-sm text-muted">Still needed — Old School RuneScape.</p>
@@ -52,7 +52,7 @@ function GodPage() {
             <GodFigure
               src={godStill(god, "RS3")!}
               alt={`${brief.god} in RuneScape`}
-              caption="RuneScape"
+              caption={godStillLine(god, "RS3")}
             />
           ) : (
             <p className="text-sm text-muted">Still needed — RuneScape.</p>

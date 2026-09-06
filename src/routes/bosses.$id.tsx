@@ -11,7 +11,7 @@ import { writeStudioSave } from "@/lib/studio-save";
 export const Route = createFileRoute("/bosses/$id")({
   head: ({ params }) => {
     const note = noteFor(params.id);
-    return pageMeta(note?.title ?? "Boss", "Working PvM sheet. Wiki keeps the hour.");
+    return pageMeta(note?.title ?? "Boss", "Working PvM sheet. Wear, eat, spec, wipe. Wiki keeps the hour.");
   },
   component: BossNotePage,
 });

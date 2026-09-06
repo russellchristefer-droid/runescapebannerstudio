@@ -14,6 +14,7 @@ export type GearTiers = { budget: string; mid: string; max: string };
 export type FightHeader = {
   combat: string;
   slayer: string;
+  unlock: string;
   weakness: string;
   instance: string;
   death: string;
@@ -29,6 +30,8 @@ export type OsrsDesk = {
   tiers: GearTiers;
   supplies: string;
   skip: string;
+  bank?: string;
+  sanity?: string;
 };
 
 export type Rs3Desk = {
@@ -105,6 +108,14 @@ const UNOFFICIAL: Partial<Record<string, { label: string; href: string }>> = {
     label: "PvME Vorago intro",
     href: "https://pvme.io/pvme-guides/rs3-full-boss-guides/vorago/introductory-necro-solo-vorago-guide/",
   },
+  raksha: {
+    label: "PvME Raksha basic",
+    href: "https://pvme.io/pvme-guides/basic-guides/raksha-basic/",
+  },
+  kerapac: {
+    label: "PvME Kerapac HM basic",
+    href: "https://pvme.io/pvme-guides/basic-guides/kerapac-hm-basic/",
+  },
 };
 
 export function padInv(items: string[], filler: string): string[] {
@@ -149,6 +160,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   inferno: {
     combat: "90+ Ranged and Magic. Infernal is a second exam after a Fire cape.",
     slayer: "None.",
+    unlock: "Fire cape. Fight Caves until Jad is boring.",
     weakness: "None. Waves set the style. Zuk is a prayer exam.",
     instance: "Solo instance.",
     death: OSRS_UNSAFE,
@@ -156,6 +168,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   tob: {
     combat: "90+ melee. Range and mage seats exist. Entry mode first.",
     slayer: "None.",
+    unlock: "Theatre ticket. Entry mode until Maiden crabs are a call.",
     weakness: "Slash on most rooms. Range Maiden nylos and Xarpus. Mage Verzik P1.",
     instance: "Instance · 3–5. Entry is the learner size.",
     death: "Raid death. Coffer / team recover. Confirm the current fee on the wiki.",
@@ -163,6 +176,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   toa: {
     combat: "80+ all styles. 0 invocation until rooms have names.",
     slayer: "None.",
+    unlock: "Beneath Cursed Sands.",
     weakness: "Yellow Keris on path bosses. Wardens follow the skull.",
     instance: "Instance · 1–8.",
     death: "Raid death. Confirm invocation and fee on the wiki.",
@@ -170,6 +184,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   cox: {
     combat: "80+. Overloads come from the raid.",
     slayer: "None.",
+    unlock: "Lizardman shaman killcount for the mountain. Confirm on the wiki.",
     weakness: "Olm: spec the mage claw, melee the left, range the head when he stands.",
     instance: "Instance · learn one layout. Do not first-time in a 15-man.",
     death: "Raid death. Confirm points and fee on the wiki.",
@@ -177,6 +192,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   vorkath: {
     combat: "80+ Ranged (or 80+ melee if you camp lance).",
     slayer: "None. Dragon Slayer II unlocks the island.",
+    unlock: "Dragon Slayer II. Boat from Ungael.",
     weakness: "Ranged. Dragonfire needs super antifire plus a ward.",
     instance: "Instance · solo.",
     death: OSRS_UNSAFE,
@@ -184,6 +200,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   zulrah: {
     combat: "80+ Magic and Ranged.",
     slayer: "None. Regicide / Western diary boat saves deaths.",
+    unlock: "Regicide. Western diary boat saves deaths.",
     weakness: "Green is range. Red and blue are mage.",
     instance: "Instance · solo.",
     death: OSRS_UNSAFE,
@@ -191,6 +208,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   nex: {
     combat: "90+ Magic. Range or melee if the team called that seat.",
     slayer: "None. Frozen door / God Wars unlock.",
+    unlock: "Frozen door / God Wars. Confirm kc on the wiki.",
     weakness: "Smoke and Zaros want mage. Shadow wants range. Blood may want melee.",
     instance: "Instance · 5-man or mass.",
     death: OSRS_UNSAFE,
@@ -198,6 +216,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   hydra: {
     combat: "90+ Ranged.",
     slayer: "95 Slayer. Konar / Duradel / other masters who assign it.",
+    unlock: "Kourend slayer cave. Task for the claw if you care about the drop.",
     weakness: "Ranged. Poison walk. Enrage is a prayer swap.",
     instance: "Instance · solo.",
     death: OSRS_UNSAFE,
@@ -205,6 +224,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   corp: {
     combat: "80+ Magic or spear melee.",
     slayer: "None.",
+    unlock: "Games necklace to Corporeal Beast.",
     weakness: "Magic or spear. Dark bow specs if the mass uses them.",
     instance: "Cave · solo, small team, or mass.",
     death: OSRS_UNSAFE,
@@ -212,6 +232,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   rasial: {
     combat: "90+ Necromancy. Other styles do not count.",
     slayer: "None.",
+    unlock: "Necromancy story through City of Um. Confirm the live gate on the wiki.",
     weakness: "Necromancy only.",
     instance: "Instance · solo.",
     death: RS3_GRAVE,
@@ -219,6 +240,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   telos: {
     combat: "90+ Necromancy (mage and melee still work if that is your log).",
     slayer: "None.",
+    unlock: "Heart of Gielinor / Telos instance. Confirm on the wiki.",
     weakness: "Necromancy is the current desk. Fonts are the wipe.",
     instance: "Instance · solo.",
     death: RS3_GRAVE,
@@ -226,6 +248,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   zuk: {
     combat: "90+ Necromancy or Magic.",
     slayer: "None.",
+    unlock: "Elder Kiln / TzKal-Zuk instance. Confirm on the wiki.",
     weakness: "Waves set the style. Zuk is the last question.",
     instance: "Instance · solo. Normal mode has checkpoints.",
     death: RS3_GRAVE,
@@ -233,6 +256,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   sanctum: {
     combat: "90+. What the lead listed.",
     slayer: "None.",
+    unlock: "Underworld raid unlock. Confirm on the wiki.",
     weakness: "Team sheet. Necro is common.",
     instance: "Instance · group raid.",
     death: RS3_GRAVE,
@@ -240,6 +264,7 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   glacor: {
     combat: "80+ Necromancy or Magic.",
     slayer: "None.",
+    unlock: "Senntisten / Glacor instance.",
     weakness: "The mechanic you ticked is the fight.",
     instance: "Instance · solo streaks.",
     death: RS3_GRAVE,
@@ -247,10 +272,244 @@ const HEADERS: Partial<Record<string, FightHeader>> = {
   vorago: {
     combat: "90+. Do not first-time as base.",
     slayer: "None.",
+    unlock: "Borehole. Week rotation is public.",
     weakness: "Week rotation is public. Usually melee bombs and a mage.",
     instance: "Borehole · 5–10.",
     death: RS3_GRAVE,
   },
+  nightmare: {
+    combat: "80+ melee. Range the totems.",
+    slayer: "None.",
+    unlock: "Priest in Peril / Sisterhood. Phosani is a different exam.",
+    weakness: "Slash on the boss. Range totems. Mage parasites if that is your seat.",
+    instance: "Mass or small team instance.",
+    death: OSRS_UNSAFE,
+  },
+  graardor: {
+    combat: "70+ melee.",
+    slayer: "None.",
+    unlock: "40+ Bandos killcount. Confirm the live number on the wiki.",
+    weakness: "Slash / crush. Minions are the extra style.",
+    instance: "GWD room · duo or trio. Mass worlds exist.",
+    death: OSRS_UNSAFE,
+  },
+  kree: {
+    combat: "70+ Ranged.",
+    slayer: "None.",
+    unlock: "40+ Armadyl killcount. Confirm on the wiki.",
+    weakness: "Ranged. Knockback is the wipe, not the HP bar.",
+    instance: "GWD room · duo or trio.",
+    death: OSRS_UNSAFE,
+  },
+  kril: {
+    combat: "70+ melee.",
+    slayer: "None.",
+    unlock: "40+ Zamorak killcount. Antipoison on.",
+    weakness: "Slash. Poison if you skipped the pot.",
+    instance: "GWD room · duo or trio.",
+    death: OSRS_UNSAFE,
+  },
+  zilyana: {
+    combat: "70+ melee or range.",
+    slayer: "None.",
+    unlock: "40+ Saradomin killcount. Confirm on the wiki.",
+    weakness: "The style the tank listed. Mage pray on her.",
+    instance: "GWD room · duo or trio.",
+    death: OSRS_UNSAFE,
+  },
+  muspah: {
+    combat: "80+ Ranged with a mage or melee swap.",
+    slayer: "None.",
+    unlock: "Desert Treasure II. Ghorrock.",
+    weakness: "Ranged on the body. Swap style on the prayer-shield phase.",
+    instance: "Instance · solo.",
+    death: OSRS_UNSAFE,
+  },
+  colosseum: {
+    combat: "90+ melee. Waves set the rest.",
+    slayer: "None.",
+    unlock: "Varlamore / Fortis. Confirm the entry on the wiki.",
+    weakness: "Waves set the style. Sol is a prayer exam.",
+    instance: "Solo instance.",
+    death: OSRS_UNSAFE,
+  },
+  duke: {
+    combat: "80+ Magic or melee.",
+    slayer: "None.",
+    unlock: "Desert Treasure II.",
+    weakness: "Magic or melee. Stun the eyes. Gas is a walk.",
+    instance: "Instance · solo.",
+    death: OSRS_UNSAFE,
+  },
+  whisperer: {
+    combat: "80+ Magic.",
+    slayer: "None.",
+    unlock: "Desert Treasure II.",
+    weakness: "Magic. Sanity is the mechanic.",
+    instance: "Instance · solo.",
+    death: OSRS_UNSAFE,
+  },
+  leviathan: {
+    combat: "80+ Ranged.",
+    slayer: "None.",
+    unlock: "Desert Treasure II.",
+    weakness: "Ranged. Path around the arena. Abyss is a walk.",
+    instance: "Instance · solo.",
+    death: OSRS_UNSAFE,
+  },
+  vardorvis: {
+    combat: "80+ melee.",
+    slayer: "None.",
+    unlock: "Desert Treasure II.",
+    weakness: "Slash. Axes are the fight.",
+    instance: "Instance · solo.",
+    death: OSRS_UNSAFE,
+  },
+  gauntlet: {
+    combat: "80+ in the styles you craft.",
+    slayer: "None.",
+    unlock: "Song of the Elves. Corrupted is a different exam.",
+    weakness: "Hunllef wants the two styles you are not praying.",
+    instance: "Solo instance. Prep is the raid.",
+    death: OSRS_UNSAFE,
+  },
+  kq: {
+    combat: "70+ crush then the other style.",
+    slayer: "None to enter. Kalphites task if you want the helm bonus.",
+    unlock: "Desert. Rope on the tunnel. Confirm the live entry on the wiki.",
+    weakness: "Form 1 crush or range. Form 2 the other style.",
+    instance: "Lair · solo or duo.",
+    death: OSRS_UNSAFE,
+  },
+  scurrius: {
+    combat: "50+ in whatever you train. This is a first boss.",
+    slayer: "None.",
+    unlock: "Varrock sewers. No extra quest.",
+    weakness: "Any. Walk the falling rocks.",
+    instance: "Instance · solo learner.",
+    death: OSRS_UNSAFE,
+  },
+  raksha: {
+    combat: "90+ Magic or Necromancy.",
+    slayer: "None.",
+    unlock: "Anachronia. Learn poison pools first.",
+    weakness: "Magic or necro. Poison and shadow walks.",
+    instance: "Instance · solo or duo.",
+    death: RS3_GRAVE,
+  },
+  solak: {
+    combat: "90+. Do not first-time as tank.",
+    slayer: "None.",
+    unlock: "Lost Grove. 7-man pin.",
+    weakness: "Base and bombs melee. One mage on the core if the sheet says so.",
+    instance: "Instance · 7-man.",
+    death: RS3_GRAVE,
+  },
+  araxxor: {
+    combat: "80+ in the path style.",
+    slayer: "None.",
+    unlock: "Araxyte hive. Week path is public.",
+    weakness: "The two paths open this week. Confirm on the wiki.",
+    instance: "Instance · solo or duo.",
+    death: RS3_GRAVE,
+  },
+  kerapac: {
+    combat: "90+ Magic or Necromancy.",
+    slayer: "None. Nodon task is a bonus, not the gate.",
+    unlock: "Anachronia lab.",
+    weakness: "Magic or necro. Time-stop is a walk.",
+    instance: "Instance · solo or duo.",
+    death: RS3_GRAVE,
+  },
+  qbd: {
+    combat: "80+ Magic or Necromancy.",
+    slayer: "None.",
+    unlock: "Song from the Depths / QBD portal. Confirm on the wiki.",
+    weakness: "Magic or necro. Artifacts in order.",
+    instance: "Instance · solo.",
+    death: RS3_GRAVE,
+  },
+  zamorakboss: {
+    combat: "90+ Necromancy or Magic.",
+    slayer: "None.",
+    unlock: "Infernal Source. 0–100% until the map is memory.",
+    weakness: "Team or solo sheet. Map first.",
+    instance: "Instance · solo or group.",
+    death: RS3_GRAVE,
+  },
+  helwyr: {
+    combat: "80+ melee or range.",
+    slayer: "None.",
+    unlock: "Heart of Gielinor. GWD2.",
+    weakness: "Melee or range. Mushrooms and howls.",
+    instance: "Instance · duo.",
+    death: RS3_GRAVE,
+  },
+  vindicta: {
+    combat: "80+ melee or range.",
+    slayer: "None.",
+    unlock: "Heart of Gielinor. GWD2.",
+    weakness: "Melee or range. Hurricane is a walk.",
+    instance: "Instance · duo.",
+    death: RS3_GRAVE,
+  },
+  gregorovic: {
+    combat: "80+ Ranged or Necromancy.",
+    slayer: "None.",
+    unlock: "Heart of Gielinor. GWD2.",
+    weakness: "Range or necro. Knives are a walk.",
+    instance: "Instance · duo.",
+    death: RS3_GRAVE,
+  },
+  ambassador: {
+    combat: "90+ Magic or Necromancy.",
+    slayer: "None.",
+    unlock: "Elite Dungeon 3 end boss.",
+    weakness: "Magic or necro. Black holes are a walk.",
+    instance: "Instance · solo or duo.",
+    death: RS3_GRAVE,
+  },
+  croesus: {
+    combat: "Skilling levels for the role you were given. Combat is not the point.",
+    slayer: "None.",
+    unlock: "Senntisten. 4-man skilling boss.",
+    weakness: "Nodes. Combat gear does not clear fungus.",
+    instance: "Instance · 4-man.",
+    death: RS3_GRAVE,
+  },
+  aod: {
+    combat: "90+. Do not first-time as tank.",
+    slayer: "None.",
+    unlock: "Nex: Angel of Death. 7-man pin. Not mass Nex.",
+    weakness: "Team sheet. Usually melee bombs and a mage.",
+    instance: "Instance · 7-man.",
+    death: RS3_GRAVE,
+  },
+  kk: {
+    combat: "80+ in two styles.",
+    slayer: "None.",
+    unlock: "Exiled kalphite hive.",
+    weakness: "The colour he is not immune to. Swap on the animation.",
+    instance: "Instance · duo or small.",
+    death: RS3_GRAVE,
+  },
+  bm: {
+    combat: "90+. What the lead listed.",
+    slayer: "None.",
+    unlock: "Liberation of Mazcab. 10-man.",
+    weakness: "Team sheet. Pets and charges are the wipe.",
+    instance: "Instance · 10-man.",
+    death: RS3_GRAVE,
+  },
+  yaka: {
+    combat: "90+. After a clean Durzag.",
+    slayer: "None.",
+    unlock: "Liberation of Mazcab after Durzag.",
+    weakness: "Team sheet. Stun and poison roles.",
+    instance: "Instance · 10-man.",
+    death: RS3_GRAVE,
+  },
+
 };
 
 const TEAM: Partial<Record<string, string[]>> = {
@@ -274,10 +533,10 @@ const TEAM: Partial<Record<string, string[]>> = {
     "Tank — holds her when the team called a tank.",
     "Mage — smoke and Zaros.",
     "Range — shadow line.",
-    "Blood seat — leave the siphon. Do not first-time this seat.",
+    "Blood seat — leave the siphon. Not a first-night seat.",
   ],
   vorago: [
-    "Base — do not first-time this seat.",
+    "Base — not a first-night seat.",
     "Bomb — one voice.",
     "Voke — when the pin listed it.",
     "North / south — P5 stack only on the called tile.",
@@ -291,9 +550,14 @@ const TEAM: Partial<Record<string, string[]>> = {
   kree: ["Tank — range pray.", "Stack — under or the mass tile.", "DPS — the style the pin listed."],
   kril: ["Tank — mage or melee as called.", "Stack — off the poison if the room uses it.", "DPS — the style the pin listed."],
   zilyana: ["Tank — mage pray.", "Stack — the mass tile.", "DPS — the style the pin listed."],
-  aod: ["Tank — the seat the pin named.", "North — one line.", "South — one line.", "DPS — do not first-time tank."],
-  solak: ["Tank — do not first-time.", "North / south — the called tile.", "DPS — the pin."],
+  aod: ["Tank — the seat the pin named.", "North — one line.", "South — one line.", "DPS — tank is not a first-night seat."],
+  solak: ["Tank — not a first-night seat.", "North / south — the called tile.", "DPS — the pin."],
   corp: ["Spear — if the small team uses spears.", "Mage — mass core.", "Caller — specs only if the mass uses them."],
+  nightmare: ["Totem — charge, then the boss.", "Parasite — mage seat if the pin listed it.", "Stack — spores are a walk."],
+  croesus: ["Wood — one node set.", "Mining — one node set.", "Hunter — one node set.", "Fishing — one node set."],
+  bm: ["Pet — the pet the pin named.", "Charge — walk when called.", "DPS — the style the pin listed."],
+  yaka: ["Stun — when the base says.", "Poison — the pool you were given.", "DPS — stun is not a first-night seat."],
+  kk: ["Colour caller — names the swap.", "Second style — already in the bag."],
 };
 
 function headerFor(note: BossNote): FightHeader {
@@ -304,6 +568,7 @@ function headerFor(note: BossNote): FightHeader {
     return {
       combat: "80+. Confirm recommended stats on the wiki.",
       slayer: /slayer/i.test(note.role) ? "Slayer task or unlock — confirm the level on the wiki." : "None unless the wiki lists a task.",
+      unlock: "Confirm quest / killcount on the wiki.",
       weakness: note.style.split(".")[0] ?? WIKI,
       instance: teamish ? "Instance or cave · team size on the wiki." : "Instance · solo unless the wiki says otherwise.",
       death: OSRS_UNSAFE,
@@ -312,6 +577,7 @@ function headerFor(note: BossNote): FightHeader {
   return {
     combat: "80+ in the style you camp. Confirm on the wiki.",
     slayer: "None unless the wiki lists a task.",
+    unlock: "Confirm quest / instance unlock on the wiki.",
     weakness: note.style.split(".")[0] ?? WIKI,
     instance: teamish ? "Instance · team size on the wiki." : "Instance · solo unless the wiki says otherwise.",
     death: RS3_GRAVE,
@@ -364,6 +630,81 @@ function osrsTiers(id: string, note: BossNote): GearTiers {
       mid: "Bowfa, brimstone ring, thralls.",
       max: "Twisted bow or lance if you camp melee. Vent order is still the fight.",
     },
+    corp: {
+      budget: "Trident or hasta. Games necklace.",
+      mid: "Sang or trident, spear if the team uses them.",
+      max: "Zamorakian / dragon hunter lance plus crystal halberd specs. Mass mage is a different night.",
+    },
+    nightmare: {
+      budget: "Hasta, blowpipe for totems.",
+      mid: "Scythe or hasta, blowpipe, parasite mage switch.",
+      max: "Scythe, tbow on totems. Phosani is a different bag.",
+    },
+    graardor: {
+      budget: "Bandos, hasta, super combats.",
+      mid: "Bandos, hasta or scythe, blood fury.",
+      max: "Scythe, inquisitor if you own it. Tank tile is still a contract.",
+    },
+    kree: {
+      budget: "Blessed, bowfa or crossbow.",
+      mid: "Masori pieces, bowfa, anguish.",
+      max: "Twisted bow, masori. Knockback is still the wipe.",
+    },
+    kril: {
+      budget: "Bandos, hasta, antipoison.",
+      mid: "Bandos, hasta or scythe, super combats.",
+      max: "Scythe. Poison pot still on.",
+    },
+    zilyana: {
+      budget: "Bandos or arma, the style the tank listed.",
+      mid: "Bandos, hasta or bowfa.",
+      max: "Scythe or tbow if the tank listed it.",
+    },
+    muspah: {
+      budget: "Bowfa, trident, a melee swap.",
+      mid: "Bowfa, sang, scythe on the last form if that is your note.",
+      max: "Tbow, shadow or sang, scythe. Spikes are still a walk.",
+    },
+    colosseum: {
+      budget: "Hasta, brews you can count.",
+      mid: "Scythe or hasta, the modifiers you practiced.",
+      max: "Scythe. Invos you practiced, not a random stack.",
+    },
+    duke: {
+      budget: "Trident, thralls.",
+      mid: "Sang or shadow, thralls, restore for enrage.",
+      max: "Shadow. Eyes down, then boss.",
+    },
+    whisperer: {
+      budget: "Trident, sanity food the wiki lists this hour.",
+      mid: "Sang, saturated heart, sanity supplies.",
+      max: "Shadow. Sanity is still the mechanic.",
+    },
+    leviathan: {
+      budget: "Bowfa, stams.",
+      mid: "Bowfa or tbow, stams.",
+      max: "Twisted bow. Path first.",
+    },
+    vardorvis: {
+      budget: "Hasta, food you can count.",
+      mid: "Hasta or scythe, blood fury if you wear it.",
+      max: "Scythe. Axes are still the fight.",
+    },
+    gauntlet: {
+      budget: "What you crafted. The door is not a shortcut.",
+      mid: "Perfected weapons and armour before the door.",
+      max: "Corrupted prep. Hunllef still wants the other two styles.",
+    },
+    kq: {
+      budget: "Crush or range, then the swap. Antipoison. Keris if you have it.",
+      mid: "Keris, range or crush swap.",
+      max: "The two styles the wiki Strategies page lists this hour.",
+    },
+    scurrius: {
+      budget: "Whatever you train with. Food you can afford to lose.",
+      mid: "Same. Leave the scythe home.",
+      max: "Still a first boss. Prayer swaps are the lesson.",
+    },
   };
   return (
     table[id] ?? {
@@ -384,25 +725,85 @@ function osrsSupplies(id: string): string {
     zulrah: "3 brews, 2 restores, 4+ manta, anti-venom+, stamina. Diary cape for the boat.",
     nex: "4 brews, 3 restores, 2 angler, sanfew, combat and range pots.",
     hydra: "8 manta, 2 restores, 2 prayer, anti-venom+, stamina.",
+    corp: "Food for the core soak. Restores. Confirm the mass bag on the wiki.",
+    nightmare: "4 brews, 3 restores, sanfew. Totem range pot if that is your seat.",
+    graardor: "4–6 food, 1 super combat, 2 restores. Kc trips, not one-kill bags.",
+    kree: "4–6 food, ranging pot, 2 restores.",
+    kril: "4–6 food, super combat, antipoison, 2 restores.",
+    zilyana: "4–6 food, combat or range pot, 2 restores.",
+    muspah: "6–8 food, 2 restores, stamina. Swap pots if you brought two styles.",
+    colosseum: "8–10 brews, 4 restores. Confirm the live wave bag on the wiki.",
+    duke: "6 food, 2 restores, thralls. Restore for enrage.",
+    whisperer: "Sanity food the wiki lists this hour, plus 2 restores and mage food.",
+    leviathan: "6–8 food, 2 restores, stamina.",
+    vardorvis: "6–8 food, 2 restores. Axes are a walk, not an eat.",
+    gauntlet: "What you gathered in prep. Short food stays in prep.",
+    kq: "8 food, antipoison, 2 restores. Two styles eat two bags.",
+    scurrius: "Cheap food. Walk the rocks. Leave the raid bag home.",
   };
   return table[id] ?? "Restores and food to finish the kill. Confirm counts on the wiki. Do not invent a number.";
 }
 
 function osrsSkip(id: string): string {
   const table: Partial<Record<string, string>> = {
-    inferno: "No melee camp. No infernal-on-wave-1 experiments. No third potion type you have not practiced.",
-    tob: "No hard mode on a first purple. No second talker. No scythe flex in Entry if void + hasta still clears.",
-    toa: "No 300 invocation first raid. No path you cannot name.",
-    cox: "No 15-man first Olm. No teleport crystal in the middle.",
-    vorkath: "No zig-zag on acid. No trip without antifire.",
-    zulrah: "No third rotation mid-kill. No range-only bag if Jad phase still kills you.",
-    nex: "No first-time blood siphon seat. No 20-man with no caller.",
-    hydra: "No wrong vent. No plant on poison.",
+    inferno: "Leave the melee camp home. Leave the infernal-on-wave-1 experiment home. Third potion type you have not practiced stays in the bank.",
+    tob: "Leave hard mode home on a first purple. Second talker stays muted. Leave the scythe flex home in Entry if void plus hasta still clears.",
+    toa: "Leave the 300 rack home on raid one. Leave a path you cannot name home.",
+    cox: "Leave the 15-man first Olm home. Leave the middle tile when the crystal lands.",
+    vorkath: "Leave the zig-zag on acid home. Leave the trip without antifire home.",
+    zulrah: "Leave the third rotation mid-kill home. Leave the range-only bag home if Jad still ends you.",
+    nex: "Leave the first-night blood siphon seat home. Leave the 20-man with no caller home.",
+    hydra: "Leave the wrong vent home. Leave the plant on poison home.",
+    corp: "Leave non-spear melee home if the team called spears. Leave a dark core on one person.",
+    nightmare: "Leave Phosani home on a first night. Leave the spore plant home.",
+    graardor: "Leave the 5 kc walk-in home. Leave the tank tile home if you are not the tank.",
+    kree: "Leave the stand-under-Kree tile home. Confirm kc on the wiki.",
+    kril: "Leave the trip without antipoison home.",
+    zilyana: "Leave the tank tile home if you are not the tank.",
+    muspah: "Leave the spike plant home. Leave the shield phase on the wrong style home.",
+    colosseum: "Leave the random modifier stack home on a first Sol.",
+    duke: "Leave the sit in first gas home. Leave skipped vents home.",
+    whisperer: "Leave first-kill enrage home. Leave the trip without sanity food home.",
+    leviathan: "Leave the skipped abyss tile home.",
+    vardorvis: "Leave the axe line home.",
+    gauntlet: "Leave the door home before perfected weapons. Leave corrupted home on a first prep.",
+    kq: "Leave the one-style bag home. Leave form-change greed home.",
+    scurrius: "Leave the scythe home. Leave the plant under falling rocks home.",
   };
-  return table[id] ?? "Do not bring a style the room does not use. Confirm the skip list on the wiki.";
+  return table[id] ?? "Leave the style the room does not use home. Confirm the skip list on the wiki.";
 }
 
-type OsrsDraft = Omit<OsrsDesk, "tiers" | "supplies" | "skip"> & Partial<Pick<OsrsDesk, "tiers" | "supplies" | "skip">>;
+function osrsBank(id: string): string {
+  const table: Partial<Record<string, string>> = {
+    inferno: "Cape attempt is one pull. Bank after a wipe. Write the wave.",
+    tob: "Chest between rooms. Bank after the raid, not mid-Maiden.",
+    toa: "Bank after two wipes on the same room. That room is the night.",
+    cox: "Overload and brews come from the raid. Bank after Olm.",
+    vorkath: "Pool, bank, boat. Two deaths already in the trip plan.",
+    zulrah: "Diary cape or scroll for the boat. Fairy ring every death is wasted time.",
+    nex: "Bank after a siphon wipe. Frozen door is the walk back.",
+    hydra: "Konar task bank. One vent error ends the trip.",
+    whisperer: "Bank when sanity food is gone. Enrage thin is a different night.",
+    gauntlet: "Prep is the bank. The door is the raid.",
+    scurrius: "Varrock sewers. Cheap food. Walk back.",
+  };
+  return table[id] ?? "Bank when food or restores run out. Confirm the walk-back on the wiki.";
+}
+
+function osrsSanity(id: string): string | undefined {
+  const table: Partial<Record<string, string>> = {
+    whisperer: "Sanity is the mechanic. Eat the sanity food the wiki lists this hour. Corridor plan before the pull. Enrage is a tile test — not first kill.",
+    duke: "No sanity drain. Gas and eyes are the exam.",
+    leviathan: "No sanity drain. Abyss path is the exam.",
+    vardorvis: "No sanity drain. Axes are the exam.",
+    muspah: "No sanity drain. Spikes and the shield phase are the exam.",
+    inferno: "No sanity drain. Prayer and the shield are the exam.",
+  };
+  return table[id];
+}
+
+type OsrsDraft = Omit<OsrsDesk, "tiers" | "supplies" | "skip" | "bank" | "sanity"> &
+  Partial<Pick<OsrsDesk, "tiers" | "supplies" | "skip" | "bank" | "sanity">>;
 type Rs3Draft = Omit<Rs3Desk, "camp" | "ultimates"> & Partial<Pick<Rs3Desk, "camp" | "ultimates" | "enrage">>;
 type SheetDraft = Omit<FightSheet, "header" | "osrs" | "rs3" | "sources"> & {
   header?: FightHeader;
@@ -419,13 +820,13 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "Solo cape · one pillar, then a shield",
     style: "Range camp. Mage on blobs and Jad. Zuk is a prayer exam, not a DPS check.",
     opener: [
-      "Fire cape first. Fight Caves until Jad is boring. Inferno is a second exam.",
-      "North pillar. Ice Barrage the nibbler pack from the west face so the south spawn never sees you.",
-      "Kill order in front of you: mager, ranger, meleer, blob, bat. Solve that stack. Do not think about Zuk on wave 12.",
+      "You already know the lobby. Fight Caves until Jad is boring. Inferno is the second exam.",
+      "North pillar. Ice Barrage the nibbler pack off the west face so the south spawn never sees you.",
+      "Kill order in front of you: mager, ranger, meleer, blob, bat. Solve that stack. Wave 12 is not Zuk.",
       "Triple Jad: sound first on mage, delayed slam is range. One healer at a time.",
       "Zuk: the shield is the prayer. Setters and Jad heals are the exam. Corners when the shield parks.",
     ],
-    wipe: "A blob stacked on a ranger you did not solve, or Zuk Jad healers left alive into the next set.",
+    wipe: "A blob stacked on a ranger you left alive, or Zuk Jad healers into the next set.",
     sources: [],
     osrs: {
       inventoryNote:
@@ -486,13 +887,13 @@ const SHEETS: Record<string, SheetDraft> = {
     title: "Theatre of Blood",
     edition: "OSRS",
     role: "Raid · 3–5 · one new seat per run",
-    style: "Scythe is the team ticket. Range and mage for Maiden nylos and Xarpus. Hasta plus void still clears Entry.",
+    style: "Scythe is the room. Range and mage for Maiden nylos and Xarpus. Hasta plus void still clears Entry.",
     opener: [
-      "Entry mode until Maiden crabs are a call. One new seat per run.",
-      "Say the role at the chest: melee, range, or freezer. Learners bring one bag that covers all three.",
-      "Maiden crabs die on their side. A leak heals her. That is the first wipe teacher.",
-      "Bloat: walk the stomp. Nylos: hold the pillar you were given. Sotetseg: one maze caller.",
-      "Hard mode is a different night. Do not add it to a first purple.",
+      "You already know the lobby. Entry until Maiden crabs are a call. One new seat per raid.",
+      "Say the role at the chest: melee, range, or freezer. One bag covers all three until it does not.",
+      "Maiden crabs die on their side. A leak is her heal. That is the first room.",
+      "Bloat walks the stomp. Nylos holds the pillar you were given. Sotetseg is one maze voice.",
+      "Hard mode is another night. First purple stays on Entry.",
     ],
     wipe: "A Maiden crab on the wrong side, or a Sotetseg maze tile nobody called.",
     sources: [],
@@ -561,10 +962,10 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "Raid · 1–8 · 0 invocation until every room has a name",
     style: "All three styles. Yellow Keris on path bosses. Wardens want the style the skull asks.",
     opener: [
-      "0 invocation until every room has a name. Solo or a quiet two-man.",
-      "Pick a path and say it. Yellow Keris on Akkha, Ba-Ba, Kephri, Zebak.",
-      "Leave after two wipes on the same room. That room is the lesson.",
-      "Add one invocation rack only after a clean raid. A clean 50 teaches more than a wipe 200.",
+      "You already know the lobby. 0 invocation until every room has a name. Solo or a quiet two.",
+      "Name the path. Yellow Keris on Akkha, Ba-Ba, Kephri, Zebak.",
+      "Two wipes on the same room: that room is the night.",
+      "One invocation rack after a clean raid. A clean 50 teaches more than a wipe 200.",
     ],
     wipe: "Kephri dung or a Zebak wave you did not jug. Wardens is rarely the first wipe.",
     sources: [],
@@ -622,7 +1023,7 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "Raid · learn one layout",
     style: "Spec the mage claw. Melee the left. Range the head when he stands.",
     opener: [
-      "Learn one layout. Do not first-time Olm in a 15-man.",
+      "Learn one layout. First Olm is not a 15-man.",
       "Points come from rooms. The head is the exam, not the whole raid.",
       "Overload and brews come from the raid. Bring the specs and the switches.",
     ],
@@ -672,10 +1073,10 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "Solo slayer / money · six-count first",
     style: "Ranged camp. Zaryte or tbow worn. Super antifire plus a dragonfire ward.",
     opener: [
-      "Super antifire plus a dragonfire ward or shield. Salve (ei) if you wear it.",
-      "Count six autos, then the special. Acid or spawn — never guess.",
+      "Super antifire plus a dragonfire ward. Salve (ei) if it is already on the neck.",
+      "Six autos, then the special. Acid or spawn — count it, do not guess it.",
       "Pink fireball: step one tile. Acid: one straight line. Spawn: Crumble Undead before the next fireball.",
-      "Bank a trip with two deaths planned. Pools before kills/hr. Woox walk is extra kills after the six-count is automatic.",
+      "Bank the trip with two deaths already in the plan. Pools before kills/hr. Woox walk is extra kills after the six-count is muscle.",
     ],
     wipe: "Acid path you zig-zagged, or a spawn left under a fireball.",
     sources: [],
@@ -724,10 +1125,10 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "Solo · first ten kills are the rotation",
     style: "Mage camp with a range switch. You swap on the colour, not on HP.",
     opener: [
-      "Pin a rotation. First ten kills are the rotation, not DPS.",
-      "Diary cape or scroll for the boat. Do not run from the fairy ring every death.",
-      "Green is range. Red and blue are mage. Jad phase: pray the first hit before you click.",
-      "Stand the tile that rotation marked. Do not invent a third rotation mid-kill.",
+      "Pin a rotation. First ten kills are the rotation. The boss is later.",
+      "Diary cape or scroll for the boat. Fairy ring every death is wasted time.",
+      "Green is range. Red and blue are mage. Jad phase: prayer first, click second.",
+      "Stand the tile that rotation marked. No third rotation mid-kill.",
     ],
     wipe: "Wrong colour prayer on Jad phase, or a tile from the other rotation.",
     sources: [],
@@ -765,7 +1166,7 @@ const SHEETS: Record<string, SheetDraft> = {
         { phase: "Red / blue", pray: "Protect Magic." },
         { phase: "Jad phase", pray: "The style that is about to land. Prayer first, click second." },
       ],
-      tiles: "Stand the tile the rotation sheet marked for that spawn. Do not invent a third rotation mid-kill.",
+      tiles: "Stand the tile the rotation sheet marked for that spawn. No third rotation mid-kill.",
       spec: "Blowpipe spec on green. Thralls if you brought the book. Death charge is not the first ten kills.",
     },
   },
@@ -776,8 +1177,8 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "5-man or mass · four wings then Zaros",
     style: "Magic on smoke and Zaros. Range or mage on shadow. Melee on blood if the team calls it.",
     opener: [
-      "Learn the wings as a list: smoke, shadow, blood, ice, then Zaros.",
-      "Do not first-time as the person who has to tank a blood siphon.",
+      "Four wings as a list: smoke, shadow, blood, ice, then Zaros.",
+      "Blood siphon is not a first-night seat.",
       "A 5-man with a caller beats a 20-man with no plan.",
     ],
     wipe: "A blood siphon nobody left, or ice icicles nobody broke.",
@@ -831,7 +1232,7 @@ const SHEETS: Record<string, SheetDraft> = {
     style: "Ranged. Poison walk. Enrage is a prayer swap, not a panic eat.",
     opener: [
       "Lure to the correct vent. The chemical you stand in is the phase.",
-      "Poison pools are a walk. Do not plant in a splash.",
+      "Poison pools are a walk. Leave the splash.",
       "Enrage: keep the prayer swap. DPS is second.",
     ],
     wipe: "Wrong vent, or a poison tile you stood in while swapping.",
@@ -880,10 +1281,10 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "Solo necromancy exam · City of Um",
     style: "Necromancy only. Other styles do not count.",
     opener: [
-      "Conjures up outside the portal. Living Death is a window, not a panic button.",
+      "Conjures up outside the portal. Living Death is a window you booked, not a panic button.",
       "One preset. Touch of Death builds. Death Grasp is the spec. Death Mark on phase 4.",
-      "Volley is a walk. Do not drop Living Death on that volley.",
-      "Do not chase a 1:03 clip on a first kill.",
+      "Volley is a walk. Living Death does not sit on that volley.",
+      "The 1:03 clip is not this pull.",
     ],
     wipe: "Living Death window dropped on a volley, or minions left to eat the skulls.",
     sources: [],
@@ -919,8 +1320,8 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "Solo enrage · fonts are the wipe",
     style: "Necromancy is the current desk. Magic and melee still work if that is your log.",
     opener: [
-      "0–100% until fonts and anima are boring. Do not jump to 200 because a VOD did.",
-      "War's Retreat. One preset. Write the enrage on the screen.",
+      "0–100% until fonts and anima are boring. A 200% VOD is not this pull.",
+      "War's Retreat. One preset. Write the % on screen.",
       "Fonts: stand the matching colour. Anima is spent on purpose.",
       "Gogoa’l is a walk. Tendrils are a cut. Do not eat both at once.",
     ],
@@ -960,7 +1361,7 @@ const SHEETS: Record<string, SheetDraft> = {
     opener: [
       "Waves are the exam. Zuk is the last question.",
       "Normal mode checkpoints after waves 5, 10, 15, and 17. Use them.",
-      "One healer at a time on Zuk. Do not panic eat into a Jad.",
+      "One healer at a time on Zuk. Panic eat into a Jad is the wipe.",
     ],
     wipe: "A wave you did not solve, or Zuk healers left into the next set.",
     sources: [],
@@ -981,7 +1382,7 @@ const SHEETS: Record<string, SheetDraft> = {
     role: "Group underworld raid · one wing a night",
     style: "Team sheet. Necro is common. What the lead listed is the bag.",
     opener: [
-      "Learn the wing you were given. Do not first-time every wing in one night.",
+      "Learn the wing you were given. Every wing in one night is a different exam.",
       "What the lead listed is the bag. One talker.",
       "Wings first. Last boss last.",
     ],
@@ -1006,8 +1407,8 @@ const SHEETS: Record<string, SheetDraft> = {
     style: "Necro or mage. The mechanic you ticked is the fight.",
     opener: [
       "0 mechanic until the kill is clean. Add one mechanic at a time.",
-      "Streaks pay. A wipe on mechanic three is a note you did not read.",
-      "Do not tick five on a first night.",
+      "Streaks pay. A wipe on mechanic three is a note you skipped.",
+      "Five ticks on a first night is a different exam.",
     ],
     wipe: "The mechanic you enabled and did not walk.",
     sources: [],
@@ -1030,7 +1431,7 @@ const SHEETS: Record<string, SheetDraft> = {
     style: "Team sheet. Usually melee bombs and a mage. Do not first-time as base.",
     opener: [
       "Week rotation is public. Read it before you type inv.",
-      "Do not first-time as base. Watch a VOD of this week's mechanic.",
+      "Base is not a first-night seat. Watch this week's mechanic.",
       "P5 bleed: stack only on the called tile. One talker.",
     ],
     wipe: "An extra voice on bomb, or a P5 stack on the wrong tile.",
@@ -1044,6 +1445,164 @@ const SHEETS: Record<string, SheetDraft> = {
       camp: "Camp the style the pin listed. Switches if the week rotation requires them.",
       ultimates: "What the lead called on this week's mechanic.",
       enrage: "Week rotation is the ladder. Bank between kills if the pin said so.",
+    },
+  },
+  whisperer: {
+    id: "whisperer",
+    title: "The Whisperer",
+    edition: "OSRS",
+    role: "Solo DT2 · sanity is the mechanic",
+    style: "Magic. Sanity food is part of the bag, not a flex.",
+    opener: [
+      "Desert Treasure II. Corridor plan before the pull.",
+      "Sanity food the wiki lists this hour. Enrage is not first kill.",
+      "Keep sanity up. Enrage is a tile test.",
+    ],
+    wipe: "Sanity gone in the corridor, or a silence tile you stood on.",
+    sources: [],
+    osrs: {
+      inventoryNote: "Mage bag plus sanity supplies. Shadow or sang worn if you own it.",
+      inventory: padInv(
+        [
+          "Saturated heart",
+          "Book of the dead",
+          "Rune pouch",
+          "Sanity food",
+          "Sanity food",
+          "Sanity food",
+          "Sanity food",
+          "Super restore",
+          "Super restore",
+          "Saradomin brew",
+          "Saradomin brew",
+          "Manta ray",
+          "Manta ray",
+          "Manta ray",
+          "Manta ray",
+          "Stamina potion",
+        ],
+        "Manta ray",
+      ),
+      prayers: [
+        { phase: "Normal", pray: "Protect Magic." },
+        { phase: "Silence tiles", pray: "Protect Magic. Walk. Do not plant." },
+        { phase: "Enrage", pray: "Protect Magic. Tile test. Sanity first." },
+      ],
+      tiles: "Walk the silence tiles. Corridor is a plan, not a panic.",
+      spec: "Thralls after sanity is stable. Death charge only if you practiced it. Sanity food before every corridor.",
+    },
+  },
+  gauntlet: {
+    id: "gauntlet",
+    title: "The Gauntlet",
+    edition: "OSRS",
+    role: "Solo · prep is the raid",
+    style: "The weapons you crafted. Hunllef wants the other two styles.",
+    opener: [
+      "Perfected weapons and armour before the door.",
+      "Corrupted is another exam. Not first prep.",
+      "Hunllef: tornado walk, prayer swap, damage the right style.",
+    ],
+    wipe: "Door before perfected gear, or a tornado you stood in.",
+    sources: [],
+    osrs: {
+      inventoryNote: "What you built. Confirm the prep path on the wiki.",
+      inventory: padInv(
+        [
+          "Crafted staff",
+          "Crafted bow",
+          "Crafted halberd",
+          "Teleport crystal",
+          "Potion",
+          "Potion",
+          "Food",
+          "Food",
+          "Food",
+          "Food",
+          "Food",
+          "Food",
+        ],
+        "Food",
+      ),
+      prayers: [
+        { phase: "Hunllef", pray: "The style he is using. Swap on the animation." },
+        { phase: "Tornado", pray: "Same overhead. Walk." },
+      ],
+      tiles: "Prep path first. Hunllef: tornadoes are a walk. Do not plant.",
+      spec: "No outside spec weapon. The crafted weapons are the bag.",
+    },
+  },
+  scurrius: {
+    id: "scurrius",
+    title: "Scurrius",
+    edition: "OSRS",
+    role: "Solo learner · first boss",
+    style: "Any. Walk the falling rocks.",
+    opener: [
+      "Varrock sewers. Food you can afford to lose.",
+      "Protect Melee. Click the rats if they pile.",
+      "Learn prayer swaps here. The next boss will use them.",
+    ],
+    wipe: "Standing in falling rocks, or ignoring the pile of rats.",
+    sources: [],
+    osrs: {
+      inventoryNote: "Training gear. Leave the scythe home.",
+      inventory: padInv(
+        ["Rune pouch", "Teleport", "Cheap food", "Cheap food", "Cheap food", "Cheap food", "Cheap food", "Cheap food"],
+        "Cheap food",
+      ),
+      prayers: [
+        { phase: "Boss", pray: "Protect Melee." },
+        { phase: "Rocks", pray: "Same overhead. Walk." },
+      ],
+      tiles: "Walk the debris. Do not plant under a rock shadow.",
+      spec: "None required. Spec is extra. No thrall, no death charge, no sanity.",
+    },
+  },
+  croesus: {
+    id: "croesus",
+    title: "Croesus",
+    edition: "RS3",
+    role: "4-man skilling boss · one person per node set",
+    style: "Skilling. Combat is not the point.",
+    opener: [
+      "Roles: wood, mining, hunter, fishing. One person per node set.",
+      "Call the fungus. Four people on one node is the wipe.",
+      "A quiet four-man beats a loud four-man with better picks.",
+    ],
+    wipe: "Four people on one node, or a fungus call nobody answered.",
+    sources: [],
+    rs3: {
+      bar: ["Wood", "Mine", "Hunter", "Fish", "Call fungus", "Swap node", "Eat", "Walk blight"],
+      revolution: "No ability bar. Roles are skilling nodes.",
+      familiar: "None required. Confirm the skilling familiar on the wiki if the team uses one.",
+      pocket: "Skilling pocket for the role you were given.",
+      relic: "Skilling relic if the pin listed one.",
+      camp: "Camp the node set you were given.",
+      ultimates: "None. This is a skilling boss.",
+    },
+  },
+  raksha: {
+    id: "raksha",
+    title: "Raksha",
+    edition: "RS3",
+    role: "Solo or duo · poison and shadow walks",
+    style: "Magic or necro. Pools first.",
+    opener: [
+      "Anachronia. Poison pools have names before you chase a time.",
+      "Pools: walk. Shadow: the tile. P4: do not channel into a beam.",
+    ],
+    wipe: "A pool you stood in, or a beam you channeled into.",
+    sources: [],
+    rs3: {
+      bar: ["Touch of Death", "Soul Sap", "Finger of Death", "Death Skulls", "Volley of Souls", "Bloat", "Living Death", "Reflect", "Freedom", "Resonance", "Disrupt"],
+      revolution: "Revolution until pools are boring. Manual the beam walk.",
+      familiar: "Ripper or the familiar the wiki page lists this hour.",
+      pocket: "Scripture of Wen or Jas.",
+      relic: "Conservation of Energy.",
+      camp: "Camp one style. Do not rebuild mid-phase.",
+      ultimates: "Living Death on a clean pool window. Do not dump on a beam.",
+      enrage: "No Telos ladder. Bank after a wipe. Do not restack mid-P4.",
     },
   },
 };
@@ -1065,17 +1624,42 @@ function fallbackOsrs(note: BossNote): OsrsDesk {
     tiers: osrsTiers(note.id, note),
     supplies: osrsSupplies(note.id),
     skip: osrsSkip(note.id),
+    bank: osrsBank(note.id),
+    sanity: osrsSanity(note.id),
   };
 }
 
 function fallbackRs3(note: BossNote): Rs3Desk {
+  if (note.id === "croesus") {
+    return {
+      bar: ["Wood", "Mine", "Hunter", "Fish", "Call fungus", "Swap node", "Eat", "Walk blight"],
+      revolution: "No ability bar. Roles are skilling nodes. Combat ultimates do not clear fungus.",
+      familiar: "None required. Confirm the skilling familiar on the wiki if the team uses one.",
+      pocket: "Skilling pocket for the role you were given.",
+      relic: "Skilling relic if the pin listed one.",
+      camp: "Camp the node set you were given. Do not stack four people on one node.",
+      ultimates: "None. This is a skilling boss.",
+    };
+  }
+  if (note.id === "kk") {
+    return {
+      bar: ["Style A builder", "Style A threshold", "Style switch", "Style B builder", "Freedom", "Reflect", "Resonance", "Disrupt"],
+      revolution: "Short revolution per colour. Manual the swap on the animation.",
+      familiar: "Ripper or the familiar the wiki page lists this hour.",
+      pocket: "Scripture that matches the colour you are on.",
+      relic: "Conservation of Energy unless the lead pinned another.",
+      camp: "Switch. Do not camp one style. Colour swap is the fight.",
+      ultimates: "Dump on the colour he is not immune to. Do not leave an ultimate on the immune colour.",
+    };
+  }
+  const enrageIds = new Set(["telos", "kerapac", "zamorakboss", "ambassador", "glacor", "araxxor"]);
   return {
     bar: ["Touch of Death", "Soul Sap", "Finger of Death", "Death Skulls", "Volley of Souls", "Bloat", "Freedom", "Reflect", "Resonance", "Disrupt"],
     revolution: "Revolution until the mechanic is boring. Full manual only if that is your log.",
     familiar: "Ripper Demon or the familiar on the wiki page for this hour.",
     pocket: "Scripture that matches the style you brought.",
     relic: "Conservation of Energy unless the lead pinned another.",
-    enrage: note.role.toLowerCase().includes("enrage")
+    enrage: enrageIds.has(note.id) || note.role.toLowerCase().includes("enrage")
       ? "Start at 0%. Add enrage after two clean kills. Bank at War's Retreat between steps."
       : undefined,
     camp: "Camp one style unless the wiki lists a required switch.",
@@ -1093,6 +1677,8 @@ function finishOsrs(note: BossNote, draft?: OsrsDraft): OsrsDesk | undefined {
     tiers: draft.tiers ?? base.tiers,
     supplies: draft.supplies ?? base.supplies,
     skip: draft.skip ?? base.skip,
+    bank: draft.bank ?? base.bank,
+    sanity: draft.sanity ?? base.sanity,
   };
 }
 

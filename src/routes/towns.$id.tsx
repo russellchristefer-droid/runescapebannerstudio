@@ -1,15 +1,14 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
-import { useEffect } from "react";
 import { BackLink } from "@/components/back-link";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { townNote } from "@/lib/town-notes";
-import { LOCATIONS, type Location } from "@/lib/locations";
+import { LOCATIONS, townStillLine, type Location } from "@/lib/locations";
 import { godInk, GOD_SLUGS } from "@/lib/gods";
 import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
 import { citizenFor } from "@/data/citizens";
 import { streetTalk } from "@/data/streetTalk";
-import { formatRemain, msUntilNext, stillIndex } from "@/lib/still-clock";
+import { stillIndex } from "@/lib/still-clock";
 import { deskOpenPath } from "@/lib/desk-link";
 import { OfficialPulse } from "@/components/official-pulse";
 import { writeStudioSave } from "@/lib/studio-save";
@@ -122,27 +121,17 @@ function TownCycle({
   loc: (typeof LOCATIONS)[number];
   title: string;
 }) {
-  const pool = loc.stills?.length ? loc.stills : [loc.viewA];
-  const now = useVisibleNow();
-  useEffect(() => {
-    const img = new Image();
-    img.src = pool[(stillIndex(pool.length, now) + 1) % pool.length] ?? "";
-  }, [now, pool]);
-  const i = stillIndex(pool.length, now);
-  const src = pool[i] ?? loc.viewA;
-  const next = pool[(i + 1) % pool.length];
+  const src = loc.viewA;
   const game = loc.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   return (
     <figure>
       <img
         src={src}
-        alt={`${title}, View ${i + 1} of ${pool.length}, ${game}`}
+        alt={`${title} in ${game}`}
         className="aspect-[21/9] w-full rounded-md border border-line object-cover"
       />
       <figcaption className="mt-1 text-xs text-faint">
-        View {i + 1} of {pool.length}
-        {" · "}
-        Next still in {formatRemain(msUntilNext(now))}
+        {townStillLine(loc.id)}
       </figcaption>
     </figure>
   );

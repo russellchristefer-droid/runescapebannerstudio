@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { GOD_BRIEFS, GOD_SLUGS } from "@/lib/gods";
-import { godStill } from "@/lib/god-stills";
+import { godStill, godStillLine } from "@/lib/god-stills";
 import { GODS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
 
@@ -22,7 +22,7 @@ function GodsIndex() {
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Gods</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          Two sealed canons. Old School RuneScape first, then RuneScape. Not a Jagex page.
+          Two sealed canons. Prayer book and God Wars on one client. Landfall and edicts on the other. Wiki keeps the hour.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
@@ -39,6 +39,7 @@ function GodsIndex() {
                 name={GOD_BRIEFS[god].god}
                 kind="God"
                 game="Old School RuneScape"
+                caption={godStillLine(god, "OSRS")}
               />
             ))}
           </PlaceGrid>
@@ -55,6 +56,7 @@ function GodsIndex() {
                 name={GOD_BRIEFS[god].god}
                 kind="God"
                 game="RuneScape"
+                caption={godStillLine(god, "RS3")}
               />
             ))}
           </PlaceGrid>

@@ -2,18 +2,18 @@
 
 const OSRS: Record<string, string[]> = {
   osrslumbridge: [
-    "Duke’s clerk: the courtyard still wakes strangers. The meadow is grass. Mind the goblins on the east road.",
-    "Bridge guard: river first, castle second. If you came looking for a crater you are in the wrong grammar.",
+    "Duke’s clerk: the courtyard still wakes strangers. The meadow is grass. Leave the crater title home.",
+    "Bridge guard: river first, castle second. Goblins on the east road are the first lesson.",
     "Miller: the wheel turns. Tutorial is a rumour the water has not forgotten.",
   ],
   osrsfalador: [
-    "White Knight on the square: walls hold. Kinshra are a weather, not a schedule I print.",
+    "White Knight on the square: walls hold. Kinshra are weather, not a schedule I print.",
     "Rising Sun keep: knights drill, the park rests, the party room is still a room.",
-    "Park warden: virtue in limestone. Slapstick lives in the same postcode. That is the town.",
+    "Park warden: virtue in limestone. Slapstick lives in the same postcode.",
   ],
   osrsvarrock: [
     "Palace clerk: Roald’s name is on the writ. The slums keep their own hours.",
-    "Exchange runner: price is a public sentence. The square still argues.",
+    "Exchange runner: price is a public sentence. This desk does not print one.",
     "Gertrude’s neighbour: the sill has a cat. Palaces inflate. The slums persist.",
   ],
   osrsprif: [
@@ -22,14 +22,24 @@ const OSRS: Record<string, string[]> = {
     "Singer on the stair: the song is public. I do not sell a clan name.",
   ],
   osrsedge: [
-    "A guard: keep walking. Monastery west, ditch north.",
-    "Monk: we keep the hill. The wilderness is a weather, not a sermon I finish.",
-    "Adventurer at the ditch: the line is the point. Cross it knowing the grammar.",
+    "A guard: monastery west, ditch north. The line is the point.",
+    "Monk: we keep the hill. The wilderness is weather. Protect item.",
+    "Adventurer at the ditch: cross it knowing the grammar.",
   ],
   osrsdraynor: [
     "Market guard: willows, bank, and a village that remembers worse nights.",
     "Willow cutter: the trees are the work. Draynor keeps its voice down.",
     "Bank clerk: I do not discuss the manor after dark.",
+  ],
+  osrscani: [
+    "Innkeep: Hair of the Dog. Priest in Peril is the crossing. Humans without leave are prey.",
+    "Tanner: Drakan’s fog is the law. I do not sell a later campaign.",
+    "Temple acolyte: Zamorak’s house. The Salve is behind you. Keep walking.",
+  ],
+  osrsent: [
+    "Monk at the slip: no weapons. No armour. The wipe is the item you forgot to bank.",
+    "Dock warden: Port Sarim searches you. That is the dock rule.",
+    "Novice: Lost City begins in that vow. Entrana is not a fort.",
   ],
 };
 
@@ -51,13 +61,23 @@ const RS3: Record<string, string[]> = {
   ],
   prifddinas: [
     "Tower door: the hour will turn. This desk will not name the clan.",
-    "Crystal-stall: Voice of Seren is a pulse. I sell thread, not a forecast.",
+    "Crystal-stall: Voice of Seren is a pulse. Confirm it on Today.",
     "Clerk: no clan pair on this card. The clock is enough.",
   ],
   edgeville: [
-    "Guard: the ditch is still a dare in this client. The village keeps its voice down.",
+    "Guard: the ditch is still a dare in this client. Protect item.",
     "Monk: the hill holds. I do not price the wilderness.",
     "Adventurer: the line is the point. Cross it knowing the grammar.",
+  ],
+  menaphos: [
+    "Gate clerk: four districts. The gates opened. Confirm the hour on the wiki.",
+    "River porter: sun and river. I do not invent a God Wars seat.",
+    "Stall: the golden city is work. Leave an Old School shut-gate title home.",
+  ],
+  cityofum: [
+    "Ferry: the living walk as guests. The dead keep the market.",
+    "Necromancer: Rasial’s shadow is on the stone. That fight is on Bosses.",
+    "Clerk: I do not sell an enrage. Confirm the hour on the wiki.",
   ],
 };
 

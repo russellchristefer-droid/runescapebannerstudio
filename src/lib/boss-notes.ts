@@ -36,35 +36,34 @@ export function bossWipe(note: BossNote) {
   return note.wipe ?? note.method[0] ?? "Confirm the wipe on the wiki for this hour.";
 }
 
-
 export const BOSS_NOTES: Record<string, BossNote> = {
   toa: {
     id: "toa",
     title: "Tombs of Amascut",
     edition: "OSRS",
     role: "Raid · 1–8",
-    style: "All three. Yellow Keris on the path bosses. Wardens want the style the invocation asks.",
-    pray: "Swap every room. Akkha: the style he just used. Zebak: missiles then mage on the roar. Wardens: the skull he is charging.",
+    style: "All three. Yellow Keris on path bosses. Wardens take the skull he is charging.",
+    pray: "Room by room. Akkha: the style he just used. Zebak: missiles, then mage on the roar. Wardens: the charging skull.",
     start: [
-      "Entry / 0 invocation until you can name every room with your eyes closed.",
-      "Solo or a quiet two-man first. A 300 with no room notes is a bank tax.",
-      "Leave if you wipe twice on the same mechanic. That room is the lesson, not the next pull.",
+      "You already know the lobby. 0 invocation until every room has a name.",
+      "Solo or a quiet two. A 300 with no room notes is a bank tax.",
+      "Two wipes on the same mechanic: that room is the night. Next pull waits.",
     ],
     kit: [
-      "Learner: swamp trident, blowpipe, bandos or blessed, yellow Keris, lightbearer if you own it.",
+      "Learner: swamp trident, blowpipe, bandos or blessed, yellow Keris, lightbearer if it is already in the bank.",
       "Desk: Tumeken's shadow or sang, masori / ancestral swaps, saturated heart, thralls.",
-      "Stamina and restore before Wardens. Food is for a missed tile, not the plan.",
+      "Stamina and restore before Wardens. Food is a missed tile, not a rotation.",
     ],
     route: [
-      "Pick a path and say it. Akkha: memory tiles first, then the boss. Baba: boulder line, then the monkey. Kephri: dunk dung, keep swarms down. Zebak: jugs on the waves, walk the acid.",
-      "Wardens: tiles, then the core. Last phase walk the slam. Do not stand in a charged skull.",
-      "Kephri dung and Zebak waves kill more teams than Wardens HP.",
+      "Name the path. Akkha: memory tiles, then the boss. Baba: boulder line, then the monkey. Kephri: dunk dung, swarms down. Zebak: jugs on waves, walk the acid.",
+      "Wardens: tiles, then the core. Last phase walks the slam. A charged skull is a leave.",
+      "Kephri dung and Zebak waves end more raids than Wardens HP.",
     ],
     method: [
-      "Add one invocation rack only after a clean raid. A clean 50 teaches more than a wipe 200.",
-      "One talker. Watch a VOD of your seat the night before. Time the raid, then cut one minute, not five.",
+      "One invocation rack after a clean raid. A clean 50 teaches more than a wipe 200.",
+      "One talker. Time the raid. Cut one minute, not five.",
     ],
-    wipe: "Kephri dung or a Zebak wave you did not jug. Wardens is rarely the first wipe.",
+    wipe: "Kephri dung on the floor, or a Zebak wave nobody jugged. Wardens is almost never first.",
     wiki: "https://oldschool.runescape.wiki/w/Tombs_of_Amascut",
   },
   vorkath: {
@@ -72,25 +71,25 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "Vorkath",
     edition: "OSRS",
     role: "Solo slayer / money",
-    style: "Ranged (Zaryte, tbow, blowpipe) or melee lance. Pick one and stay on it for the trip.",
+    style: "Ranged (Zaryte, tbow, blowpipe) or melee lance. Pick one. Stay on it for the trip.",
     pray: "Protect Missiles plus Rigour or Piety. Walk the pink fireball. Never tank it.",
     start: [
-      "Super antifire plus a dragonfire ward or shield. Salve (ei) if you wear it.",
-      "Count six autos, then the special. Acid or spawn — never guess.",
-      "Bank a trip with two deaths planned. Pools before kills/hr.",
+      "Super antifire plus a dragonfire ward. Salve (ei) if it is already on the neck.",
+      "Six autos, then the special. Acid or spawn — count it, do not guess it.",
+      "Bank the trip with two deaths already in the plan. Pools before kills/hr.",
     ],
     kit: [
       "Learner: void or blessed, blowpipe or rune cbow, ruby then diamond, extended antifire.",
-      "Desk: masori, Zaryte or tbow, slayer staff for crumble, divine ranging.",
+      "Desk: masori, Zaryte or tbow, slayer staff for Crumble, divine ranging.",
     ],
     route: [
-      "Pool, bank, boat. Spec the first hits while he is grounded.",
-      "Acid: one straight line, one-tile path. Do not panic-click the pool.",
-      "Spawn: crumble undead or a golden pool before the next fireball. Resume the six-count.",
+      "Pool, bank, boat. Spec the first grounded hits.",
+      "Acid: one straight line, one-tile path. The pool is not a panic click.",
+      "Spawn: Crumble Undead or a golden pool before the next fireball. Resume the six-count.",
     ],
     method: [
-      "Woox walk is extra kills after pools are automatic. It is not hour one.",
-      "A death on acid is a count error. Slow the next kill, then speed back up.",
+      "Woox walk is extra kills after the six-count is muscle. It is not hour one.",
+      "A death on acid is a count error. Slow the next kill. Speed comes back.",
     ],
   },
   tob: {
@@ -98,28 +97,27 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "Theatre of Blood",
     edition: "OSRS",
     role: "Raid · 3–5",
-    style: "Scythe is the team core. Range and mage for Maiden nylos and Xarpus.",
-    pray: "Maiden mage. Bloat melee. Nylos mix. Sotetseg mage. Xarpus range. Verzik mix — call every swap.",
+    style: "Scythe is the room. Range and mage for Maiden nylos and Xarpus. Hasta plus void still clears Entry.",
+    pray: "Maiden mage. Bloat missiles, walk the stomp. Nylos mix. Sotetseg mage. Xarpus range. Verzik mix — call the swap.",
     start: [
-      "Entry mode until Maiden crabs are a call, not a surprise.",
-      "One new seat per run. Wipe notes after the room, not mid-cast.",
+      "You already know the lobby. Entry until Maiden crabs are a call, not a surprise.",
+      "One new seat per raid. Notes after the room, not mid-cast.",
     ],
     kit: [
-      "Learner: hasta or whip, trident, blowpipe, avernic if you have it.",
-      "Desk: scythe, tbow, sang, avernic, justiciar for Verzik tank if that is your seat.",
+      "Learner: hasta or whip, trident, blowpipe, avernic if it is already in the bank.",
+      "Desk: scythe, tbow, sang, avernic, justiciar only if you are the Verzik tank.",
     ],
     route: [
-      "Five rooms, then Verzik. Maiden is the first wipe teacher: blood spawns (crabs) must die on the correct side or they heal her.",
-      "Bloat: he sleeps, then stomps. Walk the stomp; standing still is the wipe.",
-      "Nylos: pillars first, then the boss. A missed pillar dumps nylos on the team.",
-      "Sotetseg: the maze is one caller. Wrong tile is a death, not a shrug.",
-      "Xarpus: poison splash on the walk, then range when he is exposed.",
-      "Verzik P1 is crabs. P2 is yellow pools — leave the tile. P3 is tornadoes and one talker.",
-      "Protect Mage at Maiden and Sotetseg, Melee at Bloat, Range at Xarpus. Call every swap.",
+      "Five rooms, then Verzik. Maiden crabs die on their side. A leak is her heal. That is the first room.",
+      "Bloat sleeps, then stomps. Walk the stomp. Planted feet are the wipe.",
+      "Nylos: the pillar you were given. A missed pillar dumps the room on the team.",
+      "Sotetseg: one maze voice. Wrong tile is a death.",
+      "Xarpus: poison splash on the walk, range when he is exposed.",
+      "Verzik P1 is crabs. P2 is yellow — leave the tile. P3 is tornadoes and one talker.",
     ],
     method: [
-      "A 4:30 Maiden does not save a 12-minute Verzik. Film your seat.",
-      "Hard mode is a different exam. Do not add it to a first purple night.",
+      "A 4:30 Maiden does not save a 12-minute Verzik. Film the seat.",
+      "Hard mode is another night. First purple stays on Entry.",
     ],
     wipe: "A Maiden crab on the wrong side, or a Sotetseg maze tile nobody called.",
     wiki: "https://oldschool.runescape.wiki/w/Theatre_of_Blood",
@@ -130,21 +128,21 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     edition: "OSRS",
     role: "Mass or 2–6 spear",
     style: "Spears only for a real split. Everything else feeds the core.",
-    pray: "Protect Mage if you are in the dark core. Protect Melee on the stomp if you are stacked.",
+    pray: "Protect Mage if you are on the dark core. Protect Melee on the stomp if you are stacked.",
     start: [
       "Games necklace. Do not walk from the ditch with a spear out.",
-      "If you are not on a spear, you are a core soak. Say that before the pull.",
+      "No spear: you are a core soak. Say that before the pull.",
     ],
     kit: [
-      "Learner: hasta if you must, but a Zamorakian / dragon hunter lance is the ticket.",
-      "Desk: crystal halberd specs, slayer helm if on task, divine super combat.",
+      "Learner: hasta if you must. Zamorakian / dragon hunter lance is the ticket.",
+      "Desk: crystal halberd specs, slayer helm on task, divine super combat.",
     ],
     route: [
-      "Stack the core. Do not leave a dark core on one person.",
-      "Stomp: step out, then back in. Sigil drop is not a reason to stand in the middle.",
+      "Stack the core. A dark core left on one person is the wipe.",
+      "Stomp: step out, then back in. A sigil drop is not a reason to stand middle.",
     ],
     method: [
-      "Mass corp is a lottery. Spear teams are a job. Pick which night this is.",
+      "Mass is a lottery. Spear teams are a job. Name which night this is.",
     ],
   },
   nex: {
@@ -152,21 +150,21 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "Nex",
     edition: "OSRS",
     role: "5-man or mass",
-    style: "Magic on smoke and zaros, range or mage on shadow, melee on blood if the team calls it.",
-    pray: "Smoke: mage. Shadow: missiles. Blood: mage. Ice: mage. Zaros: the style she is using.",
+    style: "Magic on smoke and Zaros. Range or mage on shadow. Melee on blood if the team called it.",
+    pray: "Smoke mage. Shadow missiles. Blood mage. Ice mage. Zaros: the auto she is using.",
     start: [
-      "Learn the four wings as a list: smoke, shadow, blood, ice, then zaros.",
-      "Do not first-time as the person who has to tank a blood siphon.",
+      "Four wings as a list: smoke, shadow, blood, ice, then Zaros.",
+      "Blood siphon is not a first-night seat.",
     ],
     kit: [
-      "Learner: trident, blessed, a tank piece.",
+      "Learner: trident, blessed, one tank piece.",
       "Desk: ancestral, sang or shadow, tbow for shadow if the team uses it.",
     ],
     route: [
-      "Smoke: clear minions, walk the cough. Shadow: stand off the line. Blood: do not sit the siphon. Ice: break icicles. Zaros: pray the auto.",
+      "Smoke: clear minions, walk the cough. Shadow: off the line. Blood: leave the siphon. Ice: break icicles. Zaros: pray the auto.",
     ],
     method: [
-      "A 5-man with a caller beats a 20-man with no plan. Watch one VOD per wing.",
+      "A 5-man with a caller beats a 20-man with no plan. One VOD per wing.",
     ],
   },
   zulrah: {
@@ -174,19 +172,19 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "Zulrah",
     edition: "OSRS",
     role: "Solo",
-    style: "Mage and range. You swap on the colour, not on HP.",
-    pray: "Green: missiles. Red: mage. Blue: mage. Jad phase: the style that is about to land.",
+    style: "Mage and range. Swap on the colour, not on HP.",
+    pray: "Green: missiles. Red: mage. Blue: mage. Jad: the hit that is about to land.",
     start: [
-      "Print or pin a rotation. First ten kills are the rotation, not the boss.",
-      "Diary cape or scroll for the boat. Do not run from fairy ring every death.",
+      "Pin a rotation. First ten kills are the rotation. The boss is later.",
+      "Diary cape or scroll for the boat. Fairy ring every death is wasted time.",
     ],
     kit: [
       "Learner: trident, blowpipe, void or ahrim / blessed swaps.",
-      "Desk: ancestral, sang or shadow, tbow, toxic blowpipe for the green.",
+      "Desk: ancestral, sang or shadow, tbow, toxic blowpipe for green.",
     ],
     route: [
-      "Stand the correct tile for that rotation. Jad: pray the first hit before you click.",
-      "Snakelings: kill or ignore on the note you brought. Do not invent a third plan.",
+      "Stand the tile that rotation marked. Jad: prayer first, click second.",
+      "Snakelings: kill or ignore on the note you brought. No third plan mid-kill.",
     ],
     method: [
       "Kill time drops when the rotation is memory. Film one kill. Fix one tile.",
@@ -197,24 +195,24 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "The Inferno",
     edition: "OSRS",
     role: "Solo cape",
-    style: "Range camp, mage on the blobs and Jad. Zuk is a prayer exam.",
-    pray: "Every tick is a prayer. Zuk: the shield setter plus the Jad healers.",
+    style: "Range camp. Mage on blobs and Jad. Zuk is a prayer exam.",
+    pray: "Every tick is an overhead. Zuk: the shield setter plus the Jad healers.",
     start: [
-      "Fight Caves first until Jad is boring. Inferno is not a first cape.",
-      "Learn nibbler pathing in a dummy world or a guide that uses the same spawn set you will see.",
+      "You already know the lobby. Fight Caves until Jad is boring. Inferno is the second exam.",
+      "Nibbler pathing in a dummy world or a guide that uses the spawn set you will see.",
     ],
     kit: [
-      "Learner cape attempt: bowfa or tbow, ancestral, sang, justiciar optional, 3–4 brews you can count.",
-      "Desk: tbow, ancestral, lightbearer, the exact invos you practiced.",
+      "First cape: bowfa or tbow, ancestral, sang, justiciar optional, 3–4 brews you can count.",
+      "Desk: tbow, ancestral, lightbearer, the exact bag you practiced.",
     ],
     route: [
-      "Waves: solve the stack, then the rest. Do not chip Zuk thinking.",
+      "Waves: solve the stack in front of you. Wave 12 is not Zuk.",
       "Jad: healers one at a time. Zuk: set, walk, Jad, healers, set again.",
     ],
     method: [
       "A 60-wave attempt with notes beats ten 20-wave panics. Write the wipe. Change one thing.",
     ],
-    wipe: "A stacked blob on a ranger, or Zuk Jad healers you did not tag before the next set.",
+    wipe: "A blob stacked on a ranger you left alive, or Zuk Jad healers into the next set.",
     wiki: "https://oldschool.runescape.wiki/w/Inferno",
   },
   nightmare: {
@@ -222,21 +220,21 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "The Nightmare",
     edition: "OSRS",
     role: "Mass or small team",
-    style: "Melee on the boss. Range the totems. Mage the parasites if that is your seat.",
+    style: "Melee on the boss. Range the totems. Mage the parasites if that is the seat.",
     pray: "The attack she is using. Husk: the style of the husk.",
     start: [
-      "Mass first so you see every special without owning the room.",
-      "Phosani is a different exam. Do not add it to a first night.",
+      "Mass first so every special has a name before you own the room.",
+      "Phosani is another exam. Not first night.",
     ],
     kit: [
       "Learner: hasta, blowpipe for totems.",
       "Desk: scythe, tbow, the parasite mage switch.",
     ],
     route: [
-      "Spores: walk. Husks: pray. Totems: charge them, then the boss. Parasites: the person on that seat clicks them.",
+      "Spores: walk. Husks: pray. Totems: charge, then the boss. Parasites: the seat that owns them clicks them.",
     ],
     method: [
-      "Small team Nightmare is a totem job. Mass is a prayer job. Say which one you are playing.",
+      "Small team is a totem job. Mass is a prayer job. Name which night this is.",
     ],
   },
   graardor: {
@@ -247,18 +245,18 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Melee. Range only if the tank asked for it.",
     pray: "Protect Melee on Graardor. Switch for the minions when they are on you.",
     start: [
-      "Kc first. Do not walk in with 5 kc and a scythe screenshot.",
+      "Kc first. Five kc and a scythe screenshot is still five kc.",
       "Tank tile is a contract. Do not stand it unless you are the tank.",
     ],
     kit: [
       "Learner: bandos, hasta, super combats.",
-      "Desk: scythe, inquisitor if you own it, blood fury.",
+      "Desk: scythe, inquisitor if it is already in the bank, blood fury.",
     ],
     route: [
-      "Minions then boss, or the order the tank called. Do not invent a third order.",
+      "Minions then boss, or the order the tank called. No third order.",
     ],
     method: [
-      "A trip is kc plus a door. Loot talk happens after the last kill.",
+      "A trip is kc plus a door. Loot talk is after the last kill.",
     ],
   },
   kree: {
@@ -266,7 +264,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "Kree'arra",
     edition: "OSRS",
     role: "Duo or trio GWD",
-    style: "Ranged. Magic if the team brought it on purpose.",
+    style: "Ranged. Magic only if the team brought it on purpose.",
     pray: "Protect Missiles. Switch for the melee minion if it is on you.",
     start: [
       "Kc. Armadyl is a knockback room. Stand the tiles the tank uses.",
@@ -287,14 +285,14 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "Phantom Muspah",
     edition: "OSRS",
     role: "Solo DT2",
-    style: "Ranged on the body, mage or melee on the prayer-shield phase.",
+    style: "Ranged on the body. Mage or melee on the prayer-shield phase.",
     pray: "Protect the style it is using. Walk the spike.",
     start: [
-      "Ghorrock after DT2. Learn the three forms as a list before you chase a time.",
+      "Ghorrock after DT2. Three forms as a list before you chase a time.",
     ],
     kit: [
       "Learner: bowfa, trident, a melee swap.",
-      "Desk: tbow, shadow or sang, scythe on the last form if that is your note.",
+      "Desk: tbow, shadow or sang, scythe on the last form if that is the note.",
     ],
     route: [
       "Spikes: walk. Shield: swap style. Teleport smash: step out.",
@@ -311,7 +309,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Ranged. The colour of the vent is the mechanic.",
     pray: "Protect the head that is attacking. Swap on the animation.",
     start: [
-      "Konar or slayer task. Do not first-time off-task if you care about the claw.",
+      "Konar or slayer task. Off-task first kill if you care about the claw is a different night.",
     ],
     kit: [
       "Learner: blowpipe or bowfa, antipoison.",
@@ -332,26 +330,25 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Necromancy is the current desk. Magic and melee still work if that is your log.",
     pray: "Soul Split. Deflect the font style. 100%+ is a prayer exam.",
     start: [
-      "0–100% until fonts and anima are boring. Do not jump to 200 because a VOD did.",
-      "War's Retreat. One preset. One familiar. Write the enrage on the screen.",
+      "0–100% until fonts and anima are boring. A 200% VOD is not this pull.",
+      "War's Retreat. One preset. One familiar. Write the % on screen.",
     ],
     kit: [
-      "Learner: best necro or mage you own, vuln bomb, a stun.",
+      "Learner: best necro or mage you own, vuln bomb, a stun that lands.",
       "Desk: the PvME page for this hour. Do not mix three discords.",
     ],
     route: [
-      "Three phases at every enrage. Fonts are the wipe: stand on the matching colour or the room kills you.",
-      "Anima is spent on purpose. Dumping it late is how 0% learners die after a clean first minute.",
-      "Gogoa’l (the charge) is a walk. Tendrils are a cut. Do not eat both at once.",
+      "Three phases at every enrage. Fonts are the wipe: matching colour, or the room ends you.",
+      "Anima is spent on purpose. Dumping it late is how a clean first minute still dies.",
+      "Gogoa’l is a walk. Tendrils are a cut. Do not eat both at once.",
       "Hold Soul Split. Deflect the style the current font is teaching.",
-      "At 100% the same rooms get less time. The names do not change.",
-      "At 200%+ one missed font is the kill. Add enrage only after two clean kills in a row.",
-      "War’s Retreat between attempts. Write the % on screen so the next pull is a decision, not a mood.",
+      "At 100% the rooms keep their names and lose their time.",
+      "At 200%+ one missed font is the kill. Add % only after two clean kills.",
     ],
     method: [
-      "Add 25% only after two clean kills. A wipe streak is a note problem, not an RNG problem.",
+      "Add 25% after two clean kills. A wipe streak is a note problem.",
     ],
-    wipe: "Wrong font colour. The room ends the pull; the HP bar does not.",
+    wipe: "Wrong font colour. The room ends the pull. The HP bar does not.",
     wiki: "https://runescape.wiki/w/Telos,_the_Warden",
   },
   raksha: {
@@ -362,14 +359,14 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Magic or necro. Poison and shadow walks.",
     pray: "Soul Split. Deflect mage on the beam.",
     start: [
-      "Anachronia. Learn the poison pools before you chase a time.",
+      "Anachronia. Poison pools have names before you chase a time.",
     ],
     kit: [
       "Learner: best mage, poison purge if you use it.",
       "Desk: PvME necro or mage page.",
     ],
     route: [
-      "Pools: walk. Shadow: the tile. P4: do not greed a channel into a beam.",
+      "Pools: walk. Shadow: the tile. P4: do not channel into a beam.",
     ],
     method: [
       "A pool death is a walk error. Slow the next kill.",
@@ -383,17 +380,17 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Team sheet. Usually melee bombs and a mage.",
     pray: "Soul Split. Deflect melee on the smash.",
     start: [
-      "Week rotation is public. Read it before you type 'inv'.",
-      "Do not first-time as base. Watch a VOD of this week's mechanic.",
+      "Week rotation is public. Read it before you type inv.",
+      "Base is not a first-night seat. Watch this week's mechanic.",
     ],
     kit: [
       "What the lead pinned. No surprise scythe if they asked for a bomb.",
     ],
     route: [
-      "P5 bleed: stack only on the called tile. One talker. Extra voice on bomb is a wipe.",
+      "P5 bleed: stack only on the called tile. One talker. Extra voice on bomb is the wipe.",
     ],
     method: [
-      "Show up on time with the week note open. Gear flex is not a role.",
+      "On time, week note open. Gear flex is not a role.",
     ],
   },
   solak: {
@@ -407,7 +404,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "Arms and legs die on the call. Do not pad an arm that is already dead.",
     ],
     kit: [
-      "Team sheet first. Your best melee unless the lead parked you on core.",
+      "Team sheet first. Best melee unless the lead parked you on core.",
     ],
     route: [
       "Mindscape: stand your colour. Blight: cleanse when the base says. One talker in the mindscape.",
@@ -421,7 +418,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     title: "Arch-Glacor",
     edition: "RS3",
     role: "Solo streaks",
-    style: "Necro or mage. Mechanics are the drop.",
+    style: "Necro or mage. The mechanic you ticked is the fight.",
     pray: "Soul Split. Deflect the mechanic you enabled.",
     start: [
       "0 mechanic until the kill is clean. Add one mechanic at a time.",
@@ -430,10 +427,10 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "Best necro or mage. The stun you will actually press.",
     ],
     route: [
-      "The mechanic you ticked is the fight. Do not tick five on a first night.",
+      "The mechanic you ticked is the fight. Five ticks on a first night is a different exam.",
     ],
     method: [
-      "Streaks pay. A wipe on mechanic three is a note you did not read.",
+      "Streaks pay. A wipe on mechanic three is a note you skipped.",
     ],
   },
   rasial: {
@@ -444,13 +441,13 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Necromancy. This is the necro log.",
     pray: "Soul Split. Deflect the volley.",
     start: [
-      "City of Um. Learn the conjure cycle before you chase a time.",
+      "City of Um. Conjure cycle has a name before you chase a time.",
     ],
     kit: [
       "Best necro. The PvME Rasial page for this hour.",
     ],
     route: [
-      "Conjures up. Volley walk. Do not drop a living death window on a special.",
+      "Conjures up. Volley is a walk. Living Death does not sit on that volley.",
     ],
     method: [
       "A missed conjure is a reset. The HP bar follows the cycle.",
@@ -486,7 +483,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Magic or necro.",
     pray: "Soul Split. Deflect mage.",
     start: [
-      "Anachronia lab. Learn the time-stop walk before 100% enrage.",
+      "Anachronia lab. Time-stop walk before 100% enrage.",
     ],
     kit: [
       "Best mage or necro. A stun that lands.",
@@ -512,7 +509,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "Best mage. Super antifire. The four artifacts in inventory order.",
     ],
     route: [
-      "Click artifacts on the call you practiced. Walk the fire walls. Kill the coffins if they are up.",
+      "Click artifacts on the order you practiced. Walk the fire walls. Kill the coffins if they are up.",
     ],
     method: [
       "A death on artifacts is an order error. Slow the next kill.",
@@ -586,7 +583,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "All three. Olm: melee left claw, mage right claw, range the head in last phase.",
     pray: "Head: the style he is using. Hands: stay off the wrong claw.",
     start: [
-      "Learn one layout. Do not first-time Olm in a 15-man.",
+      "Learn one layout. First Olm is not a 15-man.",
       "Points come from rooms, not only the head.",
     ],
     kit: [
@@ -595,7 +592,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     ],
     route: [
       "Clear rooms clean. Olm: spec the mage claw, melee the left, range the head when he stands.",
-      "Do not tank a teleport crystal in the middle of the room.",
+      "A teleport crystal in the middle of the room is a leave.",
     ],
     method: [
       "A clean trio teaches more than a messy mass. Add scale after Olm is boring.",
@@ -652,7 +649,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Magic. Sanity is the mechanic.",
     pray: "Protect Mage. Walk the silence tiles.",
     start: [
-      "Sanity food and a plan for the corridor. Do not first-time enrage.",
+      "Sanity food and a corridor plan. Enrage is not first kill.",
     ],
     kit: [
       "Best mage. Saturated heart. The sanity supplies the wiki lists this hour.",
@@ -672,7 +669,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Ranged.",
     pray: "Protect Missiles. Walk the tail and the abyss.",
     start: [
-      "Learn the path around the arena before you chase a time.",
+      "The path around the arena has a name before you chase a time.",
     ],
     kit: [
       "Bowfa or tbow. Stams.",
@@ -681,7 +678,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "Abyss: do the path. Do not skip a tile to greed a hit.",
     ],
     method: [
-      "Path first, DPS second.",
+      "Path first. DPS second.",
     ],
   },
   vardorvis: {
@@ -712,10 +709,10 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "The weapon you crafted. Hunllef wants the other two styles in rotation.",
     pray: "Pray the style Hunllef is using. Swap on the animation.",
     start: [
-      "Perfected weapons and armour before the door. Corrupted is a different exam.",
+      "Perfected weapons and armour before the door. Corrupted is another exam.",
     ],
     kit: [
-      "What you built. Do not enter under-geared on purpose.",
+      "What you built. The door is not a shortcut.",
     ],
     route: [
       "Hunllef: tornado walk, prayer swap, damage the right style.",
@@ -792,10 +789,10 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Any. This is a first boss.",
     pray: "Protect Melee. Walk the falling rocks.",
     start: [
-      "Varrock sewers. Bring food you can afford to lose.",
+      "Varrock sewers. Food you can afford to lose.",
     ],
     kit: [
-      "Whatever you train with. Do not buy a scythe for this.",
+      "Whatever you train with. Leave the scythe home.",
     ],
     route: [
       "Click the rats if they pile. Walk the debris.",
@@ -832,7 +829,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Magic or necro.",
     pray: "Soul Split. Deflect the current blast.",
     start: [
-      "Learn the black hole walk before you chase enrage.",
+      "Black hole walk before you chase enrage.",
     ],
     kit: [
       "Best mage or necro. The stun you will press.",
@@ -855,10 +852,10 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "Roles: wood, mining, hunter, fishing. One person per node set.",
     ],
     kit: [
-      "Skilling outfit and the tool the role needs. No scythe.",
+      "Skilling outfit and the tool the role needs. Leave the scythe home.",
     ],
     route: [
-      "Call the fungus. Do not stack four people on one node.",
+      "Call the fungus. Four people on one node is the wipe.",
     ],
     method: [
       "A quiet four-man beats a loud four-man with better picks.",
@@ -875,13 +872,13 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "Roles before the door. This is not mass Nex.",
     ],
     kit: [
-      "What the lead listed. Do not bring a flex piece they did not call.",
+      "What the lead listed. No flex piece they did not call.",
     ],
     route: [
       "Elements in order. Minions on the call. One talker.",
     ],
     method: [
-      "Show up on time with the week note. Gear flex is not a role.",
+      "On time, week note open. Gear flex is not a role.",
     ],
   },
   kk: {
@@ -892,7 +889,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "The colour he is not immune to.",
     pray: "Soul Split. Deflect the incoming style.",
     start: [
-      "Swap when he changes colour. Do not camp one style.",
+      "Swap when he changes colour. One-style camp is the wipe.",
     ],
     kit: [
       "Two styles in the bag. Drygores plus mage or range.",
@@ -932,7 +929,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Team sheet. Necro is common.",
     pray: "Soul Split. Deflect the current boss.",
     start: [
-      "Learn the wing you were given. Do not first-time every wing in one night.",
+      "Learn the wing you were given. Every wing in one night is a different exam.",
     ],
     kit: [
       "What the lead listed.",
@@ -974,7 +971,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     style: "Team sheet. Stun and poison roles.",
     pray: "Soul Split. Deflect the pool you are in.",
     start: [
-      "Do not first-time Yaka the same night as first Durzag.",
+      "Yaka is not the same night as first Durzag.",
     ],
     kit: [
       "Raid sheet.",

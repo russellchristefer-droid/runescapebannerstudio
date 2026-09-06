@@ -115,7 +115,7 @@ export const HERO_STILLS: HeroStill[] = [
     captured: "2003-07",
   },
   {
-    src: "/locations/osrs-lumbridge-a.jpg",
+    src: "/locations/osrslumbridge.jpg",
     era: "osrs",
     kind: "place",
     name: "Lumbridge",
@@ -125,7 +125,7 @@ export const HERO_STILLS: HeroStill[] = [
     view: "a",
   },
   {
-    src: "/locations/osrs-falador-a.jpg",
+    src: "/Falador.png",
     era: "osrs",
     kind: "place",
     name: "Falador",
@@ -135,7 +135,7 @@ export const HERO_STILLS: HeroStill[] = [
     view: "a",
   },
   {
-    src: "/locations/osrs-varrock-a.jpg",
+    src: "/locations/osrsvarrock.jpg",
     era: "osrs",
     kind: "place",
     name: "Varrock",
@@ -175,7 +175,7 @@ export const HERO_STILLS: HeroStill[] = [
     view: "a",
   },
   {
-    src: "/locations/rs3-lumbridge-a.jpg",
+    src: "/locations/lumbridge.jpg",
     era: "rs3",
     kind: "place",
     name: "Lumbridge",

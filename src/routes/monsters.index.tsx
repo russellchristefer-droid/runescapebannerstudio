@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
-import { MONSTERS, monsterStillSrc } from "@/lib/monsters";
+import { MONSTERS, monsterStillLine, monsterStillSrc } from "@/lib/monsters";
 import { pageMeta } from "@/lib/page-title";
 import type { Monster } from "@/lib/monsters";
 
@@ -26,7 +26,7 @@ function BestiaryPage() {
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Bestiary</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          A fan ledger of creatures. Not Jagex. Bosses are elsewhere.
+          Task rooms. Face covers. Finish mechanics. Bosses have their own page. Wiki keeps the hour.
         </p>
         <p className="mt-1 text-center text-sm">
           <Link to="/bosses" className="text-parchment">
@@ -78,7 +78,7 @@ function GameBlock({ title, rows }: { title: string; rows: Monster[] }) {
               name={row.name}
               kind={row.slayer ? "Slayer" : "Monster"}
               game={title}
-              caption={`${row.name} in ${title}`}
+              caption={monsterStillLine(row)}
             />
           ))}
         </PlaceGrid>

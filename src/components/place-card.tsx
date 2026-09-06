@@ -24,7 +24,7 @@ export function PlaceCard({
   caption?: string;
 }) {
   const label = kind === "Town" && god ? god : kind;
-  const alt = caption ?? `${name} in ${game}`;
+  const alt = `${name} in ${game}`;
   return (
     <li className="[contain-intrinsic-size:auto_220px] [content-visibility:auto]">
       <Link
@@ -38,6 +38,7 @@ export function PlaceCard({
           <div className="flex aspect-video items-center justify-center bg-surface text-[10px] text-faint">Still needed.</div>
         )}
         <span className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">{name}</span>
+        {caption ? <p className="px-2 text-center text-[10px] text-muted">{caption}</p> : null}
         <p className="px-2 pb-2 text-center text-[10px] text-faint">
           {kind === "Town" && god ? (
             <span style={{ color: godInk(god) }}>{god}</span>
