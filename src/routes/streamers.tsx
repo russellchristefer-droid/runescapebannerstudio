@@ -77,7 +77,7 @@ function StreamersPage() {
       ctrl?.abort();
       ctrl = new AbortController();
       const mine = ctrl;
-      const timer = window.setTimeout(() => mine.abort(), 8000);
+      const timer = window.setTimeout(() => mine.abort(), 20000);
       const logins = CHANNELS.map((row) => row.twitch ?? "")
         .filter(Boolean)
         .slice(0, 100)
@@ -197,7 +197,7 @@ function StreamersPage() {
         <p className="mt-1 text-center text-[11px] text-faint">
           {probe === "off" || probe === "down"
             ? "Live check is off."
-            : "Live first when Helix answers. A missing badge is not a verdict."}
+            : "Live first. Helix when keys exist; otherwise a public uptime check. A missing badge is not a verdict."}
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <label className="mx-auto mt-3 block max-w-sm text-[10px] text-muted">

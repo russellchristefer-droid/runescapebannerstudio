@@ -170,27 +170,55 @@ async function helixByLogins(clientId: string, token: string, logins: string[]) 
   return rows;
 }
 
+async function decapiBoard(logins: string[]): Promise<TwitchBoardRow[]> {
+  const unique = [...new Set(logins.map(cleanLogin).filter(Boolean))].slice(0, 40);
+  const rows: TwitchBoardRow[] = [];
+  const chunk = 5;
+  for (let i = 0; i < unique.length; i += chunk) {
+    const slice = unique.slice(i, i + chunk);
+    const ups = await Promise.all(slice.map((login) => fetchTwitchUptime(login)));
+    slice.forEach((handle, idx) => {
+      if (!ups[idx]) return;
+      rows.push({
+        handle,
+        live: true,
+        displayName: handle,
+        game: gameForHandle(handle) ?? "osrs",
+      });
+    });
+  }
+  return rows;
+}
+
 export async function fetchTwitchLiveBoard(logins: string[]): Promise<TwitchBoard> {
   if (liveDisabled()) return { off: true, ok: false, rows: [] };
   if (boardMemo && Date.now() - boardMemo.at < BOARD_TTL) return boardMemo.payload;
 
+  const asked = [...new Set((logins ?? []).map(cleanLogin).filter(Boolean))];
+  const pool = asked.length ? asked : listedLogins();
   const id = process.env.TWITCH_CLIENT_ID ?? "";
   const token = await helixToken().catch(() => "");
-  if (!id || !token) {
-    return { off: true, ok: false, rows: [] };
+  if (id && token) {
+    try {
+      const rows = await helixByLogins(id, token, pool.slice(0, 100));
+      const payload: TwitchBoard = { ok: true, rows };
+      boardMemo = { at: Date.now(), payload };
+      return payload;
+    } catch (err) {
+      if (err instanceof Error && err.name === "TwitchAuth") {
+        /* fall through to public uptime */
+      } else {
+        return { ok: false, rows: [] };
+      }
+    }
   }
 
   try {
-    const asked = [...new Set((logins ?? []).map(cleanLogin).filter(Boolean))];
-    const pool = asked.length ? asked : listedLogins();
-    const rows = await helixByLogins(id, token, pool.slice(0, 100));
+    const rows = await decapiBoard(pool);
     const payload: TwitchBoard = { ok: true, rows };
     boardMemo = { at: Date.now(), payload };
     return payload;
-  } catch (err) {
-    if (err instanceof Error && err.name === "TwitchAuth") {
-      return { off: true, ok: false, rows: [] };
-    }
+  } catch {
     return { ok: false, rows: [] };
   }
 }
