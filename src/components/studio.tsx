@@ -5,7 +5,7 @@ import { TodayDesk } from "@/components/today-desk";
 import { TownHero } from "@/components/town-hero";
 import { OracleLine } from "@/components/oracle-line";
 import { StillPhoto } from "@/components/still-photo";
-import { drawBanner, ensurePlateFont, loadImage, plateMetrics, putStillOnDesk, layoutPack } from "@/desk";
+import { drawBanner, ensurePlateFont, loadImage, plateMetrics, putStillOnDesk, layoutPack, pickRandom, loadStill, eraCaption, FALLBACK } from "@/desk";
 import { loadStudioSave, writeStudioSave } from "@/desk/save";
 import { deskSharePath, readDeskQuery } from "@/desk/desk-link";
 import { PlaceRail } from "@/places";
@@ -1707,15 +1707,20 @@ export function Studio() {
             type="button"
             className="h-8 rounded-md border border-line px-2 text-[10px]"
             onClick={() => {
-              const pool = (visible.length ? visible : LOCATIONS.filter((loc) => loc.kind === kind && loc.edition === edition)).filter(
-                (loc) => Boolean(townPlateSrc(loc.id) || loc.viewA || loc.stills?.length),
-              );
-              if (!pool.length) return;
-              const pick = pool[Math.floor(Math.random() * pool.length)];
-              const raw = pick.stills?.length ? pick.stills[stillIndex(pick.stills.length, peteNow)] : pick.viewA;
-              const src = townPlateSrc(pick.id) || (stillAllowed(raw, pick.edition) ? raw : pick.viewA);
-              if (!src) return;
-              applyStill(pick.id, "a", src);
+              const row = pickRandom();
+              const img = new Image();
+              loadStill(row.src, img, () => {
+                const nextSrc = img.getAttribute("data-era") === "fallback" ? FALLBACK : row.src;
+                setCustomSrc((prev) => {
+                  if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
+                  return nextSrc;
+                });
+                setDeskStillSrc(nextSrc);
+                setPlateCaption(nextSrc === FALLBACK && row.src !== FALLBACK ? "OSRS · Falador" : eraCaption({ ...row, src: nextSrc }));
+                putStillOnDesk({ stillSrc: nextSrc });
+                setSceneReady(true);
+                requestPaint();
+              });
             }}
           >
             Random
