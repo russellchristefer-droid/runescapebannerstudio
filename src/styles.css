@@ -236,3 +236,11 @@ button,
   content-visibility: auto;
   contain-intrinsic-size: 220px;
 }
+
+pre,
+code {
+  font-family: ui-monospace, monospace;
+  color: #e8d5a3;
+  background: #1a140c;
+}
+
