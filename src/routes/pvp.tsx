@@ -2,13 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { VisitPlaces } from "@/components/place-chip";
 import { pageMeta } from "@/lib/page-title";
-import { PVP_OSRS, PVP_RS3, PVP_SOURCES } from "@/lib/pvp-sheet";
+import {
+  PVP_BH,
+  PVP_LMS,
+  PVP_METHODS,
+  PVP_RISK,
+  PVP_SOURCES,
+  PVP_TREE,
+  PVP_WILDY,
+  PVP_WORLD,
+  type ModeSheet,
+} from "@/lib/pvp-sheet";
 
 export const Route = createFileRoute("/pvp")({
   head: () =>
     pageMeta(
       "PvP",
-      "Two canons. Risk is the tax. Official rules win. Wilderness, PvP worlds, LMS, Bounty Hunter. Wiki keeps the skull rule.",
+      "Old School. What each method is. Freeze then spec. Eat the incoming. Risk first. Wiki keeps the skull rule.",
     ),
   component: PvpPage,
 });
@@ -19,7 +29,9 @@ function PvpPage() {
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <h1 className="page-h1 mt-1">PvP</h1>
-        <p className="mt-1 text-center text-sm text-parchment">Two canons. Risk is the tax. Official rules win.</p>
+        <p className="mt-1 text-center text-sm text-parchment">
+          Old School. Risk is the tax. What each method is.
+        </p>
         <p className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-[12px] text-muted">
           {PVP_SOURCES.map((src) => (
             <a
@@ -46,115 +58,84 @@ function PvpPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
-        <p className="text-sm text-muted">
-          Fan sheet. Not a cheat page. The live wiki keeps the skull rule. Official news keeps the mode list. This desk
-          does not invent ticks, GP, or a guaranteed loot pile.
-        </p>
-
+      <main className="mx-auto flex max-w-3xl flex-col gap-7 px-5 py-6 md:px-8">
         <section>
-          <h2 className="mb-2 text-sm tracking-[0.16em] text-parchment">Old School RuneScape</h2>
-          <p className="mb-4 text-sm text-muted">
-            You already know the ditch. The depth is the bracket. The skull is the invoice.
-          </p>
-
-          <Block title="Where it is legal">
-            <Lines items={PVP_OSRS.legal} />
-          </Block>
-          <Block title="Skull / protect item / what you lose">
-            <Lines items={PVP_OSRS.skull} />
-          </Block>
-          <Block title="Solo sheet">
-            <Lines items={PVP_OSRS.solo} />
-          </Block>
-          <Block title="Multi / clan">
-            <Lines items={PVP_OSRS.multi} />
-          </Block>
-          <Block title="Anti-PK">
-            <Lines items={PVP_OSRS.anti} />
-          </Block>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Box title="Last Man Standing">
-              <Lines items={PVP_OSRS.lms} />
-            </Box>
-            <Box title="Bounty Hunter">
-              <Lines items={PVP_OSRS.bh} />
-            </Box>
-          </div>
-
-          <Block title="Risk tiers">
-            <dl className="divide-y divide-line/40 rounded-md border border-line">
-              {(
-                [
-                  ["Budget", PVP_OSRS.risk.budget],
-                  ["Mid", PVP_OSRS.risk.mid],
-                  ["Max", PVP_OSRS.risk.max],
-                ] as const
-              ).map(([k, v]) => (
-                <div key={k} className="grid grid-cols-[6.5rem_1fr] gap-3 px-3 py-2 text-sm md:grid-cols-[7.5rem_1fr]">
-                  <dt className="text-parchment">{k}</dt>
-                  <dd className="text-muted">{v}</dd>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">In the fight</h2>
+          <ol className="space-y-3">
+            {PVP_TREE.map((row, i) => (
+              <li key={row.q} className="grid grid-cols-[2rem_1fr] gap-3">
+                <span className="pt-0.5 text-sm text-parchment">{i + 1}.</span>
+                <div>
+                  <p className="text-sm text-fg">{row.q}</p>
+                  <p className="mt-1 text-sm text-muted">{row.no}</p>
                 </div>
-              ))}
-            </dl>
-            <p className="mt-2 text-[11px] text-faint">Risk, not a bank dump. Prices move. Wiki wins.</p>
-          </Block>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section>
-          <h2 className="mb-2 text-sm tracking-[0.16em] text-parchment">RuneScape</h2>
-          <p className="mb-4 text-sm text-muted">
-            Sixth Age Wilderness is not the 2007 ditch. Vala is the door. Do not copy an Old School skull count onto this
-            client.
-          </p>
-          <Block title="Where PvP actually exists">
-            <Lines items={PVP_RS3.legal} />
-          </Block>
-          <Block title="Death cost vs OSRS skull">
-            <Lines items={PVP_RS3.death} />
-          </Block>
-          <Block title="Camp vs switch">
-            <Lines items={PVP_RS3.bar} />
-          </Block>
-          <Block title="Skip">
-            <Lines items={PVP_RS3.skip} />
-          </Block>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">Methods</h2>
+          <ul className="space-y-5">
+            {PVP_METHODS.map((m) => (
+              <li key={m.name}>
+                <p className="text-sm text-fg">{m.name}</p>
+                <p className="mt-1 text-sm text-muted">{m.what}</p>
+                <p className="mt-1 text-[12px] text-faint">Wipe: {m.wipe}</p>
+              </li>
+            ))}
+          </ul>
         </section>
 
-        <p className="text-xs text-faint">
-          Fan desk notes. Live skull and mode lists: the official wiki for that game, then official rules. Hundreds of
-          blogs will not beat a live wiki on the current skull rule.
-        </p>
+        <ModeCard sheet={PVP_WILDY} />
+        <ModeCard sheet={PVP_WORLD} />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ModeCard sheet={PVP_LMS} compact />
+          <ModeCard sheet={PVP_BH} compact />
+        </div>
+        <p className="-mt-3 text-[11px] text-faint">LMS and BH are different bags. Do not gear them with the wildy grid.</p>
+
+        <section>
+          <h2 className="mb-2 text-sm tracking-[0.16em] text-parchment">Wildy risk</h2>
+          <dl className="divide-y divide-line/40 rounded-md border border-line">
+            {(
+              [
+                ["Budget", PVP_RISK.budget],
+                ["Mid", PVP_RISK.mid],
+                ["Max", PVP_RISK.max],
+              ] as const
+            ).map(([k, v]) => (
+              <div key={k} className="grid grid-cols-[6.5rem_1fr] gap-3 px-3 py-2 text-sm">
+                <dt className="text-parchment">{k}</dt>
+                <dd className="text-muted">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       </main>
     </div>
   );
 }
 
-function Block({ title, children }: { title: string; children: React.ReactNode }) {
+function ModeCard({ sheet, compact }: { sheet: ModeSheet; compact?: boolean }) {
   return (
-    <section className="mb-5">
-      <h3 className="mb-2 text-sm font-semibold text-parchment">{title}</h3>
-      {children}
+    <section className={compact ? "rounded-md border border-line bg-raised px-3 py-3" : ""}>
+      <h2 className="mb-2 text-sm tracking-[0.16em] text-parchment">{sheet.title}</h2>
+      <dl className="space-y-2 text-sm">
+        <Row k="Grid" v={sheet.grid} />
+        <Row k="Opener" v={sheet.opener} />
+        <Row k="Wipe" v={sheet.wipe} />
+      </dl>
     </section>
   );
 }
 
-function Box({ title, children }: { title: string; children: React.ReactNode }) {
+function Row({ k, v }: { k: string; v: string }) {
   return (
-    <section className="rounded-md border border-line bg-raised px-3 py-3">
-      <h3 className="mb-2 text-sm font-semibold text-parchment">{title}</h3>
-      {children}
-    </section>
-  );
-}
-
-function Lines({ items }: { items: readonly string[] }) {
-  return (
-    <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
-      {items.map((line) => (
-        <li key={line}>{line}</li>
-      ))}
-    </ul>
+    <div className="grid grid-cols-[5.5rem_1fr] gap-3 md:grid-cols-[6.5rem_1fr]">
+      <dt className="text-parchment">{k}</dt>
+      <dd className="text-muted">{v}</dd>
+    </div>
   );
 }
