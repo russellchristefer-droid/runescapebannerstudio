@@ -213,6 +213,10 @@ export function Studio() {
   }, [size.width, size.height]);
   useDeskEggs(streamer);
   useEffect(() => {
+    if (draggingRef.current) return;
+    centerNameOverStamps();
+  }, [streamer]);
+  useEffect(() => {
     if (streamer.trim().toLowerCase() !== "workwork") return;
     setWorkworkLine("Work, work.");
     setStreamer("");
@@ -361,6 +365,40 @@ export function Studio() {
     return MARKS.some((mark) => mark.id === id) || id.startsWith("mark-custom-");
   }
 
+  function centerNameOverStamps(stamps = skillPicksRef.current) {
+    const who = sanitizeDisplayName(streamer);
+    const chip = plateMetrics(size.width, size.height);
+    const nameH = chip.name;
+    let nameX = 36;
+    let nameY = 24;
+    const placed = stamps.filter((item) => !isMark(item.id) && item.x != null && item.y != null);
+    if (who && placed.length) {
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minY = Infinity;
+      for (const item of placed) {
+        const cell = Math.max(1, (item.size ?? skillSize) * (item.scale ?? 1));
+        minX = Math.min(minX, item.x as number);
+        maxX = Math.max(maxX, (item.x as number) + cell);
+        minY = Math.min(minY, item.y as number);
+      }
+      let nameW = who.length * nameH * 0.55;
+      const ctx = canvasRef.current?.getContext("2d");
+      if (ctx) {
+        ctx.save();
+        ctx.font = `700 ${nameH}px "RS Chat Bold"`;
+        nameW = ctx.measureText(who).width;
+        ctx.restore();
+      }
+      nameX = minX + (maxX - minX - nameW) / 2;
+      nameY = minY - nameH - 8;
+    }
+    nameX = Math.max(8, Math.min(size.width - 48, nameX));
+    nameY = Math.max(16, Math.min(size.height - 8, nameY));
+    textPosRef.current = { ...textPosRef.current, streamer: { x: nameX, y: nameY } };
+    setTextPos(textPosRef.current);
+  }
+
   function packMates(id: string) {
     const hit = skillPicksRef.current.find((item) => item.id === id);
     if (!hit?.group) return skillPicksRef.current.filter((item) => item.id === id);
@@ -428,6 +466,7 @@ export function Studio() {
     ];
     skillPicksRef.current = next;
     setSkillPicks(next);
+    centerNameOverStamps(next);
   }
 
   function placeStamp(id: string) {
@@ -1480,10 +1519,12 @@ export function Studio() {
               } catch {
                 /* already released */
               }
+              const groupDrag = (dragRef.current?.mates?.length ?? 0) > 1;
               dragRef.current = null;
               setGrabbing(false);
               draggingRef.current = false;
               setSkillPicks(skillPicksRef.current);
+              if (groupDrag) centerNameOverStamps(skillPicksRef.current);
               setTextPos(textPosRef.current);
               requestPaint();
             }}
@@ -1955,21 +1996,23 @@ export function Studio() {
             }
             setBoardLevels((cur) => ({ ...cur, [pack]: mapped }));
             setSkillPack(pack);
-            setSkillPicks((cur) =>
-              cur
+            setSkillPicks((cur) => {
+              const next = cur
                 .filter((item) => item.game === pack)
                 .map((item) => {
                 if (item.game !== pack) return item;
                 if (isMark(item.id)) return item;
-                const next = mapped[item.id];
-                if (!next) return item;
-                if (next === "99" && sessionOnce("rs-deja-vu")) {
+                const mappedLevel = mapped[item.id];
+                if (!mappedLevel) return item;
+                if (mappedLevel === "99" && sessionOnce("rs-deja-vu")) {
                   eggToast("You have a feeling of déjà vu.");
-                  return { ...item, level: next, scale: Math.min(2.5, (item.scale ?? 1) * 1.12) };
+                  return { ...item, level: mappedLevel, scale: Math.min(2.5, (item.scale ?? 1) * 1.12) };
                 }
-                return { ...item, level: next };
-              }),
-            );
+                return { ...item, level: mappedLevel };
+              });
+              queueMicrotask(() => centerNameOverStamps(next));
+              return next;
+            });
           }}
         />
         </Suspense>
