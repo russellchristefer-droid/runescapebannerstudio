@@ -1,9 +1,9 @@
-import { sanitizeDisplayName } from "./rsText";
+import { sanitizeDisplayName } from "./rsText.ts";
 
 const BAD = /[/\\:*?"<>|\u0000-\u001f]/g;
 
 export function slugPart(raw: string, max = 12) {
-  return sanitizeDisplayName(raw)
+  return String(raw ?? "")
     .replace(BAD, "")
     .replace(/[^A-Za-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
@@ -20,5 +20,5 @@ export function bannerFileName(opts: {
   height: number;
 }) {
   const game = opts.edition === "OSRS" ? "osrs" : "rs3";
-  return `banner-${game}-${slugPart(opts.name)}-${slugPart(opts.place, 24)}-${opts.lighting}-${opts.width}x${opts.height}.jpg`;
+  return `banner-${game}-${slugPart(sanitizeDisplayName(opts.name))}-${slugPart(opts.place, 24)}-${opts.lighting}-${opts.width}x${opts.height}.jpg`;
 }

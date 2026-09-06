@@ -10,7 +10,11 @@ const unit = spawnSync(
   ["--experimental-strip-types", "--test", "src/lib/filename.test.ts"],
   { encoding: "utf8" },
 );
-if (unit.status !== 0) fail.push("unit");
+if (unit.status !== 0) {
+  if (unit.stderr) process.stderr.write(unit.stderr);
+  if (unit.stdout) process.stderr.write(unit.stdout);
+  fail.push("unit");
+}
 
 const needles = [
   ["dangerouslySetInnerHTML", "src"],
