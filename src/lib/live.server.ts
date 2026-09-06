@@ -37,6 +37,11 @@ function gameForHandle(handle: string): "osrs" | "rs3" | null {
   return row?.game ?? null;
 }
 
+function officialHandle(handle: string) {
+  const row = CHANNELS.find((item) => cleanLogin(item.twitch ?? "") === handle);
+  return Boolean(row?.official);
+}
+
 function categoryGame(name: string): "osrs" | "rs3" | null {
   if (name === "Old School RuneScape") return "osrs";
   if (name === "RuneScape") return "rs3";
@@ -147,12 +152,13 @@ async function helixByLogins(clientId: string, token: string, logins: string[]) 
       const gameName = String(stream.game_name ?? "");
       const cat = categoryGame(gameName);
       const expected = gameForHandle(handle);
-      if (expected && cat && expected !== cat) continue;
-      if (!cat) continue;
+      const official = officialHandle(handle);
+      if (!cat && !official) continue;
+      if (expected && cat && expected !== cat && !official) continue;
       rows.push({
         handle,
         displayName: String(stream.user_name ?? handle).slice(0, 32),
-        game: cat,
+        game: cat ?? expected ?? "osrs",
         live: true,
         viewers: Number(stream.viewer_count) || 0,
         title: String(stream.title ?? "").slice(0, 80),
