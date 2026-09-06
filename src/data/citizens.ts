@@ -63,6 +63,18 @@ const APE_RS3: Citizen[] = [
 
 const APE_SLUGS = new Set(["apeatoll", "osrsape", "marim", "marimbo"]);
 
+const GOBLIN_OSRS: Citizen[] = [
+  c("Goblin", "/stills/osrs/citizens/goblin-1.png"),
+  c("Village goblin", "/stills/osrs/citizens/goblin-2.png"),
+];
+
+const GOBLIN_RS3: Citizen[] = [
+  c("Goblin", "/stills/rs3/citizens/goblin-1.png"),
+  c("Village goblin", "/stills/rs3/citizens/goblin-2.png"),
+];
+
+const GOBLIN_SLUGS = new Set(["goblin", "osrsgob", "goblinvillage"]);
+
 const DEFAULT_OSRS: Citizen[] = [
   c("Guard", "/stills/osrs/citizens/_default-0.png"),
   c("Stallholder", "/stills/osrs/citizens/_default-1.png"),
@@ -75,6 +87,7 @@ const DEFAULT_RS3: Citizen[] = [
 
 export function citizenPool(id: string, game: "osrs" | "rs3"): Citizen[] {
   if (APE_SLUGS.has(id)) return game === "osrs" ? APE_OSRS : APE_RS3;
+  if (GOBLIN_SLUGS.has(id)) return game === "osrs" ? GOBLIN_OSRS : GOBLIN_RS3;
   const named = game === "osrs" ? OSRS[id] : RS3[id];
   const fallback = game === "osrs" ? DEFAULT_OSRS : DEFAULT_RS3;
   const base = named?.length ? named : [];
