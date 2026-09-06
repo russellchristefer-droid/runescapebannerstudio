@@ -9,6 +9,16 @@ export type RankedSource = {
 
 export type PrayerPhase = { phase: string; pray: string };
 
+export type GearTiers = { budget: string; mid: string; max: string };
+
+export type FightHeader = {
+  combat: string;
+  slayer: string;
+  weakness: string;
+  instance: string;
+  death: string;
+};
+
 export type OsrsDesk = {
   inventory: string[];
   inventoryNote: string;
@@ -16,6 +26,9 @@ export type OsrsDesk = {
   tiles: string;
   stand?: string[];
   spec: string;
+  tiers: GearTiers;
+  supplies: string;
+  skip: string;
 };
 
 export type Rs3Desk = {
@@ -25,6 +38,8 @@ export type Rs3Desk = {
   pocket: string;
   relic: string;
   enrage?: string;
+  camp: string;
+  ultimates: string;
 };
 
 export type FightSheet = {
@@ -33,12 +48,16 @@ export type FightSheet = {
   edition: "OSRS" | "RS3";
   role: string;
   style: string;
+  header: FightHeader;
   opener: string[];
   wipe: string;
   sources: RankedSource[];
+  team?: string[];
   osrs?: OsrsDesk;
   rs3?: Rs3Desk;
 };
+
+const WIKI = "Confirm on the wiki.";
 
 /** This-boss wiki on the other engine, only when the same fight exists there. */
 const SISTER_WIKI: Partial<Record<string, { label: string; href: string }>> = {
@@ -53,7 +72,6 @@ const SISTER_WIKI: Partial<Record<string, { label: string; href: string }>> = {
   kq: { label: "Kalphite Queen · RuneScape wiki", href: "https://runescape.wiki/w/Kalphite_Queen" },
 };
 
-/** One unofficial sheet per fight. Specific page only — no homepages, no news desks. */
 const UNOFFICIAL: Partial<Record<string, { label: string; href: string }>> = {
   inferno: {
     label: "OSRSBestInSlot Inferno sheet",
@@ -111,9 +129,7 @@ function unofficial(label: string, href: string, rank: 2 | 3): RankedSource {
 export function sourcesFor(note: BossNote): RankedSource[] {
   const out: RankedSource[] = [wikiSrc(note)];
   const sister = SISTER_WIKI[note.id];
-  if (sister) {
-    out.push({ rank: 2, label: sister.label, href: sister.href });
-  }
+  if (sister) out.push({ rank: 2, label: sister.label, href: sister.href });
   const extra = UNOFFICIAL[note.id];
   if (extra && out.length < 3) {
     out.push(unofficial(extra.label, extra.href, out.length === 1 ? 2 : 3));
@@ -121,7 +137,281 @@ export function sourcesFor(note: BossNote): RankedSource[] {
   return out.slice(0, 3);
 }
 
-const SHEETS: Record<string, FightSheet> = {
+/** Stale HMR used to import this. Boss pages use sourcesFor. */
+export function hubFor(_note?: BossNote): RankedSource[] {
+  return [];
+}
+
+const OSRS_UNSAFE = "Unsafe. Confirm kept items on the wiki. Do not invent a gp number here.";
+const RS3_GRAVE = "War's Retreat / gravestone reclaim. Confirm the cost on the wiki this hour.";
+
+const HEADERS: Partial<Record<string, FightHeader>> = {
+  inferno: {
+    combat: "90+ Ranged and Magic. Infernal is a second exam after a Fire cape.",
+    slayer: "None.",
+    weakness: "None. Waves set the style. Zuk is a prayer exam.",
+    instance: "Solo instance.",
+    death: OSRS_UNSAFE,
+  },
+  tob: {
+    combat: "90+ melee. Range and mage seats exist. Entry mode first.",
+    slayer: "None.",
+    weakness: "Slash on most rooms. Range Maiden nylos and Xarpus. Mage Verzik P1.",
+    instance: "Instance · 3–5. Entry is the learner size.",
+    death: "Raid death. Coffer / team recover. Confirm the current fee on the wiki.",
+  },
+  toa: {
+    combat: "80+ all styles. 0 invocation until rooms have names.",
+    slayer: "None.",
+    weakness: "Yellow Keris on path bosses. Wardens follow the skull.",
+    instance: "Instance · 1–8.",
+    death: "Raid death. Confirm invocation and fee on the wiki.",
+  },
+  cox: {
+    combat: "80+. Overloads come from the raid.",
+    slayer: "None.",
+    weakness: "Olm: spec the mage claw, melee the left, range the head when he stands.",
+    instance: "Instance · learn one layout. Do not first-time in a 15-man.",
+    death: "Raid death. Confirm points and fee on the wiki.",
+  },
+  vorkath: {
+    combat: "80+ Ranged (or 80+ melee if you camp lance).",
+    slayer: "None. Dragon Slayer II unlocks the island.",
+    weakness: "Ranged. Dragonfire needs super antifire plus a ward.",
+    instance: "Instance · solo.",
+    death: OSRS_UNSAFE,
+  },
+  zulrah: {
+    combat: "80+ Magic and Ranged.",
+    slayer: "None. Regicide / Western diary boat saves deaths.",
+    weakness: "Green is range. Red and blue are mage.",
+    instance: "Instance · solo.",
+    death: OSRS_UNSAFE,
+  },
+  nex: {
+    combat: "90+ Magic. Range or melee if the team called that seat.",
+    slayer: "None. Frozen door / God Wars unlock.",
+    weakness: "Smoke and Zaros want mage. Shadow wants range. Blood may want melee.",
+    instance: "Instance · 5-man or mass.",
+    death: OSRS_UNSAFE,
+  },
+  hydra: {
+    combat: "90+ Ranged.",
+    slayer: "95 Slayer. Konar / Duradel / other masters who assign it.",
+    weakness: "Ranged. Poison walk. Enrage is a prayer swap.",
+    instance: "Instance · solo.",
+    death: OSRS_UNSAFE,
+  },
+  corp: {
+    combat: "80+ Magic or spear melee.",
+    slayer: "None.",
+    weakness: "Magic or spear. Dark bow specs if the mass uses them.",
+    instance: "Cave · solo, small team, or mass.",
+    death: OSRS_UNSAFE,
+  },
+  rasial: {
+    combat: "90+ Necromancy. Other styles do not count.",
+    slayer: "None.",
+    weakness: "Necromancy only.",
+    instance: "Instance · solo.",
+    death: RS3_GRAVE,
+  },
+  telos: {
+    combat: "90+ Necromancy (mage and melee still work if that is your log).",
+    slayer: "None.",
+    weakness: "Necromancy is the current desk. Fonts are the wipe.",
+    instance: "Instance · solo.",
+    death: RS3_GRAVE,
+  },
+  zuk: {
+    combat: "90+ Necromancy or Magic.",
+    slayer: "None.",
+    weakness: "Waves set the style. Zuk is the last question.",
+    instance: "Instance · solo. Normal mode has checkpoints.",
+    death: RS3_GRAVE,
+  },
+  sanctum: {
+    combat: "90+. What the lead listed.",
+    slayer: "None.",
+    weakness: "Team sheet. Necro is common.",
+    instance: "Instance · group raid.",
+    death: RS3_GRAVE,
+  },
+  glacor: {
+    combat: "80+ Necromancy or Magic.",
+    slayer: "None.",
+    weakness: "The mechanic you ticked is the fight.",
+    instance: "Instance · solo streaks.",
+    death: RS3_GRAVE,
+  },
+  vorago: {
+    combat: "90+. Do not first-time as base.",
+    slayer: "None.",
+    weakness: "Week rotation is public. Usually melee bombs and a mage.",
+    instance: "Borehole · 5–10.",
+    death: RS3_GRAVE,
+  },
+};
+
+const TEAM: Partial<Record<string, string[]>> = {
+  tob: [
+    "Melee — scythe rooms, Maiden core, Verzik P3.",
+    "North freezer — Maiden north crabs. Do not leak.",
+    "South freezer — Maiden south crabs.",
+    "Range — nylos, Xarpus, Verzik P2.",
+  ],
+  cox: [
+    "Melee — left claw and rooms that call slash.",
+    "Mage — mage claw spec and room mage.",
+    "Range — head phase and room range.",
+  ],
+  toa: [
+    "Solo — you own every room.",
+    "Path caller — names the next room.",
+    "Second — Keris and jugs. Do not invent a third talker.",
+  ],
+  nex: [
+    "Tank — holds her when the team called a tank.",
+    "Mage — smoke and Zaros.",
+    "Range — shadow line.",
+    "Blood seat — leave the siphon. Do not first-time this seat.",
+  ],
+  vorago: [
+    "Base — do not first-time this seat.",
+    "Bomb — one voice.",
+    "Voke — when the pin listed it.",
+    "North / south — P5 stack only on the called tile.",
+  ],
+  sanctum: [
+    "Lead — one talker.",
+    "Wing — the wing you were given.",
+    "Runner — mechanics the pin named.",
+  ],
+  graardor: ["Tank — melee pray, hold the door side.", "Stack — the tile the mass uses.", "Hammer — if the pin listed specs."],
+  kree: ["Tank — range pray.", "Stack — under or the mass tile.", "DPS — the style the pin listed."],
+  kril: ["Tank — mage or melee as called.", "Stack — off the poison if the room uses it.", "DPS — the style the pin listed."],
+  zilyana: ["Tank — mage pray.", "Stack — the mass tile.", "DPS — the style the pin listed."],
+  aod: ["Tank — the seat the pin named.", "North — one line.", "South — one line.", "DPS — do not first-time tank."],
+  solak: ["Tank — do not first-time.", "North / south — the called tile.", "DPS — the pin."],
+  corp: ["Spear — if the small team uses spears.", "Mage — mass core.", "Caller — specs only if the mass uses them."],
+};
+
+function headerFor(note: BossNote): FightHeader {
+  const custom = HEADERS[note.id];
+  if (custom) return custom;
+  const teamish = /\d|raid|team|mass|5-man|group/i.test(note.role);
+  if (note.edition === "OSRS") {
+    return {
+      combat: "80+. Confirm recommended stats on the wiki.",
+      slayer: /slayer/i.test(note.role) ? "Slayer task or unlock — confirm the level on the wiki." : "None unless the wiki lists a task.",
+      weakness: note.style.split(".")[0] ?? WIKI,
+      instance: teamish ? "Instance or cave · team size on the wiki." : "Instance · solo unless the wiki says otherwise.",
+      death: OSRS_UNSAFE,
+    };
+  }
+  return {
+    combat: "80+ in the style you camp. Confirm on the wiki.",
+    slayer: "None unless the wiki lists a task.",
+    weakness: note.style.split(".")[0] ?? WIKI,
+    instance: teamish ? "Instance · team size on the wiki." : "Instance · solo unless the wiki says otherwise.",
+    death: RS3_GRAVE,
+  };
+}
+
+function teamFor(note: BossNote): string[] | undefined {
+  return TEAM[note.id];
+}
+
+function osrsTiers(id: string, note: BossNote): GearTiers {
+  const table: Partial<Record<string, GearTiers>> = {
+    inferno: {
+      budget: "Blessed d'hide, blowpipe, trident, crystal shield. Fire cape required.",
+      mid: "Bow of Faerdhinen, ancestral switch, eldritch staff, anguish / occult.",
+      max: "Twisted bow, ancestral, masori (f), eldritch, divine rune pouch. Wiki Strategies wins if a clip disagrees.",
+    },
+    tob: {
+      budget: "Elite void, hasta or whip, blowpipe, trident. Entry mode.",
+      mid: "Bandos or torva pieces, avernic, sang, blowpipe, claws / BGS.",
+      max: "Scythe, sang, masori / ancestral swaps, avernic, claws. Hard mode is a different night.",
+    },
+    toa: {
+      budget: "Swamp trident, blowpipe, bandos or blessed, yellow Keris.",
+      mid: "Fang, lightbearer, saturated heart, thralls, Keris.",
+      max: "Tumeken's shadow or sang, masori / ancestral, Keris. Invocation is the upgrade, not a third weapon.",
+    },
+    cox: {
+      budget: "Trident, blowpipe, hasta, BGS / DWH.",
+      mid: "Sang, bowfa, bandos, elder maul if you own it.",
+      max: "Scythe, twisted bow, sang. Overload still comes from the raid.",
+    },
+    vorkath: {
+      budget: "Blowpipe or rune crossbow, antifire, dragonfire ward.",
+      mid: "Zaryte crossbow or bowfa, salve (ei), ward.",
+      max: "Twisted bow or zaryte, salve (ei). Woox walk is extra kills after the six-count.",
+    },
+    zulrah: {
+      budget: "Trident, blowpipe, blessed swaps.",
+      mid: "Sang, void or ahrim / blessed, saturated heart.",
+      max: "Shadow or sang, masori / ancestral. Rotation first.",
+    },
+    nex: {
+      budget: "Trident, bowfa, bandos. Do not first-time blood siphon.",
+      mid: "Sang, tbow, DWH / BGS.",
+      max: "Shadow or sang, tbow, scythe if the team called melee blood.",
+    },
+    hydra: {
+      budget: "Bowfa or blowpipe, anti-venom+.",
+      mid: "Bowfa, brimstone ring, thralls.",
+      max: "Twisted bow or lance if you camp melee. Vent order is still the fight.",
+    },
+  };
+  return (
+    table[id] ?? {
+      budget: note.kit[0] ?? WIKI,
+      mid: note.kit[1] ?? WIKI,
+      max: note.kit[2] ?? WIKI,
+    }
+  );
+}
+
+function osrsSupplies(id: string): string {
+  const table: Partial<Record<string, string>> = {
+    inferno: "8–10 brews, 4–6 restores, 2 bastions, 2 prayer regen, stamina. Counts move — wiki Strategies this hour.",
+    tob: "4–6 brews, 3 restores, 2 angler, sanfew, super combat, range pot, stamina. Raid supplies the rest.",
+    toa: "4–6 brews, 4 restores, honey locusts, smelling salts, menaphite remedy. Stamina before Wardens.",
+    cox: "Brews and overload come from the raid. Bring 2 restores, sanfew, stamina, specs.",
+    vorkath: "8–10 manta, 2–3 restores, 2 prayer pots, antifire, anti-venom+. Bank with two deaths planned.",
+    zulrah: "3 brews, 2 restores, 4+ manta, anti-venom+, stamina. Diary cape for the boat.",
+    nex: "4 brews, 3 restores, 2 angler, sanfew, combat and range pots.",
+    hydra: "8 manta, 2 restores, 2 prayer, anti-venom+, stamina.",
+  };
+  return table[id] ?? "Restores and food to finish the kill. Confirm counts on the wiki. Do not invent a number.";
+}
+
+function osrsSkip(id: string): string {
+  const table: Partial<Record<string, string>> = {
+    inferno: "No melee camp. No infernal-on-wave-1 experiments. No third potion type you have not practiced.",
+    tob: "No hard mode on a first purple. No second talker. No scythe flex in Entry if void + hasta still clears.",
+    toa: "No 300 invocation first raid. No path you cannot name.",
+    cox: "No 15-man first Olm. No teleport crystal in the middle.",
+    vorkath: "No zig-zag on acid. No trip without antifire.",
+    zulrah: "No third rotation mid-kill. No range-only bag if Jad phase still kills you.",
+    nex: "No first-time blood siphon seat. No 20-man with no caller.",
+    hydra: "No wrong vent. No plant on poison.",
+  };
+  return table[id] ?? "Do not bring a style the room does not use. Confirm the skip list on the wiki.";
+}
+
+type OsrsDraft = Omit<OsrsDesk, "tiers" | "supplies" | "skip"> & Partial<Pick<OsrsDesk, "tiers" | "supplies" | "skip">>;
+type Rs3Draft = Omit<Rs3Desk, "camp" | "ultimates"> & Partial<Pick<Rs3Desk, "camp" | "ultimates" | "enrage">>;
+type SheetDraft = Omit<FightSheet, "header" | "osrs" | "rs3" | "sources"> & {
+  header?: FightHeader;
+  osrs?: OsrsDraft;
+  rs3?: Rs3Draft;
+  sources: RankedSource[];
+};
+
+const SHEETS: Record<string, SheetDraft> = {
   inferno: {
     id: "inferno",
     title: "The Inferno",
@@ -188,7 +478,7 @@ const SHEETS: Record<string, FightSheet> = {
         "4 Zuk east corner — when the shield walks east.",
         "5 Zuk west corner — when the shield walks west.",
       ],
-      spec: "Eldritch staff spec when prayer is thin. Blowpipe spec is extra damage, not a plan. Thralls if you brought the book — tag after the stack is solved. Death charge is not the cape.",
+      spec: "Eldritch staff spec when prayer is thin. Blowpipe spec is extra damage, not a plan. Thralls if you brought the book — tag after the stack is solved. Death charge is not the cape. No sanity drain here.",
     },
   },
   tob: {
@@ -261,7 +551,7 @@ const SHEETS: Record<string, FightSheet> = {
         "4 Nylo pillar you were given.",
         "5 Sotetseg maze start — wait for the call.",
       ],
-      spec: "Maiden: warhammer or maul for defence, then claws. Bloat: BGS on a run-by if the team uses it. Verzik P3: dump melee specs at enrage. Thralls on Arceuus if that is your seat.",
+      spec: "Maiden: warhammer or maul for defence, then claws. Bloat: BGS on a run-by if the team uses it. Verzik P3: dump melee specs at enrage. Thralls on Arceuus if that is your seat. Death charge on Verzik if you practiced it. No sanity drain.",
     },
   },
   toa: {
@@ -424,7 +714,7 @@ const SHEETS: Record<string, FightSheet> = {
         { phase: "Spawn", pray: "Crumble undead, then resume the six-count." },
       ],
       tiles: "Pink fireball: step one tile. Acid: one-tile path, no panic-click. Spawn: kill it before the next fireball.",
-      spec: "Blowpipe or zaryte spec on the first grounded hits. Crumble on the spawn. Death charge is extra, not the trip.",
+      spec: "Blowpipe or zaryte spec on the first grounded hits. Crumble on the spawn. Death charge is extra, not the trip. No sanity drain.",
     },
   },
   zulrah: {
@@ -617,7 +907,9 @@ const SHEETS: Record<string, FightSheet> = {
       familiar: "Ripper Demon or Kal'gerion if the wiki page for this hour still lists them. Hellhound plus Prism if you are learning and need the heal.",
       pocket: "Scripture of Wen, or Jas, or Erethdor's grimoire if that is your log. Salve (e) stays on the neck.",
       relic: "Conservation of Energy is the usual desk pick. Fury of the Small and Persistent Rage are the common neighbours.",
-      enrage: "No enrage ladder like Telos. Phases 1–3 are the conjure cycle. Phase 4 is dump and Death Mark.",
+      enrage: "No enrage ladder like Telos. Phases 1–3 are the conjure cycle. Phase 4 is dump and Death Mark. Bank after a wipe — do not restack mid-phase.",
+      camp: "Camp necromancy. No style switch.",
+      ultimates: "Living Death on a clean window. Death Skulls inside that window. Do not overlap them on a volley.",
     },
   },
   telos: {
@@ -654,7 +946,9 @@ const SHEETS: Record<string, FightSheet> = {
       pocket: "Scripture that matches your style. Necro desk usually Wen or Jas.",
       relic: "Conservation of Energy / Fury of the Small. Confirm on the wiki relic list this hour.",
       enrage:
-        "Add 25% only after two clean kills. 100% is the same rooms with less time. 200%+ one missed font is the kill.",
+        "Start 0%. Add 25% only after two clean kills. Bank at War's Retreat between enrage steps. 100% is the same rooms with less time. 200%+ one missed font is the kill.",
+      camp: "Camp one style. Necro is the current desk. Switch only if that is your logged preset.",
+      ultimates: "Living Death on a font-safe window. Do not dump an ultimate on tendrils.",
     },
   },
   zuk: {
@@ -676,6 +970,8 @@ const SHEETS: Record<string, FightSheet> = {
       familiar: "Ripper or the year-one familiar on the wiki page.",
       pocket: "Scripture of Wen or the pocket the preset lists.",
       relic: "Conservation of Energy.",
+      camp: "Camp one style through the waves. Do not rebuild the bar mid-kiln.",
+      ultimates: "Living Death on a solved wave, not on a Jad you have not prayed.",
     },
   },
   sanctum: {
@@ -697,6 +993,9 @@ const SHEETS: Record<string, FightSheet> = {
       familiar: "What the raid pin listed.",
       pocket: "What the raid pin listed.",
       relic: "What the raid pin listed.",
+      camp: "Camp the style the pin listed. Switches only if the lead called them.",
+      ultimates: "What the lead called. Do not dump an ultimate on a wing you do not own.",
+      enrage: "Hard mode is a different night. Bank between wings if the pin said so.",
     },
   },
   glacor: {
@@ -718,7 +1017,9 @@ const SHEETS: Record<string, FightSheet> = {
       familiar: "Ripper or the familiar the wiki page lists this hour.",
       pocket: "Scripture of Wen or Jas.",
       relic: "Conservation of Energy.",
-      enrage: "Streak from 0%. Add one mechanic only after two clean kills.",
+      enrage: "Streak from 0%. Add one mechanic only after two clean kills. Bank the streak at War's Retreat if you wipe — confirm streak rules on the wiki.",
+      camp: "Camp one style. Do not switch mid-streak.",
+      ultimates: "Living Death on a clean mechanic window.",
     },
   },
   vorago: {
@@ -740,6 +1041,9 @@ const SHEETS: Record<string, FightSheet> = {
       familiar: "What the raid pin listed.",
       pocket: "What the raid pin listed.",
       relic: "What the raid pin listed.",
+      camp: "Camp the style the pin listed. Switches if the week rotation requires them.",
+      ultimates: "What the lead called on this week's mechanic.",
+      enrage: "Week rotation is the ladder. Bank between kills if the pin said so.",
     },
   },
 };
@@ -757,7 +1061,10 @@ function fallbackOsrs(note: BossNote): OsrsDesk {
     inventory: padInv(bag, "Saradomin brew"),
     prayers: [{ phase: "Fight", pray: note.pray }],
     tiles: note.route.join(" "),
-    spec: "Spec when the room is stable. Thralls if you brought the book. Do not invent a tick count.",
+    spec: "Spec when the room is stable. Thralls if you brought the book. Death charge only if that fight uses it. Confirm on the wiki.",
+    tiers: osrsTiers(note.id, note),
+    supplies: osrsSupplies(note.id),
+    skip: osrsSkip(note.id),
   };
 }
 
@@ -768,7 +1075,36 @@ function fallbackRs3(note: BossNote): Rs3Desk {
     familiar: "Ripper Demon or the familiar on the wiki page for this hour.",
     pocket: "Scripture that matches the style you brought.",
     relic: "Conservation of Energy unless the lead pinned another.",
-    enrage: note.role.toLowerCase().includes("enrage") ? "Add enrage after two clean kills." : undefined,
+    enrage: note.role.toLowerCase().includes("enrage")
+      ? "Start at 0%. Add enrage after two clean kills. Bank at War's Retreat between steps."
+      : undefined,
+    camp: "Camp one style unless the wiki lists a required switch.",
+    ultimates: "Living Death / style ultimate on a clean window. Confirm order on the wiki.",
+  };
+}
+
+function finishOsrs(note: BossNote, draft?: OsrsDraft): OsrsDesk | undefined {
+  if (!draft && note.edition !== "OSRS") return undefined;
+  const base = fallbackOsrs(note);
+  if (!draft) return base;
+  return {
+    ...base,
+    ...draft,
+    tiers: draft.tiers ?? base.tiers,
+    supplies: draft.supplies ?? base.supplies,
+    skip: draft.skip ?? base.skip,
+  };
+}
+
+function finishRs3(note: BossNote, draft?: Rs3Draft): Rs3Desk | undefined {
+  if (!draft && note.edition !== "RS3") return undefined;
+  const base = fallbackRs3(note);
+  if (!draft) return base;
+  return {
+    ...base,
+    ...draft,
+    camp: draft.camp ?? base.camp,
+    ultimates: draft.ultimates ?? base.ultimates,
   };
 }
 
@@ -777,16 +1113,35 @@ export function sheetFor(id: string): FightSheet | null {
   if (!note) return null;
   const custom = SHEETS[id];
   const sources = sourcesFor(note);
-  if (custom) return { ...custom, sources };
+  const header = custom?.header ?? headerFor(note);
+  const team = custom?.team ?? teamFor(note);
+  if (custom) {
+    return {
+      id: custom.id,
+      title: custom.title,
+      edition: custom.edition,
+      role: custom.role,
+      style: custom.style,
+      header,
+      opener: custom.opener,
+      wipe: custom.wipe,
+      sources,
+      team,
+      osrs: finishOsrs(note, custom.osrs),
+      rs3: finishRs3(note, custom.rs3),
+    };
+  }
   return {
     id: note.id,
     title: note.title,
     edition: note.edition,
     role: note.role,
     style: note.style,
+    header,
     opener: [...note.start, ...note.route.slice(0, 2)],
     wipe: bossWipe(note),
     sources,
+    team,
     osrs: note.edition === "OSRS" ? fallbackOsrs(note) : undefined,
     rs3: note.edition === "RS3" ? fallbackRs3(note) : undefined,
   };

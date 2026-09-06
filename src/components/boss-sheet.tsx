@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { FightSheet, PrayerPhase } from "@/lib/boss-sheets";
+import type { FightHeader, FightSheet, GearTiers, PrayerPhase } from "@/lib/boss-sheets";
 
 function InventoryGrid({ items, note }: { items: string[]; note: string }) {
   const cells = items.slice(0, 28);
@@ -68,6 +68,45 @@ function Block({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
+function FactRow({ header }: { header: FightHeader }) {
+  const rows: [string, string][] = [
+    ["Combat", header.combat],
+    ["Slayer", header.slayer],
+    ["Style", header.weakness],
+    ["Instance", header.instance],
+    ["Death", header.death],
+  ];
+  return (
+    <dl className="divide-y divide-line/40 rounded-md border border-line">
+      {rows.map(([k, v]) => (
+        <div key={k} className="grid grid-cols-[6.5rem_1fr] gap-3 px-3 py-2 text-sm md:grid-cols-[7.5rem_1fr]">
+          <dt className="text-parchment">{k}</dt>
+          <dd className="text-muted">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function Tiers({ tiers }: { tiers: GearTiers }) {
+  return (
+    <dl className="divide-y divide-line/40 rounded-md border border-line">
+      {(
+        [
+          ["Budget", tiers.budget],
+          ["Mid", tiers.mid],
+          ["Max", tiers.max],
+        ] as const
+      ).map(([k, v]) => (
+        <div key={k} className="grid grid-cols-[6.5rem_1fr] gap-3 px-3 py-2 text-sm md:grid-cols-[7.5rem_1fr]">
+          <dt className="text-parchment">{k}</dt>
+          <dd className="text-muted">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 export function BossSheet({ sheet }: { sheet: FightSheet }) {
   return (
     <div className="flex flex-col gap-6">
@@ -75,6 +114,20 @@ export function BossSheet({ sheet }: { sheet: FightSheet }) {
         <p className="text-sm text-fg">{sheet.role}</p>
         <p className="mt-2 text-sm text-muted">{sheet.style}</p>
       </Block>
+
+      <Block title="Sheet">
+        <FactRow header={sheet.header} />
+      </Block>
+
+      {sheet.team?.length ? (
+        <Block title="Team">
+          <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
+            {sheet.team.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </Block>
+      ) : null}
 
       <Block title="Opener">
         <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
@@ -86,8 +139,14 @@ export function BossSheet({ sheet }: { sheet: FightSheet }) {
 
       {sheet.osrs ? (
         <>
+          <Block title="Gear tiers">
+            <Tiers tiers={sheet.osrs.tiers} />
+          </Block>
           <Block title="Inventory">
             <InventoryGrid items={sheet.osrs.inventory} note={sheet.osrs.inventoryNote} />
+          </Block>
+          <Block title="Food / brew / restore">
+            <p className="text-sm text-muted">{sheet.osrs.supplies}</p>
           </Block>
           <Block title="Prayer">
             <PrayerRow prayers={sheet.osrs.prayers} />
@@ -105,6 +164,9 @@ export function BossSheet({ sheet }: { sheet: FightSheet }) {
           <Block title="Spec / thrall / death charge">
             <p className="text-sm text-muted">{sheet.osrs.spec}</p>
           </Block>
+          <Block title="Skip">
+            <p className="text-sm text-muted">{sheet.osrs.skip}</p>
+          </Block>
         </>
       ) : null}
 
@@ -112,6 +174,12 @@ export function BossSheet({ sheet }: { sheet: FightSheet }) {
         <>
           <Block title="Ability bar">
             <AbilityBar bar={sheet.rs3.bar} revolution={sheet.rs3.revolution} />
+          </Block>
+          <Block title="Camp / switch">
+            <p className="text-sm text-muted">{sheet.rs3.camp}</p>
+          </Block>
+          <Block title="Ultimates">
+            <p className="text-sm text-muted">{sheet.rs3.ultimates}</p>
           </Block>
           <Block title="Familiar / pocket / relic">
             <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
@@ -121,7 +189,7 @@ export function BossSheet({ sheet }: { sheet: FightSheet }) {
             </ul>
           </Block>
           {sheet.rs3.enrage ? (
-            <Block title="Enrage / streak">
+            <Block title="Enrage / bank">
               <p className="text-sm text-muted">{sheet.rs3.enrage}</p>
             </Block>
           ) : null}

@@ -23,7 +23,7 @@ function BossIndex() {
         <BackLink />
         <h1 className="page-h1 mt-1">Bosses</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          Working sheets. Role, grid or bar, opener, wipe. At most three links: this-boss wiki, sister wiki if the fight exists, one unofficial sheet.
+          Working sheets. Combat, slayer, instance, death. OSRS tiers and bag. RS3 camp and ultimates. Team seats only on group fights. Three links.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
