@@ -5,7 +5,7 @@ import { TodayDesk } from "@/components/today-desk";
 import { TownHero } from "@/components/town-hero";
 import { OracleLine } from "@/components/oracle-line";
 import { StillPhoto } from "@/components/still-photo";
-import { drawBanner, ensurePlateFont, loadImage, plateMetrics, putStillOnDesk, layoutPack, pickRandom, loadStill, eraCaption, FALLBACK } from "@/desk";
+import { drawBanner, ensurePlateFont, loadImage, plateMetrics, putStillOnDesk, layoutPack, pickRandom, loadStill, eraCaption, captionForSrc, FALLBACK } from "@/desk";
 import { loadStudioSave, writeStudioSave } from "@/desk/save";
 import { deskSharePath, readDeskQuery } from "@/desk/desk-link";
 import { PlaceRail } from "@/places";
@@ -1229,7 +1229,8 @@ export function Studio() {
             onLoad={(e) => {
               e.currentTarget.dataset.ok = e.currentTarget.currentSrc;
               setPlateReady(true);
-              setPlateCaption(`${location.name} · ${size.width}×${size.height} JPEG · ${size.note}`);
+              const era = captionForSrc(e.currentTarget.currentSrc || e.currentTarget.src || sceneSrc || "");
+              setPlateCaption(era ? `${era} · ${size.width}×${size.height}` : `${location.name} · ${size.width}×${size.height} JPEG · ${size.note}`);
             }}
             onError={(e) => {
               const last = e.currentTarget.dataset.ok;

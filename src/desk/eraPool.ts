@@ -24,22 +24,12 @@ export const ERA_POOL: Record<Era, EraStill[]> = {
     { src: "/era/osrs/port-sarim.png", era: "osrs", name: "Port Sarim" },
     { src: "/era/osrs/taverley.png", era: "osrs", name: "Taverley" },
     { src: "/era/osrs/burthorpe.png", era: "osrs", name: "Burthorpe" },
-    { src: "/Falador.png", era: "osrs", name: "Falador" },
-    { src: "/Canifis.png", era: "osrs", name: "Canifis" },
-    { src: "/Catherby.png", era: "osrs", name: "Catherby" },
-    { src: "/Port_Sarim.png", era: "osrs", name: "Port Sarim" },
-    { src: "/Taverley.png", era: "osrs", name: "Taverley" },
-    { src: "/Burthorpe.png", era: "osrs", name: "Burthorpe" },
   ],
   rs3: [
     { src: "/era/rs3/prifddinas.png", era: "rs3", name: "Prifddinas" },
     { src: "/era/rs3/menaphos.png", era: "rs3", name: "Menaphos" },
     { src: "/era/rs3/daemonheim.png", era: "rs3", name: "Daemonheim" },
     { src: "/era/rs3/lost-grove.png", era: "rs3", name: "The Lost Grove" },
-    { src: "/Prifddinas.png", era: "rs3", name: "Prifddinas" },
-    { src: "/Menaphos.png", era: "rs3", name: "Menaphos" },
-    { src: "/Daemonheim.png", era: "rs3", name: "Daemonheim" },
-    { src: "/The_Lost_Grove.png", era: "rs3", name: "The Lost Grove" },
   ],
 };
 
@@ -63,6 +53,14 @@ export function pickRandom(era?: Era): EraStill {
 
 export function eraCaption(row: EraStill) {
   return `${ERA_LABEL[row.era]} · ${row.name}`;
+}
+
+export function captionForSrc(src: string) {
+  const path = src.replace(/^https?:\/\/[^/]+/i, "").split("?")[0];
+  const hit = allEraSrcs().find((row) => row.src === path || path.endsWith(row.src));
+  if (hit) return eraCaption(hit);
+  if (path.endsWith("/Falador.png") || path.endsWith("/era/osrs/falador.png")) return "OSRS · Falador";
+  return "";
 }
 
 export function loadStill(src: string, img: HTMLImageElement, onOk: () => void) {

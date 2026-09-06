@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useRef } from "react";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
-import { GOD_BRIEFS, GOD_HOME, godFromSlug } from "@/lib/gods";
+import { GOD_BRIEFS, GOD_HOME, godFromSlug, godInk } from "@/lib/gods";
 import { godStill, godStillLine } from "@/lib/god-stills";
 import { LOCATIONS } from "@/lib/locations";
 import { BackLink } from "@/components/back-link";
@@ -30,7 +30,7 @@ function GodPage() {
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
-        <h1 className="page-h1 site-title mt-1">
+        <h1 className="page-h1 site-title mt-1" style={{ color: godInk(god) }}>
           {brief.god}
         </h1>
         <p className="mt-1 text-sm text-parchment">{brief.title}</p>

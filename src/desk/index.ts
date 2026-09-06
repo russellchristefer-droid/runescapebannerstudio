@@ -13,5 +13,5 @@ export {
   layoutName,
 } from "@/lib/draw-banner";
 export { cellFor, levelFor, layoutPack, nudgePack, PAD as PACK_PAD } from "./compositor";
-export { pickRandom, loadStill, eraCaption, ERA_POOL, FALLBACK } from "./eraPool";
+export { pickRandom, loadStill, eraCaption, captionForSrc, ERA_POOL, FALLBACK } from "./eraPool";
 export type { Era } from "./eraPool";

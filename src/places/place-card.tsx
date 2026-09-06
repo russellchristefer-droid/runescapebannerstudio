@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { StillPhoto } from "@/components/still-photo";
+import { godInk } from "@/lib/gods";
 import { AppLink } from "./place-chip";
 
 type PlaceTo = "/towns/$id" | "/bosses/$id" | "/gods/$god" | "/monsters/$id";
@@ -50,7 +51,11 @@ export function PlaceCard({
             />
           )}
         </AppLink>
-        <AppLink href={href} className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">
+        <AppLink
+          href={href}
+          className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline"
+          style={kind === "God" ? { color: godInk(name) } : undefined}
+        >
           {name}
         </AppLink>
         {caption ? (
