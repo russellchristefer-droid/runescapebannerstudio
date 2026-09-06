@@ -159,10 +159,4 @@ function ProtectItemBox() {
     />
   );
 }
-  return (
-    <div className="grid grid-cols-[5.5rem_1fr] gap-3 md:grid-cols-[6.5rem_1fr]">
-      <dt className="text-parchment">{k}</dt>
-      <dd className="text-muted">{v}</dd>
-    </div>
-  );
-}
+
