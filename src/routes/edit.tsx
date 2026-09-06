@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ClipBench } from "@/components/clip-bench";
+import { ClipBench, StreamDesk } from "@/edit";
 import { SiteHeader } from "@/components/site-header";
-import { StreamDesk } from "@/components/stream-desk";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/edit")({
