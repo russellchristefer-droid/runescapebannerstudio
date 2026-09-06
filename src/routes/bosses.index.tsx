@@ -23,7 +23,7 @@ function BossIndex() {
         <BackLink />
         <h1 className="page-h1 mt-1">Bosses</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          Working sheets. Grid, opener, wipe, ranked sources. Official news and the wiki win if a clip disagrees.
+          Working sheets. Role, grid or bar, opener, wipe. At most three links: this-boss wiki, sister wiki if the fight exists, one unofficial sheet.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>

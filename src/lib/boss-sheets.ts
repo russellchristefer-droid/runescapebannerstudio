@@ -1,4 +1,4 @@
-import { bossPvme, bossStrategy, bossWiki, bossWipe, noteFor, type BossNote } from "./boss-notes";
+import { bossWiki, bossWipe, noteFor, type BossNote } from "./boss-notes";
 
 export type RankedSource = {
   rank: 1 | 2 | 3;
@@ -31,6 +31,8 @@ export type FightSheet = {
   id: string;
   title: string;
   edition: "OSRS" | "RS3";
+  role: string;
+  style: string;
   opener: string[];
   wipe: string;
   sources: RankedSource[];
@@ -38,10 +40,54 @@ export type FightSheet = {
   rs3?: Rs3Desk;
 };
 
-const OSRS_HUB = "https://oldschool.runescape.com/";
-const RS3_HUB = "https://www.runescape.com/";
-const OSRS_NEWS = "https://secure.runescape.com/m=news/archive?oldschool=1";
-const RS3_NEWS = "https://secure.runescape.com/m=news/list?cat=1&page=1";
+/** This-boss wiki on the other engine, only when the same fight exists there. */
+const SISTER_WIKI: Partial<Record<string, { label: string; href: string }>> = {
+  vorkath: { label: "Vorkath · RuneScape wiki", href: "https://runescape.wiki/w/Vorkath" },
+  corp: { label: "Corporeal Beast · RuneScape wiki", href: "https://runescape.wiki/w/Corporeal_Beast" },
+  nex: { label: "Nex · RuneScape wiki", href: "https://runescape.wiki/w/Nex" },
+  araxxor: { label: "Araxxor · OSRS wiki", href: "https://oldschool.runescape.wiki/w/Araxxor" },
+  graardor: { label: "General Graardor · RuneScape wiki", href: "https://runescape.wiki/w/General_Graardor" },
+  kree: { label: "Kree'arra · RuneScape wiki", href: "https://runescape.wiki/w/Kree%27arra" },
+  kril: { label: "K'ril Tsutsaroth · RuneScape wiki", href: "https://runescape.wiki/w/K%27ril_Tsutsaroth" },
+  zilyana: { label: "Commander Zilyana · RuneScape wiki", href: "https://runescape.wiki/w/Commander_Zilyana" },
+  kq: { label: "Kalphite Queen · RuneScape wiki", href: "https://runescape.wiki/w/Kalphite_Queen" },
+};
+
+/** One unofficial sheet per fight. Specific page only — no homepages, no news desks. */
+const UNOFFICIAL: Partial<Record<string, { label: string; href: string }>> = {
+  inferno: {
+    label: "OSRSBestInSlot Inferno sheet",
+    href: "https://www.osrsbestinslot.com/boss-gear-and-guides/the-inferno/",
+  },
+  tob: {
+    label: "OSRSBestInSlot Theatre sheet",
+    href: "https://www.osrsbestinslot.com/boss-gear-and-guides/theatre-of-blood/",
+  },
+  vorkath: {
+    label: "OSRSBestInSlot Vorkath sheet",
+    href: "https://www.osrsbestinslot.com/boss-gear-and-guides/vorkath/",
+  },
+  rasial: {
+    label: "PvME Rasial sheet",
+    href: "https://pvme.io/pvme-guides/rs3-full-boss-guides/rasial/",
+  },
+  telos: {
+    label: "PvME Telos sheet",
+    href: "https://pvme.io/pvme-guides/rs3-full-boss-guides/telos/",
+  },
+  zuk: {
+    label: "PvME TzKal-Zuk basic",
+    href: "https://pvme.io/pvme-guides/basic-guides/tzkal-zuk-basic/",
+  },
+  sanctum: {
+    label: "PvME Sanctum mechanics",
+    href: "https://pvme.io/pvme-guides/rs3-full-boss-guides/sanctum/sanctum-hm-mechanics-overview/",
+  },
+  vorago: {
+    label: "PvME Vorago intro",
+    href: "https://pvme.io/pvme-guides/rs3-full-boss-guides/vorago/introductory-necro-solo-vorago-guide/",
+  },
+};
 
 export function padInv(items: string[], filler: string): string[] {
   const out = items.filter(Boolean).slice(0, 28);
@@ -49,22 +95,30 @@ export function padInv(items: string[], filler: string): string[] {
   return out.slice(0, 28);
 }
 
-function official(note: BossNote): RankedSource {
-  return note.edition === "OSRS"
-    ? { rank: 1, label: "Official Old School · news / PvM desk", href: OSRS_NEWS }
-    : { rank: 1, label: "Official RuneScape · news / PvM desk", href: RS3_NEWS };
-}
-
 function wikiSrc(note: BossNote): RankedSource {
   return {
-    rank: 2,
+    rank: 1,
     label: note.edition === "OSRS" ? `${note.title} · OSRS wiki` : `${note.title} · RuneScape wiki`,
     href: bossWiki(note),
   };
 }
 
-function unofficial(label: string, href: string): RankedSource {
-  return { rank: 3, label: `${label} · Unofficial`, href, unofficial: true };
+function unofficial(label: string, href: string, rank: 2 | 3): RankedSource {
+  return { rank, label: `${label} · Unofficial`, href, unofficial: true };
+}
+
+/** At most three outbound links: this-boss wiki, sister-game wiki if the fight exists, one unofficial. */
+export function sourcesFor(note: BossNote): RankedSource[] {
+  const out: RankedSource[] = [wikiSrc(note)];
+  const sister = SISTER_WIKI[note.id];
+  if (sister) {
+    out.push({ rank: 2, label: sister.label, href: sister.href });
+  }
+  const extra = UNOFFICIAL[note.id];
+  if (extra && out.length < 3) {
+    out.push(unofficial(extra.label, extra.href, out.length === 1 ? 2 : 3));
+  }
+  return out.slice(0, 3);
 }
 
 const SHEETS: Record<string, FightSheet> = {
@@ -72,20 +126,20 @@ const SHEETS: Record<string, FightSheet> = {
     id: "inferno",
     title: "The Inferno",
     edition: "OSRS",
+    role: "Solo cape · one pillar, then a shield",
+    style: "Range camp. Mage on blobs and Jad. Zuk is a prayer exam, not a DPS check.",
     opener: [
-      "Fire cape is the ticket. Fight Caves until Jad is boring. Inferno is a second exam.",
-      "North pillar first. Ice Barrage the nibbler pack from the west side of that pillar so the south spawn is not in sight.",
-      "Solve the stack in front of you. Do not think about Zuk on wave 12.",
+      "Fire cape first. Fight Caves until Jad is boring. Inferno is a second exam.",
+      "North pillar. Ice Barrage the nibbler pack from the west face so the south spawn never sees you.",
+      "Kill order in front of you: mager, ranger, meleer, blob, bat. Solve that stack. Do not think about Zuk on wave 12.",
+      "Triple Jad: sound first on mage, delayed slam is range. One healer at a time.",
+      "Zuk: the shield is the prayer. Setters and Jad heals are the exam. Corners when the shield parks.",
     ],
     wipe: "A blob stacked on a ranger you did not solve, or Zuk Jad healers left alive into the next set.",
-    sources: [
-      official(noteFor("inferno")!),
-      wikiSrc(noteFor("inferno")!),
-      unofficial("OSRSBestInSlot Inferno sheet", "https://www.osrsbestinslot.com/boss-gear-and-guides/the-inferno/"),
-    ],
+    sources: [],
     osrs: {
       inventoryNote:
-        "First-cape bag. Twisted bow or Bow of Faerdhinen is worn, not bagged. Wiki Strategies wins if this disagrees with a clip.",
+        "First-cape bag. Twisted bow or Bow of Faerdhinen is worn, not bagged. Wiki Strategies wins if a clip disagrees.",
       inventory: padInv(
         [
           "Toxic blowpipe",
@@ -126,7 +180,7 @@ const SHEETS: Record<string, FightSheet> = {
         { phase: "Zuk", pray: "The shield is the prayer. Setters and Jad heals are the exam. No overhead stops Zuk." },
       ],
       tiles:
-        "North pillar to start. Trap behind a pillar; diagonal safespot on the south corner. Zuk: stay behind the shield, middle or a half-tile forward. Corners east and west are safespots when the shield parks. Mark with a vial if you must — no plugin overlay on this desk.",
+        "North pillar to start. Trap behind a pillar; diagonal safespot on the south corner. Zuk: stay behind the shield, middle or a half-tile forward. Corners east and west are safespots when the shield parks. Mark with a vial if you must.",
       stand: [
         "1 North pillar, west face — first nibbler freeze.",
         "2 South-east of that pillar — hide the south spawn.",
@@ -141,17 +195,17 @@ const SHEETS: Record<string, FightSheet> = {
     id: "tob",
     title: "Theatre of Blood",
     edition: "OSRS",
+    role: "Raid · 3–5 · one new seat per run",
+    style: "Scythe is the team ticket. Range and mage for Maiden nylos and Xarpus. Hasta plus void still clears Entry.",
     opener: [
       "Entry mode until Maiden crabs are a call. One new seat per run.",
       "Say the role at the chest: melee, range, or freezer. Learners bring one bag that covers all three.",
-      "Scythe is the team ticket. Hasta plus void still clears Entry. Hard mode is a different night.",
+      "Maiden crabs die on their side. A leak heals her. That is the first wipe teacher.",
+      "Bloat: walk the stomp. Nylos: hold the pillar you were given. Sotetseg: one maze caller.",
+      "Hard mode is a different night. Do not add it to a first purple.",
     ],
     wipe: "A Maiden crab on the wrong side, or a Sotetseg maze tile nobody called.",
-    sources: [
-      official(noteFor("tob")!),
-      wikiSrc(noteFor("tob")!),
-      unofficial("OSRSBestInSlot Theatre sheet", "https://www.osrsbestinslot.com/boss-gear-and-guides/theatre-of-blood/"),
-    ],
+    sources: [],
     osrs: {
       inventoryNote:
         "Learner void bag that can sit any seat. Worn: void melee helm, elite void, avernic or dragon defender, fire cape. Swap helms live.",
@@ -207,24 +261,23 @@ const SHEETS: Record<string, FightSheet> = {
         "4 Nylo pillar you were given.",
         "5 Sotetseg maze start — wait for the call.",
       ],
-      spec: "Maiden: warhammer or maul for defence, then claws. Bloat: BGS on a run-by if the team uses it. Verzik P3: dump melee specs at enrage. Thralls on Arceuus if that is your seat. Death charge is not Entry homework.",
+      spec: "Maiden: warhammer or maul for defence, then claws. Bloat: BGS on a run-by if the team uses it. Verzik P3: dump melee specs at enrage. Thralls on Arceuus if that is your seat.",
     },
   },
   toa: {
     id: "toa",
     title: "Tombs of Amascut",
     edition: "OSRS",
+    role: "Raid · 1–8 · 0 invocation until every room has a name",
+    style: "All three styles. Yellow Keris on path bosses. Wardens want the style the skull asks.",
     opener: [
       "0 invocation until every room has a name. Solo or a quiet two-man.",
-      "Yellow Keris on the path bosses. Wardens want the style the skull asks.",
+      "Pick a path and say it. Yellow Keris on Akkha, Ba-Ba, Kephri, Zebak.",
       "Leave after two wipes on the same room. That room is the lesson.",
+      "Add one invocation rack only after a clean raid. A clean 50 teaches more than a wipe 200.",
     ],
     wipe: "Kephri dung or a Zebak wave you did not jug. Wardens is rarely the first wipe.",
-    sources: [
-      official(noteFor("toa")!),
-      wikiSrc(noteFor("toa")!),
-      unofficial("OSRS wiki Strategies · ToA", "https://oldschool.runescape.wiki/w/Tombs_of_Amascut/Strategies"),
-    ],
+    sources: [],
     osrs: {
       inventoryNote: "Learner bag. Shadow or sang is worn if you own it. Yellow Keris stays in the bag until a path boss.",
       inventory: padInv(
@@ -276,17 +329,15 @@ const SHEETS: Record<string, FightSheet> = {
     id: "cox",
     title: "Chambers of Xeric",
     edition: "OSRS",
+    role: "Raid · learn one layout",
+    style: "Spec the mage claw. Melee the left. Range the head when he stands.",
     opener: [
       "Learn one layout. Do not first-time Olm in a 15-man.",
       "Points come from rooms. The head is the exam, not the whole raid.",
-      "Spec the mage claw. Melee the left. Range the head when he stands.",
+      "Overload and brews come from the raid. Bring the specs and the switches.",
     ],
     wipe: "Teleport crystal in the middle, or a claw you hit while praying the head.",
-    sources: [
-      official(noteFor("cox")!),
-      wikiSrc(noteFor("cox")!),
-      unofficial("OSRS wiki Strategies · CoX", "https://oldschool.runescape.wiki/w/Chambers_of_Xeric/Strategies"),
-    ],
+    sources: [],
     osrs: {
       inventoryNote: "Learner trio bag. Scythe / sang / tbow worn if you have them. Overload and brews come from the raid.",
       inventory: padInv(
@@ -328,17 +379,16 @@ const SHEETS: Record<string, FightSheet> = {
     id: "vorkath",
     title: "Vorkath",
     edition: "OSRS",
+    role: "Solo slayer / money · six-count first",
+    style: "Ranged camp. Zaryte or tbow worn. Super antifire plus a dragonfire ward.",
     opener: [
       "Super antifire plus a dragonfire ward or shield. Salve (ei) if you wear it.",
       "Count six autos, then the special. Acid or spawn — never guess.",
-      "Bank a trip with two deaths planned. Pools before kills/hr.",
+      "Pink fireball: step one tile. Acid: one straight line. Spawn: Crumble Undead before the next fireball.",
+      "Bank a trip with two deaths planned. Pools before kills/hr. Woox walk is extra kills after the six-count is automatic.",
     ],
     wipe: "Acid path you zig-zagged, or a spawn left under a fireball.",
-    sources: [
-      official(noteFor("vorkath")!),
-      wikiSrc(noteFor("vorkath")!),
-      unofficial("Woox walk method · Unofficial clip culture", "https://oldschool.runescape.wiki/w/Vorkath/Strategies"),
-    ],
+    sources: [],
     osrs: {
       inventoryNote: "Ranged trip. Zaryte or tbow worn. Woox walk is extra kills after the six-count is automatic — not hour one.",
       inventory: padInv(
@@ -381,17 +431,16 @@ const SHEETS: Record<string, FightSheet> = {
     id: "zulrah",
     title: "Zulrah",
     edition: "OSRS",
+    role: "Solo · first ten kills are the rotation",
+    style: "Mage camp with a range switch. You swap on the colour, not on HP.",
     opener: [
       "Pin a rotation. First ten kills are the rotation, not DPS.",
-      "Diary cape or scroll for the boat.",
-      "Swap on the colour. Jad phase: pray the first hit before you click.",
+      "Diary cape or scroll for the boat. Do not run from the fairy ring every death.",
+      "Green is range. Red and blue are mage. Jad phase: pray the first hit before you click.",
+      "Stand the tile that rotation marked. Do not invent a third rotation mid-kill.",
     ],
     wipe: "Wrong colour prayer on Jad phase, or a tile from the other rotation.",
-    sources: [
-      official(noteFor("zulrah")!),
-      wikiSrc(noteFor("zulrah")!),
-      unofficial("OSRS wiki Zulrah rotations", "https://oldschool.runescape.wiki/w/Zulrah/Strategies"),
-    ],
+    sources: [],
     osrs: {
       inventoryNote: "Mage camp with a range switch. Shadow or sang worn if you have it.",
       inventory: padInv(
@@ -430,21 +479,124 @@ const SHEETS: Record<string, FightSheet> = {
       spec: "Blowpipe spec on green. Thralls if you brought the book. Death charge is not the first ten kills.",
     },
   },
+  nex: {
+    id: "nex",
+    title: "Nex",
+    edition: "OSRS",
+    role: "5-man or mass · four wings then Zaros",
+    style: "Magic on smoke and Zaros. Range or mage on shadow. Melee on blood if the team calls it.",
+    opener: [
+      "Learn the wings as a list: smoke, shadow, blood, ice, then Zaros.",
+      "Do not first-time as the person who has to tank a blood siphon.",
+      "A 5-man with a caller beats a 20-man with no plan.",
+    ],
+    wipe: "A blood siphon nobody left, or ice icicles nobody broke.",
+    sources: [],
+    osrs: {
+      inventoryNote: "Learner 5-man bag. Sang or trident worn. Tbow for shadow if the team uses it.",
+      inventory: padInv(
+        [
+          "Toxic blowpipe",
+          "Twisted bow",
+          "Sanguinesti staff",
+          "Dragon warhammer",
+          "Bandos godsword",
+          "Occult necklace",
+          "Necklace of anguish",
+          "Rune pouch",
+          "Book of the dead",
+          "Super combat potion",
+          "Ranging potion",
+          "Saturated heart",
+          "Super restore",
+          "Super restore",
+          "Super restore",
+          "Saradomin brew",
+          "Saradomin brew",
+          "Saradomin brew",
+          "Saradomin brew",
+          "Anglerfish",
+          "Anglerfish",
+          "Sanfew serum",
+          "Stamina potion",
+        ],
+        "Saradomin brew",
+      ),
+      prayers: [
+        { phase: "Smoke", pray: "Protect Magic. Clear minions. Walk the cough." },
+        { phase: "Shadow", pray: "Protect Missiles. Stand off her line." },
+        { phase: "Blood", pray: "Protect Magic. Do not sit the siphon." },
+        { phase: "Ice", pray: "Protect Magic. Break icicles." },
+        { phase: "Zaros", pray: "The style she is using." },
+      ],
+      tiles: "Smoke: walk the cough cloud. Shadow: off the line she drew. Blood: leave the siphon tile. Ice: smash icicles before the freeze. Zaros: the middle is a death if nobody called it.",
+      spec: "Warhammer on the wing the team named. Claws when defence is down. Thralls if Arceuus is up.",
+    },
+  },
+  hydra: {
+    id: "hydra",
+    title: "Alchemical Hydra",
+    edition: "OSRS",
+    role: "Solo slayer · vent order is the fight",
+    style: "Ranged. Poison walk. Enrage is a prayer swap, not a panic eat.",
+    opener: [
+      "Lure to the correct vent. The chemical you stand in is the phase.",
+      "Poison pools are a walk. Do not plant in a splash.",
+      "Enrage: keep the prayer swap. DPS is second.",
+    ],
+    wipe: "Wrong vent, or a poison tile you stood in while swapping.",
+    sources: [],
+    osrs: {
+      inventoryNote: "Ranged slayer trip. Bowfa or tbow worn. Brimstone ring if you have it.",
+      inventory: padInv(
+        [
+          "Toxic blowpipe",
+          "Dragon hunter lance",
+          "Extended anti-venom+",
+          "Divine ranging potion",
+          "Super combat potion",
+          "Super restore",
+          "Super restore",
+          "Prayer potion",
+          "Prayer potion",
+          "Manta ray",
+          "Manta ray",
+          "Manta ray",
+          "Manta ray",
+          "Manta ray",
+          "Manta ray",
+          "Manta ray",
+          "Manta ray",
+          "Stamina potion",
+          "Rune pouch",
+          "Book of the dead",
+        ],
+        "Manta ray",
+      ),
+      prayers: [
+        { phase: "Green / poison", pray: "Protect Magic. Walk the pool." },
+        { phase: "Blue / lightning", pray: "Protect Missiles. Lightning is a leave." },
+        { phase: "Red / fire", pray: "Protect Magic. Fire is a leave." },
+        { phase: "Enrage", pray: "The style she just used. Keep swapping." },
+      ],
+      tiles: "Start at the vent the wiki Strategies page starts at. Each colour wants its own chemical. Lightning and fire leave the painted tiles. Enrage: you walk, you swap, you do not plant.",
+      spec: "Blowpipe spec between vents if prayer is fine. Thralls after the lure is set.",
+    },
+  },
   rasial: {
     id: "rasial",
     title: "Rasial",
     edition: "RS3",
+    role: "Solo necromancy exam · City of Um",
+    style: "Necromancy only. Other styles do not count.",
     opener: [
-      "Necromancy only. Other styles do not count.",
       "Conjures up outside the portal. Living Death is a window, not a panic button.",
-      "City of Um. One preset. Open the wiki page and the PvME page the morning you push.",
+      "One preset. Touch of Death builds. Death Grasp is the spec. Death Mark on phase 4.",
+      "Volley is a walk. Do not drop Living Death on that volley.",
+      "Do not chase a 1:03 clip on a first kill.",
     ],
     wipe: "Living Death window dropped on a volley, or minions left to eat the skulls.",
-    sources: [
-      official(noteFor("rasial")!),
-      wikiSrc(noteFor("rasial")!),
-      unofficial("PvME Rasial sheet", "https://pvme.io/pvme-guides/rs3-full-boss-guides/rasial/"),
-    ],
+    sources: [],
     rs3: {
       bar: [
         "Touch of Death",
@@ -464,25 +616,24 @@ const SHEETS: Record<string, FightSheet> = {
         "Learners: a long revolution that fires the builders. Desk: short revolution, manual Skulls / Living Death / Volley. PvME lists tick waits — treat those as unofficial until the wiki agrees.",
       familiar: "Ripper Demon or Kal'gerion if the wiki page for this hour still lists them. Hellhound plus Prism if you are learning and need the heal.",
       pocket: "Scripture of Wen, or Jas, or Erethdor's grimoire if that is your log. Salve (e) stays on the neck.",
-      relic: "Conservation of Energy is the usual desk pick. Fury of the Small and Persistent Rage are the common neighbours. Check the live relic page.",
-      enrage: "No enrage ladder like Telos. Phases 1–3 are the conjure cycle. Phase 4 is dump and Death Mark. Do not chase a 1:03 clip on a first kill.",
+      relic: "Conservation of Energy is the usual desk pick. Fury of the Small and Persistent Rage are the common neighbours.",
+      enrage: "No enrage ladder like Telos. Phases 1–3 are the conjure cycle. Phase 4 is dump and Death Mark.",
     },
   },
   telos: {
     id: "telos",
     title: "Telos, the Warden",
     edition: "RS3",
+    role: "Solo enrage · fonts are the wipe",
+    style: "Necromancy is the current desk. Magic and melee still work if that is your log.",
     opener: [
       "0–100% until fonts and anima are boring. Do not jump to 200 because a VOD did.",
       "War's Retreat. One preset. Write the enrage on the screen.",
-      "Fonts are the wipe: stand the matching colour.",
+      "Fonts: stand the matching colour. Anima is spent on purpose.",
+      "Gogoa’l is a walk. Tendrils are a cut. Do not eat both at once.",
     ],
     wipe: "Wrong font colour. The room ends the pull; the HP bar does not.",
-    sources: [
-      official(noteFor("telos")!),
-      wikiSrc(noteFor("telos")!),
-      unofficial("PvME Telos sheet", "https://pvme.io/pvme-guides/rs3-full-boss-guides/telos/"),
-    ],
+    sources: [],
     rs3: {
       bar: [
         "Touch of Death",
@@ -499,7 +650,7 @@ const SHEETS: Record<string, FightSheet> = {
         "Freedom",
       ],
       revolution: "Long revolution while fonts are new. Manual the stun and the anima spend. Full manual is a later enrage.",
-      familiar: "Ripper or the familiar the live PvME preset still lists. Do not mix three discords.",
+      familiar: "Ripper or the familiar the live wiki page still lists. Do not mix three discords.",
       pocket: "Scripture that matches your style. Necro desk usually Wen or Jas.",
       relic: "Conservation of Energy / Fury of the Small. Confirm on the wiki relic list this hour.",
       enrage:
@@ -510,16 +661,15 @@ const SHEETS: Record<string, FightSheet> = {
     id: "zuk",
     title: "TzKal-Zuk",
     edition: "RS3",
+    role: "Solo kiln · waves then Zuk",
+    style: "Necro or magic at the current meta. Waves are the exam.",
     opener: [
       "Waves are the exam. Zuk is the last question.",
-      "Open PvME the morning you push. A cape is a wave log.",
+      "Normal mode checkpoints after waves 5, 10, 15, and 17. Use them.",
+      "One healer at a time on Zuk. Do not panic eat into a Jad.",
     ],
     wipe: "A wave you did not solve, or Zuk healers left into the next set.",
-    sources: [
-      official(noteFor("zuk")!),
-      wikiSrc(noteFor("zuk")!),
-      unofficial("PvME kiln / Zuk", "https://pvme.io/"),
-    ],
+    sources: [],
     rs3: {
       bar: ["Touch of Death", "Soul Sap", "Finger of Death", "Death Skulls", "Volley of Souls", "Living Death", "Reflect", "Freedom", "Disrupt", "Resonance"],
       revolution: "Revolution through waves. Manual Zuk defensives.",
@@ -532,19 +682,61 @@ const SHEETS: Record<string, FightSheet> = {
     id: "sanctum",
     title: "Sanctum of Rebirth",
     edition: "RS3",
+    role: "Group underworld raid · one wing a night",
+    style: "Team sheet. Necro is common. What the lead listed is the bag.",
     opener: [
       "Learn the wing you were given. Do not first-time every wing in one night.",
       "What the lead listed is the bag. One talker.",
+      "Wings first. Last boss last.",
     ],
     wipe: "A wing mechanic you did not own. Last boss is not the first wipe.",
-    sources: [
-      official(noteFor("sanctum")!),
-      wikiSrc(noteFor("sanctum")!),
-      unofficial("PvME raid desk", "https://pvme.io/"),
-    ],
+    sources: [],
     rs3: {
       bar: ["Touch of Death", "Soul Sap", "Finger of Death", "Death Skulls", "Volley of Souls", "Bloat", "Living Death", "Reflect", "Freedom", "Disrupt"],
       revolution: "Team sheet first. Revolution unless the lead called full manual.",
+      familiar: "What the raid pin listed.",
+      pocket: "What the raid pin listed.",
+      relic: "What the raid pin listed.",
+    },
+  },
+  glacor: {
+    id: "glacor",
+    title: "Arch-Glacor",
+    edition: "RS3",
+    role: "Solo streaks · add one mechanic at a time",
+    style: "Necro or mage. The mechanic you ticked is the fight.",
+    opener: [
+      "0 mechanic until the kill is clean. Add one mechanic at a time.",
+      "Streaks pay. A wipe on mechanic three is a note you did not read.",
+      "Do not tick five on a first night.",
+    ],
+    wipe: "The mechanic you enabled and did not walk.",
+    sources: [],
+    rs3: {
+      bar: ["Touch of Death", "Soul Sap", "Finger of Death", "Death Skulls", "Volley of Souls", "Bloat", "Living Death", "Stun", "Reflect", "Freedom", "Resonance"],
+      revolution: "Revolution at 0 mechanic. Manual the stun on the mechanic you added.",
+      familiar: "Ripper or the familiar the wiki page lists this hour.",
+      pocket: "Scripture of Wen or Jas.",
+      relic: "Conservation of Energy.",
+      enrage: "Streak from 0%. Add one mechanic only after two clean kills.",
+    },
+  },
+  vorago: {
+    id: "vorago",
+    title: "Vorago",
+    edition: "RS3",
+    role: "5–10 man borehole · week rotation is public",
+    style: "Team sheet. Usually melee bombs and a mage. Do not first-time as base.",
+    opener: [
+      "Week rotation is public. Read it before you type inv.",
+      "Do not first-time as base. Watch a VOD of this week's mechanic.",
+      "P5 bleed: stack only on the called tile. One talker.",
+    ],
+    wipe: "An extra voice on bomb, or a P5 stack on the wrong tile.",
+    sources: [],
+    rs3: {
+      bar: ["Touch of Death", "Soul Sap", "Finger of Death", "Death Skulls", "Volley of Souls", "Bloat", "Living Death", "Reflect", "Freedom", "Disrupt", "Resonance"],
+      revolution: "What the lead pinned. Revolution unless they called full manual.",
       familiar: "What the raid pin listed.",
       pocket: "What the raid pin listed.",
       relic: "What the raid pin listed.",
@@ -561,10 +753,10 @@ function fallbackOsrs(note: BossNote): OsrsDesk {
     .slice(0, 12);
   const bag = [note.style.split(".")[0] ?? "Switch", ...items, "Super restore", "Rune pouch", "Stamina potion"];
   return {
-    inventoryNote: "Starter bag from this desk’s kit. Confirm names on the wiki Strategies page before you pull.",
+    inventoryNote: "Starter bag from this desk’s kit. Confirm names on the wiki page before you pull.",
     inventory: padInv(bag, "Saradomin brew"),
     prayers: [{ phase: "Fight", pray: note.pray }],
-    tiles: note.route[0] ?? "Stand where the wiki Strategies page stands.",
+    tiles: note.route.join(" "),
     spec: "Spec when the room is stable. Thralls if you brought the book. Do not invent a tick count.",
   };
 }
@@ -584,25 +776,18 @@ export function sheetFor(id: string): FightSheet | null {
   const note = noteFor(id);
   if (!note) return null;
   const custom = SHEETS[id];
-  if (custom) return custom;
+  const sources = sourcesFor(note);
+  if (custom) return { ...custom, sources };
   return {
     id: note.id,
     title: note.title,
     edition: note.edition,
-    opener: note.start,
+    role: note.role,
+    style: note.style,
+    opener: [...note.start, ...note.route.slice(0, 2)],
     wipe: bossWipe(note),
-    sources: [
-      official(note),
-      wikiSrc(note),
-      note.edition === "RS3"
-        ? unofficial("PvME · not Jagex", bossPvme(note) ?? "https://pvme.io/")
-        : unofficial(`${note.title} Strategies`, bossStrategy(note)),
-    ],
+    sources,
     osrs: note.edition === "OSRS" ? fallbackOsrs(note) : undefined,
     rs3: note.edition === "RS3" ? fallbackRs3(note) : undefined,
   };
-}
-
-export function hubFor(edition: "OSRS" | "RS3") {
-  return edition === "OSRS" ? OSRS_HUB : RS3_HUB;
 }

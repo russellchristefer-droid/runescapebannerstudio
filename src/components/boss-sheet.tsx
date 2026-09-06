@@ -1,23 +1,5 @@
 import type { ReactNode } from "react";
-import type { FightSheet, PrayerPhase, RankedSource } from "@/lib/boss-sheets";
-
-function Sources({ sources }: { sources: RankedSource[] }) {
-  return (
-    <p className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-[12px] text-muted">
-      {sources.map((src) => (
-        <a
-          key={src.href + src.rank}
-          href={src.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-parchment"
-        >
-          {src.rank}. {src.label}
-        </a>
-      ))}
-    </p>
-  );
-}
+import type { FightSheet, PrayerPhase } from "@/lib/boss-sheets";
 
 function InventoryGrid({ items, note }: { items: string[]; note: string }) {
   const cells = items.slice(0, 28);
@@ -89,7 +71,10 @@ function Block({ title, children }: { title: string; children: ReactNode }) {
 export function BossSheet({ sheet }: { sheet: FightSheet }) {
   return (
     <div className="flex flex-col gap-6">
-      <Sources sources={sheet.sources} />
+      <Block title="Role">
+        <p className="text-sm text-fg">{sheet.role}</p>
+        <p className="mt-2 text-sm text-muted">{sheet.style}</p>
+      </Block>
 
       <Block title="Opener">
         <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
