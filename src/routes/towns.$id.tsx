@@ -11,8 +11,7 @@ import { streetLine } from "@/data/streetTalk";
 import { OfficialPulse } from "@/components/official-pulse";
 import { PlaceRail } from "@/components/place-rail";
 import { UseOnBanner } from "@/components/use-on-banner";
-import { VisitPlaces, AppLink, godPath, townPath, bossPath } from "@/components/place-chip";
-import { noteFor } from "@/lib/boss-notes";
+import { AppLink, godPath } from "@/components/place-chip";
 
 function townWikiLinks(title: string, loc?: Location) {
   const path = encodeURI(title.replace(/ /g, "_"));
@@ -91,32 +90,6 @@ function TownNotePage() {
         ) : null}
         {loc ? (
           <SisterPlace id={loc.id} name={loc.name} edition={loc.edition} />
-        ) : null}
-        {loc ? (
-          <section>
-            <h2 className="text-sm font-semibold text-parchment">Places to visit</h2>
-            <VisitPlaces
-              items={[
-                { href: godPath(loc.god), label: loc.god, color: godInk(loc.god) },
-                ...LOCATIONS.filter(
-                  (row) =>
-                    row.id !== loc.id &&
-                    row.kind === "town" &&
-                    row.god === loc.god &&
-                    townNote(row.id),
-                )
-                  .slice(0, 8)
-                  .map((row) => ({
-                    href: townPath(row.id),
-                    label: `${row.name}${row.edition === "OSRS" ? " · OSRS" : ""}`,
-                    current: row.id === loc.id,
-                  })),
-                ...LOCATIONS.filter((row) => row.kind === "boss" && row.god === loc.god && noteFor(row.id))
-                  .slice(0, 4)
-                  .map((row) => ({ href: bossPath(row.id), label: row.name })),
-              ]}
-            />
-          </section>
         ) : null}
         <p className="text-xs text-faint">
           Fan desk notes. Live page: the official wiki for this game.

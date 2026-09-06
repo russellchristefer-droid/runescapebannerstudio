@@ -3,15 +3,13 @@ import { useRef } from "react";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
 import { GOD_BRIEFS, GOD_HOME, godFromSlug } from "@/lib/gods";
 import { godStill, godStillLine } from "@/lib/god-stills";
-import { GODS, LOCATIONS } from "@/lib/locations";
+import { LOCATIONS } from "@/lib/locations";
 import { BackLink } from "@/components/back-link";
 import { OfficialPulse } from "@/components/official-pulse";
 import { PlaceRail } from "@/components/place-rail";
 import { UseOnBanner } from "@/components/use-on-banner";
-import { VisitPlaces, AppLink, godPath, townPath, bossPath } from "@/components/place-chip";
+import { AppLink, townPath } from "@/components/place-chip";
 import { townNote } from "@/lib/town-notes";
-import { noteFor } from "@/lib/boss-notes";
-import { godInk } from "@/lib/gods";
 
 export const Route = createFileRoute("/gods/$god")({
   component: GodPage,
@@ -23,7 +21,6 @@ function GodPage() {
   if (!god) throw notFound();
   const brief = GOD_BRIEFS[god];
   const towns = LOCATIONS.filter((loc) => loc.god === god && loc.kind === "town" && townNote(loc.id));
-  const fights = LOCATIONS.filter((loc) => loc.god === god && loc.kind === "boss" && noteFor(loc.id));
   const osrsStill = godStill(god, "OSRS");
   const rs3Still = godStill(god, "RS3");
   const osrsHome = GOD_HOME[slug]?.osrs;
@@ -48,6 +45,7 @@ function GodPage() {
           links={[
             { label: `${brief.god} · Old School wiki`, href: brief.wikiOsrs },
             { label: `${brief.god} · RuneScape wiki`, href: brief.wikiRs3 },
+            { label: "Official news", href: "https://secure.runescape.com/m=news/archive?oldschool=1" },
           ]}
         />
         <div className="grid gap-3 sm:grid-cols-2">
@@ -146,26 +144,8 @@ function GodPage() {
           </p>
         ) : null}
         <section>
-          <h2 className="mb-3 text-sm font-medium text-muted">Places to visit</h2>
-          <VisitPlaces
-            items={[
-              ...GODS.map((item) => ({
-                href: godPath(item),
-                label: item,
-                current: item === god,
-                color: godInk(item),
-              })),
-              ...towns.map((loc) => ({
-                href: townPath(loc.id),
-                label: `${loc.name}${loc.edition === "OSRS" ? " · OSRS" : ""}`,
-              })),
-              ...fights.slice(0, 6).map((loc) => ({
-                href: bossPath(loc.id),
-                label: loc.name,
-              })),
-            ]}
-          />
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <h2 className="mb-3 text-sm font-medium text-muted">Towns</h2>
+          <div className="grid gap-2 sm:grid-cols-2">
             {towns.map((loc) => (
               <AppLink key={loc.id} href={townPath(loc.id)} className="min-h-11 px-1 py-2 text-sm [touch-action:manipulation]">
                 <div className="font-medium">{loc.name}</div>
@@ -176,16 +156,7 @@ function GodPage() {
             ))}
           </div>
         </section>
-        <p className="text-xs text-faint">
-          Fan desk notes. Live page: the official wiki for this game.{" "}
-          <a href={brief.wikiOsrs} target="_blank" rel="noopener noreferrer" className="text-parchment">
-            Old School
-          </a>
-          {" · "}
-          <a href={brief.wikiRs3} target="_blank" rel="noopener noreferrer" className="text-parchment">
-            RuneScape
-          </a>
-        </p>
+        <p className="text-xs text-faint">Fan desk notes. Live page: the official wiki for this game.</p>
         <Link to="/" className="text-sm text-parchment">
           Back to banners
         </Link>

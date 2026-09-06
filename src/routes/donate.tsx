@@ -14,8 +14,13 @@ function DonatePage() {
       </header>
       <main className="mx-auto flex max-w-2xl flex-col gap-4 px-5 py-8 md:px-8">
         <p className="text-sm text-muted">
-          Optional tip for the person who built this fan studio. Not Jagex.
+          Christefer Lee Russell-Barnett. Optional tip for the person who built this fan studio. Not Jagex.
           Not a guild bank.
+        </p>
+        <p className="text-sm">
+          <a className="text-parchment" href="mailto:russell.christefer@gmail.com">
+            russell.christefer@gmail.com
+          </a>
         </p>
         <a
           href="https://cash.app/$takemymoneypleaseok"

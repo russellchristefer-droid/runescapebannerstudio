@@ -4,7 +4,6 @@ import { SiteHeader } from "@/components/site-header";
 import { TodayDesk } from "@/components/today-desk";
 import { TownHero } from "@/components/town-hero";
 import { OracleLine } from "@/components/oracle-line";
-import { OfficialPulse } from "@/components/official-pulse";
 import { StillPhoto } from "@/components/still-photo";
 import { drawBanner, ensurePlateFont, loadImage, plateMetrics, putStillOnDesk } from "@/desk";
 import { loadStudioSave, writeStudioSave } from "@/desk/save";
@@ -1066,7 +1065,6 @@ export function Studio() {
       <TownHero onTown={(name, ed) => setHeroTown({ name, edition: ed })} />
       <OracleLine place={heroTown.name} edition={heroTown.edition} />
       <TodayDesk />
-      <OfficialPulse />
       <section className="page-band py-6">
         <h2 className="section-h2">Places to visit</h2>
         <div className="mb-3">

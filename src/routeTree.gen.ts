@@ -25,6 +25,7 @@ import { Route as LegalRouteImport } from './routes/legal'
 import { Route as LumbRouteImport } from './routes/lumb'
 import { Route as PvpRouteImport } from './routes/pvp'
 import { Route as SenntistenRouteImport } from './routes/senntisten'
+import { Route as SitesRouteImport } from './routes/sites'
 import { Route as StillRouteImport } from './routes/still'
 import { Route as StoryRouteImport } from './routes/story'
 import { Route as StreamRouteImport } from './routes/stream'
@@ -120,6 +121,11 @@ const SenntistenRoute = SenntistenRouteImport.update({
   path: '/senntisten',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitesRoute = SitesRouteImport.update({
+  id: '/sites',
+  path: '/sites',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StillRoute = StillRouteImport.update({
   id: '/still',
   path: '/still',
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/lumb': typeof LumbRoute
   '/pvp': typeof PvpRoute
   '/senntisten': typeof SenntistenRoute
+  '/sites': typeof SitesRoute
   '/still': typeof StillRoute
   '/story': typeof StoryRoute
   '/stream': typeof StreamRoute
@@ -240,6 +247,7 @@ export interface FileRoutesByTo {
   '/lumb': typeof LumbRoute
   '/pvp': typeof PvpRoute
   '/senntisten': typeof SenntistenRoute
+  '/sites': typeof SitesRoute
   '/still': typeof StillRoute
   '/story': typeof StoryRoute
   '/stream': typeof StreamRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/lumb': typeof LumbRoute
   '/pvp': typeof PvpRoute
   '/senntisten': typeof SenntistenRoute
+  '/sites': typeof SitesRoute
   '/still': typeof StillRoute
   '/story': typeof StoryRoute
   '/stream': typeof StreamRoute
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/lumb'
     | '/pvp'
     | '/senntisten'
+    | '/sites'
     | '/still'
     | '/story'
     | '/stream'
@@ -339,6 +349,7 @@ export interface FileRouteTypes {
     | '/lumb'
     | '/pvp'
     | '/senntisten'
+    | '/sites'
     | '/still'
     | '/story'
     | '/stream'
@@ -371,6 +382,7 @@ export interface FileRouteTypes {
     | '/lumb'
     | '/pvp'
     | '/senntisten'
+    | '/sites'
     | '/still'
     | '/story'
     | '/stream'
@@ -404,6 +416,7 @@ export interface RootRouteChildren {
   LumbRoute: typeof LumbRoute
   PvpRoute: typeof PvpRoute
   SenntistenRoute: typeof SenntistenRoute
+  SitesRoute: typeof SitesRoute
   StillRoute: typeof StillRoute
   StoryRoute: typeof StoryRoute
   StreamRoute: typeof StreamRoute
@@ -534,6 +547,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SenntistenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sites': {
+      id: '/sites'
+      path: '/sites'
+      fullPath: '/sites'
+      preLoaderRoute: typeof SitesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/still': {
       id: '/still'
       path: '/still'
@@ -652,6 +672,7 @@ const rootRouteChildren: RootRouteChildren = {
   LumbRoute: LumbRoute,
   PvpRoute: PvpRoute,
   SenntistenRoute: SenntistenRoute,
+  SitesRoute: SitesRoute,
   StillRoute: StillRoute,
   StoryRoute: StoryRoute,
   StreamRoute: StreamRoute,
