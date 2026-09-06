@@ -126,6 +126,7 @@ export function Studio() {
   });
   const [armedSkill, setArmedSkill] = useState<string | null>(null);
   const [pickedSkill, setPickedSkill] = useState<string | null>(null);
+  const [pickedText, setPickedText] = useState<string | null>(null);
   const [textPos, setTextPos] = useState<Record<string, { x: number; y: number }>>({});
   const [textScale, setTextScale] = useState<Record<string, number>>(saved.textScale ?? {});
   const [plateCaption, setPlateCaption] = useState("");
@@ -140,7 +141,6 @@ export function Studio() {
       if (mark.src.startsWith("blob:")) URL.revokeObjectURL(mark.src);
     }
   }, []);
-  const [pickedText, setPickedText] = useState<string | null>(null);
   const boxesRef = useRef<{ id: string; x: number; y: number; w: number; h: number }[]>([]);
   const dragRef = useRef<{
     id: string;
