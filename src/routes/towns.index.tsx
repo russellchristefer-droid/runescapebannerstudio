@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
-import { OfficialPulse } from "@/components/official-pulse";
 import { LOCATIONS } from "@/lib/locations";
 import { townNote } from "@/lib/town-notes";
 import { pageMeta } from "@/lib/page-title";
@@ -26,7 +25,6 @@ function TownIndex() {
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
-        <OfficialPulse />
         <section>
           <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">Old School RuneScape</h2>
           <PlaceGrid>
