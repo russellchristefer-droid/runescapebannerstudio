@@ -1559,16 +1559,54 @@ export function Studio() {
         </p>
         {workworkLine ? <p className="mt-1 text-center text-[11px] text-faint">{workworkLine}</p> : null}
         <div className="mt-1 flex flex-wrap justify-center gap-1">
-          {(["none", "twitch", "youtube", "discord"] as const).map((zone) => (
-            <button
-              key={zone}
-              type="button"
-              className={`min-h-11 rounded-md border px-2 text-[10px] ${ghostZone === zone ? "border-parchment" : "border-line"}`}
-              onClick={() => setGhostZone(zone)}
-            >
-              {zone === "none" ? "Ghosts off" : zone === "twitch" ? "Twitch crop" : zone === "youtube" ? "YouTube crop" : "Discord crop"}
-            </button>
-          ))}
+          <button
+            type="button"
+            className={`min-h-11 rounded-md border px-2 text-[10px] ${ghostZone === "none" ? "border-parchment" : "border-line"}`}
+            onClick={() => setGhostZone((zone) => (zone === "none" ? "twitch" : "none"))}
+          >
+            Ghosts off
+          </button>
+          <button
+            type="button"
+            className={`min-h-11 rounded-md border px-2 text-[10px] ${sizeId === "1200x480" && ghostZone === "twitch" ? "border-parchment" : "border-line"}`}
+            onClick={() => {
+              setSizeId("1200x480");
+              setGhostZone("twitch");
+            }}
+          >
+            Twitch crop
+          </button>
+          <button
+            type="button"
+            className={`min-h-11 rounded-md border px-2 text-[10px] ${sizeId === "1280x720" && ghostZone === "youtube" ? "border-parchment" : "border-line"}`}
+            onClick={() => {
+              setSizeId("1280x720");
+              setGhostZone("youtube");
+            }}
+          >
+            YouTube crop
+          </button>
+          <button
+            type="button"
+            className="min-h-11 rounded-md border border-line px-2 text-[10px]"
+            onClick={() => {
+              const still = document.getElementById("still") as HTMLImageElement | null;
+              const w = still?.naturalWidth || 1920;
+              const h = still?.naturalHeight || 1080;
+              const next =
+                w >= 1800 && h <= 560
+                  ? "1920x480"
+                  : w / Math.max(1, h) > 2
+                    ? "1200x480"
+                    : h >= 1000
+                      ? "1920x1080"
+                      : "1280x720";
+              setSizeId(next);
+              setGhostZone("none");
+            }}
+          >
+            Discard crop
+          </button>
         </div>
         {plateFontOk ? null : (
           <p className="mt-1 text-center text-[10px] text-[#c07050]">Font file missing</p>
@@ -1638,9 +1676,19 @@ export function Studio() {
           ))}
           <button
             type="button"
-            disabled={!pickedSkill}
+            disabled={!pickedSkill && !pickedText}
             className="min-h-11 rounded-md border border-line px-2 text-[10px] disabled:opacity-40"
             onClick={() => {
+              if (pickedText) {
+                if (pickedText === "streamer") setStreamer("");
+                setTextPos((cur) => {
+                  const next = { ...cur };
+                  delete next[pickedText];
+                  return next;
+                });
+                setPickedText(null);
+                return;
+              }
               setSkillPicks((cur) => {
                 const lead = cur.find((item) => item.id === pickedSkill);
                 if (lead?.group) return cur.filter((item) => item.group !== lead.group);
