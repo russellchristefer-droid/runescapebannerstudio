@@ -42,8 +42,8 @@ function Row({
         {row.name}
         {row.official ? <span className="ml-2 text-[10px] text-faint">Official</span> : null}
         {badge === "live" ? (
-          <span className="ml-2 rounded-sm border border-parchment px-1.5 py-0.5 text-[10px] text-parchment">
-            Live{typeof count === "number" ? ` · ${count}` : ""}
+          <span className="ml-2 rounded-sm bg-[#9b1b1b] px-1.5 py-0.5 text-[10px] tracking-[0.08em] text-[#efe4c8] uppercase">
+            Live{typeof count === "number" ? ` · ${count.toLocaleString("en-GB")}` : ""}
           </span>
         ) : null}
         {badge === "live" && title ? <span className="mt-1 block text-[12px] text-muted">{title}</span> : null}
@@ -77,8 +77,12 @@ function StreamersPage() {
       ctrl?.abort();
       ctrl = new AbortController();
       const mine = ctrl;
-      const timer = window.setTimeout(() => mine.abort(), 3000);
-      fetch("/api/twitch-live", { cache: "no-store", signal: mine.signal })
+      const timer = window.setTimeout(() => mine.abort(), 8000);
+      const logins = CHANNELS.map((row) => row.twitch ?? "")
+        .filter(Boolean)
+        .slice(0, 100)
+        .join(",");
+      fetch(`/api/twitch-live?logins=${encodeURIComponent(logins)}`, { cache: "no-store", signal: mine.signal })
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (!data) {
@@ -167,7 +171,6 @@ function StreamersPage() {
   const liveBadges: Record<string, Badge> = {};
   for (const handle of liveHandles) liveBadges[handle] = "live";
 
-  const official = CHANNELS.filter((row) => row.official && hallLinks(row).length && match(row));
   const liveNow = livePeople
     .filter((row) => match(row))
     .sort((a, b) => {
@@ -177,11 +180,11 @@ function StreamersPage() {
     });
   const rest = CHANNELS.filter(
     (row) =>
-      !row.official &&
       hallLinks(row).length &&
       match(row) &&
       !(row.twitch && liveHandles.has(row.twitch.toLowerCase())),
-  ).sort((a, b) => a.name.localeCompare(b.name));
+  ).sort((a, b) => Number(Boolean(b.official)) - Number(Boolean(a.official)) || a.name.localeCompare(b.name));
+  const hall = [...liveNow, ...rest.filter((row) => !liveNow.some((live) => live.id === row.id))];
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -211,34 +214,17 @@ function StreamersPage() {
       </header>
       <main id="content" className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
         <OfficialSites />
-        {needle && !official.length && !liveNow.length && !rest.length ? (
+        {needle && !hall.length ? (
           <p className="text-sm text-muted">No names match.</p>
         ) : null}
-        <section>
-          <h2 className="mb-3 text-sm font-semibold text-parchment">Official</h2>
-          <ul className="flex flex-col gap-2">
-            {official.map((row) => (
-              <Row key={row.id} row={row} live={liveBadges} viewers={viewers} titles={titles} />
-            ))}
-          </ul>
-        </section>
-        {liveNow.length ? (
-          <section>
-            <h2 className="mb-3 text-sm font-semibold text-parchment">Live now</h2>
-            <ul className="flex flex-col gap-2">
-              {liveNow.map((row) => (
-                <Row key={row.id} row={row} live={liveBadges} viewers={viewers} titles={titles} />
-              ))}
-            </ul>
-          </section>
-        ) : probe === "ok" ? (
+        {probe === "ok" && !liveNow.length ? (
           <p className="text-sm text-muted">No listed Twitch channel is live.</p>
         ) : null}
         <section>
           <h2 className="mb-3 text-sm font-semibold text-parchment">Hall</h2>
           <ul className="flex flex-col gap-2">
-            {rest.map((row) => (
-              <Row key={row.id} row={row} live={{}} />
+            {hall.map((row) => (
+              <Row key={row.id} row={row} live={liveBadges} viewers={viewers} titles={titles} />
             ))}
           </ul>
         </section>

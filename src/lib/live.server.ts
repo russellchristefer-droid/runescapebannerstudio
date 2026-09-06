@@ -133,9 +133,14 @@ async function helixByLogins(clientId: string, token: string, logins: string[]) 
     const url = new URL("https://api.twitch.tv/helix/streams");
     for (const login of slice) url.searchParams.append("user_login", login);
     const res = await fetch(url, {
-      headers: { "Client-Id": clientId, Authorization: `Bearer ${token}` },
+      headers: { "Client-ID": clientId, Authorization: `Bearer ${token}` },
       signal: AbortSignal.timeout(4_000),
     });
+    if (res.status === 401 || res.status === 403) {
+      const err = new Error("auth");
+      err.name = "TwitchAuth";
+      throw err;
+    }
     if (!res.ok) throw new Error("streams");
     const body = (await res.json()) as {
       data?: {
@@ -151,14 +156,10 @@ async function helixByLogins(clientId: string, token: string, logins: string[]) 
       if (!handle) continue;
       const gameName = String(stream.game_name ?? "");
       const cat = categoryGame(gameName);
-      const expected = gameForHandle(handle);
-      const official = officialHandle(handle);
-      if (!cat && !official) continue;
-      if (expected && cat && expected !== cat && !official) continue;
       rows.push({
         handle,
         displayName: String(stream.user_name ?? handle).slice(0, 32),
-        game: cat ?? expected ?? "osrs",
+        game: cat ?? gameForHandle(handle) ?? "osrs",
         live: true,
         viewers: Number(stream.viewer_count) || 0,
         title: String(stream.title ?? "").slice(0, 80),
@@ -182,11 +183,14 @@ export async function fetchTwitchLiveBoard(logins: string[]): Promise<TwitchBoar
   try {
     const asked = [...new Set((logins ?? []).map(cleanLogin).filter(Boolean))];
     const pool = asked.length ? asked : listedLogins();
-    const rows = await helixByLogins(id, token, pool.slice(0, 80));
+    const rows = await helixByLogins(id, token, pool.slice(0, 100));
     const payload: TwitchBoard = { ok: true, rows };
     boardMemo = { at: Date.now(), payload };
     return payload;
-  } catch {
+  } catch (err) {
+    if (err instanceof Error && err.name === "TwitchAuth") {
+      return { off: true, ok: false, rows: [] };
+    }
     return { ok: false, rows: [] };
   }
 }
