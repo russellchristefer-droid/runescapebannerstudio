@@ -7,8 +7,7 @@ import { godInk } from "@/lib/gods";
 import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
 import { citizenFor } from "@/data/citizens";
-import { streetTalk } from "@/data/streetTalk";
-import { stillIndex } from "@/lib/still-clock";
+import { streetLine } from "@/data/streetTalk";
 import { deskOpenPath } from "@/lib/desk-link";
 import { OfficialPulse } from "@/components/official-pulse";
 import { writeStudioSave } from "@/lib/studio-save";
@@ -184,10 +183,9 @@ function SisterPlace({
 }
 
 function StreetAndHour({ loc, wiki }: { loc: (typeof LOCATIONS)[number]; wiki?: string }) {
-  const now = useVisibleNow(60_000);
+  const now = useVisibleNow(1_000);
   const game = loc.edition === "OSRS" ? "osrs" : "rs3";
-  const lines = streetTalk(loc.id, game);
-  const line = lines[stillIndex(lines.length, now)] ?? lines[0];
+  const line = streetLine(loc.id, game, now);
   const notice = noticeFor(loc.id, game);
   const citizen = citizenFor(loc.id, game, now);
   const gameLabel = game === "osrs" ? "Old School RuneScape" : "RuneScape";

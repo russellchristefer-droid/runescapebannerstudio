@@ -23,10 +23,10 @@ const OSRS: Record<string, Citizen[]> = {
     c("Adventurer at the ditch", "/stills/osrs/citizens/edgeville-3.png"),
   ],
   osrsdraynor: [c("Market guard", "/stills/osrs/citizens/draynor-1.png")],
-  osrsalkharid: [c("Palace guard", "/stills/osrs/citizens/al-kharid-1.png")],
-  osrscatherby: [c("Fisher", "/stills/osrs/citizens/catherby-1.png")],
-  osrsardougne: [c("Knight of Ardougne", "/stills/osrs/citizens/ardougne-1.png")],
-  osrsyanille: [c("Wizard", "/stills/osrs/citizens/yanille-1.png")],
+  osrsalk: [c("Palace guard", "/stills/osrs/citizens/al-kharid-1.png")],
+  osrscath: [c("Fisher", "/stills/osrs/citizens/catherby-1.png")],
+  osrsard: [c("Knight of Ardougne", "/stills/osrs/citizens/ardougne-1.png")],
+  osrsyan: [c("Wizard", "/stills/osrs/citizens/yanille-1.png")],
   osrsprif: [c("Elven door-warden", "/stills/osrs/citizens/prifddinas-1.png")],
 };
 
@@ -62,11 +62,15 @@ const DEFAULT_RS3: Citizen[] = [
 export function citizenPool(id: string, game: "osrs" | "rs3"): Citizen[] {
   const named = game === "osrs" ? OSRS[id] : RS3[id];
   const fallback = game === "osrs" ? DEFAULT_OSRS : DEFAULT_RS3;
-  return named?.length ? named : fallback;
+  const base = named?.length ? named : [];
+  const seen = new Set(base.map((c) => c.src ?? c.role));
+  const extra = fallback.filter((c) => !seen.has(c.src ?? c.role));
+  const pool = [...base, ...extra];
+  return pool.length ? pool : fallback;
 }
 
 export function citizenFor(id: string, game: "osrs" | "rs3", now = Date.now()): Citizen {
   const pool = citizenPool(id, game);
-  const i = Math.floor(now / 300000);
-  return pool[i % pool.length]!;
+  const slot = Math.floor(now / 300000);
+  return pool[slot % pool.length]!;
 }
