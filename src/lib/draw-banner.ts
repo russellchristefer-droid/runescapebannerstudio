@@ -124,6 +124,43 @@ export function plateMetrics(width: number, height: number) {
   return { name: 36, clan: 16, line: 15, level: 18, icon: 40, gap: 12, pad: 36, top: 22 };
 }
 
+export function packBounds(
+  stamps: { x?: number; y?: number; size?: number; scale?: number }[],
+  fallback = 40,
+) {
+  const placed = stamps.filter((s) => s.x != null && s.y != null);
+  if (!placed.length) return null;
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const s of placed) {
+    const cell = Math.max(1, (s.size ?? fallback) * (s.scale ?? 1));
+    minX = Math.min(minX, s.x as number);
+    minY = Math.min(minY, s.y as number);
+    maxX = Math.max(maxX, (s.x as number) + cell);
+    maxY = Math.max(maxY, (s.y as number) + cell);
+  }
+  return { minX, minY, maxX, maxY };
+}
+
+export function layoutName(
+  ctx: PaintCtx,
+  stamps: { x?: number; y?: number; size?: number; scale?: number }[],
+  name: string,
+  fontSize: number,
+) {
+  const b = packBounds(stamps);
+  ctx.font = `700 ${Math.round(fontSize)}px "RS Chat Bold"`;
+  const nameW = ctx.measureText(name).width;
+  const nameH = fontSize;
+  if (!b) return { x: 36, y: 24 };
+  return {
+    x: b.minX + (b.maxX - b.minX - nameW) / 2,
+    y: b.minY - nameH - 8,
+  };
+}
+
 function typeScale(width: number, height: number) {
   const m = plateMetrics(width, height);
   return { name: m.name, level: m.level, pad: m.pad, top: m.top, clan: m.clan, line: m.line, icon: m.icon, gap: m.gap };
@@ -208,6 +245,7 @@ function drawIdentityPlate(
     fontId?: string;
     edition?: string;
     caps?: boolean;
+    nameAnchor?: { x: number; y: number } | null;
   },
   textMax: number,
   height: number,
@@ -268,10 +306,17 @@ function drawIdentityPlate(
     const size = Math.max(8, Math.round(line.size * scale));
     const pos = options.textPos[line.id];
     const inset = chip.pad;
-    const x = pos ? pos.x + 4 : layout === "title-card" ? Math.round(options.width / 2) : inset;
-    const yy = pos ? pos.y + size : y;
-    ctx.font = `700 ${size}px ${plateFont}`;
     const nameLine = line.id === "streamer";
+    const packPos = nameLine ? options.nameAnchor : null;
+    const x = packPos
+      ? packPos.x
+      : pos
+        ? pos.x + 4
+        : layout === "title-card"
+          ? Math.round(options.width / 2)
+          : inset;
+    const yy = packPos ? packPos.y + size : pos ? pos.y + size : y;
+    ctx.font = `700 ${size}px ${plateFont}`;
     if (nameLine) {
       paintRSYellow(ctx, line.text, x, yy, size, color);
     } else {
@@ -443,7 +488,13 @@ export function drawBanner(
     180,
     Math.min(Math.round(width * 0.33), (options.showRules ? boardLeft : width) - inset * 2),
   );
-  drawIdentityPlate(ctx, options, textMax, height, font, boxes, weight, inkStyle);
+  const name = sanitizeDisplayName(options.streamer);
+  const nameSize = Math.max(8, Math.round(typeScale(width, height).name * Math.min(3, Math.max(0.5, options.textScale?.streamer ?? 1))));
+  const nameAnchor =
+    name && name !== "Player" && name !== "Optional"
+      ? layoutName(ctx, options.skillIcons, name, nameSize)
+      : null;
+  drawIdentityPlate(ctx, { ...options, nameAnchor }, textMax, height, font, boxes, weight, inkStyle);
 
   if (options.skillIcons.length) {
     const count = options.skillIcons.length;

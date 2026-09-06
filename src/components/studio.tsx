@@ -410,6 +410,26 @@ export function Studio() {
     return skillPicksRef.current.filter((item) => item.group === hit.group);
   }
 
+  function nudgePack(dx: number, dy: number) {
+    setSkillPicks((cur) => {
+      const pack = cur.filter((item) => !isMark(item.id) && item.x != null && item.y != null);
+      if (!pack.length) return cur;
+      return cur.map((item) => {
+        if (item.x == null || item.y == null || isMark(item.id)) return item;
+        const mark = Math.max(12, (item.size ?? skillSize) * (item.scale ?? 1));
+        return {
+          ...item,
+          x: Math.max(0, Math.min(size.width - mark, item.x + dx)),
+          y: Math.max(0, Math.min(size.height - mark, item.y + dy)),
+        };
+      });
+    });
+    const lead = skillPicksRef.current.find((item) => !isMark(item.id) && item.x != null);
+    if (lead?.x != null && lead.y != null) {
+      setAriaLive(`Pack moved to ${Math.round(lead.x + dx)}, ${Math.round(lead.y + dy)}`);
+    }
+  }
+
   function packScaleMax(count: number) {
     const m = plateMetrics(size.width, size.height);
     const cols = skillPack === "OSRS" ? 8 : 9;
@@ -551,43 +571,13 @@ export function Studio() {
         window.dispatchEvent(new Event("rs-close-menu"));
         return;
       }
-      const lead = skillPicks.find((row) => row.id === pickedSkill);
       const stepBase = e.shiftKey ? 10 : 2;
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
         e.preventDefault();
         const dir = e.key.replace("Arrow", "").toLowerCase() as "up" | "down" | "left" | "right";
-        if (pickedText) {
-          const step = stepBase;
-          setTextPos((cur) => {
-            const pos = cur[pickedText] ?? boxesRef.current.find((box) => box.id === pickedText);
-            if (!pos) return cur;
-            let x = pos.x;
-            let y = pos.y;
-            if (dir === "left") x = Math.max(8, x - step);
-            if (dir === "right") x = Math.min(size.width - 40, x + step);
-            if (dir === "up") y = Math.max(8, y - step);
-            if (dir === "down") y = Math.min(size.height - 16, y + step);
-            setAriaLive(`Name moved to ${Math.round(x)}, ${Math.round(y)}`);
-            return { ...cur, [pickedText]: { x, y } };
-          });
-          return;
-        }
-        setSkillPicks((cur) =>
-          cur.map((item) => {
-            const inGroup = lead?.group && item.group === lead.group;
-            if ((!inGroup && item.id !== pickedSkill) || item.x == null || item.y == null) return item;
-            const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
-            const step = stepBase * (item.scale ?? 1);
-            let x = item.x;
-            let y = item.y;
-            if (dir === "left") x = Math.max(0, x - step);
-            if (dir === "right") x = Math.min(size.width - mark, x + step);
-            if (dir === "up") y = Math.max(0, y - step);
-            if (dir === "down") y = Math.min(size.height - mark, y + step);
-            if (item.id === pickedSkill) setAriaLive(`Stamp moved to ${Math.round(x)}, ${Math.round(y)}`);
-            return { ...item, x, y, scale: item.scale ?? 1 };
-          }),
-        );
+        const dx = dir === "left" ? -stepBase : dir === "right" ? stepBase : 0;
+        const dy = dir === "up" ? -stepBase : dir === "down" ? stepBase : 0;
+        nudgePack(dx, dy);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -1650,38 +1640,13 @@ export function Studio() {
             <button
               key={dir}
               type="button"
-              disabled={!pickedSkill && !pickedText}
+              disabled={!skillPicks.some((item) => !isMark(item.id) && item.x != null)}
               className="min-h-11 rounded-md border border-line px-2 text-[10px] capitalize disabled:opacity-40"
               onClick={(e) => {
-                const step = e.shiftKey ? 8 : 2;
-                if (pickedText) {
-                  setTextPos((cur) => {
-                    const pos = cur[pickedText] ?? boxesRef.current.find((box) => box.id === pickedText);
-                    if (!pos) return cur;
-                    let x = pos.x;
-                    let y = pos.y;
-                    if (dir === "left") x = Math.max(8, x - step);
-                    if (dir === "right") x = Math.min(size.width - 40, x + step);
-                    if (dir === "up") y = Math.max(16, y - step);
-                    if (dir === "down") y = Math.min(size.height - 8, y + step);
-                    return { ...cur, [pickedText]: { x, y } };
-                  });
-                  return;
-                }
-                setSkillPicks((cur) =>
-                  cur.map((item) => {
-                    if (item.id !== pickedSkill || item.x == null || item.y == null) return item;
-                    const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
-                    const move = step * (item.scale ?? 1);
-                    let x = item.x;
-                    let y = item.y;
-                    if (dir === "left") x = Math.max(0, x - move);
-                    if (dir === "right") x = Math.min(size.width - mark, x + move);
-                    if (dir === "up") y = Math.max(0, y - move);
-                    if (dir === "down") y = Math.min(size.height - mark, y + move);
-                    return { ...item, x, y, scale: item.scale ?? 1 };
-                  }),
-                );
+                const step = e.shiftKey ? 10 : 2;
+                const dx = dir === "left" ? -step : dir === "right" ? step : 0;
+                const dy = dir === "up" ? -step : dir === "down" ? step : 0;
+                nudgePack(dx, dy);
               }}
             >
               {dir}
