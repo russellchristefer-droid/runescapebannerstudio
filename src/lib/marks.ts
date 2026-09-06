@@ -3,7 +3,7 @@ export type Mark = {
   name: string;
   editions: ("OSRS" | "RS3")[];
   src: string;
-  group: "account" | "cape" | "overhead" | "raid" | "combat";
+  group: "account" | "cape" | "overhead" | "raid" | "combat" | "hat";
 };
 
 export const MARKS: Mark[] = [
@@ -25,6 +25,13 @@ export const MARKS: Mark[] = [
   { id: "mark-osrs-veng", name: "Vengeance", editions: ["OSRS"], src: "/marks/osrs-vengeance.png", group: "combat" },
   { id: "mark-osrs-slayer", name: "Slayer", editions: ["OSRS"], src: "/skills/osrs-Slayer.png", group: "combat" },
   { id: "mark-osrs-dt2", name: "DT2", editions: ["OSRS"], src: "/marks/osrs-dt2.svg", group: "raid" },
+  { id: "mark-osrs-phat-white", name: "White partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-white.png", group: "hat" },
+  { id: "mark-osrs-phat-blue", name: "Blue partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-blue.png", group: "hat" },
+  { id: "mark-osrs-phat-green", name: "Green partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-green.png", group: "hat" },
+  { id: "mark-osrs-phat-yellow", name: "Yellow partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-yellow.png", group: "hat" },
+  { id: "mark-osrs-phat-red", name: "Red partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-red.png", group: "hat" },
+  { id: "mark-osrs-phat-purple", name: "Purple partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-purple.png", group: "hat" },
+  { id: "mark-osrs-phat-black", name: "Black partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-black.png", group: "hat" },
   { id: "mark-rs3-im", name: "Ironman", editions: ["RS3"], src: "/marks/rs3-ironman.svg", group: "account" },
   { id: "mark-rs3-hcim", name: "Hardcore ironman", editions: ["RS3"], src: "/marks/rs3-hcim.svg", group: "account" },
   { id: "mark-rs3-uim", name: "Ultimate ironman", editions: ["RS3"], src: "/marks/rs3-uim.svg", group: "account" },

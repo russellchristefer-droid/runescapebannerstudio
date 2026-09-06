@@ -63,6 +63,8 @@ Line endings in this repo are `LF` (see [.gitattributes](https://github.com/russ
 | `public/` | Town stills, icons, fonts |
 | `public/fonts/rs-chat-bold.ttf` | Fan Chat Bold on the plate |
 | `public/fonts/runescape_uf.ttf` | UF replica (optional) |
+| `docs/partyhats/` | Old School partyhat inventory icons (GitHub download) |
+| `public/marks/osrs-partyhat-*.png` | Same hats, stamped on the desk |
 
 ## Policy
 

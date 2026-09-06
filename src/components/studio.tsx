@@ -1821,7 +1821,7 @@ export function Studio() {
         </div>
 
         <div>
-          <p className="px-1 text-[10px] text-muted">Marks</p>
+          <p className="px-1 text-[10px] text-muted">Marks · partyhats sit at skill size, pixel-scaled</p>
           <div className="grid grid-cols-8 gap-0.5 p-1 sm:grid-cols-10">
             {MARKS.filter((mark) => mark.editions.includes(skillPack)).map((mark) => {
               const on = armedSkill === mark.id || skillPicks.some((item) => item.id === mark.id);
