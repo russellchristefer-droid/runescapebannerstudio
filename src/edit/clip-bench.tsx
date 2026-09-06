@@ -807,7 +807,7 @@ export function ClipBench() {
         const two = await recordOnce(1080, 1920);
         await downloadBlob(two.blob, 1080, 1920, two.mime);
       }
-      setStatus(one.audioOk ? "Clip saved on this device." : "Clip saved. No audio track in that file.");
+      setStatus("In the bag.");
     } catch (err) {
       const why = err instanceof Error ? err.message : "";
       if (why === "mime") setStatus("This browser cannot export a clip.");
@@ -1005,8 +1005,8 @@ export function ClipBench() {
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#c6a45a]/25 bg-[#1a1610] px-2 py-2">
-          <p className="w-full text-[10px] tracking-wide text-faint sm:w-auto">Sound</p>
+        <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#c6a45a]/40 bg-[#1a1610] px-2 py-2 shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
+          <p className="w-full text-[10px] tracking-wide text-faint sm:w-auto">Mute · Gain · Fade in · Fade out · Peak</p>
           <button type="button" className={muted ? CHIP_ON : CHIP} onClick={() => setMuted((v) => !v)}>
             Mute
           </button>
@@ -1019,9 +1019,13 @@ export function ClipBench() {
               step={1}
               value={gainPct}
               disabled={muted}
-              onChange={(e) => setGainPct(Number(e.target.value))}
-              className="h-11 w-36 accent-[#c6a45a]"
-              aria-label="Gain percent"
+              onChange={(e) => {
+                const next = Number(e.target.value);
+                setGainPct(next);
+                if (next >= 190) setStatus("Back off the gain.");
+              }}
+              className="h-11 w-36 accent-[#ffff00]"
+              aria-label="Gain"
             />
             <span className="w-10 font-mono tabular-nums text-parchment">{gainPct}%</span>
           </label>
@@ -1039,23 +1043,17 @@ export function ClipBench() {
           >
             Fade out
           </button>
-          <span
-            id="pk"
-            className="inline-block h-2 w-28 origin-left rounded-sm bg-[#c6a45a]"
-            style={{ transform: "scaleX(0)" }}
-            aria-hidden="true"
-          />
-          <span className="relative inline-flex h-11 w-4 overflow-hidden rounded-sm border border-[#c6a45a]/40 bg-[#120f0c]" title={`${peakDb(hold)} dBFS`} aria-label={`Peak ${peakDb(hold)} dBFS`}>
-            <span
-              className="absolute bottom-0 w-full"
-              style={{
-                height: `${Math.min(100, peak * 100)}%`,
-                background: peak > 0.95 ? "#9b1b1b" : peak > 0.7 ? "#c6a45a" : "#7a9b3a",
-              }}
-            />
-            <span className="absolute w-full bg-[#efe4c8]" style={{ bottom: `${Math.min(100, hold * 100)}%`, height: 2 }} />
+          <span className="inline-flex min-h-11 items-center gap-2 text-[11px] text-muted">
+            Peak
+            <span className="relative h-2 w-28 overflow-hidden rounded-sm border border-black bg-[#120f0c]">
+              <span
+                id="pk"
+                className="absolute inset-y-0 left-0 w-full origin-left bg-[#ffff00]"
+                style={{ transform: "scaleX(0)" }}
+              />
+            </span>
+            <span className="text-faint">{peak < 0.04 ? "Quiet." : peak > 0.95 ? "Back off the gain." : ""}</span>
           </span>
-          <span className="font-mono text-[11px] tabular-nums text-muted">{peakDb(hold)} dB</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -1122,11 +1120,7 @@ export function ClipBench() {
             type="button"
             className={ltOn ? CHIP_ON : CHIP}
             onClick={() => {
-              setLtOn((on) => {
-                const next = !on;
-                if (next && !ltText) setLtText(sanitizeDisplayName(readDesk().streamer ?? name).slice(0, 24));
-                return next;
-              });
+              setLtOn((on) => !on);
             }}
           >
             Lower third

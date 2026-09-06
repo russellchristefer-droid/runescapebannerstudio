@@ -58,7 +58,7 @@ export function LegalPage() {
               Jagex Fan Content Policy
             </a>
           </p>
-          <p className="mt-3">Official news and the wiki win on numbers.</p>
+          <p className="mt-3">Official news and the wiki win on numbers. This page does not call anyone a god player.</p>
         </section>
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Your files</h2>
