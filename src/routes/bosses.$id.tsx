@@ -1,12 +1,14 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
-import type { ReactNode } from "react";
 import { BackLink } from "@/components/back-link";
-import { bossPvme, bossStrategy, bossWiki, bossWipe, noteFor } from "@/lib/boss-notes";
-import { LOCATIONS, type Location } from "@/lib/locations";
+import { BossSheet } from "@/components/boss-sheet";
 import { OfficialPulse } from "@/components/official-pulse";
+import { noteFor } from "@/lib/boss-notes";
+import { hubFor, sheetFor } from "@/lib/boss-sheets";
 import { deskOpenPath } from "@/lib/desk-link";
-import { writeStudioSave } from "@/lib/studio-save";
+import { LOCATIONS, type Location } from "@/lib/locations";
+import { pageMeta } from "@/lib/page-title";
 import { placeLore } from "@/lib/place-lore";
+import { writeStudioSave } from "@/lib/studio-save";
 
 function sisterWiki(loc: Location) {
   const sister = LOCATIONS.find(
@@ -20,28 +22,22 @@ function sisterWiki(loc: Location) {
 }
 
 export const Route = createFileRoute("/bosses/$id")({
+  head: ({ params }) => {
+    const note = noteFor(params.id);
+    return pageMeta(note?.title ?? "Boss", "Working PvM sheet. Wiki keeps the hour.");
+  },
   component: BossNotePage,
 });
-
-function Block({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section>
-      <h2 className="mb-2 text-sm tracking-[0.16em] text-parchment">{title}</h2>
-      {children}
-    </section>
-  );
-}
 
 function BossNotePage() {
   const { id } = Route.useParams();
   const note = noteFor(id);
+  const sheet = sheetFor(id);
   const loc = LOCATIONS.find((item) => item.id === id);
-  if (!note || !loc) throw notFound();
+  if (!note || !sheet || !loc) throw notFound();
   const game = note.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
-  const live = bossWiki(note);
-  const strat = bossStrategy(note);
-  const pvme = bossPvme(note);
   const sister = sisterWiki(loc);
+  const wiki = sheet.sources.find((s) => s.rank === 2);
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
@@ -54,9 +50,10 @@ function BossNotePage() {
       </header>
       <main className="mx-auto flex max-w-3xl flex-col gap-6 px-5 py-6 md:px-8">
         <OfficialPulse
-          note="Live method sits on the wiki. This sheet does not freeze a patch."
+          note="Live method sits on the official news desk and the wiki. This sheet does not freeze a patch. Unofficial clips lose if they disagree."
           links={[
-            { label: `${note.title} · ${game} wiki`, href: live },
+            { label: `${game} official desk`, href: hubFor(note.edition) },
+            wiki ? { label: wiki.label, href: wiki.href } : null,
             sister,
           ].filter((row): row is { label: string; href: string } => Boolean(row))}
         />
@@ -66,64 +63,11 @@ function BossNotePage() {
           className="aspect-[21/9] w-full rounded-md border border-line object-cover bg-surface"
         />
 
-        <Block title="Role">
-          <p className="text-sm text-muted">{note.role}. {note.style}</p>
-        </Block>
+        <p className="text-sm text-muted">
+          {note.style} First kill from the grid. Next rung from the wiki.
+        </p>
 
-        <Block title="Stack">
-          <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
-            {note.kit.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-            <li>{note.pray}</li>
-          </ul>
-        </Block>
-
-        <Block title="Opener">
-          <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
-            {note.start.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </Block>
-
-        <Block title="Mechanics">
-          <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
-            {note.route.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </Block>
-
-        <Block title="Wipe">
-          <p className="text-sm text-muted">{bossWipe(note)}</p>
-        </Block>
-
-        <Block title="PVM hub / wiki">
-          <p className="text-sm text-muted">
-            Confirm ticks, gear, and this hour’s method on the live page. This desk does not freeze a rotation.
-          </p>
-          <p className="mt-2 flex flex-col gap-1 text-sm">
-            <a href={live} target="_blank" rel="noopener noreferrer" className="text-parchment">
-              {game} wiki · {note.title}
-            </a>
-            {note.edition === "OSRS" ? (
-              <a href={strat} target="_blank" rel="noopener noreferrer" className="text-parchment">
-                Strategies page
-              </a>
-            ) : null}
-            {pvme ? (
-              <a href={pvme} target="_blank" rel="noopener noreferrer" className="text-parchment">
-                Community PvM Encyclopedia — not Jagex
-              </a>
-            ) : null}
-            {sister ? (
-              <a href={sister.href} target="_blank" rel="noopener noreferrer" className="text-parchment">
-                {sister.label}
-              </a>
-            ) : null}
-          </p>
-        </Block>
+        <BossSheet sheet={sheet} />
 
         <SisterBoss name={loc.name} edition={loc.edition} id={loc.id} />
         <a
