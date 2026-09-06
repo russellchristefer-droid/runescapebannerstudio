@@ -12,6 +12,7 @@ import { PlaceRail } from "@/places";
 import { stillIndex } from "@/lib/still-clock";
 import { safeZoneRects, type SafeZone } from "@/lib/bannerFeatures";
 import { MARKS } from "@/lib/marks";
+import { godInk } from "@/lib/gods";
 import { sanitizeSkillLevel, skillIdForHiscore, skillLevelCap, SKILLS } from "@/lib/skills";
 import {
   BANNER_SIZES,
@@ -1182,7 +1183,8 @@ export function Studio() {
                   {loc.name}
                 </AppLink>
                 <p className="px-2 pb-2 text-center text-[10px] text-faint">
-                  {loc.region.replace(/\s·\sOSRS$/, "")} · {loc.god}
+                  {loc.region.replace(/\s·\sOSRS$/, "")} ·{" "}
+                  <span style={{ color: godInk(loc.god) }}>{loc.god}</span>
                 </p>
               </div>
             );

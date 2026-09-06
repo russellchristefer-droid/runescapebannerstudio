@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { GOD_SLUGS } from "@/lib/gods";
+import { GOD_SLUGS, godFromSlug, godInk } from "@/lib/gods";
 import type { God } from "@/lib/locations";
 
 function sameOriginPath(href: string) {
@@ -44,8 +44,8 @@ export function PlaceChip({
       current={current}
       style={style}
       className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border px-3 text-xs [touch-action:manipulation] ${
-        current ? "border-parchment bg-raised text-parchment" : "border-line text-muted"
-      }`}
+        current ? "border-parchment bg-raised" : "border-line"
+      } ${style?.color ? "" : current ? "text-parchment" : "text-muted"}`}
     >
       {children}
     </AppLink>
@@ -67,11 +67,15 @@ export function VisitPlaces({
   if (!chips.length) return null;
   return (
     <nav aria-label="Places to visit" className="flex flex-wrap gap-2">
-      {chips.map((item) => (
-        <PlaceChip key={item.href} href={item.href} current={item.current} style={item.color ? { color: item.color } : undefined}>
-          {item.label}
-        </PlaceChip>
-      ))}
+      {chips.map((item) => {
+        const slug = item.href.replace(/^\/gods\//, "");
+        const ink = item.color || (item.href.startsWith("/gods/") ? godInk(godFromSlug(slug) ?? item.label) : undefined);
+        return (
+          <PlaceChip key={item.href} href={item.href} current={item.current} style={ink ? { color: ink } : undefined}>
+            {item.label}
+          </PlaceChip>
+        );
+      })}
     </nav>
   );
 }
