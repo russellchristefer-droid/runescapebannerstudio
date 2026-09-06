@@ -9,4 +9,7 @@ export {
   ensurePlateFont,
   loadImage,
   plateMetrics,
+  packBounds,
+  layoutName,
 } from "@/lib/draw-banner";
+export { cellFor, levelFor, layoutPack, nudgePack, PAD as PACK_PAD } from "./compositor";

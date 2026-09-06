@@ -5,7 +5,7 @@ import { TodayDesk } from "@/components/today-desk";
 import { TownHero } from "@/components/town-hero";
 import { OracleLine } from "@/components/oracle-line";
 import { StillPhoto } from "@/components/still-photo";
-import { drawBanner, ensurePlateFont, loadImage, plateMetrics, putStillOnDesk } from "@/desk";
+import { drawBanner, ensurePlateFont, loadImage, plateMetrics, putStillOnDesk, layoutPack } from "@/desk";
 import { loadStudioSave, writeStudioSave } from "@/desk/save";
 import { deskSharePath, readDeskQuery } from "@/desk/desk-link";
 import { PlaceRail } from "@/places";
@@ -468,27 +468,18 @@ export function Studio() {
     const pack = SKILLS.filter((skill) => skill.editions.includes(skillPack));
     const kept = skillPicksRef.current.filter((item) => isMark(item.id)).slice(0, 16);
     const wanted = packScaleValue ?? packScale(pack.length);
-    const grid = layoutAllGrid(pack.length, wanted);
-    const next = [
-      ...pack.map((skill, i) => {
-        const col = i % grid.cols;
-        const row = Math.floor(i / grid.cols);
-        const lastCount = pack.length % grid.cols || grid.cols;
-        const onLast = row === grid.rows - 1 && lastCount < grid.cols;
-        const rowShift = onLast ? Math.round(((grid.cols - lastCount) * grid.strideX) / 2) : 0;
-        return {
-          id: skill.id,
-          game: skillPack,
-          level: boardLevels[skillPack][skill.id] ?? "",
-          x: grid.originX + rowShift + col * grid.strideX,
-          y: grid.originY + row * grid.strideY,
-          size: grid.icon,
-          scale: 1,
-          group: "skills-all",
-        };
-      }),
-      ...kept,
-    ];
+    const laid = layoutPack(
+      pack.map((skill) => ({
+        id: skill.id,
+        game: skillPack,
+        level: boardLevels[skillPack][skill.id] ?? "",
+        group: "skills-all" as const,
+      })),
+      size.width,
+      size.height,
+      wanted,
+    );
+    const next = [...laid, ...kept];
     skillPicksRef.current = next;
     setSkillPicks(next);
     centerNameOverStamps(next);
