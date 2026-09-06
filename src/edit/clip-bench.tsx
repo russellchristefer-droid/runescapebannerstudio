@@ -50,6 +50,7 @@ export function ClipBench() {
   const gainNode = useRef<GainNode | null>(null);
   const recDest = useRef<MediaStreamAudioDestinationNode | null>(null);
   const meterBuf = useRef<Uint8Array | null>(null);
+  const exportingRef = useRef(false);
   const actions = useRef({
     togglePlay: () => {},
     seek: (_t: number) => {},
@@ -231,7 +232,7 @@ export function ClipBench() {
     };
   }
 
-  function paint(canvas: HTMLCanvasElement, video: HTMLVideoElement, ghosts: boolean, w = size.w, h = size.h) {
+  function paint(canvas: HTMLCanvasElement, video: HTMLVideoElement, ghosts: boolean, w = size.w, h = size.h, forFile = false) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const s = paintArgs.current;
@@ -259,7 +260,7 @@ export function ClipBench() {
       ctx.fillStyle = `rgba(0,0,0,${1 - fade})`;
       ctx.fillRect(0, 0, w, h);
     }
-    if (s.overlay !== "off" && bannerImg.current) {
+    if (!forFile && s.overlay !== "off" && bannerImg.current) {
       const barH = Math.round(h * (s.overlay === "top" ? 0.2 : 0.22));
       const y = s.overlay === "top" ? 0 : h - barH;
       ctx.save();
@@ -267,23 +268,18 @@ export function ClipBench() {
       ctx.drawImage(bannerImg.current, 0, y, w, barH);
       ctx.restore();
     }
-    const mark = CLIP_MARKS.find((item) => item.id === s.markId && item.id !== "none");
-    if (mark?.src) {
-      const img = markCache.current[mark.src];
-      if (img) ctx.drawImage(img, 36, Math.round(h * 0.72), Math.round(h * 0.08), Math.round(h * 0.08));
+    if (!forFile) {
+      const mark = CLIP_MARKS.find((item) => item.id === s.markId && item.id !== "none");
+      if (mark?.src) {
+        const img = markCache.current[mark.src];
+        if (img) ctx.drawImage(img, 36, Math.round(h * 0.72), Math.round(h * 0.08), Math.round(h * 0.08));
+      }
     }
     if (s.ltOn) {
       const line = sanitizeDisplayName(s.ltText || "").slice(0, 24);
       if (line) paintRSYellow(ctx, line, 36, h - Math.round(h * 0.12), Math.max(18, Math.round(h * 0.045)));
     }
-    if (ghosts && s.ghost !== "none") drawSafeZoneGhosts(ctx, w, h, s.ghost);
-    if (ghosts && s.aspect === "9x16" && w / h > 1) {
-      const cropW = h * (9 / 16);
-      const x = (w - cropW) / 2;
-      ctx.fillStyle = "rgba(0,0,0,0.35)";
-      ctx.fillRect(0, 0, x, h);
-      ctx.fillRect(x + cropW, 0, w - x - cropW, h);
-    }
+    if (!forFile && ghosts && s.ghost !== "none") drawSafeZoneGhosts(ctx, w, h, s.ghost);
   }
 
   useEffect(() => {
@@ -300,7 +296,7 @@ export function ClipBench() {
       const s = paintArgs.current;
       if (video && canvas) {
         const t = video.currentTime;
-        if (s.loop && s.outPoint > s.inPoint && t >= s.outPoint - 0.04) {
+        if (!exportingRef.current && s.loop && s.outPoint > s.inPoint && t >= s.outPoint - 0.04) {
           video.currentTime = s.inPoint;
         }
         const preview = previewSize(CLIP_ASPECTS[s.aspect].w, CLIP_ASPECTS[s.aspect].h);
@@ -534,7 +530,7 @@ export function ClipBench() {
     if (!video || !hasClip) return;
     if (video.paused) {
       if (video.currentTime < inPoint || video.currentTime >= outPoint - 0.04) video.currentTime = inPoint;
-      void audioCtx.current?.resume();
+      attachSound(video);
       void video.play();
     } else {
       video.pause();
@@ -675,12 +671,13 @@ export function ClipBench() {
     canvas.style.left = "-9999px";
     document.body.appendChild(canvas);
     const ctxTick = () => {
-      paint(canvas, video, false, w, h);
-      applyLiveGain(video.currentTime);
+      paint(canvas, video, false, w, h, true);
     };
+    exportingRef.current = true;
+    attachSound(video);
     video.muted = false;
     video.volume = 1;
-    video.playbackRate = speed === 1 ? 1 : speed;
+    video.playbackRate = 1;
     video.currentTime = inT;
     setMute(muted);
     setGain(Math.max(0, Math.min(2, gainPct / 100)));
@@ -699,13 +696,8 @@ export function ClipBench() {
     let mix: MediaStream = recStream;
     let audioOk = false;
     const processed = soundTracks();
-    const capture =
-      (video as HTMLVideoElement & { captureStream?: () => MediaStream; mozCaptureStream?: () => MediaStream }).captureStream?.() ??
-      (video as HTMLVideoElement & { mozCaptureStream?: () => MediaStream }).mozCaptureStream?.();
-    const rawAudio = capture?.getAudioTracks() ?? [];
-    const audioTracks = processed.length ? processed : rawAudio;
-    if (audioTracks.length && !muted && speed === 1) {
-      mix = new MediaStream([...recStream.getVideoTracks(), ...audioTracks]);
+    if (processed.length && !muted) {
+      mix = new MediaStream([...recStream.getVideoTracks(), ...processed]);
       audioOk = true;
     }
     const chunks: BlobPart[] = [];
@@ -713,6 +705,7 @@ export function ClipBench() {
     try {
       recorder = mime ? new MediaRecorder(mix, { mimeType: mime }) : new MediaRecorder(mix);
     } catch {
+      exportingRef.current = false;
       canvas.remove();
       throw new Error("mime");
     }
@@ -748,6 +741,7 @@ export function ClipBench() {
     });
     const blob = await done;
     recorderRef.current = null;
+    exportingRef.current = false;
     canvas.remove();
     if (blob.size < 64) throw new Error("empty-blob");
     return { blob, audioOk, mime: recorder.mimeType || mime || "video/webm" };
