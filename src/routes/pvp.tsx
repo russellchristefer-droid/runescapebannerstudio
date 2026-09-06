@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { BackLink } from "@/components/back-link";
 import { PlaceRail } from "@/components/place-rail";
+import { eggToast } from "@/lib/eggs";
 import { pageMeta } from "@/lib/page-title";
 import {
   PVP_BH,
@@ -106,6 +108,7 @@ function PvpPage() {
             ))}
           </dl>
         </section>
+        <ProtectItemBox />
       </main>
     </div>
   );
@@ -125,6 +128,37 @@ function ModeCard({ sheet, compact }: { sheet: ModeSheet; compact?: boolean }) {
 }
 
 function Row({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="grid grid-cols-[5.5rem_1fr] gap-3 md:grid-cols-[6.5rem_1fr]">
+      <dt className="text-parchment">{k}</dt>
+      <dd className="text-muted">{v}</dd>
+    </div>
+  );
+}
+
+function ProtectItemBox() {
+  const [open, setOpen] = useState(true);
+  const [value, setValue] = useState("");
+  if (!open) return null;
+  return (
+    <input
+      value={value}
+      maxLength={12}
+      spellCheck={false}
+      autoComplete="off"
+      aria-label=" "
+      className="mt-10 min-h-11 w-40 border border-transparent bg-transparent px-1 text-[11px] text-faint/30 outline-none focus:border-line/30"
+      onChange={(event) => {
+        const next = event.target.value.slice(0, 12);
+        setValue(next);
+        if (next.toLowerCase().replace(/\s+/g, " ") === "protect item") {
+          eggToast("Good.");
+          setOpen(false);
+        }
+      }}
+    />
+  );
+}
   return (
     <div className="grid grid-cols-[5.5rem_1fr] gap-3 md:grid-cols-[6.5rem_1fr]">
       <dt className="text-parchment">{k}</dt>

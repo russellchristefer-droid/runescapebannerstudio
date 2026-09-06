@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useRef } from "react";
 import { BackLink } from "@/components/back-link";
+import { eggToast, sessionOnce } from "@/lib/eggs";
 import { HERO_STILLS, type HeroStill } from "@/lib/still-pool";
 import { pageMeta } from "@/lib/page-title";
 
@@ -61,6 +63,7 @@ function ClassicPage() {
 }
 
 function ClassicGrid({ cards }: { cards: HeroStill[] }) {
+  const taps = useRef<Record<string, { n: number; t: number }>>({});
   return (
     <ul className="grid list-none gap-4 p-0 sm:grid-cols-2">
       {cards.map((card) => (
@@ -73,6 +76,18 @@ function ClassicGrid({ cards }: { cards: HeroStill[] }) {
             loading="lazy"
             decoding="async"
             className="aspect-video w-full bg-surface object-cover"
+            onClick={() => {
+              if (!/lumbridge/i.test(card.name)) return;
+              const now = Date.now();
+              const row = taps.current[card.src] ?? { n: 0, t: 0 };
+              if (now - row.t > 900) row.n = 0;
+              row.t = now;
+              row.n += 1;
+              taps.current[card.src] = row;
+              if (row.n < 3) return;
+              row.n = 0;
+              if (sessionOnce("rs-classic-worlds")) eggToast("Worlds are closed.");
+            }}
           />
           <p className="site-title px-2 pt-1.5 text-center text-sm">{card.name}</p>
           <p className="px-2 text-center text-[10px] text-faint">

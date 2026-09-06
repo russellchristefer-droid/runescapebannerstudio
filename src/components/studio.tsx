@@ -131,6 +131,8 @@ export function Studio() {
   const [textPos, setTextPos] = useState<Record<string, { x: number; y: number }>>({});
   const [textScale, setTextScale] = useState<Record<string, number>>(saved.textScale ?? {});
   const [plateCaption, setPlateCaption] = useState("");
+  const [workworkLine, setWorkworkLine] = useState<string | null>(null);
+  const [goldStar, setGoldStar] = useState(false);
   const [saveNote, setSaveNote] = useState("");
   const [ghostZone, setGhostZone] = useState<SafeZone>("none");
   const [customMarks, setCustomMarks] = useState<{ id: string; name: string; src: string; game: "OSRS" | "RS3" }[]>([]);
@@ -207,6 +209,33 @@ export function Studio() {
   const location = LOCATIONS.find((l) => l.id === locationId) ?? LOCATIONS[0];
   const size = BANNER_SIZES.find((s) => s.id === sizeId) ?? BANNER_SIZES[0];
   useDeskEggs(streamer);
+  useEffect(() => {
+    if (streamer.trim().toLowerCase() !== "workwork") return;
+    setWorkworkLine("Work, work.");
+    setStreamer("");
+  }, [streamer]);
+  useEffect(() => {
+    const seq = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    let i = 0;
+    const onKey = (e: KeyboardEvent) => {
+      if (window.location.pathname !== "/") return;
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (key === seq[i]) {
+        i += 1;
+        if (i === seq.length) {
+          i = 0;
+          setGoldStar(true);
+          window.setTimeout(() => setGoldStar(false), 8000);
+        }
+      } else if (key === seq[0]) {
+        i = 1;
+      } else {
+        i = 0;
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
   useEggGestures(
     previewRef,
     () => {
@@ -1157,6 +1186,14 @@ export function Studio() {
               if (last && e.currentTarget.src !== last) e.currentTarget.src = last;
             }}
           />
+          {goldStar ? (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute right-2 top-2 text-[10px] leading-none text-[#c6a45a]"
+            >
+              ★
+            </span>
+          ) : null}
           <canvas
             id="overlay"
             key="overlay-alpha"
@@ -1484,6 +1521,7 @@ export function Studio() {
         <p className="mt-2 text-center text-[10px] text-muted">
           {plateCaption || `${size.width}×${size.height} JPEG`}
         </p>
+        {workworkLine ? <p className="mt-1 text-center text-[11px] text-faint">{workworkLine}</p> : null}
         <div className="mt-1 flex flex-wrap justify-center gap-1">
           {(["none", "twitch", "youtube", "discord"] as const).map((zone) => (
             <button
