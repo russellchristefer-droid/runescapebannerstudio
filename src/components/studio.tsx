@@ -672,51 +672,9 @@ export function Studio() {
   function scaleSelected(delta: number, skillOverride?: string | null) {
     const skillId = skillOverride ?? pickedSkill;
     if (skillId) {
-      scalingRef.current = true;
-      const mates = packMates(skillId).filter((item) => item.x != null && item.y != null);
-      const olds = mates.map((item) => item.scale ?? 1);
-      const nextScale = Math.min(2.5, Math.max(0.5, (olds[0] ?? 1) + delta));
-      if (mates.length > 1 && mates[0]?.group === "skills-all") {
-        placeAllPack(nextScale);
-        window.setTimeout(() => {
-          scalingRef.current = false;
-        }, 80);
-        requestPaint();
-        return;
-      }
-      const ratio = nextScale / Math.max(0.01, olds[0] ?? 1);
-      let gx = 0;
-      let gy = 0;
-      for (const item of mates) {
-        const base = item.size ?? skillSize;
-        const old = item.scale ?? 1;
-        gx += (item.x as number) + (base * old) / 2;
-        gy += (item.y as number) + (base * old) / 2;
-      }
-      gx /= Math.max(1, mates.length);
-      gy /= Math.max(1, mates.length);
-      const next = skillPicksRef.current.map((item) => {
-        if (!mates.some((row) => row.id === item.id) || item.x == null || item.y == null) return item;
-        const old = item.scale ?? 1;
-        const scale = mates.length > 1 ? nextScale : Math.min(2.5, Math.max(0.5, old + delta));
-        const base = item.size ?? skillSize;
-        const cx = item.x + (base * old) / 2;
-        const cy = item.y + (base * old) / 2;
-        const nx = gx + (cx - gx) * ratio - (base * scale) / 2;
-        const ny = gy + (cy - gy) * ratio - (base * scale) / 2;
-        return {
-          ...item,
-          scale,
-          x: Math.max(0, Math.min(size.width - base * scale, mates.length > 1 ? nx : cx - (base * scale) / 2)),
-          y: Math.max(0, Math.min(size.height - base * scale, mates.length > 1 ? ny : cy - (base * scale) / 2)),
-        };
-      });
-      skillPicksRef.current = next;
-      setSkillPicks(next);
-      requestPaint();
-      window.setTimeout(() => {
-        scalingRef.current = false;
-      }, 80);
+      const lead = skillPicksRef.current.find((item) => item.id === skillId);
+      const old0 = lead?.scale ?? 1;
+      applyStampScale(skillId, Math.min(2.5, Math.max(0.5, old0 + delta)));
       return;
     }
     if (!pickedText) return;
@@ -726,19 +684,63 @@ export function Studio() {
     if (box) {
       const cx = box.x + box.w / 2;
       const cy = box.y + box.h / 2;
-      const ratio = nextScale / old;
+      const ratio = nextScale / Math.max(0.01, old);
       textPosRef.current = {
         ...textPosRef.current,
         [pickedText]: { x: cx - (box.w * ratio) / 2, y: cy - (box.h * ratio) / 2 },
       };
-      setTextPos(textPosRef.current);
     }
-    setTextScale((cur) => {
-      const next = { ...cur, [pickedText]: nextScale };
-      textScaleRef.current = next;
-      return next;
+    textScaleRef.current = { ...textScaleRef.current, [pickedText]: nextScale };
+    requestPaint();
+    window.clearTimeout(scaleTimer.current);
+    scaleTimer.current = window.setTimeout(() => {
+      setTextPos(textPosRef.current);
+      setTextScale({ ...textScaleRef.current });
+    }, 140);
+  }
+
+  function applyStampScale(skillId: string, nextScale: number) {
+    scalingRef.current = true;
+    const mates = packMates(skillId).filter((item) => item.x != null && item.y != null);
+    const targets = mates.length ? mates : skillPicksRef.current.filter((item) => item.id === skillId && item.x != null);
+    if (!targets.length) {
+      scalingRef.current = false;
+      return;
+    }
+    const old0 = targets[0].scale ?? 1;
+    const scale = Math.min(2.5, Math.max(0.5, nextScale));
+    const ratio = scale / Math.max(0.01, old0);
+    let gx = 0;
+    let gy = 0;
+    for (const item of targets) {
+      const base = item.size ?? skillSize;
+      const old = item.scale ?? 1;
+      gx += (item.x as number) + (base * old) / 2;
+      gy += (item.y as number) + (base * old) / 2;
+    }
+    gx /= targets.length;
+    gy /= targets.length;
+    skillPicksRef.current = skillPicksRef.current.map((item) => {
+      if (!targets.some((row) => row.id === item.id) || item.x == null || item.y == null) return item;
+      const old = item.scale ?? 1;
+      const base = item.size ?? skillSize;
+      const cx = item.x + (base * old) / 2;
+      const cy = item.y + (base * old) / 2;
+      const nx = gx + (cx - gx) * ratio - (base * scale) / 2;
+      const ny = gy + (cy - gy) * ratio - (base * scale) / 2;
+      return {
+        ...item,
+        scale,
+        x: Math.max(0, Math.min(size.width - base * scale, nx)),
+        y: Math.max(0, Math.min(size.height - base * scale, ny)),
+      };
     });
     requestPaint();
+    window.clearTimeout(scaleTimer.current);
+    scaleTimer.current = window.setTimeout(() => {
+      scalingRef.current = false;
+      setSkillPicks(skillPicksRef.current);
+    }, 140);
   }
 
   useEffect(() => {
@@ -1215,8 +1217,8 @@ export function Studio() {
               const rect = canvas.getBoundingClientRect();
               const x = ((e.clientX - rect.left) / rect.width) * size.width;
               const y = ((e.clientY - rect.top) / rect.height) * size.height;
-              const step = e.shiftKey ? 0.25 : 0.08;
-              const delta = e.deltaY > 0 ? -step : step;
+              const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 120 : 1;
+              const factor = Math.exp(-e.deltaY * unit * 0.0024);
               let skillId = pickedSkill;
               if (!skillId) {
                 const hit = [...skillPicksRef.current].reverse().find((item) => {
@@ -1232,7 +1234,12 @@ export function Studio() {
               }
               if (skillId) {
                 e.preventDefault();
-                scaleSelected(delta, skillId);
+                const lead = skillPicksRef.current.find((item) => item.id === skillId);
+                const old = lead?.scale ?? 1;
+                const next = e.shiftKey
+                  ? Math.min(2.5, Math.max(0.5, old + (e.deltaY > 0 ? -0.25 : 0.25)))
+                  : Math.min(2.5, Math.max(0.5, old * factor));
+                applyStampScale(skillId, next);
                 return;
               }
               let textId = pickedText;
@@ -1251,7 +1258,28 @@ export function Studio() {
               }
               if (!textId) return;
               e.preventDefault();
-              scaleSelected(delta);
+              const old = textScaleRef.current[textId] ?? 1;
+              const next = e.shiftKey
+                ? Math.min(2, Math.max(0.75, old + (e.deltaY > 0 ? -0.25 : 0.25)))
+                : Math.min(2, Math.max(0.75, old * factor));
+              const box = boxesRef.current.find((row) => row.id === textId);
+              if (box) {
+                const ratio = next / Math.max(0.01, old);
+                textPosRef.current = {
+                  ...textPosRef.current,
+                  [textId]: {
+                    x: box.x + box.w / 2 - (box.w * ratio) / 2,
+                    y: box.y + box.h / 2 - (box.h * ratio) / 2,
+                  },
+                };
+              }
+              textScaleRef.current = { ...textScaleRef.current, [textId]: next };
+              requestPaint();
+              window.clearTimeout(scaleTimer.current);
+              scaleTimer.current = window.setTimeout(() => {
+                setTextPos(textPosRef.current);
+                setTextScale({ ...textScaleRef.current });
+              }, 140);
             }}
             onPointerDown={(e) => {
               const canvas = canvasRef.current;
