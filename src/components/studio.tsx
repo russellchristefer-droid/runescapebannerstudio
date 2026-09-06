@@ -208,6 +208,9 @@ export function Studio() {
 
   const location = LOCATIONS.find((l) => l.id === locationId) ?? LOCATIONS[0];
   const size = BANNER_SIZES.find((s) => s.id === sizeId) ?? BANNER_SIZES[0];
+  useEffect(() => {
+    setSkillSize(plateMetrics(size.width, size.height).icon);
+  }, [size.width, size.height]);
   useDeskEggs(streamer);
   useEffect(() => {
     if (streamer.trim().toLowerCase() !== "workwork") return;
@@ -368,13 +371,12 @@ export function Studio() {
     const m = plateMetrics(size.width, size.height);
     const cols = skillPack === "OSRS" ? 8 : 9;
     const rows = Math.max(1, Math.ceil(count / cols));
-    const icon = m.icon;
-    const levelW = Math.round(m.level * 2.1);
+    const cell = m.icon;
     const gap = m.gap;
-    const strideX = icon + levelW + gap;
-    const strideY = icon + gap;
-    const maxW = (size.width - 2 * m.pad) / Math.max(1, cols * strideX - gap);
-    const maxH = (size.height * 0.62) / Math.max(1, rows * strideY - gap);
+    const pad = 36;
+    const maxW = (size.width - 2 * pad) / Math.max(1, cols * (cell + gap));
+    const strideY = cell + gap;
+    const maxH = (size.height * 0.62) / Math.max(1, rows * strideY);
     return Math.max(0.8, Math.min(maxW, maxH, 2));
   }
 

@@ -113,15 +113,15 @@ export function loadImage(src: string) {
 
 export function plateMetrics(width: number, height: number) {
   if (width >= 1920 && height >= 1000) {
-    return { name: 56, clan: 22, line: 20, level: 22, icon: 44, gap: 14, pad: 56, top: 40 };
+    return { name: 56, clan: 22, line: 20, level: 22, icon: 52, gap: 14, pad: 36, top: 40 };
   }
   if (width >= 1920) {
-    return { name: 40, clan: 18, line: 16, level: 18, icon: 36, gap: 12, pad: 48, top: 24 };
+    return { name: 40, clan: 18, line: 16, level: 18, icon: 40, gap: 12, pad: 36, top: 24 };
   }
   if (width >= 1280 && height >= 700) {
-    return { name: 44, clan: 20, line: 18, level: 20, icon: 40, gap: 14, pad: 40, top: 32 };
+    return { name: 44, clan: 20, line: 18, level: 20, icon: 44, gap: 14, pad: 36, top: 32 };
   }
-  return { name: 36, clan: 16, line: 15, level: 18, icon: 36, gap: 12, pad: 36, top: 22 };
+  return { name: 36, clan: 16, line: 15, level: 18, icon: 40, gap: 12, pad: 36, top: 22 };
 }
 
 function typeScale(width: number, height: number) {
