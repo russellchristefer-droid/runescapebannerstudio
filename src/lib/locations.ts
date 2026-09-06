@@ -52,7 +52,7 @@ export type Location = {
   stills: string[];
 };
 
-export const ASSET_REV = "20260905a";
+export const ASSET_REV = "20260905b";
 
 function asset(path: string) {
   return `${path}?v=${ASSET_REV}`;
