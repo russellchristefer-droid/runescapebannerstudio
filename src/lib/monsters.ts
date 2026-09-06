@@ -23,7 +23,7 @@ export function monsterStillSrc(row: Pick<Monster, "edition" | "slug">) {
   const game = row.edition === "OSRS" ? "osrs" : "rs3";
   const slug = row.slug.replace(/-/g, "");
   const file = slug === "warpedterrobird" ? "warpedterrorbird" : slug;
-  return `/stills/${game}/beast-${file}.jpg?v=8`;
+  return `/stills/${game}/beast-${file}.jpg?v=9`;
 }
 
 export function monsterHasStill(row: Pick<Monster, "edition" | "slug">) {
@@ -54,6 +54,7 @@ const MONSTER_LINE: Record<string, string> = {
   "osrs-greendragon": "Wilderness bones. Protect item.",
   "osrs-bluedragon": "Taverley lane. Antifire.",
   "osrs-blackdragon": "The task. KBD is on Bosses.",
+  "osrs-reddragon": "Brimhaven and the isle. Antifire.",
   "osrs-cavekraken": "The cove task. The boss is on Bosses.",
   "osrs-smokedevil": "The cave is not the Thermonuclear room.",
   "osrs-spiritualwarrior": "Kill count. Not Graardor.",
@@ -132,6 +133,7 @@ export const MONSTERS: Monster[] = [
   { id: "osrs-greendragon", slug: "green-dragon", name: "Green dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Wilderness", hunt: "Wilderness trip. Protect item. Antifire. Bones and hides. The ditch is the grammar.", wiki: osrsWiki("Green_dragon"), still: "" },
   { id: "osrs-bluedragon", slug: "blue-dragon", name: "Blue dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "Antifire. Protect Magic if you idle. Taverley is the old room. Baby blues are a different assignment.", wiki: osrsWiki("Blue_dragon"), still: "", placeId: "osrstav" },
   { id: "osrs-blackdragon", slug: "black-dragon", name: "Black dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "Heavier dragon. Antifire. KBD stays on Bosses. This sheet is the task.", wiki: osrsWiki("Black_dragon"), still: "", placeId: "osrstav" },
+  { id: "osrs-reddragon", slug: "red-dragon", name: "Red dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Brimhaven dungeon, Myths' Guild", hunt: "Antifire. Protect Magic if you idle. Brimhaven is the old room. The isle is a trip. KBD stays on Bosses.", wiki: osrsWiki("Red_dragon"), still: "" },
   { id: "osrs-cavekraken", slug: "cave-kraken", name: "Cave kraken", edition: "OSRS", kind: "monster", slayer: true, where: "Kraken Cove", gate: "Slayer", hunt: "The task tentacles. The boss Kraken is on Bosses. Do not mix the two rooms.", wiki: osrsWiki("Cave_kraken"), still: "" },
 
   { id: "rs3-goblin", slug: "goblin", name: "Goblin", edition: "RS3", kind: "monster", where: "Goblin Village", hunt: "Yard melee on the RuneScape client. Learn the click. Then leave.", wiki: rs3Wiki("Goblin"), still: "/locations/goblin.jpg", placeId: "goblin" },
