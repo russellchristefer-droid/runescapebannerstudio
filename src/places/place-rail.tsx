@@ -30,28 +30,11 @@ export function PlaceRail({
   return (
     <nav aria-label="Places" className="flex flex-col items-center gap-2">
       <div className="flex flex-wrap justify-center gap-2">
-        {SECTIONS.map((row) => {
-          if (onSection && (row.id === "towns" || row.id === "bosses")) {
-            return (
-              <button
-                key={row.id}
-                type="button"
-                aria-pressed={section === row.id}
-                onClick={() => onSection(row.id)}
-                className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border px-3 text-xs [touch-action:manipulation] ${
-                  section === row.id ? "border-parchment bg-raised text-parchment" : "border-line text-muted"
-                }`}
-              >
-                {row.label}
-              </button>
-            );
-          }
-          return (
-            <PlaceChip key={row.id} href={row.href} current={section === row.id}>
-              {row.label}
-            </PlaceChip>
-          );
-        })}
+        {SECTIONS.map((row) => (
+          <PlaceChip key={row.id} href={row.href} current={section === row.id}>
+            {row.label}
+          </PlaceChip>
+        ))}
       </div>
       {onEdition ? (
         <div className="flex flex-wrap justify-center gap-2">
@@ -76,22 +59,6 @@ export function PlaceRail({
       <div className="flex flex-wrap justify-center gap-1">
         {GODS.map((name) => {
           const on = god === name;
-          if (onGod) {
-            return (
-              <button
-                key={name}
-                type="button"
-                aria-pressed={on}
-                onClick={() => onGod(on ? null : name)}
-                className={`inline-flex min-h-11 items-center justify-center rounded-md border px-3 text-xs [touch-action:manipulation] ${
-                  on ? "border-parchment bg-raised" : "border-line"
-                }`}
-                style={{ color: godInk(name) }}
-              >
-                {name}
-              </button>
-            );
-          }
           return (
             <PlaceChip key={name} href={godPath(name)} current={on} style={{ color: godInk(name) }}>
               {name}

@@ -25,6 +25,7 @@ export function PlaceCard({
   kind,
   game,
   caption,
+  ontoPlate = false,
 }: {
   to: PlaceTo;
   params: { id: string } | { god: string };
@@ -34,6 +35,7 @@ export function PlaceCard({
   game: string;
   god?: string;
   caption?: string;
+  ontoPlate?: boolean;
 }) {
   const alt = `${name} in ${game}`;
   const href = hrefFor(to, params);
@@ -41,21 +43,30 @@ export function PlaceCard({
   const [gone, setGone] = useState(false);
   if (!src || gone) return null;
   const placeId = "id" in params ? params.id : undefined;
+  const photo = (
+    <StillPhoto
+      src={src}
+      alt={alt}
+      className="aspect-video w-full bg-surface object-cover [content-visibility:auto]"
+      onError={() => setGone(true)}
+    />
+  );
   return (
     <li className="[contain-intrinsic-size:auto_220px] [content-visibility:auto]">
       <div className="overflow-hidden rounded-md border border-line bg-raised hover:border-[#F5C400]">
-        <button
-          type="button"
-          className="block w-full text-left [touch-action:manipulation]"
-          onClick={() => still.putOnDesk({ locationId: placeId, edition: editionOf(game) })}
-        >
-          <StillPhoto
-            src={src}
-            alt={alt}
-            className="aspect-video w-full bg-surface object-cover [content-visibility:auto]"
-            onError={() => setGone(true)}
-          />
-        </button>
+        {ontoPlate ? (
+          <button
+            type="button"
+            className="block w-full text-left [touch-action:manipulation]"
+            onClick={() => still.putOnDesk({ locationId: placeId, edition: editionOf(game) })}
+          >
+            {photo}
+          </button>
+        ) : (
+          <AppLink href={href} className="block [touch-action:manipulation]">
+            {photo}
+          </AppLink>
+        )}
         <AppLink href={href} className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">
           {name}
         </AppLink>

@@ -101,6 +101,7 @@ function TownIndex() {
                     kind="Town"
                     game={game}
                     caption={townStillLine(loc.id)}
+                    ontoPlate
                   />
                 ))}
               </PlaceGrid>

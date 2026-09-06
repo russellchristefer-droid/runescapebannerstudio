@@ -3,6 +3,7 @@ import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
 import { BOSS_NOTES } from "@/lib/boss-notes";
+import { sheetFor } from "@/lib/boss-sheets";
 import { LOCATIONS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
 
@@ -18,6 +19,8 @@ function BossIndex() {
     if (note.edition !== edition) return false;
     const loc = LOCATIONS.find((item) => item.id === note.id);
     if (!loc) return false;
+    if (!sheetFor(note.id)) return false;
+    if (!loc.viewA) return false;
     if (god && loc.god !== god) return false;
     return true;
   });
