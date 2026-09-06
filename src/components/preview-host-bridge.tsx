@@ -22,5 +22,27 @@ export function PreviewHostBridge() {
     });
   }, [router]);
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (window.parent === window) return;
+    const ask = () => {
+      const anyDoc = document as Document & {
+        requestStorageAccess?: () => Promise<void>;
+        hasStorageAccess?: () => Promise<boolean>;
+      };
+      if (typeof anyDoc.requestStorageAccess !== "function") return;
+      void (async () => {
+        try {
+          const has = (await anyDoc.hasStorageAccess?.()) ?? false;
+          if (!has) await anyDoc.requestStorageAccess();
+        } catch {
+          /* third-party cookies stay blocked — desk uses localStorage, not cookies */
+        }
+      })();
+    };
+    window.addEventListener("pointerup", ask, { once: true, passive: true });
+    return () => window.removeEventListener("pointerup", ask);
+  }, []);
+
   return null;
 }

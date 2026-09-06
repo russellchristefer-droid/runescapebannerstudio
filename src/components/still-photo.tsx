@@ -3,11 +3,13 @@ export function StillPhoto({
   alt,
   priority = false,
   className = "aspect-video w-full bg-surface object-cover",
+  onError,
 }: {
   src: string;
   alt: string;
   priority?: boolean;
   className?: string;
+  onError?: () => void;
 }) {
   return (
     <img
@@ -30,6 +32,10 @@ export function StillPhoto({
           return;
         }
         img.onerror = null;
+        if (onError) {
+          onError();
+          return;
+        }
         img.removeAttribute("srcset");
         img.alt = `${alt}. Still needed.`;
         img.src =

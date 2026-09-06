@@ -23,7 +23,11 @@ export function monsterStillSrc(row: Pick<Monster, "edition" | "slug">) {
   const game = row.edition === "OSRS" ? "osrs" : "rs3";
   const slug = row.slug.replace(/-/g, "");
   const file = slug === "warpedterrobird" ? "warpedterrorbird" : slug;
-  return `/stills/${game}/beast-${file}.jpg?v=5`;
+  return `/stills/${game}/beast-${file}.jpg?v=6`;
+}
+
+export function monsterHasStill(row: Pick<Monster, "edition" | "slug">) {
+  return Boolean(monsterStillSrc(row));
 }
 
 export function monsterStillLine(row: Pick<Monster, "id" | "name" | "edition">) {
@@ -46,6 +50,11 @@ const MONSTER_LINE: Record<string, string> = {
   "osrs-basilisk": "Same shield as Cockatrice.",
   "osrs-skeletalwyvern": "Elemental or mind shield. Breath is the wipe.",
   "osrs-araxyte": "Task spiders. Araxxor stays on Bosses.",
+  "osrs-cavehorror": "Witchwood icon. Bare-neck is the wipe.",
+  "osrs-greendragon": "Wilderness bones. Protect item.",
+  "osrs-bluedragon": "Taverley lane. Antifire.",
+  "osrs-blackdragon": "The task. KBD is on Bosses.",
+  "osrs-cavekraken": "The cove task. The boss is on Bosses.",
   "osrs-smokedevil": "The cave is not the Thermonuclear room.",
   "osrs-spiritualwarrior": "Kill count. Not Graardor.",
   "osrs-spiritualranger": "Kill count. Not Kree'arra.",
@@ -119,6 +128,11 @@ export const MONSTERS: Monster[] = [
   { id: "osrs-araxyte", slug: "araxyte", name: "Araxyte", edition: "OSRS", kind: "monster", slayer: true, where: "Morytania", gate: "Slayer", hunt: "The task spiders. Araxxor stays on Bosses. Do not mix the nest with that room.", wiki: osrsWiki("Araxyte"), still: "", placeId: "osrscani" },
   { id: "osrs-warpedtb", slug: "warped-terrobird", name: "Warped terrorbird", edition: "OSRS", kind: "monster", slayer: true, where: "Poison Waste dungeon", gate: "Slayer", hunt: "Poison Waste after the west plague work. The live page owns the room. Confirm the style before you camp.", wiki: osrsWiki("Warped_terrobird"), still: "" },
   { id: "osrs-warpedto", slug: "warped-tortoise", name: "Warped tortoise", edition: "OSRS", kind: "monster", slayer: true, where: "Poison Waste dungeon", gate: "Slayer", hunt: "Same dungeon as the birds. Confirm the assignment. Leave a raid title home.", wiki: osrsWiki("Warped_tortoise"), still: "" },
+  { id: "osrs-cavehorror", slug: "cave-horror", name: "Cave horror", edition: "OSRS", kind: "monster", slayer: true, where: "Mos Le'Harmless cave", gate: "Slayer — witchwood icon", hunt: "Witchwood icon. No icon, they drain. Protect Melee. The cave is the task. Confirm the door on the wiki.", wiki: osrsWiki("Cave_horror"), still: "" },
+  { id: "osrs-greendragon", slug: "green-dragon", name: "Green dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Wilderness", hunt: "Wilderness trip. Protect item. Antifire. Bones and hides. The ditch is the grammar.", wiki: osrsWiki("Green_dragon"), still: "" },
+  { id: "osrs-bluedragon", slug: "blue-dragon", name: "Blue dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "Antifire. Protect Magic if you idle. Taverley is the old room. Baby blues are a different assignment.", wiki: osrsWiki("Blue_dragon"), still: "", placeId: "osrstav" },
+  { id: "osrs-blackdragon", slug: "black-dragon", name: "Black dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "Heavier dragon. Antifire. KBD stays on Bosses. This sheet is the task.", wiki: osrsWiki("Black_dragon"), still: "", placeId: "osrstav" },
+  { id: "osrs-cavekraken", slug: "cave-kraken", name: "Cave kraken", edition: "OSRS", kind: "monster", slayer: true, where: "Kraken Cove", gate: "Slayer", hunt: "The task tentacles. The boss Kraken is on Bosses. Do not mix the two rooms.", wiki: osrsWiki("Cave_kraken"), still: "" },
 
   { id: "rs3-goblin", slug: "goblin", name: "Goblin", edition: "RS3", kind: "monster", where: "Goblin Village", hunt: "Yard melee on the RuneScape client. Learn the click. Then leave.", wiki: rs3Wiki("Goblin"), still: "/locations/goblin.jpg", placeId: "goblin" },
   { id: "rs3-cow", slug: "cow", name: "Cow", edition: "RS3", kind: "monster", where: "Lumbridge field", hunt: "Melee in the rebuilt paddock. Hide is still the lesson. Leave the scythe home.", wiki: rs3Wiki("Cow"), still: "/stills/rs3/rs3-lumbridge-a.jpg", placeId: "lumbridge" },

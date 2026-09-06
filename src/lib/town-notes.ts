@@ -497,12 +497,108 @@ const OSRS: Record<string, TownNote> = {
       "Not a temple. The civic machine that replaced the old stalls inside the gates. This desk does not print a price.",
     ],
   },
+  rellekka: {
+    title: "Rellekka",
+    region: "Fremennik",
+    lore: [
+      "Fremennik dock. Longhall first. The tests stay on the wiki.",
+      "Waterbirth is a boat, not this street. The slip is work.",
+    ],
+  },
+  keldagrim: {
+    title: "Keldagrim",
+    region: "Fremennik",
+    lore: [
+      "Under the mountain. Consortium halls. The blast is work.",
+      "Leave a surface title home. The city is the hall.",
+    ],
+  },
+  phasmatys: {
+    title: "Port Phasmatys",
+    region: "Morytania",
+    lore: [
+      "Ectoplasm and the dock. The town is the veil.",
+      "Canifis is inland. Pay the fare if the page still says so.",
+    ],
+  },
+  lletya: {
+    title: "Lletya",
+    region: "Tirannwn",
+    lore: [
+      "Refugee camp before the city stands. Prifddinas is the later street.",
+      "Tirannwn is the walk. The trees keep their own hours.",
+    ],
+  },
+  fortforinthry: {
+    title: "Fort Forinthry",
+    region: "Misthalin",
+    lore: [
+      "The fort after the fort. Rebuild is work.",
+      "The ditch is north. Edgeville is a different grammar.",
+    ],
+  },
+  waiko: {
+    title: "Waiko",
+    region: "The Arc",
+    lore: [
+      "The Arc. Voyages, not a mainland bank.",
+      "The boat is the town. Leave a Varrock title home.",
+    ],
+  },
+  osrsrel: {
+    title: "Rellekka",
+    region: "Fremennik · OSRS",
+    lore: [
+      "The longhall. Waterbirth is a boat, not this street.",
+      "Fremennik tests stay on the wiki. The slip is work.",
+    ],
+  },
+  shayzien: {
+    title: "Shayzien",
+    region: "Great Kourend · OSRS",
+    lore: [
+      "The camp. Lizardmen stay on the hill.",
+      "Shayzien is a drill, not a farm. Hosidius is the dirt.",
+    ],
+  },
+  lovakengj: {
+    title: "Lovakengj",
+    region: "Great Kourend · OSRS",
+    lore: [
+      "Blast mine and the forge. The sulphur is the weather.",
+      "The house is the heat. Shayzien buys what we make.",
+    ],
+  },
+  arceuus: {
+    title: "Arceuus",
+    region: "Great Kourend · OSRS",
+    lore: [
+      "Dark altar. Library hours stay on the wiki.",
+      "The tower is blood and books. Hosidius is green. This house is not.",
+    ],
+  },
+  piscarilius: {
+    title: "Port Piscarilius",
+    region: "Great Kourend · OSRS",
+    lore: [
+      "The port house. Thieving tiles if the page still says so.",
+      "Kourend’s wet door. Shayzien is inland.",
+    ],
+  },
+  fortis: {
+    title: "Civitas Fortis",
+    region: "Varlamore · OSRS",
+    lore: [
+      "Varlamore capital. Colosseum is on Bosses.",
+      "The square is work. Leave a Varrock title home.",
+    ],
+  },
 };
 
 function fillEssay(id: string, note: TownNote): TownNote {
   const osrs =
     id.startsWith("osrs") ||
-    ["hosidius", "shayzien", "lovakengj", "arceuus", "piscarilius", "fortis", "draynor", "grandexchange", "darkmeyer"].includes(id);
+    ["hosidius", "shayzien", "lovakengj", "arceuus", "piscarilius", "fortis"].includes(id);
   const history =
     note.history?.length
       ? note.history

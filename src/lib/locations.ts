@@ -94,6 +94,14 @@ export function townStillLine(id: string) {
   return TOWN_LINE[id] ?? "In-world still. Same file on the card and the plate.";
 }
 
+export function townRegionHead(region: string) {
+  return region.replace(/\s·\sOSRS$/, "").replace(/\s·\sRuneScape$/, "");
+}
+
+export function townHasStill(loc: Location) {
+  return Boolean(loc.viewA);
+}
+
 const TOWN_LINE: Record<string, string> = {
   lumbridge: "The crater is current geography. Leave the courtyard sermon home.",
   osrslumbridge: "You already know the courtyard. Leave the crater home.",
@@ -347,6 +355,9 @@ export const LOCATIONS: Location[] = [
   loc("zilyana", "Commander Zilyana", "God Wars · OSRS", "Saradomin", "OSRS", "boss"),
   loc("kq", "Kalphite Queen", "Kharidian · OSRS", "Tumeken", "OSRS", "boss"),
   loc("scurrius", "Scurrius", "Varrock · OSRS", "Zamorak", "OSRS", "boss"),
+  loc("cerberus", "Cerberus", "Taverley · OSRS", "Zamorak", "OSRS", "boss"),
+  loc("kraken", "Kraken", "Kraken Cove · OSRS", "Zaros", "OSRS", "boss"),
+  loc("kbd", "King Black Dragon", "Wilderness · OSRS", "Zamorak", "OSRS", "boss"),
   loc("zuk", "TzKal-Zuk", "Elder Kiln", "Zamorak", "RS3", "boss"),
   loc("ambassador", "The Ambassador", "Dungeons of Daemonheim", "Zaros", "RS3", "boss"),
   loc("croesus", "Croesus", "Senntisten", "Zaros", "RS3", "boss"),

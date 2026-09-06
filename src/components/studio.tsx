@@ -24,8 +24,6 @@ import {
   type LocationId,
   type SceneKind,
 } from "@/lib/locations";
-import { godInk } from "@/lib/gods";
-import { loreLead, placeLore } from "@/lib/place-lore";
 import { EggToast } from "@/components/egg-toast";
 import { useDeskEggs } from "@/hooks/use-desk-eggs";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
@@ -34,7 +32,8 @@ import { postieLineAt, PETE_LINES, peteThreshold } from "@/lib/postie";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { loadStudioSave, writeStudioSave } from "@/lib/studio-save";
 import { deskSharePath, readDeskQuery } from "@/lib/desk-link";
-import { PlaceChip, AppLink, godPath, townPath, bossPath } from "@/components/place-chip";
+import { PlaceRail } from "@/components/place-rail";
+import { AppLink, townPath, bossPath } from "@/components/place-chip";
 import { noteFor } from "@/lib/boss-notes";
 import { townNote } from "@/lib/town-notes";
 import {
@@ -155,6 +154,7 @@ export function Studio() {
     mates?: { id: string; x0: number; y0: number }[];
   } | null>(null);
   const [placeCap, setPlaceCap] = useState(12);
+  const [placeGod, setPlaceGod] = useState<(typeof GODS)[number] | null>(null);
   const [status, setStatus] = useState("Ready");
   const [plateFontOk, setPlateFontOk] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -1053,8 +1053,9 @@ export function Studio() {
 
   const visible = LOCATIONS.filter((loc) => {
     if (loc.edition !== edition) return false;
-    if (loc.kind === "boss") return Boolean(noteFor(loc.id));
-    return Boolean(townNote(loc.id));
+    if (placeGod && loc.god !== placeGod) return false;
+    if (kind === "boss") return loc.kind === "boss" && Boolean(noteFor(loc.id));
+    return loc.kind === "town" && Boolean(townNote(loc.id));
   });
 
   return (
@@ -1067,67 +1068,53 @@ export function Studio() {
       <OfficialPulse />
       <section className="page-band py-6">
         <h2 className="section-h2">Places to visit</h2>
-        <div className="mb-3 flex flex-wrap justify-center gap-2">
-          <PlaceChip href="/towns">Towns</PlaceChip>
-          <PlaceChip href="/bosses">Bosses</PlaceChip>
-          <PlaceChip href="/pvp">PvP</PlaceChip>
-          <PlaceChip href="/gods">Gods</PlaceChip>
-          {(["RS3", "OSRS"] as const).map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => {
-                setEdition(item);
-                setSkillPack(item);
-                const next = LOCATIONS.find((loc) => loc.kind === kind && loc.edition === item);
-                if (next) setLocationId(next.id);
-              }}
-              className={`min-h-11 rounded-md border px-3 text-xs ${edition === item ? "border-parchment bg-raised" : "border-line"}`}
-            >
-              {item === "RS3" ? "RuneScape" : "Old School RuneScape"}
-            </button>
-          ))}
-        </div>
-        <div className="mb-3 flex flex-wrap justify-center gap-1">
-          {GODS.map((god) => (
-            <PlaceChip key={god} href={godPath(god)} style={{ color: godInk(god) }}>
-              {god}
-            </PlaceChip>
-          ))}
+        <div className="mb-3">
+          <PlaceRail
+            section={kind === "boss" ? "bosses" : "towns"}
+            edition={edition}
+            god={placeGod}
+            onEdition={(next) => {
+              setEdition(next);
+              setSkillPack(next);
+              const nextLoc = LOCATIONS.find((loc) => loc.kind === kind && loc.edition === next);
+              if (nextLoc) setLocationId(nextLoc.id);
+            }}
+            onGod={setPlaceGod}
+            onSection={(next) => {
+              if (next === "towns") setKind("town");
+              if (next === "bosses") setKind("boss");
+              setPlaceCap(12);
+            }}
+          />
         </div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
           {visible.slice(0, placeCap).map((loc, i) => {
             const raw = loc.stills?.length ? loc.stills[stillIndex(loc.stills.length, peteNow)] : loc.viewA;
             const src = stillAllowed(raw, loc.edition) ? raw : loc.viewA;
             const href = loc.kind === "boss" ? bossPath(loc.id) : townPath(loc.id);
-            const lore = placeLore(loc);
             return (
               <div key={loc.id} className="overflow-hidden rounded-md border border-line hover:border-[#F5C400]" data-place-card data-slug={loc.id}>
-                <AppLink href={href} className="block w-full text-left [touch-action:manipulation]">
+                <button
+                  type="button"
+                  className="block w-full text-left [touch-action:manipulation]"
+                  onClick={() => {
+                    applyStill(loc.id, "a", src);
+                    document.getElementById("desk")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                >
                   <StillPhoto
                     src={src}
                     alt={`${loc.name}, ${loc.region}`}
                     priority={i < 2}
                     className="aspect-video w-full object-cover [content-visibility:auto]"
                   />
-                  <span className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">
-                    {loc.name}
-                  </span>
+                </button>
+                <AppLink href={href} className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">
+                  {loc.name}
                 </AppLink>
-                <p className="px-2 pb-1.5 text-center text-[10px] text-faint">
-                  {loc.region.replace(/\s·\sOSRS$/, "")} ·{" "}
-                  <AppLink href={godPath(loc.god)} className="no-underline" style={{ color: godInk(loc.god) }}>
-                    {loc.god}
-                  </AppLink>
+                <p className="px-2 pb-2 text-center text-[10px] text-faint">
+                  {loc.region.replace(/\s·\sOSRS$/, "")} · {loc.god}
                 </p>
-                {lore ? (
-                  <p className="px-2 pb-2 text-center text-[10px] text-muted">
-                    {loreLead(lore.brief)}{" "}
-                    <AppLink href={href} className="text-parchment">
-                      Lore
-                    </AppLink>
-                  </p>
-                ) : null}
               </div>
             );
           })}

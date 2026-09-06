@@ -21,6 +21,16 @@ function hasGlobbedMigrations(root: string): boolean {
   }
 }
 
+/** Preview iframe is third-party — Lax cookies get dropped. CHIPS keeps the session. */
+function withPartitionedPreviewCookie(cookie: string) {
+  let next = cookie;
+  if (!/;\s*secure/i.test(next)) next += "; Secure";
+  if (/;\s*samesite=/i.test(next)) next = next.replace(/;\s*samesite=[^;]*/i, "; SameSite=None");
+  else next += "; SameSite=None";
+  if (!/;\s*partitioned/i.test(next)) next += "; Partitioned";
+  return next;
+}
+
 /**
  * Finish PGLite bootstrap during dev-server setup (before traffic). Vite awaits
  * async `configureServer` hooks. Production: `src/lib/db` kicks `ensureDbReady`
@@ -125,7 +135,7 @@ function authPopupPlugin(): Plugin {
             res.setHeader(key, value);
           });
           for (const cookie of setCookies) {
-            res.appendHeader("set-cookie", cookie);
+            res.appendHeader("set-cookie", withPartitionedPreviewCookie(cookie));
           }
           const body = Buffer.from(await response.arrayBuffer());
           res.end(body);

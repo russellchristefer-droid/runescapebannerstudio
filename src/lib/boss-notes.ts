@@ -801,6 +801,74 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "Learn prayer swaps here. The next boss will use them.",
     ],
   },
+  cerberus: {
+    id: "cerberus",
+    title: "Cerberus",
+    edition: "OSRS",
+    role: "Solo slayer",
+    style: "Melee or ranged. Pick one and stay on it.",
+    pray: "Protect Magic on the first special if that is the live order. Confirm the three ghosts on the wiki.",
+    start: [
+      "Taverley hellhound task or the key. Antifire is not this room.",
+      "Two deaths already in the plan. Pools before kills/hr.",
+    ],
+    kit: [
+      "Slayer helm on task. Spectre or hasta. Protect item if you brought risk.",
+    ],
+    route: [
+      "Three heads. Walk the lava. Ghosts: pray the style they named.",
+      "Do not plant in the middle when the pool drops.",
+    ],
+    method: [
+      "Task first. Off-task is a tax unless the live page still pays.",
+    ],
+    wipe: "A ghost you did not pray, or a lava tile you stood in.",
+    wiki: "https://oldschool.runescape.wiki/w/Cerberus",
+  },
+  kraken: {
+    id: "kraken",
+    title: "Kraken",
+    edition: "OSRS",
+    role: "Solo slayer",
+    style: "Magic. Trident or the live equivalent.",
+    pray: "Protect Missiles. The tentacles hit first.",
+    start: [
+      "Cave kraken task. Disturb the large whirlpool last.",
+    ],
+    kit: [
+      "Trident, slayer helm on task, ranging potion if the page still says so.",
+    ],
+    route: [
+      "Tentacles first. Then the boss. Do not idle on a tentacle you left up.",
+    ],
+    method: [
+      "This is not the cove task sheet. Cave kraken stays on Bestiary.",
+    ],
+    wipe: "A tentacle left alive while you chase the boss.",
+    wiki: "https://oldschool.runescape.wiki/w/Kraken",
+  },
+  kbd: {
+    id: "kbd",
+    title: "King Black Dragon",
+    edition: "OSRS",
+    role: "Solo / small team",
+    style: "Melee, ranged, or magic. Antifire is the tax.",
+    pray: "Protect Magic. Super antifire plus a dragonfire ward.",
+    start: [
+      "Wilderness lair. Protect item. The lever is a risk tile.",
+    ],
+    kit: [
+      "Antifire. Ward. Food you can laugh off. Leave the bank home.",
+    ],
+    route: [
+      "Walk poison. Count the heads. Do not stand in the breath.",
+    ],
+    method: [
+      "A trip is a risk number. Black dragons on a task stay on Bestiary.",
+    ],
+    wipe: "Dragonfire without antifire, or a PKer on the lever.",
+    wiki: "https://oldschool.runescape.wiki/w/King_Black_Dragon",
+  },
   zuk: {
     id: "zuk",
     title: "TzKal-Zuk",

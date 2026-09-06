@@ -16,16 +16,13 @@ import { noteFor } from "@/lib/boss-notes";
 
 function townWikiLinks(title: string, loc?: Location) {
   const path = encodeURI(title.replace(/ /g, "_"));
-  const osrs = loc?.edition === "OSRS" ? placeLore(loc)?.sourceUrl : undefined;
-  const rs3 = loc?.edition === "RS3" ? placeLore(loc)?.sourceUrl : undefined;
-  const sister = loc
-    ? LOCATIONS.find((row) => row.name === loc.name && row.edition !== loc.edition && row.kind === "town")
-    : undefined;
-  const sisterUrl = sister ? placeLore(sister)?.sourceUrl : undefined;
-  return [
-    { label: `${title} · Old School wiki`, href: osrs || (loc?.edition !== "RS3" ? `https://oldschool.runescape.wiki/w/${path}` : sisterUrl) },
-    { label: `${title} · RuneScape wiki`, href: rs3 || (loc?.edition !== "OSRS" ? `https://runescape.wiki/w/${path}` : sisterUrl) },
-  ].filter((row): row is { label: string; href: string } => Boolean(row.href));
+  if (!loc) return [];
+  if (loc.edition === "OSRS") {
+    const href = placeLore(loc)?.sourceUrl ?? `https://oldschool.runescape.wiki/w/${path}`;
+    return [{ label: `${title} · Old School wiki`, href }];
+  }
+  const href = placeLore(loc)?.sourceUrl ?? `https://runescape.wiki/w/${path}`;
+  return [{ label: `${title} · RuneScape wiki`, href }];
 }
 
 export const Route = createFileRoute("/towns/$id")({

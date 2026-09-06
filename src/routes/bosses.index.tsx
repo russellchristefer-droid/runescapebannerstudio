@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
-import { VisitPlaces } from "@/components/place-chip";
+import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
 import { BOSS_NOTES } from "@/lib/boss-notes";
 import { LOCATIONS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
@@ -12,12 +12,15 @@ export const Route = createFileRoute("/bosses/")({
 });
 
 function BossIndex() {
-  const osrs = Object.values(BOSS_NOTES).filter(
-    (n) => n.edition === "OSRS" && LOCATIONS.some((l) => l.id === n.id),
-  );
-  const rs3 = Object.values(BOSS_NOTES).filter(
-    (n) => n.edition === "RS3" && LOCATIONS.some((l) => l.id === n.id),
-  );
+  const { edition, setEdition, god, setGod } = usePlaceFilter("OSRS");
+  const game = edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
+  const rows = Object.values(BOSS_NOTES).filter((note) => {
+    if (note.edition !== edition) return false;
+    const loc = LOCATIONS.find((item) => item.id === note.id);
+    if (!loc) return false;
+    if (god && loc.god !== god) return false;
+    return true;
+  });
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
@@ -27,22 +30,14 @@ function BossIndex() {
           Working sheets. Combat, slayer, unlock, instance, death. OSRS tiers, bag, supplies, spec, skip, bank. Sanity only where the fight uses it. RS3 camp, ultimates, familiar. Team seats only on group fights. Three links.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
-        <div className="mt-3 flex justify-center">
-          <VisitPlaces
-            items={[
-              { href: "/gods", label: "Gods" },
-              { href: "/towns", label: "Towns" },
-              { href: "/bosses", label: "Bosses", current: true },
-              { href: "/pvp", label: "PvP" },
-            ]}
-          />
+        <div className="mt-3">
+          <PlaceRail section="bosses" edition={edition} god={god} onEdition={setEdition} onGod={setGod} />
         </div>
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
-        <section>
-          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">Old School RuneScape</h2>
+        {rows.length ? (
           <PlaceGrid>
-            {osrs.map((note) => {
+            {rows.map((note) => {
               const loc = LOCATIONS.find((item) => item.id === note.id);
               return (
                 <PlaceCard
@@ -52,31 +47,14 @@ function BossIndex() {
                   src={loc?.viewA}
                   name={note.title}
                   kind="Boss"
-                  game="Old School RuneScape"
+                  game={game}
                 />
               );
             })}
           </PlaceGrid>
-        </section>
-        <section>
-          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">RuneScape</h2>
-          <PlaceGrid>
-            {rs3.map((note) => {
-              const loc = LOCATIONS.find((item) => item.id === note.id);
-              return (
-                <PlaceCard
-                  key={note.id}
-                  to="/bosses/$id"
-                  params={{ id: note.id }}
-                  src={loc?.viewA}
-                  name={note.title}
-                  kind="Boss"
-                  game="RuneScape"
-                />
-              );
-            })}
-          </PlaceGrid>
-        </section>
+        ) : (
+          <p className="text-center text-sm text-muted">Nothing on that filter.</p>
+        )}
       </main>
     </div>
   );

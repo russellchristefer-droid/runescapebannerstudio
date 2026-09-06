@@ -49,6 +49,20 @@ const RS3: Record<string, Citizen[]> = {
   prifddinas: [c("Elven door-warden", "/stills/rs3/citizens/prifddinas-1.png")],
 };
 
+const APE_OSRS: Citizen[] = [
+  c("Gorilla guard", "/stills/osrs/citizens/ape-gorilla.png"),
+  c("Marim monkey", "/stills/osrs/citizens/ape-monkey.png"),
+  c("Ninja ape", "/stills/osrs/citizens/ape-ninja.png"),
+];
+
+const APE_RS3: Citizen[] = [
+  c("Gorilla guard", "/stills/rs3/citizens/ape-gorilla.png"),
+  c("Marim monkey", "/stills/rs3/citizens/ape-monkey.png"),
+  c("Ninja ape", "/stills/rs3/citizens/ape-ninja.png"),
+];
+
+const APE_SLUGS = new Set(["apeatoll", "osrsape", "marim", "marimbo"]);
+
 const DEFAULT_OSRS: Citizen[] = [
   c("Guard", "/stills/osrs/citizens/_default-0.png"),
   c("Stallholder", "/stills/osrs/citizens/_default-1.png"),
@@ -60,11 +74,12 @@ const DEFAULT_RS3: Citizen[] = [
 ];
 
 export function citizenPool(id: string, game: "osrs" | "rs3"): Citizen[] {
+  if (APE_SLUGS.has(id)) return game === "osrs" ? APE_OSRS : APE_RS3;
   const named = game === "osrs" ? OSRS[id] : RS3[id];
   const fallback = game === "osrs" ? DEFAULT_OSRS : DEFAULT_RS3;
   const base = named?.length ? named : [];
-  const seen = new Set(base.map((c) => c.src ?? c.role));
-  const extra = fallback.filter((c) => !seen.has(c.src ?? c.role));
+  const seen = new Set(base.map((row) => row.src ?? row.role));
+  const extra = fallback.filter((row) => !seen.has(row.src ?? row.role));
   const pool = [...base, ...extra];
   return pool.length ? pool : fallback;
 }

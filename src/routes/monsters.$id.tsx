@@ -33,10 +33,7 @@ function MonsterPage() {
       <main className="mx-auto max-w-3xl px-5 py-6 md:px-8">
         <OfficialPulse
           note="Official wiki for this creature. Official news wins."
-          links={[
-            { label: `${row.name} · ${game} wiki`, href: row.wiki },
-            sister ? { label: `${sister.name} · ${sister.edition === "OSRS" ? "Old School RuneScape" : "RuneScape"} wiki`, href: sister.wiki } : null,
-          ].filter((row): row is { label: string; href: string } => Boolean(row))}
+          links={[{ label: `${row.name} · ${game} wiki`, href: row.wiki }]}
         />
         {src ? (
           <StillPhoto

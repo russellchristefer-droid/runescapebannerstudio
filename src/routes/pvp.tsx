@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
-import { VisitPlaces } from "@/components/place-chip";
+import { PlaceRail } from "@/components/place-rail";
 import { pageMeta } from "@/lib/page-title";
 import {
   PVP_BH,
@@ -46,15 +46,8 @@ function PvpPage() {
           ))}
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
-        <div className="mt-3 flex justify-center">
-          <VisitPlaces
-            items={[
-              { href: "/gods", label: "Gods" },
-              { href: "/towns", label: "Towns" },
-              { href: "/bosses", label: "Bosses" },
-              { href: "/pvp", label: "PvP", current: true },
-            ]}
-          />
+        <div className="mt-3">
+          <PlaceRail section="pvp" edition="OSRS" />
         </div>
       </header>
 
