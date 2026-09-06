@@ -900,24 +900,12 @@ export function ClipBench() {
           ) : null}
         </div>
         <video ref={videoRef} className="pointer-events-none absolute h-px w-px opacity-0" playsInline preload="none" muted={false} controls={false} />
-        <div className="grid grid-cols-2 gap-x-3 gap-y-1 px-4 py-2 font-mono text-[11px] tabular-nums text-muted sm:grid-cols-4">
-          <p>TC {hasClip ? timecode(now) : "00:00.00"}</p>
-          <p>DUR {hasClip ? timecode(range) : "00:00.00"}</p>
-          <p>SRC {native || "—"}</p>
+        <div className="flex flex-wrap gap-x-4 gap-y-1 px-4 py-2 font-mono text-[11px] tabular-nums text-muted">
           <p>
-            OUT {size.w}×{size.h}
+            {size.w}×{size.h}
+            {native ? ` · ${native}` : ""}
           </p>
-          <p>IN {hasClip ? timecode(inPoint) : "00:00.00"}</p>
-          <p>OUT {hasClip ? timecode(outPoint) : "00:00.00"}</p>
-          <p>
-            PK {peakDb(hold)} dBFS{hold > 0.95 ? " CLIP" : ""}
-          </p>
-          <p>
-            {ready === "ready" ? "READY" : ready === "loading" ? "LOAD" : ready === "bad" ? "BAD FILE" : "IDLE"}
-            {muted ? " · MUTE" : ` · ${gainPct}%`}
-            {loop ? " · LOOP" : ""}
-            {speed !== 1 ? ` · ${speed}×` : ""}
-          </p>
+          <p>{ready === "ready" ? "READY" : ready === "loading" ? "LOAD" : ready === "bad" ? "BAD FILE" : "IDLE"}</p>
         </div>
       </div>
 
@@ -1000,7 +988,6 @@ export function ClipBench() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#c6a45a]/40 bg-[#1a1610] px-2 py-2 shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
-          <p className="w-full text-[10px] tracking-wide text-faint sm:w-auto">Mute · Gain · Fade in · Fade out · Peak</p>
           <button type="button" className={muted ? CHIP_ON : CHIP} onClick={() => setMuted((v) => !v)}>
             Mute
           </button>
@@ -1043,7 +1030,7 @@ export function ClipBench() {
               <span
                 id="pk"
                 className="absolute inset-y-0 left-0 w-full origin-left bg-[#ffff00]"
-                style={{ transform: "scaleX(0)" }}
+                style={{ transform: `scaleX(${Math.min(1, peak)})` }}
               />
             </span>
             <span className="text-faint">{peak < 0.04 ? "Quiet." : peak > 0.95 ? "Back off the gain." : ""}</span>
@@ -1051,9 +1038,13 @@ export function ClipBench() {
         </div>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openClipPicker}>
-            Upload video
-          </button>
+          {hasClip ? (
+            <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openClipPicker}>
+              Replace clip
+            </button>
+          ) : (
+            <span className="hidden sm:block" />
+          )}
           <button type="button" disabled={!hasClip} className={CHIP} onClick={markIn}>
             In
           </button>
@@ -1098,9 +1089,6 @@ export function ClipBench() {
           <button type="button" disabled={!hasClip} className={CHIP} onClick={() => setZoom((v) => Math.max(0.5, +(v - 0.1).toFixed(2)))}>
             Scale −
           </button>
-          <button type="button" className={fadeIn > 0 && fadeOut > 0 ? CHIP_ON : CHIP} onClick={fadeHalf}>
-            Fade 0.5s
-          </button>
           <button type="button" className={loop ? CHIP_ON : CHIP} onClick={() => setLoop((v) => !v)}>
             Loop
           </button>
@@ -1124,7 +1112,7 @@ export function ClipBench() {
             <input
               value={ltText}
               maxLength={24}
-              placeholder="Lower third"
+              placeholder="24 letters"
               spellCheck={false}
               autoComplete="off"
               className="min-h-11 w-40 rounded-md border border-[#c6a45a]/40 bg-[#120f0c] px-2 text-sm text-parchment"
@@ -1165,7 +1153,7 @@ export function ClipBench() {
             <div className="h-full bg-[#9b1b1b]" style={{ width: `${exportPct}%` }} />
           </div>
         ) : null}
-        <p className="text-[11px] text-faint">Space play · I / O marks · J / L skip · , . frames. Don’t export a Bank PIN.</p>
+        <p className="text-[11px] text-faint">Space play · I / O marks · J / L skip · , . frames.</p>
       </div>
 
       {moreOpen ? (
@@ -1187,22 +1175,6 @@ export function ClipBench() {
             </button>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              className={CHIP}
-              onClick={() => {
-                pushUndo();
-                setRotate((v) => (v + 90) % 360);
-              }}
-            >
-              Rotate 90
-            </button>
-            <button type="button" className={CHIP} onClick={() => setZoom((v) => Math.min(2, +(v + 0.1).toFixed(2)))}>
-              Scale +
-            </button>
-            <button type="button" className={CHIP} onClick={() => setZoom((v) => Math.max(0.5, +(v - 0.1).toFixed(2)))}>
-              Scale −
-            </button>
             {([0.5, 1, 1.5, 2] as const).map((rate) => (
               <button
                 key={rate}
