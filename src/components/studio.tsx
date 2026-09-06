@@ -65,7 +65,7 @@ export function Studio() {
   const [viewLocked, setViewLocked] = useState(false);
   const [poolSkip, setPoolSkip] = useState(0);
   const [, setCycleTick] = useState(0);
-  const [sizeId, setSizeId] = useState<BannerSizeId>(() => migrateBannerSizeId(boot.sizeId ?? saved.sizeId ?? "m"));
+  const [sizeId, setSizeId] = useState<BannerSizeId>(() => migrateBannerSizeId(boot.sizeId ?? saved.sizeId ?? "1200x480"));
   const [streamer, setStreamer] = useState(saved.streamer ?? "");
   const [clan, setClan] = useState(saved.clan ?? "");
   const [handle, setHandle] = useState(saved.handle ?? "");
@@ -1532,7 +1532,7 @@ export function Studio() {
             <button
               key={zone}
               type="button"
-              className={`h-8 rounded-md border px-2 text-[10px] ${ghostZone === zone ? "border-parchment" : "border-line"}`}
+              className={`min-h-11 rounded-md border px-2 text-[10px] ${ghostZone === zone ? "border-parchment" : "border-line"}`}
               onClick={() => setGhostZone(zone)}
             >
               {zone === "none" ? "Ghosts off" : zone === "twitch" ? "Twitch crop" : zone === "youtube" ? "YouTube crop" : "Discord crop"}
@@ -1694,7 +1694,7 @@ export function Studio() {
                   key={box.id}
                   type="button"
                   onClick={() => setSizeId(box.id)}
-                  className={`h-7 rounded-md border px-2 text-[10px] ${sizeId === box.id ? "border-parchment" : "border-line"}`}
+                  className={`min-h-11 rounded-md border px-2 text-[10px] ${sizeId === box.id ? "border-parchment" : "border-line"}`}
                 >
                   {box.name}
                 </button>
