@@ -473,11 +473,13 @@ export function Studio() {
         window.dispatchEvent(new Event("rs-close-menu"));
         return;
       }
-      const step = e.shiftKey ? 8 : 2;
+      const lead = skillPicks.find((row) => row.id === pickedSkill);
+      const stepBase = e.shiftKey ? 8 : 2;
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
         e.preventDefault();
         const dir = e.key.replace("Arrow", "").toLowerCase() as "up" | "down" | "left" | "right";
         if (pickedText) {
+          const step = stepBase;
           setTextPos((cur) => {
             const pos = cur[pickedText] ?? boxesRef.current.find((box) => box.id === pickedText);
             if (!pos) return cur;
@@ -493,17 +495,17 @@ export function Studio() {
         }
         setSkillPicks((cur) =>
           cur.map((item) => {
-            const lead = cur.find((row) => row.id === pickedSkill);
             const inGroup = lead?.group && item.group === lead.group;
             if ((!inGroup && item.id !== pickedSkill) || item.x == null || item.y == null) return item;
-            const mark = (item.size ?? skillSize) * (item.scale ?? 1);
+            const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
+            const step = stepBase * (item.scale ?? 1);
             let x = item.x;
             let y = item.y;
             if (dir === "left") x = Math.max(0, x - step);
             if (dir === "right") x = Math.min(size.width - mark, x + step);
             if (dir === "up") y = Math.max(0, y - step);
             if (dir === "down") y = Math.min(size.height - mark, y + step);
-            return { ...item, x, y };
+            return { ...item, x, y, scale: item.scale ?? 1 };
           }),
         );
       }
@@ -667,8 +669,8 @@ export function Studio() {
     });
   }
 
-  function scaleSelected(delta: number) {
-    const skillId = pickedSkill;
+  function scaleSelected(delta: number, skillOverride?: string | null) {
+    const skillId = skillOverride ?? pickedSkill;
     if (skillId) {
       scalingRef.current = true;
       const mates = packMates(skillId).filter((item) => item.x != null && item.y != null);
@@ -742,14 +744,11 @@ export function Studio() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const onWheel = (e: WheelEvent) => {
-      if (!pickedSkill && !pickedText) return;
-      e.preventDefault();
-      const step = e.shiftKey ? 0.25 : 0.08;
-      scaleSelected(e.deltaY > 0 ? -step : step);
+    const stopPage = (e: WheelEvent) => {
+      if (pickedSkill || pickedText) e.preventDefault();
     };
-    canvas.addEventListener("wheel", onWheel, { passive: false });
-    return () => canvas.removeEventListener("wheel", onWheel);
+    canvas.addEventListener("wheel", stopPage, { passive: false });
+    return () => canvas.removeEventListener("wheel", stopPage);
   }, [pickedSkill, pickedText]);
 
   useEffect(() => {
@@ -1218,19 +1217,12 @@ export function Studio() {
               const y = ((e.clientY - rect.top) / rect.height) * size.height;
               const step = e.shiftKey ? 0.25 : 0.08;
               const delta = e.deltaY > 0 ? -step : step;
-              const pad = 8;
               let skillId = pickedSkill;
               if (!skillId) {
                 const hit = [...skillPicksRef.current].reverse().find((item) => {
-                  const mark = (item.size ?? skillSize) * (item.scale ?? 1);
-                  return (
-                    item.x != null &&
-                    item.y != null &&
-                    x >= item.x - pad &&
-                    x <= item.x + mark + pad &&
-                    y >= item.y - pad &&
-                    y <= item.y + mark + pad
-                  );
+                  if (item.x == null || item.y == null) return false;
+                  const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
+                  return x >= item.x && x <= item.x + mark && y >= item.y && y <= item.y + mark;
                 });
                 if (hit) {
                   skillId = hit.id;
@@ -1240,51 +1232,16 @@ export function Studio() {
               }
               if (skillId) {
                 e.preventDefault();
-                scalingRef.current = true;
-                const mates = packMates(skillId).filter((item) => item.x != null && item.y != null);
-                const olds = mates.map((item) => item.scale ?? 1);
-                const nextScale = Math.min(2.5, Math.max(0.5, (olds[0] ?? 1) + delta));
-                const ratio = nextScale / Math.max(0.01, olds[0] ?? 1);
-                let gx = 0;
-                let gy = 0;
-                for (const item of mates) {
-                  const base = item.size ?? skillSize;
-                  const old = item.scale ?? 1;
-                  gx += (item.x as number) + (base * old) / 2;
-                  gy += (item.y as number) + (base * old) / 2;
-                }
-                gx /= Math.max(1, mates.length);
-                gy /= Math.max(1, mates.length);
-                const next = skillPicksRef.current.map((item) => {
-                  if (!mates.some((row) => row.id === item.id) || item.x == null || item.y == null) return item;
-                  const old = item.scale ?? 1;
-                  const scale = mates.length > 1 ? nextScale : Math.min(2.5, Math.max(0.5, old + delta));
-                  const base = item.size ?? skillSize;
-                  const cx = item.x + (base * old) / 2;
-                  const cy = item.y + (base * old) / 2;
-                  const nx = gx + (cx - gx) * ratio - (base * scale) / 2;
-                  const ny = gy + (cy - gy) * ratio - (base * scale) / 2;
-                  return {
-                    ...item,
-                    scale,
-                    x: Math.max(0, Math.min(size.width - base * scale, mates.length > 1 ? nx : cx - (base * scale) / 2)),
-                    y: Math.max(0, Math.min(size.height - base * scale, mates.length > 1 ? ny : cy - (base * scale) / 2)),
-                  };
-                });
-                skillPicksRef.current = next;
-                requestPaint();
-                window.clearTimeout(scaleTimer.current);
-                scaleTimer.current = window.setTimeout(() => {
-                  scalingRef.current = false;
-                  setSkillPicks(skillPicksRef.current);
-                }, 80);
+                scaleSelected(delta, skillId);
                 return;
               }
               let textId = pickedText;
               if (!textId) {
                 const hit = [...boxesRef.current].reverse().find((box) => {
                   if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
-                  return x >= box.x - pad && x <= box.x + box.w + pad && y >= box.y - pad && y <= box.y + box.h + pad;
+                  const hw = Math.max(28, box.w);
+                  const hh = Math.max(28, box.h);
+                  return x >= box.x && x <= box.x + hw && y >= box.y && y <= box.y + hh;
                 });
                 if (hit) {
                   textId = hit.id;
@@ -1294,28 +1251,7 @@ export function Studio() {
               }
               if (!textId) return;
               e.preventDefault();
-              const box = boxesRef.current.find((row) => row.id === textId);
-              const old = textScaleRef.current[textId] ?? 1;
-              const nextScale = Math.min(2, Math.max(0.75, old + delta));
-              if (box) {
-                const cx = box.x + box.w / 2;
-                const cy = box.y + box.h / 2;
-                const ratio = nextScale / old;
-                textPosRef.current = {
-                  ...textPosRef.current,
-                  [textId]: {
-                    x: cx - (box.w * ratio) / 2,
-                    y: cy - (box.h * ratio) / 2,
-                  },
-                };
-                setTextPos(textPosRef.current);
-              }
-              setTextScale((cur) => {
-                const next = { ...cur, [textId]: nextScale };
-                textScaleRef.current = next;
-                return next;
-              });
-              requestPaint();
+              scaleSelected(delta);
             }}
             onPointerDown={(e) => {
               const canvas = canvasRef.current;
@@ -1343,24 +1279,31 @@ export function Studio() {
                   setArmedSkill(null);
                   return;
                 }
+                const prev = skillPicksRef.current.find((item) => item.id === armedSkill);
+                const scale = prev?.scale ?? 1;
+                const mark = Math.max(28, skillSize * scale);
+                const px = Math.max(0, Math.min(size.width - mark, x));
+                const py = Math.max(0, Math.min(size.height - mark, y));
                 setSkillPicks((cur) => [
                   ...cur.filter((item) => item.id !== armedSkill),
-                  { id: armedSkill, game: skillPack, level: boardLevels[skillPack][armedSkill] ?? "", x, y, size: skillSize, scale: 1 },
+                  {
+                    id: armedSkill,
+                    game: skillPack,
+                    level: boardLevels[skillPack][armedSkill] ?? prev?.level ?? "",
+                    x: px,
+                    y: py,
+                    size: prev?.size ?? skillSize,
+                    scale,
+                  },
                 ]);
                 setPickedSkill(armedSkill);
                 setArmedSkill(null);
                 return;
               }
-              const skillHit = [...skillPicks].reverse().find((item) => {
-                const mark = (item.size ?? skillSize) * (item.scale ?? 1);
-                return (
-                  item.x != null &&
-                  item.y != null &&
-                  x >= item.x - pad &&
-                  x <= item.x + mark + pad &&
-                  y >= item.y - pad &&
-                  y <= item.y + mark + pad
-                );
+              const skillHit = [...skillPicksRef.current].reverse().find((item) => {
+                if (item.x == null || item.y == null) return false;
+                const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
+                return x >= item.x && x <= item.x + mark && y >= item.y && y <= item.y + mark;
               });
               if (skillHit && skillHit.x != null && skillHit.y != null) {
                 setPickedSkill(skillHit.id);
@@ -1383,10 +1326,40 @@ export function Studio() {
                 return;
               }
               const textHit = [...boxesRef.current].reverse().find((box) => {
-                if (skillPicks.some((item) => item.id === box.id)) return false;
-                return x >= box.x - pad && x <= box.x + box.w + pad && y >= box.y - pad && y <= box.y + box.h + pad;
+                if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
+                const hw = Math.max(28, box.w);
+                const hh = Math.max(28, box.h);
+                return x >= box.x && x <= box.x + hw && y >= box.y && y <= box.y + hh;
               });
               if (!textHit) {
+                if (pickedSkill) {
+                  const lead = skillPicksRef.current.find((item) => item.id === pickedSkill);
+                  if (lead) {
+                    const mark = Math.max(28, (lead.size ?? skillSize) * (lead.scale ?? 1));
+                    const px = Math.max(0, Math.min(size.width - mark, x));
+                    const py = Math.max(0, Math.min(size.height - mark, y));
+                    const mates = packMates(pickedSkill).filter((item) => item.x != null && item.y != null);
+                    const dx = px - (lead.x ?? 0);
+                    const dy = py - (lead.y ?? 0);
+                    setSkillPicks((cur) =>
+                      cur.map((item) => {
+                        const mate = mates.find((row) => row.id === item.id);
+                        if (!mate || item.x == null || item.y == null) {
+                          if (item.id !== pickedSkill) return item;
+                          return { ...item, x: px, y: py, scale: item.scale ?? 1 };
+                        }
+                        const extent = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
+                        return {
+                          ...item,
+                          scale: item.scale ?? 1,
+                          x: Math.max(0, Math.min(size.width - extent, item.x + dx)),
+                          y: Math.max(0, Math.min(size.height - extent, item.y + dy)),
+                        };
+                      }),
+                    );
+                  }
+                  return;
+                }
                 setPickedSkill(null);
                 setPickedText(null);
                 return;
@@ -1428,18 +1401,17 @@ export function Studio() {
               const y = ((e.clientY - rect.top) / rect.height) * size.height;
               const pad = Math.max(8, (44 * size.width) / Math.max(1, rect.width));
               setOverIcon(
-                skillPicks.some((item) => {
-                  const mark = (item.size ?? skillSize) * (item.scale ?? 1);
-                  return item.x != null && item.y != null && x >= item.x - pad && x <= item.x + mark + pad && y >= item.y - pad && y <= item.y + mark + pad;
+                skillPicksRef.current.some((item) => {
+                  if (item.x == null || item.y == null) return false;
+                  const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
+                  return x >= item.x && x <= item.x + mark && y >= item.y && y <= item.y + mark;
                 }) ||
-                  boxesRef.current.some(
-                    (box) =>
-                      !skillPicks.some((item) => item.id === box.id) &&
-                      x >= box.x - pad &&
-                      x <= box.x + box.w + pad &&
-                      y >= box.y - pad &&
-                      y <= box.y + box.h + pad,
-                  ),
+                  boxesRef.current.some((box) => {
+                    if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
+                    const hw = Math.max(28, box.w);
+                    const hh = Math.max(28, box.h);
+                    return x >= box.x && x <= box.x + hw && y >= box.y && y <= box.y + hh;
+                  }),
               );
               const drag = dragRef.current;
               if (!drag) return;
@@ -1467,9 +1439,10 @@ export function Studio() {
               skillPicksRef.current = skillPicksRef.current.map((item) => {
                 const mate = mates.find((row) => row.id === item.id);
                 if (!mate) return item;
-                const mark = (item.size ?? skillSize) * (item.scale ?? 1);
+                const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
                 return {
                   ...item,
+                  scale: item.scale ?? 1,
                   x: Math.max(0, Math.min(size.width - mark, mate.x0 + dx)),
                   y: Math.max(0, Math.min(size.height - mark, mate.y0 + dy)),
                 };
@@ -1589,14 +1562,15 @@ export function Studio() {
                 setSkillPicks((cur) =>
                   cur.map((item) => {
                     if (item.id !== pickedSkill || item.x == null || item.y == null) return item;
-                    const mark = (item.size ?? skillSize) * (item.scale ?? 1);
+                    const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
+                    const move = step * (item.scale ?? 1);
                     let x = item.x;
                     let y = item.y;
-                    if (dir === "left") x = Math.max(0, x - step);
-                    if (dir === "right") x = Math.min(size.width - mark, x + step);
-                    if (dir === "up") y = Math.max(0, y - step);
-                    if (dir === "down") y = Math.min(size.height - mark, y + step);
-                    return { ...item, x, y };
+                    if (dir === "left") x = Math.max(0, x - move);
+                    if (dir === "right") x = Math.min(size.width - mark, x + move);
+                    if (dir === "up") y = Math.max(0, y - move);
+                    if (dir === "down") y = Math.min(size.height - mark, y + move);
+                    return { ...item, x, y, scale: item.scale ?? 1 };
                   }),
                 );
               }}
