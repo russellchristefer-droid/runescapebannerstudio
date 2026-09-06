@@ -482,16 +482,14 @@ export function drawBanner(
     ctx.textAlign = "left";
     ctx.imageSmoothingEnabled = false;
     const chip = typeScale(width, height);
-    const first = options.skillIcons[0];
-    const uniformIcon = Math.max(
-      24,
-      Math.min(72, Math.round((first?.size ?? grid.icon) * (first?.scale ?? 1))),
-    );
-    const uniformLevel = Math.max(14, Math.min(24, Math.round(chip.level)));
     options.skillIcons.forEach((slot, i) => {
       const col = i % grid.cols;
       const row = Math.floor(i / grid.cols);
-      const icon = uniformIcon;
+      const scale = Math.max(0.4, Math.min(2.5, slot.scale ?? 1));
+      const icon = Math.max(
+        12,
+        Math.round((slot.size ?? grid.icon) * scale),
+      );
       let px = Math.round(grid.originX + col * grid.cellW);
       let py = Math.round(grid.originY + row * grid.cellH);
       if (slot.x != null && slot.y != null) {
@@ -501,11 +499,11 @@ export function drawBanner(
       ctx.drawImage(slot.img, px, py, icon, icon);
       const label = slot.level.trim();
       if (label) {
+        const levelSize = Math.max(10, Math.round((chip.level || 14) * scale));
         ctx.save();
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        ctx.font = `700 ${uniformLevel}px "${FACE}"`;
-        paintYellow(ctx, px + icon + 4, py + Math.round(icon / 2), label, options.textColor || RS_YELLOW);
+        paintRSYellow(ctx, label, px + icon + 4, py + Math.round(icon / 2) - levelSize / 2, levelSize, options.textColor || RS_YELLOW);
         ctx.restore();
       }
       boxes.push({
