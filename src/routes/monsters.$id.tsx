@@ -2,8 +2,7 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { StillPhoto } from "@/components/still-photo";
 import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillLine, monsterStillSrc, monsterTaskLine, monsterWatchLine, sisterMonster } from "@/lib/monsters";
-import { deskOpenPath } from "@/lib/desk-link";
-import { writeStudioSave } from "@/lib/studio-save";
+import { UseOnBanner } from "@/components/use-on-banner";
 import { OfficialPulse } from "@/components/official-pulse";
 import { pageMeta } from "@/lib/page-title";
 
@@ -90,20 +89,7 @@ function MonsterPage() {
           {row.placeId ? (
             <>
               {" · "}
-              <a
-                href={deskOpenPath(row.edition, row.placeId, { still: src })}
-                className="text-parchment"
-                onClick={() =>
-                  writeStudioSave({
-                    locationId: row.placeId,
-                    edition: row.edition,
-                    skillPicks: [],
-                    stillSrc: src,
-                  })
-                }
-              >
-                Use on banner
-              </a>
+              <UseOnBanner src={src} edition={row.edition} placeId={row.placeId} />
             </>
           ) : null}
         </p>

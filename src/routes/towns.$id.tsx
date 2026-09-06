@@ -8,9 +8,9 @@ import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
 import { citizenFor } from "@/data/citizens";
 import { streetLine } from "@/data/streetTalk";
-import { deskOpenPath } from "@/lib/desk-link";
 import { OfficialPulse } from "@/components/official-pulse";
-import { writeStudioSave } from "@/lib/studio-save";
+import { PlaceRail } from "@/components/place-rail";
+import { UseOnBanner } from "@/components/use-on-banner";
 import { VisitPlaces, AppLink, godPath, townPath, bossPath } from "@/components/place-chip";
 import { noteFor } from "@/lib/boss-notes";
 
@@ -50,6 +50,9 @@ function TownNotePage() {
           <p className="mt-1 text-sm text-muted">{note.region}</p>
         )}
         <span className="mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <div className="mt-3">
+          <PlaceRail section="towns" />
+        </div>
       </header>
       <main className="mx-auto flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8">
         <OfficialPulse
@@ -118,16 +121,7 @@ function TownNotePage() {
         <p className="text-xs text-faint">
           Fan desk notes. Live page: the official wiki for this game.
         </p>
-        <a
-          href={loc ? deskOpenPath(loc.edition, loc.id, { still: loc.viewA }) : "/#desk"}
-          className="min-h-11 text-sm text-parchment [touch-action:manipulation]"
-          onClick={() => {
-            if (!loc) return;
-            writeStudioSave({ locationId: loc.id, edition: loc.edition, skillPicks: [], stillSrc: loc.viewA });
-          }}
-        >
-          Use on banner
-        </a>
+        {loc ? <UseOnBanner src={loc.viewA} edition={loc.edition} placeId={loc.id} /> : null}
       </main>
     </div>
   );

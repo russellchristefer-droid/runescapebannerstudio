@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { loadStudioSave } from "@/lib/studio-save";
+import { readDesk } from "@/lib/desk-store";
 import { sanitizeDisplayName, sanitizeWorld } from "@/lib/rsText";
 import {
   CHECKLIST,
@@ -16,7 +16,7 @@ import {
 } from "@/lib/stream-guide";
 
 export function StreamDesk() {
-  const saved = loadStudioSave();
+  const saved = readDesk();
   const [copyNote, setCopyNote] = useState("");
   const name = sanitizeDisplayName(saved.streamer ?? "");
   const world = sanitizeWorld(saved.world ?? "");

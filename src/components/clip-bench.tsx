@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { loadStudioSave } from "@/lib/studio-save";
+import { readDesk } from "@/lib/desk-store";
 import { sanitizeClan, sanitizeDisplayName, sanitizeWorld, worldLabel } from "@/lib/rsText";
 import { LOCATIONS } from "@/lib/locations";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
@@ -162,11 +162,10 @@ export function ClipBench() {
   }
 
   useEffect(() => {
-    const saved = loadStudioSave();
+    const saved = readDesk();
     if (saved.edition === "RS3" || saved.edition === "OSRS") setEdition(saved.edition);
     setName(sanitizeDisplayName(saved.streamer ?? ""));
     setClan(sanitizeClan(saved.clan ?? ""));
-    setLtText(sanitizeDisplayName(saved.streamer ?? ""));
     return () => {
       releaseVideo(videoRef.current, objectUrl.current);
       objectUrl.current = null;
@@ -345,9 +344,9 @@ export function ClipBench() {
   }, [aspect, overlay]);
 
   function useDeskBanner() {
-    const saved = loadStudioSave();
+    const saved = readDesk();
     const loc = LOCATIONS.find((item) => item.id === saved.locationId) ?? LOCATIONS.find((item) => item.edition === edition);
-    const src = loc ? (saved.view === "b" && loc.viewB ? loc.viewB : loc.viewA) : "";
+    const src = saved.stillSrc || (loc ? (saved.view === "b" && loc.viewB ? loc.viewB : loc.viewA) : "");
     if (!src) {
       setStatus("No desk still saved.");
       return;
@@ -1139,7 +1138,17 @@ export function ClipBench() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className={ltOn ? CHIP_ON : CHIP} onClick={() => setLtOn((v) => !v)}>
+          <button
+            type="button"
+            className={ltOn ? CHIP_ON : CHIP}
+            onClick={() => {
+              setLtOn((on) => {
+                const next = !on;
+                if (next && !ltText) setLtText(sanitizeDisplayName(readDesk().streamer ?? name).slice(0, 24));
+                return next;
+              });
+            }}
+          >
             Lower third
           </button>
           <label className="inline-flex min-h-11 items-center gap-2 text-[11px] text-muted">

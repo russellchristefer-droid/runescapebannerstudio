@@ -3,10 +3,10 @@ import { BackLink } from "@/components/back-link";
 import { BossSheet } from "@/components/boss-sheet";
 import { noteFor } from "@/lib/boss-notes";
 import { sheetFor } from "@/lib/boss-sheets";
-import { deskOpenPath } from "@/lib/desk-link";
 import { LOCATIONS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
-import { writeStudioSave } from "@/lib/studio-save";
+import { PlaceRail } from "@/components/place-rail";
+import { UseOnBanner } from "@/components/use-on-banner";
 import { VisitPlaces, godPath, bossPath, townPath } from "@/components/place-chip";
 import { godInk } from "@/lib/gods";
 import { townNote } from "@/lib/town-notes";
@@ -48,6 +48,9 @@ function BossNotePage() {
           ))}
         </p>
         <span className="mt-2 mx-auto block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <div className="mt-3">
+          <PlaceRail section="bosses" />
+        </div>
       </header>
       <main className="mx-auto flex max-w-3xl flex-col gap-6 px-5 py-6 md:px-8">
         <img
@@ -82,20 +85,7 @@ function BossNotePage() {
             ]}
           />
         </section>
-        <a
-          href={deskOpenPath(loc.edition, loc.id, { still: loc.viewA })}
-          className="min-h-11 text-sm text-parchment [touch-action:manipulation]"
-          onClick={() =>
-            writeStudioSave({
-              locationId: loc.id,
-              edition: loc.edition,
-              skillPicks: [],
-              stillSrc: loc.viewA,
-            })
-          }
-        >
-          Use on banner
-        </a>
+        <UseOnBanner src={loc.viewA} edition={loc.edition} placeId={loc.id} />
       </main>
     </div>
   );

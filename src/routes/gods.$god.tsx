@@ -6,9 +6,9 @@ import { godStill, godStillLine } from "@/lib/god-stills";
 import { GODS, LOCATIONS } from "@/lib/locations";
 import { BackLink } from "@/components/back-link";
 import { OfficialPulse } from "@/components/official-pulse";
+import { PlaceRail } from "@/components/place-rail";
+import { UseOnBanner } from "@/components/use-on-banner";
 import { VisitPlaces, AppLink, godPath, townPath, bossPath } from "@/components/place-chip";
-import { deskOpenPath } from "@/lib/desk-link";
-import { writeStudioSave } from "@/lib/studio-save";
 import { townNote } from "@/lib/town-notes";
 import { noteFor } from "@/lib/boss-notes";
 import { godInk } from "@/lib/gods";
@@ -28,8 +28,6 @@ function GodPage() {
   const rs3Still = godStill(god, "RS3");
   const osrsHome = GOD_HOME[slug]?.osrs;
   const rs3Home = GOD_HOME[slug]?.rs3;
-  const osrsDesk = osrsHome ? deskOpenPath("OSRS", osrsHome, { still: osrsStill, marks: [slug] }) : "";
-  const rs3Desk = rs3Home ? deskOpenPath("RS3", rs3Home, { still: rs3Still, marks: [slug] }) : "";
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -39,6 +37,9 @@ function GodPage() {
           {brief.god}
         </h1>
         <p className="mt-1 text-sm text-parchment">{brief.title}</p>
+        <div className="mt-3">
+          <PlaceRail section="gods" />
+        </div>
       </header>
 
       <main className="mx-auto flex max-w-3xl flex-col gap-6 px-5 py-6 md:px-8">
@@ -134,29 +135,13 @@ function GodPage() {
             </Link>
           </p>
         ) : null}
-        {(osrsDesk || rs3Desk) ? (
+        {(osrsHome || rs3Home) ? (
           <p className="flex flex-wrap gap-3 text-sm">
-            {osrsDesk ? (
-              <a
-                href={osrsDesk}
-                className="text-parchment"
-                onClick={() => {
-                  writeStudioSave({ locationId: osrsHome, edition: "OSRS", skillPicks: [], stillSrc: osrsStill });
-                }}
-              >
-                Use on banner · Old School
-              </a>
+            {osrsHome && osrsStill ? (
+              <UseOnBanner src={osrsStill} edition="OSRS" placeId={osrsHome} label="Use on banner · Old School" />
             ) : null}
-            {rs3Desk ? (
-              <a
-                href={rs3Desk}
-                className="text-parchment"
-                onClick={() => {
-                  writeStudioSave({ locationId: rs3Home, edition: "RS3", skillPicks: [], stillSrc: rs3Still });
-                }}
-              >
-                Use on banner · RuneScape
-              </a>
+            {rs3Home && rs3Still ? (
+              <UseOnBanner src={rs3Still} edition="RS3" placeId={rs3Home} label="Use on banner · RuneScape" />
             ) : null}
           </p>
         ) : null}

@@ -30,6 +30,7 @@ import { useEggGestures } from "@/hooks/use-egg-gestures";
 import { eggToast, isOwnerName, sessionOnce } from "@/lib/eggs";
 import { postieLineAt, PETE_LINES, peteThreshold } from "@/lib/postie";
 import { useVisibleNow } from "@/hooks/use-visible-now";
+import { putStillOnDesk } from "@/lib/desk-store";
 import { loadStudioSave, writeStudioSave } from "@/lib/studio-save";
 import { deskSharePath, readDeskQuery } from "@/lib/desk-link";
 import { PlaceRail } from "@/components/place-rail";
@@ -299,6 +300,7 @@ export function Studio() {
       return null;
     });
     setSceneReady(true);
+    putStillOnDesk({ stillSrc: cardSrc, locationId: id, edition: loc?.edition });
     if (typeof document !== "undefined") {
       document.getElementById("desk")?.scrollIntoView({ block: "start", behavior: "smooth" });
       canvasRef.current?.focus();

@@ -75,33 +75,6 @@ export function paintRSYellow(
   ctx.restore();
 }
 
-function paintYellow(
-  ctx: PaintCtx,
-  x: number,
-  y: number,
-  text: string,
-  color = RS_YELLOW,
-  _style = "chat",
-) {
-  const sizeMatch = ctx.font.match(/(\d+(?:\.\d+)?)px/);
-  const size = Math.round(sizeMatch ? Number(sizeMatch[1]) : 16);
-  paintRSYellow(ctx, text, Math.round(x), Math.round(y), size, color);
-}
-
-function yellowText(
-  ctx: PaintCtx,
-  text: string,
-  x: number,
-  y: number,
-  size: number,
-  _font: string,
-  _weight = "700",
-  color = RS_YELLOW,
-  _style = "chat",
-) {
-  paintRSYellow(ctx, text, x, y, size, color);
-}
-
 function fitYellow(
   ctx: PaintCtx,
   text: string,
@@ -112,7 +85,7 @@ function fitYellow(
   _font: string,
   _weight = "800",
   color = RS_YELLOW,
-  style = "chat",
+  _style = "chat",
 ) {
   let next = Math.round(size);
   ctx.font = `700 ${next}px "${FACE}"`;
@@ -120,8 +93,7 @@ function fitYellow(
     next -= 1;
     ctx.font = `700 ${next}px "${FACE}"`;
   }
-  ctx.textBaseline = "top";
-  paintYellow(ctx, x, y, text, color, style);
+  paintRSYellow(ctx, text, x, y, next, color);
 }
 
 export function loadImage(src: string) {
