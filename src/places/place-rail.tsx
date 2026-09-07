@@ -3,13 +3,14 @@ import { PlaceChip, AppLink, godPath } from "./place-chip";
 import { GODS, type Edition, type God } from "@/lib/locations";
 import { godInk } from "@/lib/gods";
 
-export type PlaceSection = "towns" | "gods" | "bosses" | "pvp";
+export type PlaceSection = "towns" | "gods" | "bosses" | "pvp" | "clan-wars";
 
 const SECTIONS: { id: PlaceSection; href: string; label: string }[] = [
   { id: "towns", href: "/towns", label: "Towns" },
   { id: "gods", href: "/gods", label: "Gods" },
   { id: "bosses", href: "/bosses", label: "Bosses" },
   { id: "pvp", href: "/pvp", label: "PvP" },
+  { id: "clan-wars", href: "/clan-wars", label: "Clan Wars" },
 ];
 
 export function PlaceRail({

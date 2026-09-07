@@ -45,7 +45,7 @@ function ClanWarsPage() {
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <div className="mt-3">
-          <PlaceRail section="pvp" />
+          <PlaceRail section="clan-wars" />
         </div>
       </header>
 

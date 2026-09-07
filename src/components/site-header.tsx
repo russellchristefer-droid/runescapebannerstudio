@@ -11,6 +11,7 @@ export const STUDIO_NAV = [
   ["/gods", "Gods"],
   ["/bosses", "Bosses"],
   ["/pvp", "PvP"],
+  ["/clan-wars", "Clan Wars"],
   ["/monsters", "Bestiary"],
   ["/skills", "Skills"],
   ["/towns", "Towns"],

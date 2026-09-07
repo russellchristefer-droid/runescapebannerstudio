@@ -205,6 +205,7 @@ function HistoryPage() {
           <a href="https://runescape.wiki/" target="_blank" rel="noopener noreferrer">
             RuneScape wiki
           </a>
+          <Link to="/clan-wars">Clan Wars</Link>
           <Link to="/">Desk</Link>
           <Link to="/chronicle">Chronicle</Link>
         </p>
