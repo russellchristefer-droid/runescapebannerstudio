@@ -9,5 +9,10 @@ node_modules/
 *.log
 dist/
 .output/
+.vercel/
 .vinxi/
 .tanstack/
+attachments/
+__pycache__/
+*.pyc
+sidecars/__pycache__/

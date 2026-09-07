@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /__grok/
-Disallow: /api/
-Disallow: /healthz
-
-Sitemap: https://runescapebannerstudio.grok.me/sitemap.xml
