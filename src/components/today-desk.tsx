@@ -1,5 +1,6 @@
 import { pad, untilUtcHour, untilUtcMidnight } from "@/lib/clock";
 import { eggToast, sessionOnce } from "@/lib/eggs";
+import { hourMethods } from "@/lib/today-methods";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { useEffect, useRef, useState } from "react";
 
@@ -37,6 +38,7 @@ export function TodayDesk() {
   const hour = untilUtcHour(now);
   const day = now.getUTCDay();
   const utcH = now.getUTCHours();
+  const methods = hourMethods(utcH);
   return (
     <section className="page-band py-6">
       <h2 className="mb-1 text-center text-sm font-semibold">Today</h2>
@@ -52,6 +54,9 @@ export function TodayDesk() {
             <li>
               Daily reset in {reset} (00:00 UTC). Herb runs, birdhouses, battlestaves,
               and shop caps flip then. Worlds hitch for a few minutes after.
+            </li>
+            <li>
+              This hour · {methods.osrs}
             </li>
             <li>
               {day === 3
@@ -79,6 +84,9 @@ export function TodayDesk() {
             <li>
               Daily reset in {reset} (00:00 UTC). Challenges, ports, cache, Fort
               contracts, and travelling merchant stock flip then.
+            </li>
+            <li>
+              This hour · {methods.rs3}
             </li>
             <li>
               Voice of Seren flips on the hour. Next in {hour} (UTC hour). Desk
