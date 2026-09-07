@@ -59,23 +59,21 @@ const ROOMS = [
     era: "RuneScape Classic",
     note: "Before the portals. Two chats on the same ditch.",
     srcs: [
-      "/clan-wars/classic-wild1.jpg",
-      "/clan-wars/classic-wild2.jpg",
-      "/stills/rsc/rsc-ranging.jpg",
-      "/clan-wars/more/rsc-moss.png",
-      "/clan-wars/more/rsc-map-2001.jpg",
+      "/clan-wars/rsc-wild-photo.jpg",
+      "/clan-wars/fresh/rsc-combat.gif",
+      "/stills/rsc/rsc-lumbridge.jpg",
+      "/stills/rsc/rsc-woodcutting.jpg",
+      "/clan-wars/fresh/rs3-old-wildy.jpg",
     ],
   },
   {
     place: "Edgeville",
     era: "RuneScape Classic",
-    note: "The general store. Last bank before the wild.",
+    note: "The road north.",
     srcs: [
-      "/clan-wars/rsc-edge-store.png",
       "/stills/rsc/rsc-edgeville.jpg",
       "/stills/hero/rsc-edgeville.jpg",
-      "/era/classic/draynor.jpg",
-      "/stills/rsc/rsc-draynor.jpg",
+      "/stills/rsc/rsc-smithing.jpg",
     ],
   },
   {
@@ -86,68 +84,37 @@ const ROOMS = [
       "/clan-wars/osrs-edgeville-shot.png",
       "/locations/osrsedge.jpg",
       "/locations/edgeville.jpg",
-      "/clan-wars/osrs-ffa-portal.png",
-      "/clan-wars/more/osrs-exit-ffa.png",
     ],
   },
   {
     place: "Ferox Enclave",
     era: "Old School",
-    note: "The house. Purple in. White to practice.",
+    note: "Soul Wars door, LMS, the pool, Giants' Plateau.",
     srcs: [
-      "/clan-wars/osrs-ferox.png",
       "/clan-wars/osrs-clan-wars.png",
-      "/clan-wars/osrs-ffa-portal.png",
-      "/clan-wars/more/osrs-portal-magenta.png",
-      "/clan-wars/more/osrs-exit-challenge.png",
-    ],
-  },
-  {
-    place: "Giants' Plateau",
-    era: "Old School",
-    note: "The first Old School house. 19 June 2014.",
-    srcs: [
+      "/clan-wars/fresh/osrs-soul-ferox.png",
+      "/clan-wars/fresh/osrs-lms.png",
+      "/clan-wars/fresh/osrs-pool.png",
       "/clan-wars/osrs-giants-plateau.png",
-      "/clan-wars/osrs-clan-wars.png",
-      "/clan-wars/more/osrs-portal-green.png",
-      "/clan-wars/more/osrs-portal-teal.png",
-      "/clan-wars/more/osrs-exit-challenge.png",
     ],
   },
   {
     place: "Castle Wars",
-    era: "Old School",
-    note: "The flag. Not this minigame. West of Yanille.",
+    era: "Old School · RuneScape",
+    note: "The flag. Barricades. Yanille door.",
     srcs: [
-      "/clan-wars/osrs-castle-wars.png",
-      "/clan-wars/more/osrs-cw-portal.png",
-      "/clan-wars/more/osrs-cw-red.png",
-      "/clan-wars/more/osrs-cw-blue.png",
+      "/clan-wars/rs3-castle-wars.png",
+      "/clan-wars/fresh/osrs-cw-barricades.png",
       "/locations/yanille.jpg",
     ],
   },
   {
     place: "Gamers' Grotto",
     era: "RuneScape",
-    note: "North of Falador since 1 February 2011.",
-    srcs: [
-      "/clan-wars/rs3-grotto.png",
-      "/clan-wars/more/rs3-arena.png",
-      "/clan-wars/more/rs3-ffa.png",
-      "/clan-wars/more/rs3-rated-portal.png",
-      "/locations/falador.jpg",
-    ],
-  },
-  {
-    place: "Clan Wars hall",
-    era: "RuneScape",
-    note: "Captain to captain. The board still names the winner.",
+    note: "The main-client house.",
     srcs: [
       "/clan-wars/rs3-clan-wars.png",
-      "/clan-wars/more/rs3-victory.png",
-      "/clan-wars/more/rs3-defeat.png",
-      "/clan-wars/more/rs3-classic-mode.png",
-      "/clan-wars/more/rs3-ruins.png",
+      "/clan-wars/fresh/rs3-clan-wars-old.jpg",
     ],
   },
   {
@@ -246,31 +213,16 @@ function ClanWarsPage() {
         <h1 className="page-h1 mt-1">Clan Wars</h1>
         <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
           The minigame. Not a login. Two chat-channels walk through a purple portal and
-          agree the terms. Stills from the wikis and the Classic wilderness that came first.
+          agree the terms. Each still on this page is used once.
         </p>
         <p className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-sm">
-          <a
-            className="text-parchment"
-            href="https://oldschool.runescape.wiki/w/Clan_Wars"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a className="text-parchment" href="https://oldschool.runescape.wiki/w/Clan_Wars" target="_blank" rel="noopener noreferrer">
             Old School wiki
           </a>
-          <a
-            className="text-parchment"
-            href="https://runescape.wiki/w/Clan_Wars"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a className="text-parchment" href="https://runescape.wiki/w/Clan_Wars" target="_blank" rel="noopener noreferrer">
             RuneScape wiki
           </a>
-          <a
-            className="text-parchment"
-            href="https://oldschool.runescape.wiki/w/Castle_Wars"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a className="text-parchment" href="https://oldschool.runescape.wiki/w/Castle_Wars" target="_blank" rel="noopener noreferrer">
             Castle Wars
           </a>
           <Link to="/pvp" className="text-parchment">
@@ -428,7 +380,7 @@ function ClanWarsPage() {
             ))}
           </div>
           <p className="mt-2 text-center text-[11px] text-faint">
-            Arrow through each place. The still sits in the frame.
+            Arrow through each place. No still is used twice on this page.
           </p>
         </section>
 
