@@ -10,6 +10,20 @@ export const BOB_LINES = [
   "The edict and the edict's absence are two canons. Keep them unmingled, as Bob keeps his paws off the wrong side of the river.",
   "A still is not the town. It is a deixis: here, from this window, at this hour of the tessellated day.",
   "The cat has seniority. Act like it.",
+  "Risk is the tax. The GE is a public cut. Neither one cares that you titled the stream.",
+  "A freeze is a sentence. A spec into immunity is a donation with extra clicks.",
+  "Wiki keeps the hour. Blogs keep the rumour. Bob keeps the sill.",
+  "The ditch does not grade your intention. Protect Item is the only footnote it accepts.",
+  "Twelve letters on the plate. A Bank PIN never.",
+  "OSRS and RS3 share a map and not a grammar. Mix them and you are sightseeing.",
+  "Kill count is a number. A wipe is a name. Learn the name first.",
+  "Partyhats are identification. This desk does not print a mid.",
+  "The first click after they eat is not another spec. Bob has watched that funeral.",
+  "A learner who names the mechanic lives. A maxed account that will not is still loot.",
+  "Worlds hitch at midnight. The shops restock. The cat is unmoved.",
+  "If the still 404s, Falador holds the plate. Pride is not a fallback.",
+  "Marks are what you wear. The rest can stay in the tray.",
+  "Pete writes the JPEG. That is the work. The rest is commentary.",
 ];
 
 export const BOB_BY_PLACE: Record<string, string[]> = {

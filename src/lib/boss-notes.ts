@@ -63,7 +63,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
       "One invocation rack after a clean raid. A clean 50 teaches more than a wipe 200.",
       "One talker. Time the raid. Cut one minute, not five.",
     ],
-    wipe: "Kephri dung on the floor, or a Zebak wave nobody jugged. Wardens is almost never first.",
+    wipe: "Kephri dung still on the floor, or a Zebak wave nobody jugged. Wardens is the exam you sit after you pass the rooms.",
     wiki: "https://oldschool.runescape.wiki/w/Tombs_of_Amascut",
   },
   vorkath: {
@@ -212,7 +212,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     method: [
       "A 60-wave attempt with notes beats ten 20-wave panics. Write the wipe. Change one thing.",
     ],
-    wipe: "A blob stacked on a ranger you left alive, or Zuk Jad healers into the next set.",
+    wipe: "A blob you stacked on a ranger you left alive. Zuk Jad healers into the next set is how a cape becomes a story.",
     wiki: "https://oldschool.runescape.wiki/w/Inferno",
   },
   nightmare: {
@@ -348,7 +348,7 @@ export const BOSS_NOTES: Record<string, BossNote> = {
     method: [
       "Add 25% after two clean kills. A wipe streak is a note problem.",
     ],
-    wipe: "Wrong font colour. The room ends the pull. The HP bar does not.",
+    wipe: "Wrong font colour. The room ends the pull. The HP bar is commentary.",
     wiki: "https://runescape.wiki/w/Telos,_the_Warden",
   },
   raksha: {

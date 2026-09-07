@@ -74,7 +74,7 @@ export function OracleLine({
         </figcaption>
       </figure>
       <p className="mt-2 text-center text-[11px] text-muted">Kept by a player who looks first and banks second.</p>
-      <p className="mt-1 text-center text-[11px] text-faint">New lesson list at midnight UTC.</p>
+      <p className="mt-1 text-center text-[11px] text-faint">Word turns every thirty seconds. New list at midnight UTC.</p>
       <p className="mt-2 text-center text-xs text-muted">Today · {date}</p>
     </div>
   );
