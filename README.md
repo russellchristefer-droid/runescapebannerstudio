@@ -72,6 +72,17 @@ TWITCH_APP_TOKEN=
 YOUTUBE_API_KEY=
 ```
 
+## One-file Python sidecar
+
+The website is still Node. [`banner_studio.py`](banner_studio.py) is a separate file if you only have Python:
+
+```bash
+python3 banner_studio.py serve
+python3 banner_studio.py compose --still public/Falador.png --name Christefer
+```
+
+`compose` needs Pillow (`python3 -m pip install pillow`). `serve` is stdlib only and just hosts `public/`.
+
 ## Legal
 
 Stills are identification. Jagex owns the game art. Policy: [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
