@@ -4,38 +4,43 @@ A fan site for streamers who need a banner that looks like it belongs next to a 
 
 Live site: [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
 
-There are two git remotes on purpose. Public is the tree people clone. Private is the backup I actually trust.
+Two remotes. Public is what people clone. Private is the backup I actually trust.
 
 - Public: [russellchristefer-droid/runescapebannerstudio](https://github.com/russellchristefer-droid/runescapebannerstudio)
 - Private: [russellchristefer-droid/runescapebannerstudio-private](https://github.com/russellchristefer-droid/runescapebannerstudio-private)
 
-You can make a 1200×480 JPEG on the desk, walk towns and bosses, read an Old School PvP sheet, trim a clip you own, and look up who is live if a Twitch key exists. If the key is missing the list still shows. That is not a bug.
+## What you can do here
+
+On the desk you pick a still (or upload one), crop it to Twitch 1200×480 or YouTube 1280×720, zoom and pan the picture, drop skills and partyhats, and download a JPEG. Levels sit next to the icons in RS Chat Bold. Fit plate / Room / Desk change how tight the pack is. Hiscores fill levels when the boards answer.
+
+Towns, gods, and bosses keep two canons. PvP is Old School only. `/edit` is a local clip bench: In / Out, mute, gain, fades, Save as WebM. Streamer and YouTuber halls list names even when live check is off. History ends in a small Legends’ Guild desk — public names only.
 
 ## How the code is split
 
-Old School and RuneScape 3 are different games. The folders treat them that way: different stills, different street lines, different skill packs.
+Old School and RuneScape 3 are different games. Different stills, different street lines, different skill packs.
 
-The plate type is RS Chat Bold, yellow with a black edge. Random stills come from files in `public/era/`, not a live scrape of the Wayback Machine. Hiscores and live badges fail quietly if Jagex or Twitch is down. Clip Save records mute, gain, and fades because those go through Web Audio, not the raw `<video>` element.
+Plate type is yellow Chat Bold with a black edge. Random stills come from `public/era/`, not a live Wayback scrape. Hiscores and live badges fail quietly. Clip Save records the Web Audio graph so mute actually lands in the file.
 
-Short write-ups of those choices live in [docs/adr/](docs/adr/). A one-page map is [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Choices are written down in [docs/adr/](docs/adr/). One-page map: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Security colours on GitHub are Old School partyhats, not status dots — [SECURITY.md](SECURITY.md).
 
 ## Stack
 
-React 19 and TanStack Start on Vite 8. Node 22. Canvas for the desk. MediaRecorder plus Web Audio for clips. CI is `.github/workflows/ci.yml` running `npm run ci:gates` then `npm run build`.
+React 19, TanStack Start, Vite 8, Node 22. Canvas for the desk. MediaRecorder and Web Audio for clips. CI runs `npm run ci:gates` then `npm run build`.
 
-No Python server. No second Vite app. Tokens stay in the environment, never in git.
+No Python server. No second Vite app. Tokens stay in the environment.
 
 ## Folders
 
 ```
-src/desk/       the still compositor
-src/places/     PlaceRail and the cards
-src/edit/       clip bench and the sound strip
+src/desk/       still compositor
+src/places/     PlaceRail and cards
+src/edit/       clip bench and sound strip
 src/legal/      operator notice
 src/lib/        catalogs and the yellow painter
 src/routes/     pages
 public/         stills, skills, marks, fonts
 server/api/     hiscores and live probes
+docs/partyhats/ wiki hats used in SECURITY.md
 ```
 
 ## Run it
@@ -47,17 +52,15 @@ npm ci
 npm run dev
 ```
 
-Then:
-
 ```bash
 npm run ci:gates
 npm run build
 npm run preview
 ```
 
-Line endings are LF. On a phone, just use the live site.
+Line endings are LF. On a phone, use the live site.
 
-If you want live badges, set these locally and do not commit them:
+Live badges (optional, never commit):
 
 ```
 TWITCH_CLIENT_ID=
@@ -67,8 +70,6 @@ YOUTUBE_API_KEY=
 
 ## Legal
 
-Stills are for identification. Jagex owns the game art. The fan policy is linked from [Legal](https://runescapebannerstudio.grok.me/legal).
+Stills are identification. Jagex owns the game art. Policy: [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
 
-Also: [SECURITY.md](SECURITY.md), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
-
-Code and original prose are under [LICENSE](LICENSE). Operator: Christefer Lee Russell-Barnett.
+[LICENSE](LICENSE). Operator: Christefer Lee Russell-Barnett.
