@@ -74,23 +74,16 @@ TWITCH_APP_TOKEN=
 YOUTUBE_API_KEY=
 ```
 
-## Python sidecars (download these files)
+## Python sidecars (optional download)
 
-The website is still Node. These are separate files if you only have Python.
+Not the website. grok.me runs Node. These live under [`sidecars/`](sidecars/) if you want a script, not a second stack.
 
-| File | Open | Raw download |
+| File | Open | Raw |
 | --- | --- | --- |
-| Still compositor | [still_desk.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/still_desk.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/still_desk.py) |
-| Clip bench | [clip_bench.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/clip_bench.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/clip_bench.py) |
-| Serve public/ | [banner_studio.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/banner_studio.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/banner_studio.py) |
+| Still compositor | [sidecars/still_desk.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/still_desk.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/still_desk.py) |
+| Clip bench | [sidecars/clip_bench.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/clip_bench.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/clip_bench.py) |
+| Static stills | [sidecars/banner_studio.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/banner_studio.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/banner_studio.py) |
 
-```bash
-python3 still_desk.py --still public/Falador.png --name Christefer --size 1200x480
-python3 clip_bench.py your-clip.mp4 --in 2 --out 8 --size 1280x720 --gain 1
-python3 banner_studio.py serve
-```
-
-`still_desk.py` needs Pillow. `clip_bench.py` needs ffmpeg on PATH. Neither file is the live grok.me desk.
 
 ## Legal
 

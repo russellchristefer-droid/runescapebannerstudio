@@ -17,7 +17,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 SIZES = {
     "1920x1080": (1920, 1080),
     "1280x720": (1280, 720),

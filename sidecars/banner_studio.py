@@ -18,7 +18,7 @@ import socketserver
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 DEFAULT_STILL = PUBLIC / "Falador.png"
 DEFAULT_OUT = ROOT / "banner-1200x480.jpg"

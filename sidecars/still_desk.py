@@ -15,7 +15,7 @@ import argparse
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 SIZES = {
     "1200x480": (1200, 480),
