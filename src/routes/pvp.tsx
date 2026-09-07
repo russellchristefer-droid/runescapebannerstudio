@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { BackLink } from "@/components/back-link";
 import { PlaceRail } from "@/components/place-rail";
@@ -53,6 +53,9 @@ function PvpPage() {
               {src.rank}. {src.label}
             </a>
           ))}
+          <Link to="/clan-wars" className="text-parchment">
+            Clan Wars
+          </Link>
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <div className="mt-3">
