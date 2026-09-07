@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
-import { BOSS_NOTES } from "@/lib/boss-notes";
+import { BOSS_NOTES, bossWash } from "@/lib/boss-notes";
 import { sheetFor } from "@/lib/boss-sheets";
 import { LOCATIONS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
@@ -51,6 +51,7 @@ function BossIndex() {
                   name={note.title}
                   kind="Boss"
                   game={game}
+                  wash={bossWash(note.id, loc?.god)}
                 />
               );
             })}

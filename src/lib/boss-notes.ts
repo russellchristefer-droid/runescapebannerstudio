@@ -1,3 +1,18 @@
+import { godWash } from "./gods";
+import type { God } from "./locations";
+
+export function bossWash(id: string, god?: God | string) {
+  const key = id.toLowerCase();
+  if (key.includes("inferno") || key.includes("zuk")) return "#2a1410";
+  if (key.includes("colosseum")) return "#2a2010";
+  if (key.includes("tob") || key.includes("maiden") || key.includes("verzik")) return "#2a1218";
+  if (key.includes("cox") || key.includes("olm")) return "#1c2418";
+  if (key.includes("toa") || key.includes("warden")) return "#2a2010";
+  if (key.includes("kbd") || key.includes("vetion") || key.includes("callisto") || key.includes("venenatis")) return "#241810";
+  if (god) return godWash(god);
+  return "#1c1812";
+}
+
 export type BossNote = {
   id: string;
   title: string;

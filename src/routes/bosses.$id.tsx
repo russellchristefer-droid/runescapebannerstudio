@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { BossSheet } from "@/components/boss-sheet";
-import { noteFor } from "@/lib/boss-notes";
+import { noteFor, bossWash } from "@/lib/boss-notes";
 import { sheetFor } from "@/lib/boss-sheets";
 import { LOCATIONS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
@@ -55,7 +55,8 @@ function BossNotePage() {
         <img
           src={loc.viewA}
           alt={`${note.title} arena, ${game}`}
-          className="aspect-[21/9] w-full rounded-md border border-line object-cover bg-surface"
+          className="aspect-[21/9] w-full rounded-md border border-line object-contain"
+          style={{ backgroundColor: bossWash(note.id, loc.god) }}
           loading="eager"
           decoding="async"
         />

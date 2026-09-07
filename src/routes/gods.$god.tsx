@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useRef } from "react";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
-import { GOD_BRIEFS, GOD_HOME, godFromSlug, godInk } from "@/lib/gods";
+import { GOD_BRIEFS, GOD_HOME, godFromSlug, godInk, godWash } from "@/lib/gods";
 import { godStill, godStillLine } from "@/lib/god-stills";
 import { LOCATIONS } from "@/lib/locations";
 import { BackLink } from "@/components/back-link";
@@ -54,6 +54,7 @@ function GodPage() {
               src={godStill(god, "OSRS")!}
               alt={`${brief.god} in Old School RuneScape`}
               caption={godStillLine(god, "OSRS")}
+              wash={godWash(god)}
             />
           ) : (
             <p className="text-sm text-muted">Still needed — Old School RuneScape.</p>
@@ -63,6 +64,7 @@ function GodPage() {
               src={godStill(god, "RS3")!}
               alt={`${brief.god} in RuneScape`}
               caption={godStillLine(god, "RS3")}
+              wash={godWash(god)}
             />
           ) : (
             <p className="text-sm text-muted">Still needed — RuneScape.</p>
@@ -165,7 +167,7 @@ function GodPage() {
   );
 }
 
-function GodFigure({ src, alt, caption }: { src: string; alt: string; caption: string }) {
+function GodFigure({ src, alt, caption, wash }: { src: string; alt: string; caption: string; wash?: string }) {
   const ref = useRef<HTMLElement | null>(null);
   useEggGestures(ref, () => "The stone remembers a name.");
   return (
@@ -173,7 +175,8 @@ function GodFigure({ src, alt, caption }: { src: string; alt: string; caption: s
       <img
         src={src}
         alt={alt}
-        className="aspect-video w-full rounded-md border border-line bg-surface object-cover"
+        className="aspect-video w-full rounded-md border border-line object-contain"
+        style={{ backgroundColor: wash ?? "#1c1812" }}
         loading="lazy"
         decoding="async"
       />

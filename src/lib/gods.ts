@@ -19,6 +19,25 @@ export function godInk(god: God | string) {
   return GOD_INK[god as God] ?? "#e0b45c";
 }
 
+/** Dark field behind a still. Same hue as the prayer book, not a highlighter. */
+export const GOD_WASH: Record<God, string> = {
+  Saradomin: "#122038",
+  Zamorak: "#2a1214",
+  Guthix: "#142414",
+  Armadyl: "#1c2430",
+  Bandos: "#241c10",
+  Seren: "#102428",
+  Zaros: "#1c1430",
+  Sliske: "#242018",
+  Tumeken: "#2a2010",
+  Elidinis: "#102422",
+  Marimbo: "#281810",
+};
+
+export function godWash(god: God | string) {
+  return GOD_WASH[god as God] ?? "#1c1812";
+}
+
 export const GOD_SLUGS: Record<God, string> = {
   Saradomin: "saradomin",
   Zamorak: "zamorak",

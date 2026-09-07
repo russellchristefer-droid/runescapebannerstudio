@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
-import { GOD_BRIEFS, GOD_SLUGS } from "@/lib/gods";
+import { GOD_BRIEFS, GOD_SLUGS, godWash } from "@/lib/gods";
 import { godStill, godStillLine } from "@/lib/god-stills";
 import { GODS } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
@@ -41,6 +41,7 @@ function GodsIndex() {
               kind="God"
               game={game}
               caption={godStillLine(name, edition)}
+              wash={godWash(name)}
             />
           ))}
         </PlaceGrid>
