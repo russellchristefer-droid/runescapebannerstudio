@@ -1,12 +1,23 @@
 export const PERIOD_MS = 5 * 60 * 1000;
+/** Town hero cycle. Street lines stay on PERIOD_MS. */
+export const HERO_PERIOD_MS = (2 * 60 + 3) * 1000;
 
 export function stillIndex(length: number, now = Date.now()) {
   if (length <= 0) return 0;
   return Math.floor(now / PERIOD_MS) % length;
 }
 
+export function heroStillIndex(length: number, now = Date.now()) {
+  if (length <= 0) return 0;
+  return Math.floor(now / HERO_PERIOD_MS) % length;
+}
+
 export function msUntilNext(now = Date.now()) {
   return PERIOD_MS - (now % PERIOD_MS);
+}
+
+export function msUntilHero(now = Date.now()) {
+  return HERO_PERIOD_MS - (now % HERO_PERIOD_MS);
 }
 
 export function formatRemain(ms: number) {

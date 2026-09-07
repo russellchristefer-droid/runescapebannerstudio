@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useVisibleNow } from "@/hooks/use-visible-now";
-import { PERIOD_MS, formatRemain, stillIndex } from "@/lib/still-clock";
+import { HERO_PERIOD_MS, formatRemain, heroStillIndex } from "@/lib/still-clock";
+import { bobWord } from "@/lib/sill-words";
 import { type Edition } from "@/lib/locations";
 import { type HeroChip, gameLabel, heroPool } from "@/lib/hero-pools";
 
@@ -24,11 +25,12 @@ export function TownHero({
   const now = useVisibleNow();
   const clock = Math.max(0, now - origin);
   const n = pool.length;
-  const idx = n ? (stillIndex(n, clock) + skip) % n : 0;
+  const idx = n ? (heroStillIndex(n, clock) + skip) % n : 0;
   const shot = pool[idx] ?? pool[0];
   const next = n ? pool[(idx + 1) % n] : undefined;
   const [shown, setShown] = useState(shot?.src);
-  const remain = PERIOD_MS - (clock % PERIOD_MS);
+  const remain = HERO_PERIOD_MS - (clock % HERO_PERIOD_MS);
+  const word = bobWord(now);
 
   const [caption, setCaption] = useState(shot?.name ?? "");
 
@@ -106,6 +108,9 @@ export function TownHero({
       </div>
       <p className="px-3 py-2 text-center text-sm text-fg md:px-8">
         {name} · {game}
+      </p>
+      <p className="px-3 text-center text-[12px] text-parchment/80 md:px-8" style={{ fontFamily: "Fondamento, serif" }}>
+        Bob · {word.t} — {word.g}
       </p>
       <p className="pb-2 text-center text-[11px] text-faint">
         {edition === "RSC" ? "Archive. The worlds are not on this page." : `Next still in ${formatRemain(remain)}`}
