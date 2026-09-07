@@ -4,6 +4,8 @@ A fan site for streamers who need a banner that looks like it belongs next to a 
 
 Live site: [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
 
+Alt1 and RuneLite downloads are at the bottom: [For RuneScape players](#for-runescape-players--alt1-and-runelite).
+
 Two remotes. Public is what people clone. Private is the backup I actually trust.
 
 - Public: [russellchristefer-droid/runescapebannerstudio](https://github.com/russellchristefer-droid/runescapebannerstudio)
@@ -74,28 +76,68 @@ TWITCH_APP_TOKEN=
 YOUTUBE_API_KEY=
 ```
 
-## Python sidecars (optional download)
+---
 
-Not the website. grok.me runs Node. These live under [`sidecars/`](sidecars/) if you want a script, not a second stack.
+## For RuneScape® players — Alt1 and RuneLite
 
-| File | Open | Raw |
+Fan tools. Not Jagex. They do not click. RuneScape® and Old School RuneScape® are registered trademarks of Jagex Limited.
+
+Start here: [overlays/README.md](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/overlays/README.md)
+
+### Alt1 Toolkit
+
+Install [Alt1 Toolkit](https://runeapps.org/), then **Apps → Add app** and paste one config.
+
+| App | Add this URL | Folder | Open the page |
+| --- | --- | --- | --- |
+| Still compositor | [appconfig.json](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/appconfig.json) | [overlays/desk/alt1](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/overlays/desk/alt1) | [index.html](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/overlays/desk/alt1/index.html) |
+| Clip bench | [appconfig.json](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/appconfig.json) | [overlays/clips/alt1](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/overlays/clips/alt1) | [index.html](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/overlays/clips/alt1/index.html) |
+
+One-click if Toolkit is already installed:
+
+- Still compositor: [alt1://addapp/…](alt1://addapp/https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/appconfig.json)
+- Clip bench: [alt1://addapp/…](alt1://addapp/https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/appconfig.json)
+
+### RuneLite
+
+Not on Plugin Hub. One jar, two plugins.
+
+| Plugin | What it does | Source |
 | --- | --- | --- |
-| Still compositor | [sidecars/still_desk.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/still_desk.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/still_desk.py) |
-| Clip bench | [sidecars/clip_bench.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/clip_bench.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/clip_bench.py) |
-| Static stills | [sidecars/banner_studio.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/banner_studio.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/banner_studio.py) |
+| Banner Studio | Sidebar → Open the still compositor | [BannerStudioPlugin.java](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/overlays/runelite/src/main/java/com/bannerstudio/BannerStudioPlugin.java) |
+| Clip bench | Sidebar → Open the clip bench | [ClipBenchPlugin.java](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/overlays/runelite/src/main/java/com/bannerstudio/ClipBenchPlugin.java) |
 
+Build and drop the jar:
+
+```bash
+cd overlays/runelite
+mvn -q package
+```
+
+Copy `target/banner-studio-1.0.0.jar` into:
+
+- Windows: `%USERPROFILE%\.runelite\sideloaded-plugins` or `%USERPROFILE%\.runelite\externalplugins`
+- macOS / Linux: `~/.runelite/sideloaded-plugins` or `~/.runelite/externalplugins`
+
+Turn on RuneLite → Settings → RuneLite → Developer mode, restart, enable **Banner Studio** and **Clip bench**.
+
+Plugin pack: [overlays/runelite](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/overlays/runelite)
+
+### Optional Python (no Alt1 / no RuneLite)
+
+| Script | Open | Raw download |
+| --- | --- | --- |
+| Still compositor | [still_desk.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/still_desk.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/still_desk.py) |
+| Clip bench | [clip_bench.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/clip_bench.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/clip_bench.py) |
+| Static stills | [banner_studio.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/banner_studio.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/banner_studio.py) |
+
+Folder: [sidecars/](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/sidecars)
+
+---
 
 ## Legal
 
 Stills are identification. RuneScape® and Old School RuneScape® are registered trademarks of Jagex Limited. Jagex® owns the game art. The Fan Content Policy is permission, not a sale — [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
 
-## Client plugins (not the website)
-
-| App | Alt1 | RuneLite |
-| --- | --- | --- |
-| Still compositor | [appconfig](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/appconfig.json) | Enable **Banner Studio** after sideload |
-| Clip bench | [appconfig](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/appconfig.json) | Enable **Clip bench** after sideload |
-
-How-to: [overlays/README.md](overlays/README.md)
-
 This README is not a licence to print official marks. [LICENSE](LICENSE) covers original studio code and prose only. Operator: Christefer Lee Russell-Barnett.
+
