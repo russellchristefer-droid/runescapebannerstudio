@@ -553,29 +553,11 @@ export function ClipBench() {
     setOutPoint(Math.max(a + frameStep(fps), b));
   }
 
-  function splitAtPlayhead() {
-    pushUndo();
-    const t = Math.max(0, Math.min(duration, snapTime(now, fps || 30)));
-    setOutPoint(Math.max(inPoint + (1 / (fps || 30)), t));
-  }
-
   function deleteRegion() {
     pushUndo();
     setInPoint(0);
     setOutPoint(duration);
     setStatus("In and Out cleared.");
-  }
-
-  function snapSeconds() {
-    const t = Math.round(now);
-    seek(t);
-    setSnapOn(true);
-  }
-
-  function fadeHalf() {
-    const frames = Math.max(1, Math.round((fps || 30) * 0.5));
-    setFadeIn(frames);
-    setFadeOut(frames);
   }
 
   function undo() {
@@ -961,10 +943,10 @@ export function ClipBench() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => seek(now - 2)}>
+          <button type="button" disabled={!hasClip} className={CHIP} id="back2" onClick={() => seek(now - 2)}>
             −2s
           </button>
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => seek(now - frameStep(fps))}>
+          <button type="button" disabled={!hasClip} className={CHIP} id="frameBack" onClick={() => seek(now - frameStep(fps))}>
             Frame −
           </button>
           <button
@@ -979,16 +961,16 @@ export function ClipBench() {
           >
             {playing ? "Pause" : "Play"}
           </button>
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => seek(now + frameStep(fps))}>
+          <button type="button" disabled={!hasClip} className={CHIP} id="frameFwd" onClick={() => seek(now + frameStep(fps))}>
             Frame +
           </button>
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => seek(now + 2)}>
+          <button type="button" disabled={!hasClip} className={CHIP} id="fwd2" onClick={() => seek(now + 2)}>
             +2s
           </button>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#c6a45a]/40 bg-[#1a1610] px-2 py-2 shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
-          <button type="button" className={muted ? CHIP_ON : CHIP} onClick={() => setMuted((v) => !v)}>
+          <button type="button" className={muted ? CHIP_ON : CHIP} id="mute" onClick={() => setMuted((v) => !v)}>
             Mute
           </button>
           <label className="inline-flex min-h-11 items-center gap-2 text-[11px] text-muted">
@@ -1012,6 +994,7 @@ export function ClipBench() {
           </label>
           <button
             type="button"
+            id="fade"
             className={fadeIn > 0 ? CHIP_ON : CHIP}
             onClick={() => setFadeIn((v) => (v > 0 ? 0 : Math.round(fps * 0.5)))}
           >
@@ -1037,20 +1020,16 @@ export function ClipBench() {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {hasClip ? (
             <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openClipPicker}>
               Replace clip
             </button>
           ) : (
-            <span className="hidden sm:block" />
+            <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openClipPicker}>
+              Upload video
+            </button>
           )}
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={markIn}>
-            In
-          </button>
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={markOut}>
-            Out
-          </button>
           {busy ? (
             <button type="button" className={CHIP} onClick={cancelExport}>
               Cancel
@@ -1063,19 +1042,32 @@ export function ClipBench() {
         </div>
 
         <div className="flex flex-wrap gap-1">
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={splitAtPlayhead}>
-            Split
+          <button type="button" disabled={!hasClip} className={CHIP} id="markIn" onClick={markIn}>
+            In
+          </button>
+          <button type="button" disabled={!hasClip} className={CHIP} id="markOut" onClick={markOut}>
+            Out
+          </button>
+          <button type="button" disabled={!hasClip} className={CHIP} onClick={dropMarker}>
+            Marker
           </button>
           <button type="button" disabled={!hasClip} className={CHIP} onClick={deleteRegion}>
-            Delete region
+            Clear marks
           </button>
-          <button type="button" disabled={!hasClip} className={snapOn ? CHIP_ON : CHIP} onClick={snapSeconds}>
-            Snap seconds
+          <button
+            type="button"
+            disabled={!hasClip}
+            className={snapOn ? CHIP_ON : CHIP}
+            id="snap"
+            onClick={() => setSnapOn((v) => !v)}
+          >
+            Snap
           </button>
           <button
             type="button"
             disabled={!hasClip}
             className={CHIP}
+            id="rot90"
             onClick={() => {
               pushUndo();
               setRotate((v) => (v + 90) % 360);
@@ -1083,10 +1075,10 @@ export function ClipBench() {
           >
             Rotate 90
           </button>
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => setZoom((v) => Math.min(2, +(v + 0.1).toFixed(2)))}>
+          <button type="button" disabled={!hasClip} className={CHIP} id="scaleUp" onClick={() => setZoom((v) => Math.min(2, +(v + 0.1).toFixed(2)))}>
             Scale +
           </button>
-          <button type="button" disabled={!hasClip} className={CHIP} onClick={() => setZoom((v) => Math.max(0.5, +(v - 0.1).toFixed(2)))}>
+          <button type="button" disabled={!hasClip} className={CHIP} id="scaleDown" onClick={() => setZoom((v) => Math.max(0.5, +(v - 0.1).toFixed(2)))}>
             Scale −
           </button>
           <button type="button" className={loop ? CHIP_ON : CHIP} onClick={() => setLoop((v) => !v)}>
@@ -1094,6 +1086,9 @@ export function ClipBench() {
           </button>
           <button type="button" className={CHIP} onClick={undo}>
             Undo
+          </button>
+          <button type="button" className={CHIP} onClick={redo}>
+            Redo
           </button>
         </div>
 
