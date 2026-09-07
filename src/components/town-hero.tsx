@@ -34,7 +34,7 @@ export function TownHero({
   const quote =
     edition === "RSC"
       ? "Worlds are closed."
-      : bobLine(gameKey, placeSlug(caption || shot?.name || ""), now);
+      : bobLine(gameKey, placeSlug(shot?.name || ""), now);
 
   const [caption, setCaption] = useState(shot?.name ?? "");
 
