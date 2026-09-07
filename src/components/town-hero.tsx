@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { HERO_PERIOD_MS, formatRemain, heroStillIndex } from "@/lib/still-clock";
-import { bobWord } from "@/lib/sill-words";
+import { bobLine, placeSlug } from "@/lib/bob-lines";
 import { type Edition } from "@/lib/locations";
 import { type HeroChip, gameLabel, heroPool } from "@/lib/hero-pools";
 
@@ -30,7 +30,11 @@ export function TownHero({
   const next = n ? pool[(idx + 1) % n] : undefined;
   const [shown, setShown] = useState(shot?.src);
   const remain = HERO_PERIOD_MS - (clock % HERO_PERIOD_MS);
-  const word = bobWord(now);
+  const gameKey = edition === "RS3" ? "rs3" : "osrs";
+  const quote =
+    edition === "RSC"
+      ? "Worlds are closed."
+      : bobLine(gameKey, placeSlug(caption || shot?.name || ""), now);
 
   const [caption, setCaption] = useState(shot?.name ?? "");
 
@@ -109,8 +113,12 @@ export function TownHero({
       <p className="px-3 py-2 text-center text-sm text-fg md:px-8">
         {name} · {game}
       </p>
-      <p className="px-3 text-center text-[12px] text-parchment/80 md:px-8" style={{ fontFamily: "Fondamento, serif" }}>
-        Bob · {word.t} — {word.g}
+      <p
+        className="px-3 pb-1 text-center text-sm text-parchment/80 md:px-8"
+        style={{ fontFamily: "Fondamento, serif" }}
+        aria-live="polite"
+      >
+        “{quote}”
       </p>
       <p className="pb-2 text-center text-[11px] text-faint">
         {edition === "RSC" ? "Archive. The worlds are not on this page." : `Next still in ${formatRemain(remain)}`}

@@ -1,9 +1,8 @@
-import { bobLine, placeSlug, rememberBobPlace } from "@/lib/bob-lines";
+import { placeSlug, rememberBobPlace } from "@/lib/bob-lines";
 import { bobWord } from "@/lib/sill-words";
 import { useVisibleNow } from "@/hooks/use-visible-now";
-import { sessionOnce } from "@/lib/eggs";
 import type { Edition } from "@/lib/locations";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export function OracleLine({
   place,
@@ -13,23 +12,11 @@ export function OracleLine({
   edition: Edition;
 }) {
   const now = useVisibleNow();
-  const [hitch, setHitch] = useState(false);
-  useEffect(() => {
-    const t = new Date(now);
-    if (t.getUTCHours() === 0 && t.getUTCMinutes() === 0 && sessionOnce("rs-midnight-hitch")) {
-      setHitch(true);
-      const id = window.setTimeout(() => setHitch(false), 12_000);
-      return () => window.clearTimeout(id);
-    }
-  }, [now]);
   const game = edition === "OSRS" ? "osrs" : "rs3";
   const slug = placeSlug(place);
   useEffect(() => {
     rememberBobPlace(game, slug);
   }, [game, slug]);
-  const line = hitch
-    ? "The shopkeepers restock. Worlds hitch."
-    : bobLine(game, slug, now);
   const word = bobWord(now);
   const date = new Date(now).toLocaleDateString("en-GB", {
     weekday: "long",
@@ -48,14 +35,7 @@ export function OracleLine({
           className="h-[72px] w-[72px] shrink-0 object-contain object-bottom"
         />
         <div className="min-w-[12rem] flex-1 text-center">
-          <blockquote
-            className="oracle text-sm leading-snug text-parchment/80"
-            style={{ fontFamily: "Fondamento, serif" }}
-            aria-live="polite"
-          >
-            “{line}”
-          </blockquote>
-          <p className="bob-word mt-2 text-sm leading-snug text-parchment/80">
+          <p className="bob-word text-sm leading-snug text-parchment/80">
             <span className="mr-1 text-[11px] text-muted">Bob teaches</span>
             <strong className="font-semibold text-parchment">{word.t}</strong>
             <span className="text-muted"> ({word.p})</span>
