@@ -1,11 +1,11 @@
 # Contributing
 
-Small fan desk. Read [README](README.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) first.
+This is a small fan desk. Read the [README](README.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) before you open a PR.
 
-- Node 22. `npm ci` then `npm run ci:gates`.
-- Do not add official Jagex logos, cache dumps, or live Wayback hotlinks.
-- Keep OSRS and RS3 stills, quotes, and skill packs in their own folders.
-- One `PlaceRail`, one painter, one store. Do not add a second nav on the card face.
-- No secrets in commits. Live badges are env only.
-- Pack layout must keep icons and levels inside the export box.
-- Voice stays dry veteran. Wiki wins on numbers.
+Use Node 22. Run `npm ci` and `npm run ci:gates`.
+
+Please do not add official Jagex logos, cache dumps, or live Wayback links. Keep Old School and RuneScape 3 stills, quotes, and skills in their own folders. There should stay one PlaceRail, one painter, and one store — not a second nav on the card.
+
+Do not commit secrets. Live badges belong in env vars. When you drop a skill pack on the plate, icons and levels have to stay inside the export box.
+
+Write like someone who has died to the mechanic. The wiki wins on numbers.

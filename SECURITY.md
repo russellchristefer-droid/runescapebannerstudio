@@ -1,21 +1,21 @@
-# Hats (metaphor only)
+# Security
 
-GitHub will not paint a word Red in red ink. These are the Old School partyhats.
+This is a fan desk. We do not scan your machine, phish, or pop boxes.
 
-This origin does not scan, phish, or pop boxes.
+The colours below are Old School partyhats — the same inventory icons from the wiki — not GitHub status dots.
 
-- ![White partyhat](docs/partyhats/white-partyhat.png) **White** — headers, HTTPS, no secrets in git
-- ![Blue partyhat](docs/partyhats/blue-partyhat.png) **Blue** — what broke, logs, 404s
-- ![Green partyhat](docs/partyhats/green-partyhat.png) **Green** — backups that actually ran
-- ![Yellow partyhat](docs/partyhats/yellow-partyhat.png) **Yellow** — `git push private`, the boring work. Jagex never shipped a brown partyhat.
-- ![Purple partyhat](docs/partyhats/purple-partyhat.png) **Purple** — fan desk only. Not an official overlay.
-- ![Red partyhat](docs/partyhats/red-partyhat.png) **Red** — we assume the desk will be poked; fail-soft Hiscores; no token on the JPEG
-- ![Black partyhat](docs/partyhats/black-partyhat.png) **Black** — out of scope. If you wanted that, you are in the wrong repo.
-
-Inventory icons from the Old School wiki, identification only. Same files live under [`public/marks/`](public/marks) for the desk.
+| Hat | Meaning |
+| --- | --- |
+| ![White partyhat](docs/partyhats/white-partyhat.png) White | HTTPS, `nosniff`, no `.env` in git |
+| ![Blue partyhat](docs/partyhats/blue-partyhat.png) Blue | What broke: logs, 404s, fail-soft Hiscores |
+| ![Green partyhat](docs/partyhats/green-partyhat.png) Green | Backups that actually ran (`git push private`) |
+| ![Yellow partyhat](docs/partyhats/yellow-partyhat.png) Yellow | The boring work. Push both remotes. Jagex never shipped a brown hat. |
+| ![Purple partyhat](docs/partyhats/purple-partyhat.png) Purple | Fan desk only. Not an official overlay. |
+| ![Red partyhat](docs/partyhats/red-partyhat.png) Red | Assume someone will poke the desk. No token on the JPEG. |
+| ![Black partyhat](docs/partyhats/black-partyhat.png) Black | Out of scope. If you wanted that, this is the wrong repo. |
 
 Operator: Christefer Lee Russell-Barnett · russell.christefer@gmail.com
 
-Backup: [russellchristefer-droid/runescapebannerstudio-private](https://github.com/russellchristefer-droid/runescapebannerstudio-private) (private).
-Public: [russellchristefer-droid/runescapebannerstudio](https://github.com/russellchristefer-droid/runescapebannerstudio).
-Live: [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
+- Public: [russellchristefer-droid/runescapebannerstudio](https://github.com/russellchristefer-droid/runescapebannerstudio)
+- Private backup: [russellchristefer-droid/runescapebannerstudio-private](https://github.com/russellchristefer-droid/runescapebannerstudio-private)
+- Live: [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
