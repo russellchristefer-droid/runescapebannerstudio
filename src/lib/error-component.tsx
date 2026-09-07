@@ -1,20 +1,15 @@
 import type { ErrorComponentProps } from "@tanstack/react-router";
-import { TriangleAlert } from "lucide-react";
 
 export function AppErrorComponent({ error }: ErrorComponentProps) {
+  const message = error instanceof Error && error.message ? error.message : "This tile failed to load.";
   return (
-    <main
-      className={
-        "flex min-h-screen flex-col items-center justify-center gap-3 px-6 text-center " +
-        "bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50"
-      }
-    >
-      <span className="text-red-500" aria-hidden="true">
-        <TriangleAlert className="size-10" strokeWidth={2} />
-      </span>
-      <h1 className="page-h1">Something went wrong</h1>
-      <p className="max-w-md text-sm break-words text-zinc-500 dark:text-zinc-400">
-        {error.message || "An unexpected error occurred. Try reloading the page."}
+    <main className="min-h-dvh bg-bg px-5 py-16 text-center text-fg">
+      <h1 className="page-h1 site-title">This tile failed to load.</h1>
+      <p className="mx-auto mt-3 max-w-md text-sm text-muted">{message}</p>
+      <p className="mt-6">
+        <a href="/" className="text-parchment">
+          Back to the desk
+        </a>
       </p>
     </main>
   );

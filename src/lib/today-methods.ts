@@ -60,6 +60,6 @@ const RS3: string[] = [
 ];
 
 export function hourMethods(utcHour: number): HourNote {
-  const i = ((utcHour % 24) + 24) % 24;
-  return { osrs: OSRS[i] ?? OSRS[0], rs3: RS3[i] ?? RS3[0] };
+  const i = ((Math.trunc(Number(utcHour)) % 24) + 24) % 24;
+  return { osrs: OSRS[i] ?? OSRS[0]!, rs3: RS3[i] ?? RS3[0]! };
 }

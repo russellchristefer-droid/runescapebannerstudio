@@ -7,7 +7,13 @@ if (tsc.status !== 0) fail.push("tsc");
 
 const unit = spawnSync(
   "node",
-  ["--experimental-strip-types", "--test", "src/lib/filename.test.ts"],
+  [
+    "--experimental-strip-types",
+    "--test",
+    "src/lib/filename.test.ts",
+    "src/lib/rsText.test.ts",
+    "src/lib/today-methods.test.ts",
+  ],
   { encoding: "utf8" },
 );
 if (unit.status !== 0) {
