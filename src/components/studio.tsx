@@ -946,9 +946,8 @@ export function Studio() {
   }, [pickedSkill, pickedText, overIcon]);
 
   function downloadJpeg() {
-    const overlay = canvasRef.current;
     const still = stillCacheRef.current;
-    if (!overlay) return;
+    const overlay = canvasRef.current;
     const out = document.createElement("canvas");
     out.width = size.width;
     out.height = size.height;
@@ -959,13 +958,16 @@ export function Studio() {
     }
     ctx.fillStyle = "#1a1610";
     ctx.fillRect(0, 0, out.width, out.height);
-    if (still && still.width && still.height) {
-      coverStill(ctx, still, out.width, out.height);
-    } else {
+    if (still && (still as HTMLCanvasElement).width) {
+      paintOnto(ctx, still, out.width, out.height);
+    } else if (overlay) {
       const plate = document.getElementById("still") as HTMLImageElement | null;
       if (plate && plate.naturalWidth) coverStill(ctx, plate, out.width, out.height);
+      ctx.drawImage(overlay, 0, 0, out.width, out.height);
+    } else {
+      setSaveNote("Could not save. Try 1200×480.");
+      return;
     }
-    ctx.drawImage(overlay, 0, 0, out.width, out.height);
     out.toBlob(
       (blob) => {
         if (!blob) {
@@ -974,13 +976,14 @@ export function Studio() {
         }
         const who = sanitizeDisplayName(streamer);
         const worldTag = sanitizeWorld(world) ? `-w${sanitizeWorld(world)}` : "";
+        const href = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
+        a.href = href;
         a.download = `banner-${edition.toLowerCase()}-${(who || "desk").replace(/\s+/g, "-")}${worldTag}-${location.id}-${size.width}x${size.height}.jpg`;
+        a.rel = "noopener";
         a.click();
-        URL.revokeObjectURL(a.href);
-        if (!who) setSaveNote("Saved without a name.");
-        else setSaveNote(`Saved ${size.width}×${size.height}.`);
+        window.setTimeout(() => URL.revokeObjectURL(href), 2500);
+        setSaveNote(`Saved ${size.width}×${size.height}.`);
       },
       "image/jpeg",
       0.92,
@@ -1604,6 +1607,8 @@ export function Studio() {
             onClick={() => {
               setSizeId("1200x480");
               setGhostZone("twitch");
+              requestPaint();
+              setSaveNote("1200×480 Twitch crop.");
             }}
           >
             Twitch crop
@@ -1614,6 +1619,8 @@ export function Studio() {
             onClick={() => {
               setSizeId("1280x720");
               setGhostZone("youtube");
+              requestPaint();
+              setSaveNote("1280×720 YouTube crop.");
             }}
           >
             YouTube crop
@@ -1623,18 +1630,24 @@ export function Studio() {
             className="min-h-11 rounded-md border border-line px-2 text-[10px]"
             onClick={() => {
               const still = document.getElementById("still") as HTMLImageElement | null;
-              const w = still?.naturalWidth || 1920;
-              const h = still?.naturalHeight || 1080;
-              const next =
-                w >= 1800 && h <= 560
-                  ? "1920x480"
-                  : w / Math.max(1, h) > 2
-                    ? "1200x480"
-                    : h >= 1000
-                      ? "1920x1080"
-                      : "1280x720";
+              const cache = stillCacheRef.current as HTMLCanvasElement | null;
+              const w = still?.naturalWidth || cache?.width || 1920;
+              const h = still?.naturalHeight || cache?.height || 1080;
+              const ratio = w / Math.max(1, h);
+              let next: typeof sizeId = "1280x720";
+              let best = Infinity;
+              for (const box of BANNER_SIZES) {
+                const d = Math.abs(box.width / box.height - ratio);
+                if (d < best) {
+                  best = d;
+                  next = box.id;
+                }
+              }
               setSizeId(next);
               setGhostZone("none");
+              requestPaint();
+              const box = BANNER_SIZES.find((row) => row.id === next);
+              setSaveNote(`Full still · ${box?.width}×${box?.height}.`);
             }}
           >
             Discard crop
@@ -1724,6 +1737,13 @@ export function Studio() {
           </button>
           <button
             type="button"
+            className="h-8 min-h-11 rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"
+            onClick={() => fileRef.current?.click()}
+          >
+            Upload still
+          </button>
+          <button
+            type="button"
             className="h-8 rounded-md border border-line px-2 text-[10px]"
             onClick={() => {
               const row = pickRandom();
@@ -1785,7 +1805,11 @@ export function Studio() {
                 <button
                   key={box.id}
                   type="button"
-                  onClick={() => setSizeId(box.id)}
+                  onClick={() => {
+                    setSizeId(box.id);
+                    requestPaint();
+                    setSaveNote(`${box.width}×${box.height}.`);
+                  }}
                   className={`min-h-11 rounded-md border px-2 text-[10px] ${sizeId === box.id ? "border-parchment" : "border-line"}`}
                 >
                   {box.name}
@@ -2067,12 +2091,19 @@ export function Studio() {
           aria-hidden="true"
           onChange={(e) => {
             const file = e.target.files?.[0];
+            e.target.value = "";
             if (!file) return;
+            if (!file.type.startsWith("image/")) {
+              setSaveNote("That file is not a still.");
+              return;
+            }
             if (customSrc?.startsWith("blob:")) URL.revokeObjectURL(customSrc);
             customFileRef.current = file;
             setCustomSrc(URL.createObjectURL(file));
-            clearStampsAndText();
+            setDeskStillSrc(null);
             setSceneReady(true);
+            setPlateCaption(file.name.slice(0, 48));
+            setSaveNote("Still on the plate. Pick a crop, then Download.");
           }}
         />
 
