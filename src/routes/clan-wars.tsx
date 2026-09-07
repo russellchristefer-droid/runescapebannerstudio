@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { BackLink } from "@/components/back-link";
 import { PlaceRail } from "@/components/place-rail";
 import { pageMeta } from "@/lib/page-title";
@@ -12,23 +13,126 @@ export const Route = createFileRoute("/clan-wars")({
   component: ClanWarsPage,
 });
 
-const STILLS = [
-  { src: "/stills/rsc/rsc-ranging.jpg", name: "Classic fight", era: "RuneScape Classic", note: "Two chats on the grass. The bag was live." },
-  { src: "/stills/rsc/rsc-lumbridge.jpg", name: "The walk", era: "RuneScape Classic", note: "Before anyone named a portal." },
-  { src: "/clan-wars/rsc-edge-store.png", name: "Edgeville store", era: "RuneScape Classic", note: "Last counter before the ditch." },
-  { src: "/clan-wars/osrs-edgeville-shot.png", name: "Edgeville", era: "Old School", note: "The same road. Newer letters." },
-  { src: "/locations/osrsedge.jpg", name: "Edgeville bank road", era: "Old School", note: "The last town before you mean it." },
-  { src: "/locations/edgeville.jpg", name: "Edgeville", era: "Old School", note: "North of here the tax starts." },
-  { src: "/clan-wars/osrs-ferox.png", name: "Ferox Enclave", era: "Old School", note: "16 July 2020. Safe pocket. Purple and white." },
-  { src: "/locations/yanille.jpg", name: "Yanille", era: "Old School", note: "West is Castle Wars. That is the flag game." },
-  { src: "/locations/ardougne.jpg", name: "East Ardougne", era: "Old School", note: "Members country. The door is further west." },
-  { src: "/clan-wars/rs3-grotto.png", name: "Gamers' Grotto", era: "RuneScape", note: "1 February 2011. North of Falador." },
-  { src: "/clan-wars/more/rs3-arena.png", name: "The field", era: "RuneScape", note: "The hall after the purple portal." },
-  { src: "/locations/falador.jpg", name: "Falador", era: "RuneScape", note: "White walls. The Grotto is north." },
-  { src: "/locations/rs3-falador-a.jpg", name: "Falador square", era: "RuneScape", note: "Same city. Later grammar." },
-  { src: "/Falador.png", name: "Falador", era: "Old School", note: "The walk north is a different client." },
-  { src: "/locations/osrsfalador.jpg", name: "Falador walls", era: "Old School", note: "Order is a costume the wild does not rent." },
+const STRIP_WHAT = [
+  { src: "/clan-wars/osrs-ferox.png", name: "Ferox" },
+  { src: "/clan-wars/rs3-grotto.png", name: "Grotto" },
+  { src: "/stills/rsc/rsc-ranging.jpg", name: "Classic fight" },
 ] as const;
+
+const STRIP_OSRS = [
+  { src: "/clan-wars/osrs-edgeville-shot.png", name: "Edgeville" },
+  { src: "/locations/yanille.jpg", name: "Yanille" },
+  { src: "/locations/ardougne.jpg", name: "Ardougne" },
+] as const;
+
+const STRIP_RS3 = [
+  { src: "/clan-wars/more/rs3-arena.png", name: "The field" },
+  { src: "/locations/falador.jpg", name: "Falador" },
+  { src: "/locations/rs3-falador-a.jpg", name: "Falador square" },
+] as const;
+
+const STRIP_HISTORY = [
+  { src: "/stills/rsc/rsc-lumbridge.jpg", name: "The walk" },
+  { src: "/clan-wars/rsc-edge-store.png", name: "Edgeville store" },
+  { src: "/clan-wars/classic-wild1.jpg", name: "2001 wild" },
+] as const;
+
+const STRIP_WIN = [
+  { src: "/Falador.png", name: "Falador walls" },
+  { src: "/locations/osrsfalador.jpg", name: "White city" },
+  { src: "/locations/osrsedge.jpg", name: "Edgeville road" },
+] as const;
+
+const ROOMS = [
+  {
+    place: "Wilderness",
+    era: "RuneScape Classic",
+    note: "People on the grass. Before the portals.",
+    srcs: [
+      "/clan-wars/fresh/rsc-combat.gif",
+      "/stills/rsc/rsc-woodcutting.jpg",
+      "/clan-wars/classic-wild2.jpg",
+    ],
+  },
+  {
+    place: "Edgeville",
+    era: "Old School",
+    note: "The last town before you mean it.",
+    srcs: ["/locations/edgeville.jpg"],
+  },
+] as const;
+
+function ShotStrip({ items }: { items: readonly { src: string; name: string }[] }) {
+  return (
+    <div className="mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2">
+      {items.map((item) => (
+        <figure
+          key={item.src}
+          className="w-[220px] shrink-0 snap-start overflow-hidden rounded-md border border-[#c6a45a]/35 bg-[#120e0a]"
+        >
+          <div className="flex h-40 items-center justify-center bg-[#0c0a08] px-2">
+            <img
+              src={item.src}
+              alt={item.name}
+              loading="lazy"
+              decoding="async"
+              className="max-h-36 w-full object-contain"
+            />
+          </div>
+          <figcaption className="px-2 py-1 text-[11px] text-[#c6a45a]">{item.name}</figcaption>
+        </figure>
+      ))}
+    </div>
+  );
+}
+
+function RoomDeck({
+  place,
+  era,
+  note,
+  srcs,
+}: (typeof ROOMS)[number]) {
+  const [i, setI] = useState(0);
+  const src = srcs[i] ?? srcs[0];
+  const n = srcs.length;
+  return (
+    <figure className="overflow-hidden rounded-md border border-[#c6a45a]/40 bg-[#120e0a]">
+      <div className="relative flex min-h-[260px] items-center justify-center bg-[#0c0a08] md:min-h-[320px]">
+        <img src={src} alt={`${place}, ${era}`} className="max-h-[340px] w-full object-contain md:max-h-[400px]" />
+        {n > 1 ? (
+          <>
+            <button
+              type="button"
+              className="absolute left-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 rounded-md border border-[#c6a45a]/60 bg-[#120e0a]/80 text-[#efe4c8]"
+              aria-label={`Previous still, ${place}`}
+              onClick={() => setI((n + i - 1) % n)}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="absolute right-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 rounded-md border border-[#c6a45a]/60 bg-[#120e0a]/80 text-[#efe4c8]"
+              aria-label={`Next still, ${place}`}
+              onClick={() => setI((i + 1) % n)}
+            >
+              ›
+            </button>
+          </>
+        ) : null}
+      </div>
+      <figcaption className="border-t border-[#c6a45a]/25 px-3 py-2">
+        <p className="text-sm text-[#efe4c8]">{place}</p>
+        <p className="text-[11px] tracking-[0.12em] text-[#c6a45a] uppercase">{era}</p>
+        <p className="mt-1 text-[12px] text-[#b7a989]">{note}</p>
+        {n > 1 ? (
+          <p className="mt-1 text-[11px] text-[#8a7a5a]">
+            {i + 1} / {n}
+          </p>
+        ) : null}
+      </figcaption>
+    </figure>
+  );
+}
 
 function ClanWarsPage() {
   return (
@@ -69,134 +173,66 @@ function ClanWarsPage() {
             clans practice here and why F2P masses still fill a world. The Wilderness is
             a different tax. Do not mix the two sheets.
           </p>
+          <ShotStrip items={STRIP_WHAT} />
         </section>
 
         <section>
           <h2 className="section-h2">History</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Three rooms used the same words. Veterans keep them unmingled. Dates below
-            are from the live wikis. If a lobby went quiet, the wiki is the verdict.
+            Three rooms used the same words. Veterans keep them unmingled. Dates are from
+            the live wikis.
           </p>
-
           <h3 className="mt-5 mb-1 text-fg">Before the name</h3>
           <p className="text-sm leading-relaxed text-muted">
             Classic and early RS2 clans walked north of Edgeville and fought in multi.
             That was a clan war because two chats agreed to stand on the same ditch.
-            There was no purple portal and no two-minute wall. The bag was live. The
-            skull was live. Worlds are closed on Classic. The letters still remember
-            that walk. This origin files that tax on PvP. This page files the minigame
-            that came after.
+            The bag was live. The skull was live. Worlds are closed on Classic.
           </p>
-
           <h3 className="mt-5 mb-1 text-fg">13 December 2004 — the flag</h3>
           <p className="text-sm leading-relaxed text-muted">
-            Castle Wars is capture the flag. Saradomin and Zamorak castles west of
-            Yanille. Twenty minutes. Take their standard home. Bandages, not food.
-            Tickets at the exchange. Later a Ferox portal opened the same game to
-            free-to-play. Clan Wars never asked for a flag. If someone says they warred
-            at the ditch with a standard on their back, they are mixing two maps.
+            Castle Wars is capture the flag. Saradomin and Zamorak west of Yanille.
+            Twenty minutes. Bandages, not food. Clan Wars never asked for a flag.
           </p>
-
           <h3 className="mt-5 mb-1 text-fg">10 December 2007 — the minigame</h3>
           <p className="text-sm leading-relaxed text-muted">
-            Jagex named Clan Wars on the same day it pulled free PvP and free trade out
-            of the main-client Wilderness. The update sat next to Bounty Hunter. The
-            first house was in the wild: a challenge hall so clans could still fight
-            when the ditch stopped being the law. Compensation, not a skin. Captains
-            picked terms. Purple portal. Two-minute wall. That grammar is still the
-            grammar.
+            Jagex named Clan Wars the day it pulled free PvP out of the main-client
+            Wilderness. First house sat in the wild. Captains picked terms. Purple
+            portal. Two-minute wall.
           </p>
-
           <h3 className="mt-5 mb-1 text-fg">1 February 2011 — the Grotto</h3>
           <p className="text-sm leading-relaxed text-muted">
-            Free trade and the old Wilderness came back on the main client. Clan Wars
-            left the wild and moved into Gamers’ Grotto, north of Falador, with Stealing
-            Creation and a door to Fist of Guthix. The old Wilderness house became the
-            Bone Yard. Rated Clan Wars at the Clan Camp is a later sheet. If that lobby
-            is quiet this month, do not describe it as live.
+            Free trade and the old Wilderness came back. Clan Wars moved into Gamers’
+            Grotto, north of Falador. The old house became the Bone Yard.
           </p>
-
           <h3 className="mt-5 mb-1 text-fg">19 June 2014 — Old School</h3>
           <p className="text-sm leading-relaxed text-muted">
-            A priority poll put Clan Wars on the 2007-era client. The first house was
-            Giants’ Plateau. 26 June added Soggy Swamp as a free-to-play arena. 6
-            November added the Classic Arena. 16 April 2015 added timed deathmatch and
-            Oddskull. The maps changed. The rule did not: captain to captain, then the
-            wall.
+            A priority poll put the minigame on the 2007-era client. First house:
+            Giants’ Plateau. Oddskull arrived 16 April 2015.
           </p>
-
           <h3 className="mt-5 mb-1 text-fg">16 July 2020 — Ferox</h3>
           <p className="text-sm leading-relaxed text-muted">
-            The whole Old School room moved into Ferox Enclave. Still a Wilderness
-            level. Still a safe pocket. White portal for practice. Purple for the
-            arranged war. Ring of dueling, minigame teleport, or a waka canoe. Official
-            F2P chaos still uses a numbered world when Jagex hosts it. 23 May 2024 added
-            Classic F2P magic — Bind as the only freeze if that box is ticked.
+            The Old School room moved into Ferox Enclave. Still Wilderness level.
+            Still a safe pocket. White portal to practice. Purple for the war.
           </p>
-
-          <h3 className="mt-5 mb-1 text-fg">The ditch after the portal</h3>
-          <p className="text-sm leading-relaxed text-muted">
-            Wilderness clan wars after the minigame still happen: two chats pick a multi
-            tile and a world. That is not Ferox. That is not the Grotto. That is the tax.
-            Protect Item is on or you are sightseeing. The PvP page keeps that skull.
-          </p>
+          <ShotStrip items={STRIP_HISTORY} />
         </section>
 
         <section>
           <h2 className="section-h2">Old School</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Lives in Ferox Enclave. A captain or higher challenges another captain.
-            Both agree the terms. A two-minute wall goes up. Walk in or you are
-            watching. Cap is one hundred a side. Twelve maps. Some are members. The
-            current list is on the wiki.
+            Lives in Ferox Enclave. A captain challenges a captain. Two-minute wall.
+            One hundred a side. Twelve maps. Death is the jail. The bag stays.
           </p>
-          <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted">
-            <li>
-              Modes: last team standing, first to a kill count, most kills on a timer,
-              king of the hill, Oddskull.
-            </li>
-            <li>
-              Combat can ban a style, lock a spellbook, strip overheads, or cap the team
-              at 5v5.
-            </li>
-            <li>
-              Death sends you to the jail inside the game. Rejoin only if the terms
-              allow it. Items stay. Hardcore group iron is safe here because the wiki
-              says this is safe PvP.
-            </li>
-          </ul>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
-            How you win is the mode you signed. Last team standing: the other colour
-            leaves the field. Kill races: the number on the board. Hill and Oddskull:
-            hold the object. Call the pile. Freeze first if magic is on. Do not spec
-            into a PJ timer you asked for.
-          </p>
+          <ShotStrip items={STRIP_OSRS} />
         </section>
 
         <section>
           <h2 className="section-h2">RuneScape</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Lives in Gamers’ Grotto. Same idea: captain challenges captain, purple
-            portal, two-minute call. Up to one hundred a side. Win by the kill points
-            you agreed or by clearing the other team.
+            Lives in Gamers’ Grotto. Safe unless the terms tick unsafe. White portal
+            is practice. Red portal is the tax. Rated Clan Wars is a different lobby.
           </p>
-          <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted">
-            <li>
-              Safe wars keep the bag. Unsafe wars are a term you have to tick — treat
-              that like a skull. Confirm it on the challenge screen before you walk in.
-            </li>
-            <li>
-              White portal is safe FFA. Red portal is dangerous FFA: items drop, no
-              gravestone. Protect Item is the only prayer that still means a keep.
-            </li>
-            <li>
-              Rated Clan Wars is a different sheet at the Clan Camp. Confirm it on
-              official news.
-            </li>
-          </ul>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
-            Revolution bars do not replace a caller. Leave the enrage bosses on Bosses.
-          </p>
+          <ShotStrip items={STRIP_RS3} />
         </section>
 
         <section>
@@ -204,40 +240,20 @@ function ClanWarsPage() {
           <ol className="mt-3 space-y-2 text-sm text-muted">
             <li>1. Read the terms. Food off is a different fight than food on.</li>
             <li>2. Enter before the wall drops. Late is a spectator.</li>
-            <li>3. One target. If you are solo in a pile, you are the loot even when the bag is safe.</li>
-            <li>4. Do not chase through a rule you disabled. Freeze immunity still exists.</li>
-            <li>5. White portal is practice. Purple is the match. Red on RuneScape is the tax.</li>
+            <li>3. One target. Solo in a pile is the loot even when the bag is safe.</li>
+            <li>4. Do not chase through a rule you disabled.</li>
+            <li>5. White is practice. Purple is the match. Red on RuneScape is the tax.</li>
           </ol>
+          <ShotStrip items={STRIP_WIN} />
         </section>
 
         <section>
           <h2 className="section-h2 mb-3 text-center">The rooms</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {STILLS.map((shot) => (
-              <figure
-                key={shot.src}
-                className="overflow-hidden rounded-md border border-[#c6a45a]/40 bg-[#120e0a]"
-              >
-                <div className="flex min-h-[220px] items-center justify-center bg-[#0c0a08] md:min-h-[280px]">
-                  <img
-                    src={shot.src}
-                    alt={`${shot.name}, ${shot.era}`}
-                    loading="lazy"
-                    decoding="async"
-                    className="max-h-[320px] w-full object-contain md:max-h-[380px]"
-                  />
-                </div>
-                <figcaption className="border-t border-[#c6a45a]/25 px-3 py-2">
-                  <p className="text-sm text-[#efe4c8]">{shot.name}</p>
-                  <p className="text-[11px] tracking-[0.12em] text-[#c6a45a] uppercase">{shot.era}</p>
-                  <p className="mt-1 text-[12px] text-[#b7a989]">{shot.note}</p>
-                </figcaption>
-              </figure>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {ROOMS.map((room) => (
+              <RoomDeck key={`${room.place}-${room.era}`} {...room} />
             ))}
           </div>
-          <p className="mt-2 text-center text-[11px] text-faint">
-            Places and people. No portal icons. No map charts.
-          </p>
         </section>
 
         <p className="text-sm text-parchment">
@@ -246,8 +262,6 @@ function ClanWarsPage() {
           <Link to="/">Desk</Link>
           {" · "}
           <Link to="/history">History</Link>
-          {" · "}
-          <Link to="/chronicle">Chronicle</Link>
         </p>
       </main>
     </div>
