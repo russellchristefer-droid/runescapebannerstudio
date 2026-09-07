@@ -3,30 +3,28 @@ package com.bannerstudio;
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
-import javax.swing.SwingUtilities;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.util.LinkBrowser;
 
 @PluginDescriptor(
 	name = "Banner Studio",
-	description = "Opens the banner desk in a browser. Optional local JPEG overlay. Not a bot.",
+	description = "Sidebar: open the banner desk, pick a local JPEG overlay. Not a bot.",
 	tags = {"banner", "stream", "overlay"}
 )
 public class BannerStudioPlugin extends Plugin
 {
-	@Inject
-	private BannerStudioConfig config;
 	@Inject
 	private ClientToolbar toolbar;
 	@Inject
 	private OverlayManager overlays;
 	@Inject
 	private BannerStudioOverlay overlay;
+	@Inject
+	private BannerStudioPanel panel;
 
 	private NavigationButton button;
 
@@ -35,9 +33,9 @@ public class BannerStudioPlugin extends Plugin
 	{
 		overlays.add(overlay);
 		button = NavigationButton.builder()
-			.tooltip("Open Banner Studio")
+			.tooltip("Banner Studio")
 			.icon(new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB))
-			.onClick(() -> SwingUtilities.invokeLater(() -> LinkBrowser.browse(config.deskUrl())))
+			.panel(panel)
 			.build();
 		toolbar.addNavigation(button);
 	}
