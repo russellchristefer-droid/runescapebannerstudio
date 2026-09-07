@@ -44,16 +44,19 @@ function BriefPage() {
               <In to="/towns">Towns</In> — one sheet per town and game: still, street line on a five-minute clock, wiki for that slug. Use on banner stamps the picture. Cards are <code>/towns/:slug</code>.
             </li>
             <li>
-              <In to="/gods">Gods</In> — two canons. Use on banner loads a home town for that god, not a statue as the whole plate.
+              <In to="/gods">Gods</In> — two canons. Each still sits on that god’s prayer-book field, same idea as the dragon colours. Use on banner loads a home town for that god, not a statue as the whole plate.
             </li>
             <li>
-              <In to="/bosses">Bosses</In> — one bible per fight: grid, opener, wipe, three links. Click the card for <code>/bosses/:slug</code>. Live method stays on the wiki.
+              <In to="/bosses">Bosses</In> — one bible per fight: the room, grid, opener, wipe, three links. Click the card for <code>/bosses/:slug</code>. Live method stays on the wiki.
             </li>
             <li>
-              <In to="/pvp">PvP</In> — Old School only. Five decisions in a fight. Risk is the tax. Wiki and official rules. Not RS3. Not a cheat sheet.
+              <In to="/pvp">PvP</In> — two canons on one page, separate sheets. Old School is freeze then spec. RuneScape is Vala and reclaim. Official rules win. Not a cheat sheet.
             </li>
             <li>
-              <In to="/monsters">Bestiary</In> — slayer and common creatures only. Not bosses. Where, task, hunt, wiki.
+              <In to="/skills">Skills</In> — Old School and RuneScape in sequence. Early, mid, late, what to wear, afk and fast. Sailing moves — confirm that page. Wiki keeps the hour.
+            </li>
+            <li>
+              <In to="/monsters">Bestiary</In> — slayer and dungeon rooms. Not bosses. Pick Old School or RuneScape, then the room (dragons, Stronghold, Tower, Legends’ Guild). Where, task, hunt, wiki.
             </li>
             <li>
               <In to="/classic">Classic</In> — RuneScape Classic archive. Places and play shots. Official Classic worlds are not on this desk.
@@ -68,7 +71,7 @@ function BriefPage() {
               <In to="/stream">Stream</In> — go-live notes. <In to="/streamers">Streamers</In> — one Twitch hall, search, live first when Helix has a Client-ID and app token. No key: <code>Live check is off.</code> Names still list. No YouTube buttons there. <In to="/youtubers">Youtubers</In> — YouTube hall only.
             </li>
             <li>
-              <In to="/edit">Clips</In> — local video editor. Upload, cut, Save download. The clip stays on this device. It does not go live.
+              <In to="/edit">Clips</In> — local video bench. Upload, In / Out, mute, gain, fades, Save a WebM. The clip stays on this device. It does not go live.
             </li>
             <li>
               <In to="/legal">Legal</In> — Fan Content Policy sentence, name, mail. <In to="/donate">Donate</In> — optional Cash App tip. Not Jagex. Not a guild bank.
