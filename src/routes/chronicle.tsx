@@ -28,15 +28,15 @@ function ChroniclePage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Chronicle</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          Ages and doors. Two live games. Not Jagex. Not a hiscores rank.
+          Ages and doors. Two live games. A third title in the same house. Not Jagex.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main id="content" className="chronicle prose-desk mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 text-sm text-muted md:px-8">
         <p className="text-parchment">
-          Gielinor is not one timeline. It is two grammars that share names. This page is a
-          ledger of public doors — towns, ages, and the hours that actually shipped. The long
-          story lives on History. Official news and the wikis keep the hour if we drift.
+          Gielinor is not one timeline. It is two grammars that share names, and a survival
+          title that borrowed the map. This page is a ledger of public doors. The long story
+          lives on History. Official news and the wikis keep the hour if we drift.
         </p>
 
         <section>
@@ -94,6 +94,19 @@ function ChroniclePage() {
           </p>
           <Wiki href="https://oldschool.runescape.wiki/w/Falador">Live page · Falador (Old School)</Wiki>
 
+          <h3 className="mt-4 mb-1 text-fg">Ferox and the safe pocket</h3>
+          <p>
+            Clan Wars left Giants’ Plateau for Ferox Enclave in 2020. Still Wilderness
+            level. Still a safe pocket. White portal for practice. Purple for the arranged
+            war. The ditch outside is the tax. The minigame sheet lives on this origin.
+          </p>
+          <p className="mt-2">
+            <Link to="/clan-wars" className="text-parchment">
+              Clan Wars
+            </Link>
+          </p>
+          <Wiki href="https://oldschool.runescape.wiki/w/Ferox_Enclave">Live page · Ferox Enclave</Wiki>
+
           <h3 className="mt-4 mb-1 text-fg">Wilderness</h3>
           <p>
             Skull, ditch, the ethics of the attack option. Law has moved more than once. Memory
@@ -122,11 +135,12 @@ function ChroniclePage() {
 
           <h3 className="mt-4 mb-1 text-fg">Iron, leagues, sailing</h3>
           <p>
-            Ironman is an official mode and a spectator vow. Leagues and Deadman are festivals.
-            Mobile carried the dialect into pockets. Sailing is a long public argument that
-            became a skill — file the current rules on the wiki, not here.
+            Ironman is an official mode and a spectator vow. Group iron is the same vow with
+            a shared chest. Leagues and Deadman are festivals. Mobile carried the dialect into
+            pockets. Sailing is on the Old School boards as a skill — file the current rules
+            on the wiki, not a guess from last year’s argument.
           </p>
-          <Wiki href="https://oldschool.runescape.wiki/w/Ironman_Mode">Live page · Ironman (Old School)</Wiki>
+          <Wiki href="https://oldschool.runescape.wiki/w/Sailing">Live page · Sailing (Old School)</Wiki>
 
           <h3 className="mt-4 mb-1 text-fg">Prifddinas in this client</h3>
           <p>
@@ -203,6 +217,22 @@ function ChroniclePage() {
             labelled Old School, it is not that fort.
           </p>
           <Wiki href="https://runescape.wiki/w/Fort_Forinthry">Live page · Fort Forinthry</Wiki>
+        </section>
+
+        <section>
+          <h2 className="mb-2 text-sm font-semibold text-parchment">The house around the two games</h2>
+          <p>
+            RuneFest is a public door that is not a patch. 2026 is booked for the NEC. The
+            stream is the cheap seat. Tickets and the hour live on the official event account.
+          </p>
+          <p className="mt-2">
+            Dragonwilds is a co-op survival title in the same house. It is not Old School. It
+            is not the main RuneScape client. Do not put its stills on this desk’s two wells.
+          </p>
+          <p className="mt-2">
+            Officers change. The two live games keep their names. Ban mail still goes to
+            Support, not a J-Mod mention.
+          </p>
         </section>
 
         <section>
