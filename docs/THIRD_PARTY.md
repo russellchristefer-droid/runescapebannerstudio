@@ -1,6 +1,6 @@
 # Third parties
 
-- Jagex Limited — games, marks, stills, skill icons. Not licensed to this studio beyond Fan Content Policy identification.
+- Jagex Limited — RuneScape® and Old School RuneScape® marks, stills, skill icons. Not licensed to this studio beyond Fan Content Policy identification.
 - Official wikis — article text often CC BY-NC-SA; **files** stay Jagex copyright. File pages in `src/lib/stills-provenance.ts`.
 - Wise Old Man — OSRS community API only. Not Jagex.
 - Google Fonts — Cinzel, Fondamento, Source Sans 3, Source Serif 4 if still loaded from fonts.googleapis.com.

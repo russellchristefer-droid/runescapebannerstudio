@@ -1,6 +1,8 @@
 # Client sidecars (not the website)
 
-Easy add. Official rules win. They do not click.
+RuneScape® and Old School RuneScape® are registered trademarks of Jagex Limited. These sidecars are fan tools. They do not click. They are not official.
+
+Easy add. Official rules win.
 
 ## Alt1 Toolkit
 

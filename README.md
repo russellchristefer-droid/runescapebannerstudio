@@ -87,6 +87,15 @@ Not the website. grok.me runs Node. These live under [`sidecars/`](sidecars/) if
 
 ## Legal
 
-Stills are identification. Jagex owns the game art. The Fan Content Policy is permission, not a sale — [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
+Stills are identification. RuneScape® and Old School RuneScape® are registered trademarks of Jagex Limited. Jagex® owns the game art. The Fan Content Policy is permission, not a sale — [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
+
+## Client plugins (not the website)
+
+| Client | Add |
+| --- | --- |
+| Alt1 Toolkit | [Add app config](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/alt1/appconfig.json) · [folder](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/overlays/alt1) |
+| RuneLite | [Plugin folder](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/overlays/runelite) · sideload, not Plugin Hub |
+
+How-to: [overlays/README.md](overlays/README.md)
 
 This README is not a licence to print official marks. [LICENSE](LICENSE) covers original studio code and prose only. Operator: Christefer Lee Russell-Barnett.
