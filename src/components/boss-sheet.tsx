@@ -112,9 +112,21 @@ export function BossSheet({ sheet }: { sheet: FightSheet }) {
   return (
     <div className="flex flex-col gap-6">
       <Block title="Role">
-        <p className="text-sm text-fg">{sheet.role}</p>
-        <p className="mt-2 text-sm text-muted">{sheet.style}</p>
+        <p className="text-sm leading-relaxed text-fg">{sheet.role}</p>
+        <p className="mt-2 text-sm leading-relaxed text-muted">{sheet.style}</p>
       </Block>
+
+      {sheet.lesson?.length ? (
+        <Block title="The room">
+          <div className="space-y-3">
+            {sheet.lesson.map((line) => (
+              <p key={line.slice(0, 48)} className="text-sm leading-relaxed text-muted">
+                {line}
+              </p>
+            ))}
+          </div>
+        </Block>
+      ) : null}
 
       <Block title="Sheet">
         <FactRow header={sheet.header} />
@@ -208,7 +220,7 @@ export function BossSheet({ sheet }: { sheet: FightSheet }) {
       ) : null}
 
       <Block title="Wipe">
-        <p className="text-sm text-muted">{sheet.wipe}</p>
+        <p className="text-sm leading-relaxed text-muted">{sheet.wipe}</p>
       </Block>
     </div>
   );

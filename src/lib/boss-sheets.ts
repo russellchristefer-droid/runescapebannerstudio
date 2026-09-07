@@ -1,3 +1,4 @@
+import { BOSS_LESSONS } from "./boss-lessons";
 import { bossWiki, bossWipe, noteFor, type BossNote } from "./boss-notes";
 
 export type RankedSource = {
@@ -53,6 +54,7 @@ export type FightSheet = {
   style: string;
   header: FightHeader;
   opener: string[];
+  lesson?: string[];
   wipe: string;
   sources: RankedSource[];
   team?: string[];
@@ -1710,6 +1712,7 @@ export function sheetFor(id: string): FightSheet | null {
       style: custom.style,
       header,
       opener: custom.opener,
+      lesson: BOSS_LESSONS[id] ?? note.method,
       wipe: custom.wipe,
       sources,
       team,
@@ -1725,6 +1728,7 @@ export function sheetFor(id: string): FightSheet | null {
     style: note.style,
     header,
     opener: [...note.start, ...note.route.slice(0, 2)],
+    lesson: BOSS_LESSONS[id] ?? note.method,
     wipe: bossWipe(note),
     sources,
     team,
