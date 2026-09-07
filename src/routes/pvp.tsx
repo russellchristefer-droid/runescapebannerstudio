@@ -13,6 +13,13 @@ import {
   PVP_TREE,
   PVP_WILDY,
   PVP_WORLD,
+  RS3_CLAN,
+  RS3_DEAD,
+  RS3_DEATHMATCH,
+  RS3_PVP_METHODS,
+  RS3_PVP_TREE,
+  RS3_RISK,
+  RS3_WILDY,
   type ModeSheet,
 } from "@/lib/pvp-sheet";
 
@@ -20,7 +27,7 @@ export const Route = createFileRoute("/pvp")({
   head: () =>
     pageMeta(
       "PvP",
-      "Old School. What each method is. Freeze then spec. Eat the incoming. Risk first. Wiki keeps the skull rule.",
+      "Two canons. Old School freeze then spec. RuneScape opt-in at Vala. Wiki keeps the skull.",
     ),
   component: PvpPage,
 });
@@ -32,7 +39,7 @@ function PvpPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">PvP</h1>
         <p className="mt-1 text-center text-sm text-parchment">
-          Old School. Risk is the tax. Freeze first. Eat the incoming. Wiki keeps the skull.
+          Two canons. Risk is the tax. Old School freeze first. RuneScape opt-in first. Wiki keeps the skull.
         </p>
         <p className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-[12px] text-muted">
           {PVP_SOURCES.map((src) => (
@@ -49,13 +56,13 @@ function PvpPage() {
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <div className="mt-3">
-          <PlaceRail section="pvp" edition="OSRS" />
+          <PlaceRail section="pvp" />
         </div>
       </header>
 
       <main className="mx-auto flex max-w-3xl flex-col gap-7 px-5 py-6 md:px-8">
         <section>
-          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">In the fight</h2>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">Old School · in the fight</h2>
           <ol className="space-y-3">
             {PVP_TREE.map((row, i) => (
               <li key={row.q} className="grid grid-cols-[2rem_1fr] gap-3">
@@ -109,6 +116,64 @@ function PvpPage() {
           </dl>
         </section>
         <ProtectItemBox />
+
+        <section>
+          <h2 className="mb-1 text-sm tracking-[0.16em] text-parchment">RuneScape</h2>
+          <p className="mb-3 text-sm text-muted">
+            Same five questions. Different door. PvP is opt-in. Dead modes stay dead.
+          </p>
+          <h3 className="mb-3 text-sm text-parchment">In the fight</h3>
+          <ol className="space-y-3">
+            {RS3_PVP_TREE.map((row, i) => (
+              <li key={row.q} className="grid grid-cols-[2rem_1fr] gap-3">
+                <span className="pt-0.5 text-sm text-parchment">{i + 1}.</span>
+                <div>
+                  <p className="text-sm text-fg">{row.q}</p>
+                  <p className="mt-1 text-sm text-muted">{row.no}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section>
+          <h3 className="mb-3 text-sm tracking-[0.16em] text-parchment">Methods</h3>
+          <ul className="space-y-5">
+            {RS3_PVP_METHODS.map((m) => (
+              <li key={m.name}>
+                <p className="text-sm text-fg">{m.name}</p>
+                <p className="mt-1 text-sm text-muted">{m.what}</p>
+                <p className="mt-1 text-[12px] text-faint">Wipe: {m.wipe}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <ModeCard sheet={RS3_WILDY} />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ModeCard sheet={RS3_DEATHMATCH} compact />
+          <ModeCard sheet={RS3_CLAN} compact />
+        </div>
+        <p className="-mt-3 text-[11px] text-faint">Deathmatch and Clan Wars are not the Wilderness bag.</p>
+
+        <section>
+          <h3 className="mb-2 text-sm tracking-[0.16em] text-parchment">RuneScape risk</h3>
+          <dl className="divide-y divide-line/40 rounded-md border border-line">
+            {(
+              [
+                ["Budget", RS3_RISK.budget],
+                ["Mid", RS3_RISK.mid],
+                ["Max", RS3_RISK.max],
+              ] as const
+            ).map(([k, v]) => (
+              <div key={k} className="grid grid-cols-[6.5rem_1fr] gap-3 px-3 py-2 text-sm">
+                <dt className="text-parchment">{k}</dt>
+                <dd className="text-muted">{v}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-3 text-[12px] text-faint">{RS3_DEAD}</p>
+        </section>
       </main>
     </div>
   );
