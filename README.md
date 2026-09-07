@@ -1,80 +1,94 @@
 # RuneScape Banner Studio
 
-Hats: defensive only. Source backup is the private remote.
-
-Independent fan studio for **Twitch / YouTube / Discord** identification stills.
-Not a Jagex product. Not a game client. Not an official overlay.
+Independent fan desk. Not Jagex. Not a client. Not an overlay.
 
 **Live:** [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
 
-**Repos**
-- Public: [russellchristefer-droid/runescapebannerstudio](https://github.com/russellchristefer-droid/runescapebannerstudio)
-- Private backup: [russellchristefer-droid/runescapebannerstudio-private](https://github.com/russellchristefer-droid/runescapebannerstudio-private)
+```
+public   github.com/russellchristefer-droid/runescapebannerstudio
+private  github.com/russellchristefer-droid/runescapebannerstudio-private
+```
 
-## What it does
+A browser compositor that writes a **JPEG** at platform pixels, plus the halls a streamer actually opens: towns, gods, bosses, PvP (Old School), a local clip bench, streamer / YouTuber directories.
 
-- Banner desk: town still + display name (12 letters) + skills / marks + export at 1200×480, 1280×720, 1920×1080, 1920×480
-- [Towns](https://runescapebannerstudio.grok.me/towns), [gods](https://runescapebannerstudio.grok.me/gods), [bosses](https://runescapebannerstudio.grok.me/bosses), [bestiary](https://runescapebannerstudio.grok.me/monsters), [Classic](https://runescapebannerstudio.grok.me/classic)
-- [PvP](https://runescapebannerstudio.grok.me/pvp) (Old School only), [clips](https://runescapebannerstudio.grok.me/edit), [streamers](https://runescapebannerstudio.grok.me/streamers), [YouTubers](https://runescapebannerstudio.grok.me/youtubers)
-- Hiscores lookup (public boards, fail-soft)
+## Why this tree looks like this
 
-## Platforms
+Two live games. Two inventories. Two streets. The code keeps that split on purpose.
 
-| You have | You run |
+| Rule | Where it lives |
 | --- | --- |
-| Windows / macOS / Linux | Node 22+, then `npm install` and `npm run dev` |
-| Phone | Use the live site. Do not expect `npm` on iOS. |
+| OSRS and RS3 never share a still, a street quote, or a skill pack | `src/lib/locations.ts`, `src/data/streetTalk.ts`, `src/lib/skills.ts` |
+| Plate type is RS Chat Bold, yellow, black edge | `src/lib/draw-banner.ts` · `paintRSYellow` |
+| Pack layout fits the export box (icons + levels) | `src/desk/compositor.ts` |
+| Random stills are local era files, not live Wayback | `src/desk/eraPool.ts` · `public/era/` |
+| Hiscores and live badges fail-soft | `server/api/hiscores.get.ts`, `server/api/live.get.ts` |
+| Clip Save records the processed graph (mute / gain / fades) | `src/edit/clipSound.ts` |
+| Official news and the wiki win on numbers | halls + `/legal` |
 
-This is a **Node app**. It is not an iPhone App Store build and there is no `.exe` installer.
+Decisions are short ADRs under [`docs/adr/`](docs/adr/).
 
-## Run on any computer
+## Stack
 
-Requires **Node 22+**.
+| Layer | Choice |
+| --- | --- |
+| UI | React 19, TanStack Router / Start |
+| Build | Vite 8, Node **22** |
+| Plate | Canvas 2D, one painter |
+| Clips | `MediaRecorder` + Web Audio, WebM |
+| CI | `.github/workflows/ci.yml` → `npm run ci:gates` then `npm run build` |
+
+No Python sidecar. No second Vite. Tokens stay in env, never in git.
+
+## Layout engineers actually open
+
+```
+src/desk/       compositor, store, still hook, era pool
+src/places/     PlaceRail + cards (one switcher)
+src/edit/       clip bench + sound graph
+src/legal/      operator notice
+src/lib/        catalogs, yellow paint, hiscores, PvP sheet
+src/routes/     file routes (TanStack)
+public/         stills, skills, marks, fonts, era plates
+server/api/     hiscores + live probes
+```
+
+## Clone
 
 ```bash
 git clone https://github.com/russellchristefer-droid/runescapebannerstudio.git
 cd runescapebannerstudio
-npm install
+npm ci
 npm run dev
 ```
 
-Open the URL the app prints.
-
 ```bash
+npm run ci:gates    # tsc + unit + grep
 npm run build
 npm run preview
 ```
 
-**Windows:** install Node from [nodejs.org](https://nodejs.org) (22 LTS). Use PowerShell in the repo folder.
+Line endings are `LF` ([.gitattributes](.gitattributes)). Phone: use the live site; there is no App Store build.
 
-**macOS:** Node 22 from nodejs.org or `brew install node@22`.
+## Optional env (never commit)
 
-**Linux:** Node 22 from NodeSource or your package manager.
+```
+TWITCH_CLIENT_ID=
+TWITCH_APP_TOKEN=
+YOUTUBE_API_KEY=
+```
 
-If `npm run dev` fails, delete `node_modules` and run `npm install` again.
-
-Line endings in this repo are `LF` (see [.gitattributes](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/.gitattributes)) so Windows Git does not rewrite scripts as CRLF.
-
-## Layout
-
-| Path | Role |
-| --- | --- |
-| `src/` | App |
-| `public/` | Town stills, icons, fonts |
-| `public/fonts/rs-chat-bold.ttf` | Fan Chat Bold on the plate |
-| `public/fonts/runescape_uf.ttf` | UF replica (optional) |
-| `docs/partyhats/` | Old School partyhat inventory icons (GitHub download) |
-| `public/marks/osrs-partyhat-*.png` | Same hats, stamped on the desk |
+Empty keys → halls render with `Live check is off.` That is correct.
 
 ## Policy
 
-Stills are identification. Official news and the wiki win on numbers.
+Stills are identification. Jagex property stays named. Fan policy is on Legal.
 
 - [Legal](https://runescapebannerstudio.grok.me/legal)
-- [SECURITY.md](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/SECURITY.md)
-- [NOTICE](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/NOTICE)
-- Jagex [Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy)
+- [SECURITY.md](SECURITY.md)
+- [NOTICE](NOTICE)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy)
 
 ## License
 
-See [LICENSE](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/LICENSE) and [NOTICE](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/NOTICE). RuneScape © Jagex. Fan typefaces credited on Legal.
+[LICENSE](LICENSE) + [NOTICE](NOTICE). RuneScape © Jagex. Operator: Christefer Lee Russell-Barnett.
