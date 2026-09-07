@@ -128,7 +128,7 @@ function YoutubersPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Youtubers</h1>
         <p className="mt-2 text-center text-sm text-muted">
-          Independent hall. Twitch stays on Streamers.
+          Independent hall of public RuneScape channels. Not every upload. Twitch stays on Streamers.
         </p>
         <p className="mt-1 text-center text-[11px] text-faint">
           {probe === "off" || probe === "down"
@@ -186,6 +186,13 @@ function YoutubersPage() {
             ))}
           </ul>
         </section>
+        <p className="text-sm text-muted">
+          Search on{" "}
+          <a className="text-parchment" href="https://www.youtube.com/results?search_query=old+school+runescape" target="_blank" rel="noopener noreferrer">
+            YouTube
+          </a>
+          {" "}for the rest of the worlds. This hall is the names we keep.
+        </p>
         <p className="text-sm text-parchment">
           <Link to="/">Desk</Link>
           {" · "}
