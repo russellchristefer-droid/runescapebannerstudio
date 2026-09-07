@@ -13,13 +13,15 @@ Two remotes. Public is what people clone. Private is the backup I actually trust
 
 On the desk you pick a still (or upload one), crop it to Twitch 1200×480 or YouTube 1280×720, zoom and pan the picture, drop skills and partyhats, and download a JPEG. Levels sit next to the icons in RS Chat Bold. Fit plate / Room / Desk change how tight the pack is. Hiscores fill levels when the boards answer.
 
-Towns, gods, and bosses keep two canons. The bestiary is slayer rooms only — RuneScape has its own stills. PvP is Old School only. `/edit` is a local clip bench: upload a video, mark In / Out, mute, gain, fades, Save as WebM. Stills stay on the desk.
+Towns, gods, bosses, and the bestiary keep two canons. Gods sit on their prayer-book field — Saradomin blue, Zamorak red, the rest matching the book. Dragons keep red, blue, green, and black behind them. The bestiary is slayer and dungeon rooms, split by Old School or RuneScape, then by room (dragons, Stronghold, Tower, Legends’ Guild). Bosses stay off that list.
+
+`/pvp` has both canons on one page, separate sheets. `/skills` lists Old School and RuneScape skills with early / mid / late, what to wear, and the live wiki. `/edit` is a local clip bench: upload a video, mark In / Out, mute, gain, fades, Save as WebM. Stills stay on the desk.
 
 Streamer and YouTuber halls list names even when live check is off. History ends in a small Legends’ Guild desk (first room on the left): public names only — Zezima, The Old Nite, 25 Buttholes, and the rest of that sill.
 
 ## How the code is split
 
-Old School and RuneScape 3 are different games. Different stills, different street lines, different skill packs.
+Old School and RuneScape 3 are different games. Different stills, different street lines, different skill packs, different PvP grammar.
 
 Plate type is yellow Chat Bold with a black edge. Random stills come from `public/era/`, not a live Wayback scrape. Hiscores and live badges fail quietly. Clip Save records the Web Audio graph so mute actually lands in the file.
 
@@ -40,7 +42,7 @@ src/desk/       still compositor
 src/places/     PlaceRail and cards
 src/edit/       clip bench and sound strip
 src/legal/      operator notice
-src/lib/        catalogs and the yellow painter
+src/lib/        catalogs, skill sheets, yellow painter
 src/routes/     pages
 public/         stills, skills, marks, fonts
 server/api/     hiscores and live probes
