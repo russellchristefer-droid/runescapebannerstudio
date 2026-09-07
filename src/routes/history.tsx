@@ -197,6 +197,13 @@ function HistoryPage() {
               the ditch told as a joke that still knows the skull rule. The name is a banner.
               The work is the VOD.
             </li>
+            <li>
+              <span className="text-parchment">Clan Wars</span> — not a login. The room
+              north of Ferox on Old School, Gamers’ Grotto on the main client. Safe PvP:
+              the bag stays, the pile still happens. Official F2P chaos still uses a
+              numbered world. Public masses have been on camera at five hundred a side.
+              The wiki owns the portals. The VOD owns who walked in.
+            </li>
           </ul>
           <p className="mt-4 text-[11px] text-faint">
             If a name is not on a public board, a public VOD, or the wiki, it does not belong
@@ -209,6 +216,9 @@ function HistoryPage() {
           </a>
           <a href="https://runescape.wiki/" target="_blank" rel="noopener noreferrer">
             RuneScape wiki
+          </a>
+          <a href="https://oldschool.runescape.wiki/w/Clan_Wars" target="_blank" rel="noopener noreferrer">
+            Clan Wars
           </a>
           <Link to="/">Desk</Link>
           <Link to="/chronicle">Chronicle</Link>
