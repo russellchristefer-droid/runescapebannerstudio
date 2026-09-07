@@ -15,52 +15,34 @@ export const Route = createFileRoute("/clan-wars")({
 
 const SHOTS = [
   {
-    src: "/stills/rsc/rsc-wilderness.jpg",
+    src: "/clan-wars/classic-wild1.jpg",
     name: "Wilderness",
     era: "RuneScape Classic",
-    note: "Before the portals. Clans met on the ditch.",
+    note: "2001 preview. The walk north of the ditch.",
   },
   {
-    src: "/stills/rsc/rsc-edgeville.jpg",
+    src: "/clan-wars/rsc-edge-store.png",
     name: "Edgeville",
     era: "RuneScape Classic",
-    note: "The bank before the walk north.",
+    note: "The general store. Last bank before the wild.",
   },
   {
-    src: "/era/rs2/wilderness.jpg",
-    name: "Wilderness",
-    era: "RS2",
-    note: "The 2007 house sat here until the Grotto.",
-  },
-  {
-    src: "/era/rs2/edgeville.jpg",
-    name: "Edgeville",
-    era: "RS2",
-    note: "Same road. Newer letters.",
-  },
-  {
-    src: "/clan-wars/osrs-wilderness.png",
-    name: "Wilderness",
+    src: "/clan-wars/osrs-ferox.png",
+    name: "Ferox Enclave",
     era: "Old School",
-    note: "The tax is still north of the ditch.",
+    note: "The current house. Safe pocket. Purple and white.",
   },
   {
-    src: "/clan-wars/osrs-edgeville.png",
+    src: "/clan-wars/osrs-edgeville-shot.png",
     name: "Edgeville",
     era: "Old School",
-    note: "The last bank before you mean it.",
+    note: "The last town before you mean it.",
   },
   {
     src: "/clan-wars/osrs-giants-plateau.png",
     name: "Giants' Plateau",
     era: "Old School",
     note: "The first Old School house. 19 June 2014.",
-  },
-  {
-    src: "/clan-wars/osrs-ferox.png",
-    name: "Ferox Enclave",
-    era: "Old School",
-    note: "16 July 2020. Safe pocket. Purple and white.",
   },
   {
     src: "/clan-wars/osrs-clan-wars.png",
