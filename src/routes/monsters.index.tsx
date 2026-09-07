@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
-import { MONSTERS, monsterStillLine, monsterStillSrc } from "@/lib/monsters";
+import { MONSTERS, monsterStillLine, monsterStillSrc, monsterWash } from "@/lib/monsters";
 import { pageMeta } from "@/lib/page-title";
 import type { Monster } from "@/lib/monsters";
 
@@ -79,6 +79,7 @@ function GameBlock({ title, rows }: { title: string; rows: Monster[] }) {
               kind={row.slayer ? "Slayer" : "Monster"}
               game={title}
               caption={monsterStillLine(row)}
+              wash={monsterWash(row)}
             />
           ))}
         </PlaceGrid>

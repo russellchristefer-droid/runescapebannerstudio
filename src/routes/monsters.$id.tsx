@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { StillPhoto } from "@/components/still-photo";
-import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillLine, monsterStillSrc, monsterTaskLine, monsterWatchLine, sisterMonster } from "@/lib/monsters";
+import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillLine, monsterStillSrc, monsterTaskLine, monsterWatchLine, monsterWash, sisterMonster } from "@/lib/monsters";
 import { UseOnBanner } from "@/components/use-on-banner";
 import { OfficialPulse } from "@/components/official-pulse";
 import { pageMeta } from "@/lib/page-title";
@@ -38,7 +38,8 @@ function MonsterPage() {
           <StillPhoto
             src={src}
             alt={`${row.name} in ${game}`}
-            className="aspect-[21/9] w-full border border-[#c6a45a] bg-surface object-cover"
+            className="aspect-[21/9] w-full border border-[#c6a45a] object-contain"
+            style={{ backgroundColor: monsterWash(row) }}
           />
         ) : (
           <p className="border border-[#c6a45a] bg-surface px-3 py-10 text-center text-sm text-muted">Even the beast declined to appear.</p>

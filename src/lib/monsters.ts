@@ -23,7 +23,56 @@ export function monsterStillSrc(row: Pick<Monster, "edition" | "slug">) {
   const game = row.edition === "OSRS" ? "osrs" : "rs3";
   const slug = row.slug.replace(/-/g, "");
   const file = slug === "warpedterrobird" ? "warpedterrorbird" : slug;
-  return `/stills/${game}/beast-${file}.jpg?v=10`;
+  return `/stills/${game}/beast-${file}.jpg?v=11`;
+}
+
+/** Quiet field colour behind the still. Dragons keep their own hue. */
+export function monsterWash(row: Pick<Monster, "slug" | "name">) {
+  const key = `${row.slug} ${row.name}`.toLowerCase();
+  if (key.includes("red dragon")) return "#2a1510";
+  if (key.includes("blue dragon")) return "#101b2e";
+  if (key.includes("green dragon")) return "#1b2814";
+  if (key.includes("black dragon") || key.includes("king black")) return "#141311";
+  if (key.includes("iron dragon") || key.includes("adamant dragon") || key.includes("rune dragon") || key.includes("metal"))
+    return "#1a2228";
+  if (key.includes("frost") || key.includes("ice ") || key.includes("glacor") || key.includes("skeletal wyvern") || key.includes("living wyvern"))
+    return "#15242c";
+  if (key.includes("celestial") || key.includes("gemstone")) return "#24182a";
+  if (key.includes("abyssal") || key.includes("ripper") || key.includes("nihil") || key.includes("muspah")) return "#1c1224";
+  if (key.includes("demon") || key.includes("hellhound") || key.includes("nechryael") || key.includes("tormented"))
+    return "#2a1418";
+  if (key.includes("dragon")) return "#241810";
+  if (
+    key.includes("ghost") ||
+    key.includes("shade") ||
+    key.includes("ankou") ||
+    key.includes("skeleton") ||
+    key.includes("zombie") ||
+    key.includes("spectre") ||
+    key.includes("banshee") ||
+    key.includes("shadow warrior")
+  )
+    return "#1a2228";
+  if (key.includes("gargoyle") || key.includes("bloodveld") || key.includes("crawling")) return "#1e2418";
+  if (
+    key.includes("spider") ||
+    key.includes("scorpion") ||
+    key.includes("cockroach") ||
+    key.includes("flesh crawler") ||
+    key.includes("kalphite") ||
+    key.includes("araxyte")
+  )
+    return "#2a2210";
+  if (key.includes("wyrm") || key.includes("hydra") || key.includes("drake") || key.includes("kurask") || key.includes("turoth"))
+    return "#1c2418";
+  if (key.includes("dinosaur") || key.includes("jadinko") || key.includes("airut") || key.includes("camel")) return "#1e2818";
+  if (key.includes("minotaur") || key.includes("wolf") || key.includes("rat") || key.includes("cow") || key.includes("bat"))
+    return "#241c14";
+  if (key.includes("catablepon") || key.includes("goblin") || key.includes("troll") || key.includes("giant")) return "#241c14";
+  if (key.includes("automaton") || key.includes("rorarius") || key.includes("gladius") || key.includes("capsarius") || key.includes("scutarius"))
+    return "#1a2030";
+  if (key.includes("edimmu") || key.includes("crystal") || key.includes("prif")) return "#14241e";
+  return "#1c1812";
 }
 
 export function monsterHasStill(row: Pick<Monster, "edition" | "slug">) {

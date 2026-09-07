@@ -1,14 +1,18 @@
+import type { CSSProperties } from "react";
+
 export function StillPhoto({
   src,
   alt,
   priority = false,
   className = "aspect-video w-full bg-surface object-cover",
+  style,
   onError,
 }: {
   src: string;
   alt: string;
   priority?: boolean;
   className?: string;
+  style?: CSSProperties;
   onError?: () => void;
 }) {
   return (
@@ -23,6 +27,7 @@ export function StillPhoto({
       decoding="async"
       fetchPriority={priority ? "high" : "low"}
       className={className}
+      style={style}
       onError={(event) => {
         const img = event.currentTarget;
         const tried = img.dataset.retry === "1";
