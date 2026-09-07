@@ -38,12 +38,11 @@ const REGION_ORDER = [
   "Varrock",
 ];
 
-function listedTowns(edition: Location["edition"], god: Location["god"] | null) {
+function listedTowns(edition: Location["edition"]) {
   return LOCATIONS.filter(
     (loc) =>
       loc.kind === "town" &&
       loc.edition === edition &&
-      (!god || loc.god === god) &&
       townNote(loc.id) &&
       townHasStill(loc),
   );
@@ -69,8 +68,8 @@ function byRegion(towns: Location[]) {
 }
 
 function TownIndex() {
-  const { edition, setEdition, god, setGod } = usePlaceFilter("OSRS");
-  const groups = byRegion(listedTowns(edition, god));
+  const { edition, setEdition } = usePlaceFilter("OSRS");
+  const groups = byRegion(listedTowns(edition));
   const game = edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -82,7 +81,7 @@ function TownIndex() {
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <div className="mt-3">
-          <PlaceRail section="towns" edition={edition} god={god} onEdition={setEdition} onGod={setGod} />
+          <PlaceRail section="towns" edition={edition} onEdition={setEdition} />
         </div>
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">

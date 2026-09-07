@@ -4,26 +4,7 @@ import { UtcClock } from "@/components/utc-clock";
 import { eggToast } from "@/lib/eggs";
 import { useEffect, useRef, useState } from "react";
 
-export const STUDIO_NAV = [
-  ["/", "Banner Studio"],
-  ["/edit", "Video editor"],
-  ["/classic", "Classic"],
-  ["/gods", "Gods"],
-  ["/bosses", "Bosses"],
-  ["/pvp", "PvP"],
-  ["/clan-wars", "Clan Wars"],
-  ["/monsters", "Bestiary"],
-  ["/skills", "Skills"],
-  ["/towns", "Towns"],
-  ["/knowledge", "Sites"],
-  ["/jmods", "Jagex directory"],
-  ["/brief", "Brief"],
-  ["/history", "History"],
-  ["/chronicle", "Chronicle"],
-  ["/streamers", "Streamers"],
-  ["/youtubers", "Youtubers"],
-  ["/legal", "Legal"],
-] as const;
+import { STUDIO_NAV } from "@/places/nav";
 
 function navActive(path: string, to: string) {
   if (to === "/") return path === "/";

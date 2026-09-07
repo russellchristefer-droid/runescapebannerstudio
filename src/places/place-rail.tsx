@@ -1,17 +1,11 @@
 import { useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { PlaceChip, AppLink, godPath } from "./place-chip";
 import { GODS, type Edition, type God } from "@/lib/locations";
-import { godInk } from "@/lib/gods";
+import { godFromSlug, godInk } from "@/lib/gods";
+import { PLACE_SECTIONS, type PlaceSection } from "./nav";
 
-export type PlaceSection = "towns" | "gods" | "bosses" | "pvp" | "clan-wars";
-
-const SECTIONS: { id: PlaceSection; href: string; label: string }[] = [
-  { id: "towns", href: "/towns", label: "Towns" },
-  { id: "gods", href: "/gods", label: "Gods" },
-  { id: "bosses", href: "/bosses", label: "Bosses" },
-  { id: "pvp", href: "/pvp", label: "PvP" },
-  { id: "clan-wars", href: "/clan-wars", label: "Clan Wars" },
-];
+export type { PlaceSection };
 
 export function PlaceRail({
   section,
@@ -26,10 +20,15 @@ export function PlaceRail({
   onGod?: (next: God | null) => void;
   onSection?: (next: PlaceSection) => void;
 }) {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const fromPath = path.startsWith("/gods/")
+    ? godFromSlug(path.slice("/gods/".length).split("/")[0] ?? "")
+    : null;
+  const currentGod = god ?? fromPath;
   return (
     <nav aria-label="Places" className="flex flex-col items-center gap-2">
       <div className="flex flex-wrap justify-center gap-2">
-        {SECTIONS.map((row) => (
+        {PLACE_SECTIONS.map((row) => (
           <PlaceChip key={row.id} href={row.href} current={section === row.id}>
             {row.label}
           </PlaceChip>
@@ -56,14 +55,16 @@ export function PlaceRail({
         </div>
       ) : null}
       <div className="flex flex-wrap justify-center gap-1">
-        {GODS.map((name) => {
-          const on = god === name;
-          return (
-            <PlaceChip key={name} href={godPath(name)} current={on} style={{ color: godInk(name) }}>
-              {name}
-            </PlaceChip>
-          );
-        })}
+        {GODS.map((name) => (
+          <PlaceChip
+            key={name}
+            href={godPath(name)}
+            current={currentGod === name}
+            style={{ color: godInk(name) }}
+          >
+            {name}
+          </PlaceChip>
+        ))}
       </div>
     </nav>
   );
@@ -71,8 +72,7 @@ export function PlaceRail({
 
 export function usePlaceFilter(start: Edition = "OSRS") {
   const [edition, setEdition] = useState<Edition>(start);
-  const [god, setGod] = useState<God | null>(null);
-  return { edition, setEdition, god, setGod };
+  return { edition, setEdition };
 }
 
 export function PlaceTitle({ href, children }: { href: string; children: string }) {
