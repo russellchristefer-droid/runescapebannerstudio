@@ -89,6 +89,7 @@ export function Studio() {
   const [skillPack, setSkillPack] = useState<"OSRS" | "RS3">(boot.edition ?? saved.skillPack ?? "RS3");
   const [skillPlace, setSkillPlace] = useState<"name" | "bottom" | "top">("name");
   const [skillSize, setSkillSize] = useState(saved.skillSize ?? 40);
+  const [packFit, setPackFit] = useState<"fit" | "room" | "desk">("desk");
   const [skillX] = useState<number | null>(null);
   const [skillY] = useState<number | null>(null);
   const [skillPicks, setSkillPicks] = useState<
@@ -466,8 +467,17 @@ export function Studio() {
     return Math.max(0.8, Math.min(maxW, maxH, 2));
   }
 
-  function packScale(count: number) {
-    return Math.min(1, packScaleMax(count));
+  function packScale(count: number, mode: "fit" | "room" | "desk" = packFit) {
+    const max = packScaleMax(count);
+    if (mode === "fit") return max;
+    if (mode === "room") return Math.max(0.55, Math.min(max * 0.7, 0.85));
+    return Math.min(1, max);
+  }
+
+  function applyPackFit(mode: "fit" | "room" | "desk") {
+    setPackFit(mode);
+    const pack = skillPicksRef.current.filter((item) => !isMark(item.id));
+    if (pack.length >= 8) placeAllPack(packScale(pack.length, mode), mode);
   }
 
   function layoutAllGrid(count: number, packScaleValue: number) {
@@ -487,21 +497,25 @@ export function Studio() {
     return { cols, rows, icon, levelW, gap, strideX, strideY, originX, originY, scale, cell: icon };
   }
 
-  function placeAllPack(packScaleValue?: number) {
+  function placeAllPack(packScaleValue?: number, mode: "fit" | "room" | "desk" = packFit) {
     const pack = SKILLS.filter((skill) => skill.editions.includes(skillPack));
     const kept = skillPicksRef.current.filter((item) => isMark(item.id)).slice(0, 16);
-    const wanted = packScaleValue ?? packScale(pack.length);
+    const wanted = packScaleValue ?? packScale(pack.length, mode);
     const laid = layoutPack(
       pack.map((skill) => ({
         id: skill.id,
         game: skillPack,
         level: boardLevels[skillPack][skill.id] ?? "",
         group: "skills-all" as const,
+        size: skillSize,
+        scale: 1,
       })),
       size.width,
       size.height,
       wanted,
     );
+    const cell = Number(laid[0] && "size" in laid[0] ? laid[0].size : skillSize) || skillSize;
+    setSkillSize(cell);
     const next = [...laid, ...kept];
     skillPicksRef.current = next;
     setSkillPicks(next);
@@ -1816,6 +1830,35 @@ export function Studio() {
               >
                 All
               </button>
+              {(["fit", "room", "desk"] as const).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  className={`h-7 min-h-11 rounded-md border px-2 text-[10px] [touch-action:manipulation] ${packFit === mode ? "border-parchment" : "border-line"}`}
+                  onClick={() => applyPackFit(mode)}
+                >
+                  {mode === "fit" ? "Fit plate" : mode === "room" ? "Room" : "Desk"}
+                </button>
+              ))}
+              {pickedSkill ? (
+                <>
+                  {([0.75, 1, 1.35] as const).map((mult, i) => (
+                    <button
+                      key={mult}
+                      type="button"
+                      className="h-7 min-h-11 rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"
+                      onClick={() => {
+                        const id = pickedSkill;
+                        setSkillPicks((cur) =>
+                          cur.map((item) => (item.id === id ? { ...item, scale: mult } : item)),
+                        );
+                      }}
+                    >
+                      {["S", "M", "L"][i]}
+                    </button>
+                  ))}
+                </>
+              ) : null}
               <button type="button" className="h-7 rounded-md border border-line px-2 text-[10px]" onClick={() => setSkillPicks([])}>
                 Clear
               </button>
