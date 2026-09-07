@@ -21,6 +21,7 @@ export const JAGEX_SOCIAL: JagexLink[] = [
   { name: "Support", href: "https://support.runescape.com/hc/en-gb", label: "Support", note: "Account help. Not a J-Mod mention." },
 ];
 
+export type JagexX = {
   name: string;
   handle: string;
   role: string;
