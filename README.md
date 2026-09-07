@@ -74,7 +74,9 @@ YOUTUBE_API_KEY=
 
 ## One-file Python sidecar
 
-The website is still Node. [`banner_studio.py`](banner_studio.py) is a separate file if you only have Python:
+The website is still Node. The Python file lives at the repo root:
+
+**[banner_studio.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/banner_studio.py)**
 
 ```bash
 python3 banner_studio.py serve
