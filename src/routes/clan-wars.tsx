@@ -65,9 +65,9 @@ const CASTLE_DOORS = [
 
 const PIT_STILLS = [
   { src: "/clan-wars/pits/osrs-champion.png", name: "Champion", era: "Old School", note: "Last one standing. Tokkul, not a flag." },
-  { src: "/clan-wars/pits/rs3-pits.png", name: "The bowl", era: "RuneScape", note: "TzHaar City. People in the pit." },
-  { src: "/clan-wars/pits/rs3-waiting.png", name: "Waiting room", era: "RuneScape", note: "Safe now. 13 May 2008 was not." },
-  { src: "/clan-wars/pits/rs3-celebration.png", name: "The win", era: "RuneScape", note: "The city watches." },
+  { src: "/clan-wars/pits/rs3-pits.jpg", name: "The bowl", era: "RuneScape", note: "TzHaar City. People in the pit." },
+  { src: "/clan-wars/pits/rs3-waiting.jpg", name: "Waiting room", era: "RuneScape", note: "Safe now. 13 May 2008 was not." },
+  { src: "/clan-wars/pits/rs3-celebration.jpg", name: "The win", era: "RuneScape", note: "The city watches." },
 ] as const;
 
 const ROOMS = [
