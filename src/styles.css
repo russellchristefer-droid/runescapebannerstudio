@@ -48,6 +48,8 @@
   html {
     color-scheme: dark;
     overflow-x: clip;
+    background-color: var(--color-bg);
+    overscroll-behavior-y: contain;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scrollbar-gutter: stable;
@@ -233,8 +235,7 @@ button,
 }
 
 .place-card {
-  content-visibility: auto;
-  contain-intrinsic-size: 220px;
+  contain: layout;
 }
 
 pre,

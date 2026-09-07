@@ -37,7 +37,7 @@ export function PlaceCard({
   const [gone, setGone] = useState(false);
   if (!src) return null;
   return (
-    <li className="[contain-intrinsic-size:auto_220px] [content-visibility:auto]">
+    <li>
       <div className="overflow-hidden rounded-md border border-line bg-raised hover:border-[#F5C400]">
         <AppLink href={href} className="block [touch-action:manipulation]">
           {gone ? (
@@ -48,8 +48,8 @@ export function PlaceCard({
             <StillPhoto
               src={src}
               alt={alt}
-              className={`aspect-video w-full object-cover [content-visibility:auto] ${wash ? "object-contain" : "bg-surface"}`}
-              style={wash ? { backgroundColor: wash } : undefined}
+              className="aspect-video w-full bg-surface object-cover"
+              style={wash ? { boxShadow: `inset 0 3px 0 0 ${wash}` } : undefined}
               onError={() => setGone(true)}
             />
           )}

@@ -175,8 +175,8 @@ function GodFigure({ src, alt, caption, wash }: { src: string; alt: string; capt
       <img
         src={src}
         alt={alt}
-        className="aspect-video w-full rounded-md border border-line object-contain"
-        style={{ backgroundColor: wash ?? "#1c1812" }}
+        className="aspect-video w-full rounded-md border border-line bg-surface object-cover"
+        style={wash ? { boxShadow: `inset 0 3px 0 0 ${wash}` } : undefined}
         loading="lazy"
         decoding="async"
       />

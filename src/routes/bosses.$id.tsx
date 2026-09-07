@@ -55,8 +55,8 @@ function BossNotePage() {
         <img
           src={loc.viewA}
           alt={`${note.title} arena, ${game}`}
-          className="aspect-[21/9] w-full rounded-md border border-line object-contain"
-          style={{ backgroundColor: bossWash(note.id, loc.god) }}
+          className="aspect-[21/9] w-full rounded-md border border-line bg-surface object-cover"
+          style={{ boxShadow: `inset 0 3px 0 0 ${bossWash(note.id, loc.god)}` }}
           loading="eager"
           decoding="async"
         />

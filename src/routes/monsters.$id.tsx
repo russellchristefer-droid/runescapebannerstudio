@@ -38,8 +38,8 @@ function MonsterPage() {
           <StillPhoto
             src={src}
             alt={`${row.name} in ${game}`}
-            className="aspect-[21/9] w-full border border-[#c6a45a] object-contain"
-            style={{ backgroundColor: monsterWash(row) }}
+            className="aspect-[21/9] w-full border border-[#c6a45a] bg-surface object-cover"
+            style={{ boxShadow: `inset 0 3px 0 0 ${monsterWash(row)}` }}
           />
         ) : (
           <p className="border border-[#c6a45a] bg-surface px-3 py-10 text-center text-sm text-muted">Even the beast declined to appear.</p>
