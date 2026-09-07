@@ -1,0 +1,16 @@
+{
+  "appName": "Banner Studio",
+  "description": "Local still compositor for a RuneScape stream banner. Not a bot. Not official.",
+  "appUrl": "./index.html",
+  "configUrl": "./appconfig.json",
+  "iconUrl": "./icon.png",
+  "defaultWidth": 420,
+  "defaultHeight": 580,
+  "minWidth": 320,
+  "minHeight": 420,
+  "maxWidth": 900,
+  "maxHeight": 900,
+  "requestHandlers": [],
+  "activators": [],
+  "permissions": "pixel"
+}

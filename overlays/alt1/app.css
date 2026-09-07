@@ -1,0 +1,44 @@
+:root {
+  color-scheme: dark;
+  --bg: #16130f;
+  --ink: #efe4c8;
+  --gold: #c6a45a;
+  --muted: #a89878;
+}
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.4 "Segoe UI", system-ui, sans-serif;
+}
+header, label, p, .row, .save { margin: 0 12px 10px; }
+h1 { font-size: 18px; margin: 12px 12px 4px; }
+header p, .fine, #status { color: var(--muted); font-size: 12px; }
+#plate {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 0 12px 10px;
+  background: #120e0a;
+  border: 1px solid var(--gold);
+}
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip, .save {
+  min-height: 44px;
+  border: 1px solid var(--gold);
+  background: #1a1610;
+  color: var(--ink);
+  padding: 0 12px;
+  cursor: pointer;
+}
+.save { width: calc(100% - 24px); background: #241e16; }
+input[type="text"], #name {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  margin-top: 4px;
+  background: #1a1610;
+  color: var(--ink);
+  border: 1px solid #c6a45a59;
+}
+label.chip { display: inline-flex; align-items: center; }
