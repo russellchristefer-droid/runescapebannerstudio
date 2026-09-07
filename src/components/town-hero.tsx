@@ -120,6 +120,7 @@ export function TownHero({
       >
         “{quote}”
       </p>
+      <p className="text-center text-[11px] text-muted">— Bob the Cat</p>
       <p className="pb-2 text-center text-[11px] text-faint">
         {edition === "RSC" ? "Archive. The worlds are not on this page." : `Next still in ${formatRemain(remain)}`}
       </p>
