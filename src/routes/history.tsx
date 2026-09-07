@@ -192,11 +192,6 @@ function HistoryPage() {
               the ditch told as a joke that still knows the skull rule. The name is a banner.
               The work is the VOD.
             </li>
-            <li>
-              <span className="text-parchment">ClanWars</span> — a login on the Old School
-              boards, not the Ferox portal. Maxed skills the hiscores will still print.
-              The minigame borrowed the words. This kettle means the account.
-            </li>
           </ul>
           <p className="mt-4 text-[11px] text-faint">
             If a name is not on a public board, a public VOD, or the wiki, it does not belong
@@ -209,9 +204,6 @@ function HistoryPage() {
           </a>
           <a href="https://runescape.wiki/" target="_blank" rel="noopener noreferrer">
             RuneScape wiki
-          </a>
-          <a href="https://secure.runescape.com/m=hiscore_oldschool/hiscorepersonal?user1=ClanWars" target="_blank" rel="noopener noreferrer">
-            ClanWars
           </a>
           <Link to="/">Desk</Link>
           <Link to="/chronicle">Chronicle</Link>
