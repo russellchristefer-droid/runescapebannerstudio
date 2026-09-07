@@ -103,27 +103,6 @@ function ClanWarsPage() {
 
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
         <section>
-          <h2 className="section-h2 mb-3 text-center">The rooms</h2>
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {SHOTS.map((shot) => (
-              <li key={shot.src} className="overflow-hidden rounded-md border border-line bg-raised">
-                <StillPhoto
-                  src={shot.src}
-                  alt={`${shot.name}, ${shot.era}`}
-                  className="aspect-[5/3] w-full bg-[#1a1612] object-cover"
-                />
-                <p className="px-3 pt-2 text-sm text-fg">{shot.name}</p>
-                <p className="px-3 text-[11px] text-parchment">{shot.era}</p>
-                <p className="px-3 pb-3 text-[12px] text-muted">{shot.note}</p>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-2 text-center text-[11px] text-faint">
-            Identification stills from official wiki File pages and the Classic archive on this origin.
-          </p>
-        </section>
-
-        <section>
           <h2 className="section-h2">What it is</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             Two Friends Chat / chat-channel sides fight under rules the captains picked.
@@ -219,6 +198,27 @@ function ClanWarsPage() {
             <li>4. Do not chase through a rule you disabled. Freeze immunity still exists.</li>
             <li>5. White portal is practice. Purple is the match. Red on RuneScape is the tax.</li>
           </ol>
+        </section>
+
+        <section>
+          <h2 className="section-h2 mb-3 text-center">The rooms</h2>
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SHOTS.map((shot) => (
+              <li key={shot.src} className="overflow-hidden rounded-md border border-line bg-raised">
+                <StillPhoto
+                  src={shot.src}
+                  alt={`${shot.name}, ${shot.era}`}
+                  className="aspect-[5/3] w-full bg-[#1a1612] object-cover"
+                />
+                <p className="px-3 pt-2 text-sm text-fg">{shot.name}</p>
+                <p className="px-3 text-[11px] text-parchment">{shot.era}</p>
+                <p className="px-3 pb-3 text-[12px] text-muted">{shot.note}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-center text-[11px] text-faint">
+            Identification stills from official wiki File pages and the Classic archive on this origin.
+          </p>
         </section>
 
         <p className="text-sm text-parchment">
