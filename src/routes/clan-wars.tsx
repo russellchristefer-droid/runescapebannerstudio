@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { BackLink } from "@/components/back-link";
 import { PlaceRail } from "@/components/place-rail";
 import { pageMeta } from "@/lib/page-title";
@@ -11,87 +12,6 @@ export const Route = createFileRoute("/clan-wars")({
     ),
   component: ClanWarsPage,
 });
-
-const SHOTS = [
-  {
-    src: "/clan-wars/classic-wild1.jpg",
-    name: "Wilderness",
-    era: "RuneScape Classic",
-    note: "2001 preview. The walk north of the ditch.",
-  },
-  {
-    src: "/clan-wars/rsc-edge-store.png",
-    name: "Edgeville",
-    era: "RuneScape Classic",
-    note: "The general store. Last bank before the wild.",
-  },
-  {
-    src: "/clan-wars/osrs-ferox.png",
-    name: "Ferox Enclave",
-    era: "Old School",
-    note: "The current house. Safe pocket. Purple and white.",
-  },
-  {
-    src: "/clan-wars/osrs-edgeville-shot.png",
-    name: "Edgeville",
-    era: "Old School",
-    note: "The last town before you mean it.",
-  },
-  {
-    src: "/clan-wars/osrs-giants-plateau.png",
-    name: "Giants' Plateau",
-    era: "Old School",
-    note: "The first Old School house. 19 June 2014.",
-  },
-  {
-    src: "/clan-wars/osrs-clan-wars.png",
-    name: "Clan Wars",
-    era: "Old School",
-    note: "The hall the wiki still uses.",
-  },
-  {
-    src: "/clan-wars/osrs-ffa-portal.png",
-    name: "White portal",
-    era: "Old School",
-    note: "Free-for-all. Stats come back when you leave.",
-  },
-  {
-    src: "/clan-wars/osrs-castle-wars.png",
-    name: "Castle Wars",
-    era: "Old School",
-    note: "The flag. 13 December 2004. Not this minigame.",
-  },
-  {
-    src: "/locations/yanille.jpg",
-    name: "Yanille",
-    era: "Old School",
-    note: "West of here is the members Castle Wars door.",
-  },
-  {
-    src: "/clan-wars/rs3-grotto.png",
-    name: "Gamers' Grotto",
-    era: "RuneScape",
-    note: "North of Falador since 1 February 2011.",
-  },
-  {
-    src: "/clan-wars/rs3-clan-wars.png",
-    name: "Clan Wars",
-    era: "RuneScape",
-    note: "Challenge hall. Captain to captain.",
-  },
-  {
-    src: "/clan-wars/rs3-castle-wars.png",
-    name: "Castle Wars",
-    era: "RuneScape",
-    note: "Same flag on the main client.",
-  },
-  {
-    src: "/locations/falador.jpg",
-    name: "Falador",
-    era: "RuneScape",
-    note: "The Grotto is north. White walls stay white.",
-  },
-] as const;
 
 const STRIP_WHAT = [
   { src: "/clan-wars/osrs-ferox.png", name: "Ferox" },
@@ -133,16 +53,133 @@ const STRIP_WIN = [
   { src: "/clan-wars/osrs-ffa-portal.png", name: "White portal" },
 ] as const;
 
+const ROOMS = [
+  {
+    place: "Wilderness",
+    era: "RuneScape Classic",
+    note: "Before the portals. Two chats on the same ditch.",
+    srcs: [
+      "/clan-wars/classic-wild1.jpg",
+      "/clan-wars/classic-wild2.jpg",
+      "/stills/rsc/rsc-ranging.jpg",
+      "/clan-wars/more/rsc-moss.png",
+      "/clan-wars/more/rsc-map-2001.jpg",
+    ],
+  },
+  {
+    place: "Edgeville",
+    era: "RuneScape Classic",
+    note: "The general store. Last bank before the wild.",
+    srcs: [
+      "/clan-wars/rsc-edge-store.png",
+      "/stills/rsc/rsc-edgeville.jpg",
+      "/stills/hero/rsc-edgeville.jpg",
+      "/era/classic/draynor.jpg",
+      "/stills/rsc/rsc-draynor.jpg",
+    ],
+  },
+  {
+    place: "Edgeville",
+    era: "Old School",
+    note: "The last town before you mean it.",
+    srcs: [
+      "/clan-wars/osrs-edgeville-shot.png",
+      "/locations/osrsedge.jpg",
+      "/locations/edgeville.jpg",
+      "/clan-wars/osrs-ffa-portal.png",
+      "/clan-wars/more/osrs-exit-ffa.png",
+    ],
+  },
+  {
+    place: "Ferox Enclave",
+    era: "Old School",
+    note: "The house. Purple in. White to practice.",
+    srcs: [
+      "/clan-wars/osrs-ferox.png",
+      "/clan-wars/osrs-clan-wars.png",
+      "/clan-wars/osrs-ffa-portal.png",
+      "/clan-wars/more/osrs-portal-magenta.png",
+      "/clan-wars/more/osrs-exit-challenge.png",
+    ],
+  },
+  {
+    place: "Giants' Plateau",
+    era: "Old School",
+    note: "The first Old School house. 19 June 2014.",
+    srcs: [
+      "/clan-wars/osrs-giants-plateau.png",
+      "/clan-wars/osrs-clan-wars.png",
+      "/clan-wars/more/osrs-portal-green.png",
+      "/clan-wars/more/osrs-portal-teal.png",
+      "/clan-wars/more/osrs-exit-challenge.png",
+    ],
+  },
+  {
+    place: "Castle Wars",
+    era: "Old School",
+    note: "The flag. Not this minigame. West of Yanille.",
+    srcs: [
+      "/clan-wars/osrs-castle-wars.png",
+      "/clan-wars/more/osrs-cw-portal.png",
+      "/clan-wars/more/osrs-cw-red.png",
+      "/clan-wars/more/osrs-cw-blue.png",
+      "/locations/yanille.jpg",
+    ],
+  },
+  {
+    place: "Gamers' Grotto",
+    era: "RuneScape",
+    note: "North of Falador since 1 February 2011.",
+    srcs: [
+      "/clan-wars/rs3-grotto.png",
+      "/clan-wars/more/rs3-arena.png",
+      "/clan-wars/more/rs3-ffa.png",
+      "/clan-wars/more/rs3-rated-portal.png",
+      "/locations/falador.jpg",
+    ],
+  },
+  {
+    place: "Clan Wars hall",
+    era: "RuneScape",
+    note: "Captain to captain. The board still names the winner.",
+    srcs: [
+      "/clan-wars/rs3-clan-wars.png",
+      "/clan-wars/more/rs3-victory.png",
+      "/clan-wars/more/rs3-defeat.png",
+      "/clan-wars/more/rs3-classic-mode.png",
+      "/clan-wars/more/rs3-ruins.png",
+    ],
+  },
+  {
+    place: "Falador",
+    era: "RuneScape",
+    note: "The Grotto is north. White walls stay white.",
+    srcs: [
+      "/locations/falador.jpg",
+      "/locations/rs3-falador-a.jpg",
+      "/Falador.png",
+      "/era/osrs/falador.png",
+      "/locations/osrsfalador.jpg",
+    ],
+  },
+] as const;
+
 function ShotStrip({ items }: { items: readonly { src: string; name: string }[] }) {
   return (
     <div className="mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2">
       {items.map((item) => (
         <figure
-          key={item.src}
+          key={`${item.src}-${item.name}`}
           className="w-[220px] shrink-0 snap-start overflow-hidden rounded-md border border-[#c6a45a]/35 bg-[#120e0a]"
         >
           <div className="flex h-40 items-center justify-center bg-[#0c0a08] px-2">
-            <img src={item.src} alt={item.name} loading="lazy" decoding="async" className="max-h-36 w-full object-contain" />
+            <img
+              src={item.src}
+              alt={item.name}
+              loading="lazy"
+              decoding="async"
+              className="max-h-36 w-full object-contain"
+            />
           </div>
           <figcaption className="px-2 py-1 text-[11px] text-[#c6a45a]">{item.name}</figcaption>
         </figure>
@@ -151,32 +188,51 @@ function ShotStrip({ items }: { items: readonly { src: string; name: string }[] 
   );
 }
 
-function HallStill({
-  src,
-  name,
+function RoomDeck({
+  place,
   era,
   note,
-  wide = false,
-}: (typeof SHOTS)[number] & { wide?: boolean }) {
+  srcs,
+}: (typeof ROOMS)[number]) {
+  const [i, setI] = useState(0);
+  const src = srcs[i] ?? srcs[0];
+  const n = srcs.length;
   return (
-    <figure
-      className={`overflow-hidden rounded-md border border-[#c6a45a]/40 bg-[#120e0a] ${
-        wide ? "sm:col-span-2" : ""
-      }`}
-    >
-      <div className={`flex items-center justify-center bg-[#0c0a08] ${wide ? "min-h-[280px] md:min-h-[360px]" : "min-h-[200px] md:min-h-[240px]"}`}>
+    <figure className="overflow-hidden rounded-md border border-[#c6a45a]/40 bg-[#120e0a]">
+      <div className="relative flex min-h-[260px] items-center justify-center bg-[#0c0a08] md:min-h-[320px]">
         <img
           src={src}
-          alt={`${name}, ${era}`}
-          loading={wide ? "eager" : "lazy"}
-          decoding="async"
-          className="max-h-[360px] w-full object-contain md:max-h-[420px]"
+          alt={`${place}, ${era}`}
+          className="max-h-[340px] w-full object-contain md:max-h-[400px]"
         />
+        {n > 1 ? (
+          <>
+            <button
+              type="button"
+              className="absolute left-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 rounded-md border border-[#c6a45a]/60 bg-[#120e0a]/80 text-[#efe4c8]"
+              aria-label={`Previous still, ${place}`}
+              onClick={() => setI((n + i - 1) % n)}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="absolute right-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 rounded-md border border-[#c6a45a]/60 bg-[#120e0a]/80 text-[#efe4c8]"
+              aria-label={`Next still, ${place}`}
+              onClick={() => setI((i + 1) % n)}
+            >
+              ›
+            </button>
+          </>
+        ) : null}
       </div>
       <figcaption className="border-t border-[#c6a45a]/25 px-3 py-2">
-        <p className="text-sm text-[#efe4c8]">{name}</p>
+        <p className="text-sm text-[#efe4c8]">{place}</p>
         <p className="text-[11px] tracking-[0.12em] text-[#c6a45a] uppercase">{era}</p>
         <p className="mt-1 text-[12px] text-[#b7a989]">{note}</p>
+        <p className="mt-1 text-[11px] text-[#8a7a5a]">
+          {i + 1} / {n}
+        </p>
       </figcaption>
     </figure>
   );
@@ -366,17 +422,13 @@ function ClanWarsPage() {
 
         <section>
           <h2 className="section-h2 mb-3 text-center">The rooms</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {SHOTS.map((shot) => (
-              <HallStill
-                key={shot.src}
-                {...shot}
-                wide={shot.src.includes("ferox") || shot.src.includes("grotto")}
-              />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {ROOMS.map((room) => (
+              <RoomDeck key={`${room.place}-${room.era}`} {...room} />
             ))}
           </div>
           <p className="mt-2 text-center text-[11px] text-faint">
-            Stills sit in the frame. Nothing is cropped to a town card.
+            Arrow through each place. The still sits in the frame.
           </p>
         </section>
 
@@ -391,4 +443,3 @@ function ClanWarsPage() {
     </div>
   );
 }
-
