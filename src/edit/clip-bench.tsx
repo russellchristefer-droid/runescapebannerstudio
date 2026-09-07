@@ -36,6 +36,7 @@ export function ClipBench() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const stillRef = useRef<HTMLInputElement | null>(null);
   const objectUrl = useRef<string | null>(null);
   const bannerUrl = useRef<string | null>(null);
   const bannerImg = useRef<CanvasImageSource | null>(null);
@@ -260,7 +261,7 @@ export function ClipBench() {
       ctx.fillStyle = `rgba(0,0,0,${1 - fade})`;
       ctx.fillRect(0, 0, w, h);
     }
-    if (!forFile && s.overlay !== "off" && bannerImg.current) {
+    if (s.overlay !== "off" && bannerImg.current) {
       const barH = Math.round(h * (s.overlay === "top" ? 0.2 : 0.22));
       const y = s.overlay === "top" ? 0 : h - barH;
       ctx.save();
@@ -268,12 +269,10 @@ export function ClipBench() {
       ctx.drawImage(bannerImg.current, 0, y, w, barH);
       ctx.restore();
     }
-    if (!forFile) {
-      const mark = CLIP_MARKS.find((item) => item.id === s.markId && item.id !== "none");
-      if (mark?.src) {
-        const img = markCache.current[mark.src];
-        if (img) ctx.drawImage(img, 36, Math.round(h * 0.72), Math.round(h * 0.08), Math.round(h * 0.08));
-      }
+    const mark = CLIP_MARKS.find((item) => item.id === s.markId && item.id !== "none");
+    if (mark?.src) {
+      const img = markCache.current[mark.src];
+      if (img) ctx.drawImage(img, 36, Math.round(h * 0.72), Math.round(h * 0.08), Math.round(h * 0.08));
     }
     if (s.ltOn) {
       const line = sanitizeDisplayName(s.ltText || "").slice(0, 24);
@@ -366,38 +365,45 @@ export function ClipBench() {
 
   async function holdingCard() {
     const canvas = document.createElement("canvas");
-    canvas.width = 1200;
-    canvas.height = 480;
+    const w = size.w;
+    const h = size.h;
+    canvas.width = w;
+    canvas.height = h;
     const video = videoRef.current;
-    if (video && hasClip) paint(canvas, video, false, 1200, 480);
+    if (video && hasClip) paint(canvas, video, false, w, h);
     else {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       ctx.fillStyle = "#1a1612";
-      ctx.fillRect(0, 0, 1200, 480);
-      if (bannerImg.current) ctx.drawImage(bannerImg.current, 0, 0, 1200, 480);
-      const line = [sanitizeDisplayName(name), sanitizeClan(clan), worldLabel(sanitizeWorld(world))].filter(Boolean).join(" · ");
-      if (line) {
-        ctx.font = `600 28px "Source Sans 3", sans-serif`;
-        ctx.strokeStyle = "#000";
-        ctx.lineWidth = 3;
-        ctx.strokeText(line, 48, 420);
-        ctx.fillStyle = "#efe0c4";
-        ctx.fillText(line, 48, 420);
+      ctx.fillRect(0, 0, w, h);
+      if (bannerImg.current) {
+        const box = coverRect(
+          (bannerImg.current as ImageBitmap).width || 1200,
+          (bannerImg.current as ImageBitmap).height || 480,
+          w,
+          h,
+        );
+        ctx.drawImage(bannerImg.current, box.sx, box.sy, box.sw, box.sh, 0, 0, w, h);
       }
+      const line = [sanitizeDisplayName(name), sanitizeClan(clan), worldLabel(sanitizeWorld(world))].filter(Boolean).join(" · ");
+      if (line) paintRSYellow(ctx, line, 36, h - Math.round(h * 0.12), Math.max(18, Math.round(h * 0.045)));
     }
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
-    if (!blob) return;
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.96));
+    if (!blob) {
+      setStatus("Could not save the still.");
+      return;
+    }
     const href = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = href;
-    a.download = `holding-${edition === "OSRS" ? "osrs" : "rs3"}-1200x480.jpg`;
+    a.download = `holding-${edition === "OSRS" ? "osrs" : "rs3"}-${w}x${h}.jpg`;
+    a.rel = "noopener";
     a.click();
-    URL.revokeObjectURL(href);
+    window.setTimeout(() => URL.revokeObjectURL(href), 2500);
     const file = new File([blob], a.download, { type: "image/jpeg" });
     setLastFile(file);
     setCanShareFile(Boolean(navigator.canShare?.({ files: [file] })));
-    setStatus("Holding card saved on this device.");
+    setStatus(`Saved ${w}×${h} still.`);
   }
 
   function fadeMul(t: number) {
@@ -500,6 +506,10 @@ export function ClipBench() {
 
   function openClipPicker() {
     fileRef.current?.click();
+  }
+
+  function openStillPicker() {
+    stillRef.current?.click();
   }
 
   function snapValue(t: number) {
@@ -765,7 +775,11 @@ export function ClipBench() {
   async function exportClip(pair = false) {
     const video = videoRef.current;
     if (!hasClip && !video?.src) {
-      setStatus("Upload a clip first.");
+      if (bannerImg.current) {
+        await holdingCard();
+        return;
+      }
+      setStatus("Upload a clip or a still first.");
       return;
     }
     if (typeof MediaRecorder === "undefined") {
@@ -821,7 +835,21 @@ export function ClipBench() {
         onChange={(e) => {
           const file = e.target.files?.[0];
           e.target.value = "";
-          if (file) takeVideo(file);
+          if (!file) return;
+          if (file.type.startsWith("image/")) void takeBanner(file);
+          else takeVideo(file);
+        }}
+      />
+      <input
+        id="clip-still-file"
+        ref={stillRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="sr-only"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = "";
+          if (file) void takeBanner(file);
         }}
       />
       <div
@@ -837,7 +865,7 @@ export function ClipBench() {
           else if (file) takeVideo(file);
         }}
       >
-        <div className="relative mx-auto w-full max-w-[960px] overflow-hidden bg-[#120f0c]" style={{ aspectRatio: "16 / 9" }}>
+        <div className="relative mx-auto w-full max-w-[960px] overflow-hidden bg-[#120f0c]" style={{ aspectRatio: `${size.w} / ${size.h}` }}>
           {!hasClip ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
               <p className="text-sm text-muted">{ready === "loading" ? "Reading clip…" : "No clip"}</p>
@@ -848,6 +876,13 @@ export function ClipBench() {
                 onClick={openClipPicker}
               >
                 Upload video
+              </button>
+              <button
+                type="button"
+                className="pointer-events-auto min-h-11 rounded-md border border-[#c6a45a]/40 bg-[#241e16] px-4 text-sm text-parchment"
+                onClick={openStillPicker}
+              >
+                Upload still
               </button>
             </div>
           ) : null}
@@ -1030,13 +1065,16 @@ export function ClipBench() {
               Upload video
             </button>
           )}
+          <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openStillPicker}>
+            Upload still
+          </button>
           {busy ? (
             <button type="button" className={CHIP} onClick={cancelExport}>
               Cancel
             </button>
           ) : (
-            <button type="button" disabled={!hasClip} className={CHIP} onClick={() => void exportClip(false)}>
-              Save clip
+            <button type="button" disabled={!hasClip && overlay === "off"} className={CHIP} onClick={() => void exportClip(false)}>
+              Save
             </button>
           )}
         </div>
