@@ -24,3 +24,6 @@ A security mail and a rights-holder take-down use the same address. Do not send 
 
 This origin cannot stop a volumetric flood. That is the host. What we do: no tokens in git, Hiscores allowlisted, `/api` slows down if one address hammers it, frames stay off the plate.
 
+Defensive check only (not Kali): `node scripts/integrity-check.mjs`
+
+
