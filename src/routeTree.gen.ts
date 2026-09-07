@@ -38,6 +38,8 @@ import { Route as GodsIndexRouteImport } from './routes/gods.index'
 import { Route as GodsGodRouteImport } from './routes/gods.$god'
 import { Route as MonstersIndexRouteImport } from './routes/monsters.index'
 import { Route as MonstersIdRouteImport } from './routes/monsters.$id'
+import { Route as SkillsIndexRouteImport } from './routes/skills.index'
+import { Route as SkillsIdRouteImport } from './routes/skills.$id'
 import { Route as TownsIndexRouteImport } from './routes/towns.index'
 import { Route as TownsIdRouteImport } from './routes/towns.$id'
 
@@ -186,6 +188,16 @@ const MonstersIdRoute = MonstersIdRouteImport.update({
   path: '/monsters/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SkillsIndexRoute = SkillsIndexRouteImport.update({
+  id: '/skills/',
+  path: '/skills/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkillsIdRoute = SkillsIdRouteImport.update({
+  id: '/skills/$id',
+  path: '/skills/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TownsIndexRoute = TownsIndexRouteImport.update({
   id: '/towns/',
   path: '/towns/',
@@ -224,10 +236,12 @@ export interface FileRoutesByFullPath {
   '/bosses/$id': typeof BossesIdRoute
   '/gods/$god': typeof GodsGodRoute
   '/monsters/$id': typeof MonstersIdRoute
+  '/skills/$id': typeof SkillsIdRoute
   '/towns/$id': typeof TownsIdRoute
   '/bosses/': typeof BossesIndexRoute
   '/gods/': typeof GodsIndexRoute
   '/monsters/': typeof MonstersIndexRoute
+  '/skills/': typeof SkillsIndexRoute
   '/towns/': typeof TownsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -257,10 +271,12 @@ export interface FileRoutesByTo {
   '/bosses/$id': typeof BossesIdRoute
   '/gods/$god': typeof GodsGodRoute
   '/monsters/$id': typeof MonstersIdRoute
+  '/skills/$id': typeof SkillsIdRoute
   '/towns/$id': typeof TownsIdRoute
   '/bosses': typeof BossesIndexRoute
   '/gods': typeof GodsIndexRoute
   '/monsters': typeof MonstersIndexRoute
+  '/skills': typeof SkillsIndexRoute
   '/towns': typeof TownsIndexRoute
 }
 export interface FileRoutesById {
@@ -291,10 +307,12 @@ export interface FileRoutesById {
   '/bosses/$id': typeof BossesIdRoute
   '/gods/$god': typeof GodsGodRoute
   '/monsters/$id': typeof MonstersIdRoute
+  '/skills/$id': typeof SkillsIdRoute
   '/towns/$id': typeof TownsIdRoute
   '/bosses/': typeof BossesIndexRoute
   '/gods/': typeof GodsIndexRoute
   '/monsters/': typeof MonstersIndexRoute
+  '/skills/': typeof SkillsIndexRoute
   '/towns/': typeof TownsIndexRoute
 }
 export interface FileRouteTypes {
@@ -326,10 +344,12 @@ export interface FileRouteTypes {
     | '/bosses/$id'
     | '/gods/$god'
     | '/monsters/$id'
+    | '/skills/$id'
     | '/towns/$id'
     | '/bosses/'
     | '/gods/'
     | '/monsters/'
+    | '/skills/'
     | '/towns/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -359,10 +379,12 @@ export interface FileRouteTypes {
     | '/bosses/$id'
     | '/gods/$god'
     | '/monsters/$id'
+    | '/skills/$id'
     | '/towns/$id'
     | '/bosses'
     | '/gods'
     | '/monsters'
+    | '/skills'
     | '/towns'
   id:
     | '__root__'
@@ -392,10 +414,12 @@ export interface FileRouteTypes {
     | '/bosses/$id'
     | '/gods/$god'
     | '/monsters/$id'
+    | '/skills/$id'
     | '/towns/$id'
     | '/bosses/'
     | '/gods/'
     | '/monsters/'
+    | '/skills/'
     | '/towns/'
   fileRoutesById: FileRoutesById
 }
@@ -426,10 +450,12 @@ export interface RootRouteChildren {
   BossesIdRoute: typeof BossesIdRoute
   GodsGodRoute: typeof GodsGodRoute
   MonstersIdRoute: typeof MonstersIdRoute
+  SkillsIdRoute: typeof SkillsIdRoute
   TownsIdRoute: typeof TownsIdRoute
   BossesIndexRoute: typeof BossesIndexRoute
   GodsIndexRoute: typeof GodsIndexRoute
   MonstersIndexRoute: typeof MonstersIndexRoute
+  SkillsIndexRoute: typeof SkillsIndexRoute
   TownsIndexRoute: typeof TownsIndexRoute
 }
 
@@ -638,6 +664,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MonstersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/skills/': {
+      id: '/skills/'
+      path: '/skills'
+      fullPath: '/skills/'
+      preLoaderRoute: typeof SkillsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/skills/$id': {
+      id: '/skills/$id'
+      path: '/skills/$id'
+      fullPath: '/skills/$id'
+      preLoaderRoute: typeof SkillsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/towns/': {
       id: '/towns/'
       path: '/towns'
@@ -682,10 +722,12 @@ const rootRouteChildren: RootRouteChildren = {
   BossesIdRoute: BossesIdRoute,
   GodsGodRoute: GodsGodRoute,
   MonstersIdRoute: MonstersIdRoute,
+  SkillsIdRoute: SkillsIdRoute,
   TownsIdRoute: TownsIdRoute,
   BossesIndexRoute: BossesIndexRoute,
   GodsIndexRoute: GodsIndexRoute,
   MonstersIndexRoute: MonstersIndexRoute,
+  SkillsIndexRoute: SkillsIndexRoute,
   TownsIndexRoute: TownsIndexRoute,
 }
 export const routeTree = rootRouteImport

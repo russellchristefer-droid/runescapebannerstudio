@@ -12,6 +12,7 @@ export const STUDIO_NAV = [
   ["/bosses", "Bosses"],
   ["/pvp", "PvP"],
   ["/monsters", "Bestiary"],
+  ["/skills", "Skills"],
   ["/towns", "Towns"],
   ["/knowledge", "Sites"],
   ["/jmods", "Jagex directory"],
