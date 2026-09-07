@@ -42,7 +42,7 @@ export function TodayDesk() {
   return (
     <section className="page-band py-6">
       <h2 className="mb-1 text-center text-sm font-semibold">Today</h2>
-      <p className="mb-3 text-center font-mono text-xs tabular-nums text-muted">
+      <p className="mb-3 text-center font-mono text-xs tabular-nums text-muted" suppressHydrationWarning>
         {weekday(now)} · {pad(utcH)}:{pad(now.getUTCMinutes())}:
         {pad(now.getUTCSeconds())} UTC
         {stale ? " · clock stale" : ""}
