@@ -2,15 +2,19 @@
 
 const hits = new Map<string, number[]>();
 
-export function clientKey(event: { node?: { req?: { headers?: unknown; socket?: { remoteAddress?: string } } } }) {
-  const raw = event.node?.req?.headers;
-  const headers = raw && typeof raw === "object" && "get" in raw
-    ? (raw as Headers)
-    : null;
-  const xf = headers
-    ? headers.get("x-forwarded-for")
-    : String((raw as Record<string, string | string[] | undefined> | undefined)?.["x-forwarded-for"] ?? "");
-  const ip = (xf.split(",")[0] || event.node?.req?.socket?.remoteAddress || "local").trim();
+export function clientKey(event: unknown) {
+  const node = event && typeof event === "object" && "node" in event ? (event as { node?: { req?: unknown } }).node : undefined;
+  const req = node?.req as { headers?: unknown; socket?: { remoteAddress?: string } } | undefined;
+  const raw = req?.headers;
+  let xf = "";
+  if (raw && typeof raw === "object" && "get" in raw && typeof (raw as Headers).get === "function") {
+    xf = (raw as Headers).get("x-forwarded-for") ?? "";
+  } else if (raw && typeof raw === "object") {
+    const bag = raw as Record<string, string | string[] | undefined>;
+    const v = bag["x-forwarded-for"] ?? bag["X-Forwarded-For"];
+    xf = Array.isArray(v) ? v[0] ?? "" : v ?? "";
+  }
+  const ip = (xf.split(",")[0] || req?.socket?.remoteAddress || "local").trim();
   return ip.slice(0, 64);
 }
 
