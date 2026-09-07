@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceRail } from "@/components/place-rail";
+import { StillPhoto } from "@/components/still-photo";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/clan-wars")({
@@ -12,6 +13,57 @@ export const Route = createFileRoute("/clan-wars")({
   component: ClanWarsPage,
 });
 
+const SHOTS = [
+  {
+    src: "/stills/rsc/rsc-wilderness.jpg",
+    name: "Wilderness",
+    era: "RuneScape Classic",
+    note: "Before the portals. Clans met on the ditch.",
+  },
+  {
+    src: "/era/rs2/wilderness.jpg",
+    name: "Wilderness",
+    era: "RS2",
+    note: "The 2007 room sat in the wild until the Grotto.",
+  },
+  {
+    src: "/stills/rsc/rsc-edgeville.jpg",
+    name: "Edgeville",
+    era: "RuneScape Classic",
+    note: "The bank before the walk north.",
+  },
+  {
+    src: "/clan-wars/osrs-ferox.png",
+    name: "Ferox Enclave",
+    era: "Old School",
+    note: "The current house. Safe pocket. Purple and white portals.",
+  },
+  {
+    src: "/clan-wars/osrs-clan-wars.png",
+    name: "Clan Wars",
+    era: "Old School",
+    note: "The hall the wiki still uses.",
+  },
+  {
+    src: "/clan-wars/osrs-ffa-portal.png",
+    name: "White portal",
+    era: "Old School",
+    note: "Free-for-all. Practice. Stats come back when you leave.",
+  },
+  {
+    src: "/clan-wars/rs3-grotto.png",
+    name: "Gamers' Grotto",
+    era: "RuneScape",
+    note: "North of Falador. The main-client house since 2011.",
+  },
+  {
+    src: "/clan-wars/rs3-clan-wars.png",
+    name: "Clan Wars",
+    era: "RuneScape",
+    note: "Challenge hall. Captain to captain.",
+  },
+] as const;
+
 function ClanWarsPage() {
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -20,7 +72,7 @@ function ClanWarsPage() {
         <h1 className="page-h1 mt-1">Clan Wars</h1>
         <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
           The minigame. Not a login. Two chat-channels walk through a purple portal and
-          agree the terms. The wiki owns the current maps.
+          agree the terms. Stills from the wikis and the Classic wilderness that came first.
         </p>
         <p className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-sm">
           <a
@@ -49,7 +101,28 @@ function ClanWarsPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
+      <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
+        <section>
+          <h2 className="section-h2 mb-3 text-center">The rooms</h2>
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SHOTS.map((shot) => (
+              <li key={shot.src} className="overflow-hidden rounded-md border border-line bg-raised">
+                <StillPhoto
+                  src={shot.src}
+                  alt={`${shot.name}, ${shot.era}`}
+                  className="aspect-[5/3] w-full bg-[#1a1612] object-cover"
+                />
+                <p className="px-3 pt-2 text-sm text-fg">{shot.name}</p>
+                <p className="px-3 text-[11px] text-parchment">{shot.era}</p>
+                <p className="px-3 pb-3 text-[12px] text-muted">{shot.note}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-center text-[11px] text-faint">
+            Identification stills from official wiki File pages and the Classic archive on this origin.
+          </p>
+        </section>
+
         <section>
           <h2 className="section-h2">What it is</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -128,6 +201,16 @@ function ClanWarsPage() {
         </section>
 
         <section>
+          <h2 className="section-h2">Classic</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            RuneScape Classic never got the purple portal. Clans walked the Wilderness
+            and Edgeville ditch. The stills above are that walk. The minigame arrived
+            10 December 2007 on the main client. Worlds are closed. The letters still
+            remember the bag.
+          </p>
+        </section>
+
+        <section>
           <h2 className="section-h2">How to not donate the hour</h2>
           <ol className="mt-3 space-y-2 text-sm text-muted">
             <li>1. Read the terms. Food off is a different fight than food on.</li>
@@ -149,3 +232,4 @@ function ClanWarsPage() {
     </div>
   );
 }
+
