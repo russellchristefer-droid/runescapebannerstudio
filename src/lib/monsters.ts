@@ -23,7 +23,7 @@ export function monsterStillSrc(row: Pick<Monster, "edition" | "slug">) {
   const game = row.edition === "OSRS" ? "osrs" : "rs3";
   const slug = row.slug.replace(/-/g, "");
   const file = slug === "warpedterrobird" ? "warpedterrorbird" : slug;
-  return `/stills/${game}/beast-${file}.jpg?v=9`;
+  return `/stills/${game}/beast-${file}.jpg?v=10`;
 }
 
 export function monsterHasStill(row: Pick<Monster, "edition" | "slug">) {
@@ -107,6 +107,12 @@ const MONSTER_LINE: Record<string, string> = {
   "rs3-cockroach": "Stronghold cellar. Then leave.",
   "rs3-mightybanshee": "Heavier scream. Earmuffs.",
   "rs3-glacor": "The slayer glacor. Arch-Glacor stays on Bosses.",
+  "osrs-giantbat": "First room under the guild.",
+  "osrs-pitscorpion": "Poison in the basement. Sip first.",
+  "osrs-shadowwarrior": "Deep under the guild. Left half is the old story.",
+  "rs3-giantbat": "First room under the guild.",
+  "rs3-pitscorpion": "Poison in the basement. Sip first.",
+  "rs3-shadowwarrior": "Deep under the guild. Left half is the old story.",
 };
 
 export function sisterMonster(row: Monster) {
@@ -174,6 +180,9 @@ export const MONSTERS: Monster[] = [
   { id: "osrs-blackdragon", slug: "black-dragon", name: "Black dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "Heavier dragon. Antifire. KBD stays on Bosses. This sheet is the task.", wiki: osrsWiki("Black_dragon"), still: "", placeId: "osrstav" },
   { id: "osrs-reddragon", slug: "red-dragon", name: "Red dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Brimhaven dungeon, Myths' Guild", hunt: "Antifire. Protect Magic if you idle. Brimhaven is the old room. The isle is a trip. KBD stays on Bosses.", wiki: osrsWiki("Red_dragon"), still: "" },
   { id: "osrs-cavekraken", slug: "cave-kraken", name: "Cave kraken", edition: "OSRS", kind: "monster", slayer: true, where: "Kraken Cove", gate: "Slayer", hunt: "The task tentacles. The boss Kraken is on Bosses. Do not mix the two rooms.", wiki: osrsWiki("Cave_kraken"), still: "" },
+  { id: "osrs-giantbat", slug: "giant-bat", name: "Giant bat", edition: "OSRS", kind: "monster", where: "Legends' Guild dungeon", hunt: "First room under the guild. Melee. Cape of legends is the door. Learn the click, then the scorpions.", wiki: osrsWiki("Giant_bat"), still: "" },
+  { id: "osrs-pitscorpion", slug: "pit-scorpion", name: "Pit scorpion", edition: "OSRS", kind: "monster", where: "Legends' Guild dungeon", hunt: "Poison in the basement. Antipoison before the first hit. Not a slayer assignment.", wiki: osrsWiki("Pit_Scorpion"), still: "" },
+  { id: "osrs-shadowwarrior", slug: "shadow-warrior", name: "Shadow warrior", edition: "OSRS", kind: "monster", slayer: true, where: "Legends' Guild dungeon", hunt: "The deep room under the guild. Left half of the shield is the old story. Confirm the live drop. Melee. Protect as the page says.", wiki: osrsWiki("Shadow_warrior"), still: "" },
 
   { id: "rs3-goblin", slug: "goblin", name: "Goblin", edition: "RS3", kind: "monster", where: "Goblin Village", hunt: "Yard melee on the RuneScape client. Learn the click. Then leave.", wiki: rs3Wiki("Goblin"), still: "/locations/goblin.jpg", placeId: "goblin" },
   { id: "rs3-cow", slug: "cow", name: "Cow", edition: "RS3", kind: "monster", where: "Lumbridge field", hunt: "Melee in the rebuilt paddock. Hide is still the lesson. Leave the scythe home.", wiki: rs3Wiki("Cow"), still: "/stills/rs3/rs3-lumbridge-a.jpg", placeId: "lumbridge" },
@@ -241,6 +250,9 @@ export const MONSTERS: Monster[] = [
   { id: "rs3-cockroach", slug: "cockroach-soldier", name: "Cockroach soldier", edition: "RS3", kind: "monster", slayer: true, where: "Stronghold of Player Safety", hunt: "The cellar task. Learn the click. Then leave.", wiki: rs3Wiki("Cockroach_soldier"), still: "" },
   { id: "rs3-mightybanshee", slug: "mighty-banshee", name: "Mighty banshee", edition: "RS3", kind: "monster", slayer: true, where: "Pollnivneach Slayer Dungeon", gate: "Slayer — earmuffs", hunt: "Heavier scream. Earmuffs. Protect Magic. The wipe is a bare ear.", wiki: rs3Wiki("Mighty_banshee"), still: "" },
   { id: "rs3-glacor", slug: "glacor", name: "Glacor", edition: "RS3", kind: "monster", slayer: true, where: "Land of Snow", hunt: "The slayer glacor. Arch-Glacor stays on Bosses. Do not mix the two rooms.", wiki: rs3Wiki("Glacor"), still: "" },
+  { id: "rs3-giantbat", slug: "giant-bat", name: "Giant bat", edition: "RS3", kind: "monster", where: "Legends' Guild dungeon", hunt: "First room under the guild. Melee. Cape of legends is the door.", wiki: rs3Wiki("Giant_bat"), still: "" },
+  { id: "rs3-pitscorpion", slug: "pit-scorpion", name: "Pit scorpion", edition: "RS3", kind: "monster", where: "Legends' Guild dungeon", hunt: "Poison in the basement. Antipoison before the first hit.", wiki: rs3Wiki("Pit_Scorpion"), still: "" },
+  { id: "rs3-shadowwarrior", slug: "shadow-warrior", name: "Shadow warrior", edition: "RS3", kind: "monster", slayer: true, where: "Legends' Guild dungeon", hunt: "The deep room under the guild. Left half of the shield is the old story. Confirm the live drop.", wiki: rs3Wiki("Shadow_warrior"), still: "" },
 ];
 
 const NOTES: Record<string, { masters?: string; style?: string; watch?: string; slayerWiki?: string }> = {
