@@ -41,41 +41,43 @@ function SkillPage() {
           className="mx-auto h-24 w-24 object-contain"
         />
         <p className="mt-3 text-center text-[11px] text-muted">{game}</p>
-        <p className="mt-2 text-center text-[12px] text-faint">A paid hour is you on a call. This is the sheet. Wiki keeps the number.</p>
+        <p className="mt-2 text-center text-sm text-muted">
+          Early, mid, and late are rooms, not a promise. Rates move. Wiki keeps the hour. A paid coach is a call, not this page.
+        </p>
         <section className="mt-6">
           <h2 className="section-h2">Levels</h2>
-          <dl className="mt-3 divide-y divide-line/40 rounded-md border border-line">
-            <div className="grid grid-cols-[5.5rem_1fr] gap-3 px-3 py-2 text-sm">
-              <dt className="text-parchment">Early</dt>
-              <dd className="text-muted">{row.early}</dd>
+          <dl className="mt-3 space-y-4">
+            <div>
+              <h3 className="text-sm text-parchment">Early</h3>
+              <p className="mt-1 text-sm leading-relaxed text-muted">{row.early}</p>
             </div>
-            <div className="grid grid-cols-[5.5rem_1fr] gap-3 px-3 py-2 text-sm">
-              <dt className="text-parchment">Mid</dt>
-              <dd className="text-muted">{row.mid}</dd>
+            <div>
+              <h3 className="text-sm text-parchment">Mid</h3>
+              <p className="mt-1 text-sm leading-relaxed text-muted">{row.mid}</p>
             </div>
-            <div className="grid grid-cols-[5.5rem_1fr] gap-3 px-3 py-2 text-sm">
-              <dt className="text-parchment">Late</dt>
-              <dd className="text-muted">{row.late}</dd>
+            <div>
+              <h3 className="text-sm text-parchment">Late</h3>
+              <p className="mt-1 text-sm leading-relaxed text-muted">{row.late}</p>
             </div>
           </dl>
         </section>
         <section className="mt-6">
           <h2 className="section-h2">Wear</h2>
-          <p className="text-sm text-muted">{row.wear}</p>
+          <p className="text-sm leading-relaxed text-muted">{row.wear}</p>
         </section>
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <section>
             <h2 className="section-h2">Afk</h2>
-            <p className="text-sm text-muted">{row.afk}</p>
+            <p className="text-sm leading-relaxed text-muted">{row.afk}</p>
           </section>
           <section>
             <h2 className="section-h2">Fast</h2>
-            <p className="text-sm text-muted">{row.fast}</p>
+            <p className="text-sm leading-relaxed text-muted">{row.fast}</p>
           </section>
         </div>
         <section className="mt-6">
           <h2 className="section-h2">Watch</h2>
-          <p className="text-sm text-muted">{row.watch}</p>
+          <p className="text-sm leading-relaxed text-muted">{row.watch}</p>
         </section>
         <p className="mt-6 text-sm text-muted">
           <a href={row.wiki} target="_blank" rel="noopener noreferrer" className="text-parchment">
