@@ -4,7 +4,7 @@ import { GOD_SLUGS } from "./gods";
 export function godStill(god: God, edition: "OSRS" | "RS3"): string | undefined {
   const slug = GOD_SLUGS[god];
   const folder = edition === "OSRS" ? "osrs" : "rs3";
-  const path = `/stills/${folder}/god-${slug}.jpg?v=5`;
+  const path = `/stills/${folder}/god-${slug}.jpg?v=6`;
   return GOD_STILL_OK[`${folder}:${slug}`] ? path : undefined;
 }
 

@@ -21,6 +21,7 @@ export function PlaceCard({
   game,
   caption,
   wash,
+  field,
 }: {
   to: PlaceTo;
   params: { id: string } | { god: string };
@@ -31,6 +32,7 @@ export function PlaceCard({
   god?: string;
   caption?: string;
   wash?: string;
+  field?: boolean;
 }) {
   const alt = `${name} in ${game}`;
   const href = hrefFor(to, params);
@@ -48,8 +50,14 @@ export function PlaceCard({
             <StillPhoto
               src={src}
               alt={alt}
-              className="aspect-video w-full bg-surface object-cover"
-              style={wash ? { boxShadow: `inset 0 3px 0 0 ${wash}` } : undefined}
+              className={`aspect-video w-full object-cover ${field ? "object-contain" : "bg-surface"}`}
+              style={
+                field && wash
+                  ? { backgroundColor: wash }
+                  : wash
+                    ? { boxShadow: `inset 0 3px 0 0 ${wash}` }
+                    : undefined
+              }
               onError={() => setGone(true)}
             />
           )}

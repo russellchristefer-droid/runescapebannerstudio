@@ -42,6 +42,7 @@ function GodsIndex() {
               game={game}
               caption={godStillLine(name, edition)}
               wash={godWash(name)}
+              field
             />
           ))}
         </PlaceGrid>
