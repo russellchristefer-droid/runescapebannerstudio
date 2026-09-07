@@ -187,11 +187,6 @@ function HistoryPage() {
               craft. Raids and the weekly hour, on camera.
             </li>
             <li>
-              <span className="text-parchment">BlueIvy</span> — a name the street already
-              used. This desk will not invent a biography. The plaque is that the work was
-              public.
-            </li>
-            <li>
               <span className="text-parchment">25 Buttholes</span> — Old School on camera as
               sketches and as a pair of eyes in the wild. Chin hunters, gold-farmer walks,
               the ditch told as a joke that still knows the skull rule. The name is a banner.
