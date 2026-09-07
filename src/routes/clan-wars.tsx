@@ -48,10 +48,14 @@ const STRIP_DOORS = [
   { src: "/clan-wars/osrs-ffa-portal.png", name: "White — practice" },
   { src: "/clan-wars/more/osrs-portal-green.png", name: "Green — Ferox exit" },
   { src: "/clan-wars/more/osrs-portal-teal.png", name: "Teal — Ferox exit" },
-  { src: "/clan-wars/more/osrs-cw-red.png", name: "Red — Zamorak" },
-  { src: "/clan-wars/more/osrs-cw-blue.png", name: "Blue — Saradomin" },
   { src: "/clan-wars/more/rs3-rated-portal.png", name: "Rated door" },
   { src: "/clan-wars/more/rs3-ffa.png", name: "Grotto FFA" },
+] as const;
+
+const CASTLE_DOORS = [
+  { src: "/clan-wars/more/osrs-cw-portal.png", name: "The door", era: "Castle Wars", note: "West of Yanille. You pick a colour inside." },
+  { src: "/clan-wars/more/osrs-cw-blue.png", name: "Saradomin", era: "Blue portal", note: "The white castle. Bandages, not food." },
+  { src: "/clan-wars/more/osrs-cw-red.png", name: "Zamorak", era: "Red portal", note: "The dark castle. Twenty minutes." },
 ] as const;
 
 const ROOMS = [
@@ -91,6 +95,40 @@ function ShotStrip({ items }: { items: readonly { src: string; name: string }[] 
             />
           </div>
           <figcaption className="px-2 py-1 text-[11px] text-[#c6a45a]">{item.name}</figcaption>
+        </figure>
+      ))}
+    </div>
+  );
+}
+
+function StillGrid({
+  items,
+}: {
+  items: readonly { src: string; name: string; era?: string; note?: string }[];
+}) {
+  return (
+    <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
+      {items.map((item) => (
+        <figure
+          key={item.src}
+          className="overflow-hidden rounded-md border border-[#c6a45a]/35 bg-[#120e0a]"
+        >
+          <div className="flex h-36 items-center justify-center bg-[#0c0a08] px-2 md:h-44">
+            <img
+              src={item.src}
+              alt={item.name}
+              loading="lazy"
+              decoding="async"
+              className="max-h-32 w-full object-contain md:max-h-40"
+            />
+          </div>
+          <figcaption className="border-t border-[#c6a45a]/20 px-2 py-1.5">
+            <p className="text-[12px] text-[#efe4c8]">{item.name}</p>
+            {item.era ? (
+              <p className="text-[11px] tracking-[0.12em] text-[#c6a45a] uppercase">{item.era}</p>
+            ) : null}
+            {item.note ? <p className="mt-0.5 text-[11px] text-[#b7a989]">{item.note}</p> : null}
+          </figcaption>
         </figure>
       ))}
     </div>
@@ -218,7 +256,7 @@ function ClanWarsPage() {
               quiet, the wiki is the verdict.
             </li>
           </ul>
-          <ShotStrip items={STRIP_DOORS} />
+          <StillGrid items={STRIP_DOORS} />
         </section>
 
         <section>
@@ -238,6 +276,7 @@ function ClanWarsPage() {
             Castle Wars is capture the flag. Saradomin and Zamorak west of Yanille.
             Twenty minutes. Bandages, not food. Clan Wars never asked for a flag.
           </p>
+          <StillGrid items={CASTLE_DOORS} />
           <h3 className="mt-5 mb-1 text-fg">10 December 2007 — the minigame</h3>
           <p className="text-sm leading-relaxed text-muted">
             Jagex named Clan Wars the day it pulled free PvP out of the main-client
