@@ -13,13 +13,17 @@ Two remotes. Public is what people clone. Private is the backup I actually trust
 
 On the desk you pick a still (or upload one), crop it to Twitch 1200×480 or YouTube 1280×720, zoom and pan the picture, drop skills and partyhats, and download a JPEG. Levels sit next to the icons in RS Chat Bold. Fit plate / Room / Desk change how tight the pack is. Hiscores fill levels when the boards answer.
 
-Towns, gods, and bosses keep two canons. PvP is Old School only. `/edit` is a local clip bench: In / Out, mute, gain, fades, Save as WebM. Streamer and YouTuber halls list names even when live check is off. History ends in a small Legends’ Guild desk — public names only.
+Towns, gods, and bosses keep two canons. The bestiary is slayer rooms only — RuneScape has its own stills. PvP is Old School only. `/edit` is a local clip bench: upload a video, mark In / Out, mute, gain, fades, Save as WebM. Stills stay on the desk.
+
+Streamer and YouTuber halls list names even when live check is off. History ends in a small Legends’ Guild desk (first room on the left): public names only — Zezima, The Old Nite, 25 Buttholes, and the rest of that sill.
 
 ## How the code is split
 
 Old School and RuneScape 3 are different games. Different stills, different street lines, different skill packs.
 
 Plate type is yellow Chat Bold with a black edge. Random stills come from `public/era/`, not a live Wayback scrape. Hiscores and live badges fail quietly. Clip Save records the Web Audio graph so mute actually lands in the file.
+
+Town street lines flip every five minutes. Bob’s word of the day flips every thirty seconds.
 
 Choices are written down in [docs/adr/](docs/adr/). One-page map: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Security colours on GitHub are Old School partyhats, not status dots — [SECURITY.md](SECURITY.md).
 
