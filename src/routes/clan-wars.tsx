@@ -20,7 +20,7 @@ const STRIP_WHAT = [
 ] as const;
 
 const STRIP_OSRS = [
-  { src: "/clan-wars/osrs-edgeville-shot.png", name: "Edgeville" },
+  { src: "/locations/catherby.jpg", name: "Catherby" },
   { src: "/locations/yanille.jpg", name: "Yanille" },
   { src: "/locations/ardougne.jpg", name: "Ardougne" },
 ] as const;
@@ -85,7 +85,7 @@ const ROOMS = [
     place: "Edgeville",
     era: "Old School",
     note: "The last town before you mean it.",
-    srcs: ["/locations/edgeville.jpg"],
+    srcs: ["/clan-wars/osrs-edgeville-shot.png"],
   },
 ] as const;
 
