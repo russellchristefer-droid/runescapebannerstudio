@@ -193,11 +193,9 @@ function HistoryPage() {
               The work is the VOD.
             </li>
             <li>
-              <span className="text-parchment">Clan Wars</span> — not a login. The room
-              north of Ferox on Old School, Gamers’ Grotto on the main client. Safe PvP:
-              the bag stays, the pile still happens. Official F2P chaos still uses a
-              numbered world. Public masses have been on camera at five hundred a side.
-              The wiki owns the portals. The VOD owns who walked in.
+              <span className="text-parchment">ClanWars</span> — a login on the Old School
+              boards, not the Ferox portal. Maxed skills the hiscores will still print.
+              The minigame borrowed the words. This kettle means the account.
             </li>
           </ul>
           <p className="mt-4 text-[11px] text-faint">
@@ -212,8 +210,8 @@ function HistoryPage() {
           <a href="https://runescape.wiki/" target="_blank" rel="noopener noreferrer">
             RuneScape wiki
           </a>
-          <a href="https://oldschool.runescape.wiki/w/Clan_Wars" target="_blank" rel="noopener noreferrer">
-            Clan Wars
+          <a href="https://secure.runescape.com/m=hiscore_oldschool/hiscorepersonal?user1=ClanWars" target="_blank" rel="noopener noreferrer">
+            ClanWars
           </a>
           <Link to="/">Desk</Link>
           <Link to="/chronicle">Chronicle</Link>
