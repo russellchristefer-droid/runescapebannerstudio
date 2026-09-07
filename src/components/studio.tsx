@@ -90,6 +90,9 @@ export function Studio() {
   const [skillPlace, setSkillPlace] = useState<"name" | "bottom" | "top">("name");
   const [skillSize, setSkillSize] = useState(saved.skillSize ?? 40);
   const [packFit, setPackFit] = useState<"fit" | "room" | "desk">("desk");
+  const [stillZoom, setStillZoom] = useState(1);
+  const [stillPan, setStillPan] = useState({ x: 0, y: 0 });
+  const stillImgRef = useRef<HTMLImageElement | null>(null);
   const [skillX] = useState<number | null>(null);
   const [skillY] = useState<number | null>(null);
   const [skillPicks, setSkillPicks] = useState<
@@ -151,7 +154,7 @@ export function Studio() {
   const boxesRef = useRef<{ id: string; x: number; y: number; w: number; h: number }[]>([]);
   const dragRef = useRef<{
     id: string;
-    kind: "skill" | "text";
+    kind: "skill" | "text" | "still";
     x0: number;
     y0: number;
     px: number;
@@ -294,8 +297,24 @@ export function Studio() {
     deskStillSrc ??
     (viewLocked ? (view === "b" && location.viewB ? location.viewB : location.viewA) : safeCycle);
   useEffect(() => {
-    setPlateReady(false);
+    setStillZoom(1);
+    setStillPan({ x: 0, y: 0 });
   }, [sceneSrc]);
+
+  useEffect(() => {
+    const img = stillImgRef.current;
+    if (!img?.naturalWidth) return;
+    const cache = stillCacheRef.current ?? document.createElement("canvas");
+    cache.width = size.width;
+    cache.height = size.height;
+    const c = cache.getContext("2d", { alpha: false });
+    if (!c) return;
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = "high";
+    coverStill(c, img, size.width, size.height, stillZoom, stillPan.x, stillPan.y);
+    stillCacheRef.current = cache;
+    requestPaint();
+  }, [stillZoom, stillPan, size.width, size.height]);
 
   function clearStampsAndText() {
     setSkillPicks([]);
@@ -639,7 +658,7 @@ export function Studio() {
   const copyRef = useRef({ streamer, clan, handle, tagline, world, discord, grind, edition, skillPlace, skillSize, skillX, skillY, god: location.god, caps: bannerCaps });
   copyRef.current = { streamer, clan, handle, tagline, world, discord, grind, edition, skillPlace, skillSize, skillX, skillY, god: location.god, caps: bannerCaps };
 
-  function coverStill(ctx: CanvasRenderingContext2D, img: CanvasImageSource, w: number, h: number) {
+  function coverStill(ctx: CanvasRenderingContext2D, img: CanvasImageSource, w: number, h: number, zoom = 1, panX = 0, panY = 0) {
     const src = img as { width?: number; height?: number; naturalWidth?: number; naturalHeight?: number };
     const sw = Math.max(1, src.naturalWidth ?? src.width ?? w);
     const sh = Math.max(1, src.naturalHeight ?? src.height ?? h);
@@ -656,7 +675,14 @@ export function Studio() {
       th = sw / dstRatio;
       sy = (sh - th) / 2;
     }
-    ctx.drawImage(img, sx, sy, tw, th, 0, 0, w, h);
+    const z = Math.min(3, Math.max(1, zoom));
+    const tw2 = tw / z;
+    const th2 = th / z;
+    sx += (tw - tw2) / 2 - (panX / Math.max(1, w)) * tw;
+    sy += (th - th2) / 2 - (panY / Math.max(1, h)) * th;
+    sx = Math.max(0, Math.min(sw - tw2, sx));
+    sy = Math.max(0, Math.min(sh - th2, sy));
+    ctx.drawImage(img, sx, sy, tw2, th2, 0, 0, w, h);
   }
 
   function paintNow() {
@@ -878,8 +904,9 @@ export function Studio() {
       if (!c) return;
       c.imageSmoothingEnabled = true;
       c.imageSmoothingQuality = "high";
-      coverStill(c, img, size.width, size.height);
+      coverStill(c, img, size.width, size.height, stillZoom, stillPan.x, stillPan.y);
       stillCacheRef.current = cache;
+      stillImgRef.current = img;
       requestPaint();
       setStatus("Ready");
     }
@@ -1231,6 +1258,10 @@ export function Studio() {
             alt=""
             src={sceneSrc || "/Falador.png"}
             className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            style={{
+              transform: `translate(${(stillPan.x / Math.max(1, size.width)) * 100}%, ${(stillPan.y / Math.max(1, size.height)) * 100}%) scale(${stillZoom})`,
+              transformOrigin: "center center",
+            }}
             decoding="async"
             onLoad={(e) => {
               e.currentTarget.dataset.ok = e.currentTarget.currentSrc;
@@ -1325,6 +1356,13 @@ export function Studio() {
                 applyStampScale(skillId, next);
                 return;
               }
+              e.preventDefault();
+              setStillZoom((z) => {
+                const next = e.shiftKey
+                  ? Math.min(3, Math.max(1, z + (e.deltaY > 0 ? -0.1 : 0.1)))
+                  : Math.min(3, Math.max(1, z * factor));
+                return Math.round(next * 100) / 100;
+              });
             }}
             onPointerDown={(e) => {
               const canvas = canvasRef.current;
@@ -1463,6 +1501,17 @@ export function Studio() {
               }
               setPickedSkill(null);
               setPickedText(null);
+              setGrabbing(true);
+              draggingRef.current = true;
+              dragRef.current = {
+                id: "still",
+                x0: stillPan.x,
+                y0: stillPan.y,
+                px: e.clientX,
+                py: e.clientY,
+                kind: "still",
+              };
+              (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
             }}
             onPointerMove={(e) => {
               const canvas = canvasRef.current;
@@ -1507,6 +1556,18 @@ export function Studio() {
               const rectScaleY = size.height / Math.max(1, rect.height);
               const nx = drag.x0 + (e.clientX - drag.px) * rectScaleX;
               const ny = drag.y0 + (e.clientY - drag.py) * rectScaleY;
+              if (drag.kind === "still") {
+                const z = Math.max(1, stillZoom);
+                const maxX = (size.width * (1 - 1 / z)) / 2;
+                const maxY = (size.height * (1 - 1 / z)) / 2;
+                const nx = drag.x0 + (e.clientX - drag.px) * (size.width / Math.max(1, rect.width));
+                const ny = drag.y0 + (e.clientY - drag.py) * (size.height / Math.max(1, rect.height));
+                setStillPan({
+                  x: Math.max(-maxX, Math.min(maxX, nx)),
+                  y: Math.max(-maxY, Math.min(maxY, ny)),
+                });
+                return;
+              }
               if (drag.kind === "text") {
                 textPosRef.current = {
                   ...textPosRef.current,
@@ -1741,6 +1802,30 @@ export function Studio() {
             onClick={() => fileRef.current?.click()}
           >
             Upload still
+          </button>
+          <button
+            type="button"
+            className="h-8 min-h-11 rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"
+            onClick={() => setStillZoom((z) => Math.min(3, Math.round((z + 0.15) * 100) / 100))}
+          >
+            Still +
+          </button>
+          <button
+            type="button"
+            className="h-8 min-h-11 rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"
+            onClick={() => setStillZoom((z) => Math.max(1, Math.round((z - 0.15) * 100) / 100))}
+          >
+            Still −
+          </button>
+          <button
+            type="button"
+            className="h-8 min-h-11 rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"
+            onClick={() => {
+              setStillZoom(1);
+              setStillPan({ x: 0, y: 0 });
+            }}
+          >
+            Reset still
           </button>
           <button
             type="button"
