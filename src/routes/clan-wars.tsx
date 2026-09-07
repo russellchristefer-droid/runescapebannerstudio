@@ -43,6 +43,17 @@ const STRIP_WIN = [
   { src: "/locations/osrsedge.jpg", name: "Edgeville road" },
 ] as const;
 
+const STRIP_DOORS = [
+  { src: "/clan-wars/more/osrs-portal-magenta.png", name: "Purple — the war" },
+  { src: "/clan-wars/osrs-ffa-portal.png", name: "White — practice" },
+  { src: "/clan-wars/more/osrs-portal-green.png", name: "Green — Ferox exit" },
+  { src: "/clan-wars/more/osrs-portal-teal.png", name: "Teal — Ferox exit" },
+  { src: "/clan-wars/more/osrs-cw-red.png", name: "Red — Zamorak" },
+  { src: "/clan-wars/more/osrs-cw-blue.png", name: "Blue — Saradomin" },
+  { src: "/clan-wars/more/rs3-rated-portal.png", name: "Rated door" },
+  { src: "/clan-wars/more/rs3-ffa.png", name: "Grotto FFA" },
+] as const;
+
 const ROOMS = [
   {
     place: "Wilderness",
@@ -177,6 +188,40 @@ function ClanWarsPage() {
         </section>
 
         <section>
+          <h2 className="section-h2">The doors</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            Colour is the contract. Read it before you step.
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted">
+            <li>
+              <span className="text-fg">Purple / magenta.</span> The arranged war. Captains
+              already agreed the terms. Two-minute wall. This is the match.
+            </li>
+            <li>
+              <span className="text-fg">White.</span> Free-for-all. Practice. Stats restore.
+              No terms. Do not treat it like a scheduled fight.
+            </li>
+            <li>
+              <span className="text-fg">Green and teal.</span> Ferox exits. They take you out
+              of the pocket. They are not the war.
+            </li>
+            <li>
+              <span className="text-fg">Red and blue at Castle Wars.</span> Zamorak and
+              Saradomin. That is the flag game west of Yanille, not this minigame.
+            </li>
+            <li>
+              <span className="text-fg">Red on RuneScape FFA.</span> Dangerous. Items drop.
+              Protect Item is the keep. White on that client is the safe FFA.
+            </li>
+            <li>
+              <span className="text-fg">Rated door.</span> Clan Camp sheet. If the lobby is
+              quiet, the wiki is the verdict.
+            </li>
+          </ul>
+          <ShotStrip items={STRIP_DOORS} />
+        </section>
+
+        <section>
           <h2 className="section-h2">History</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             Three rooms used the same words. Veterans keep them unmingled. Dates are from
@@ -220,8 +265,11 @@ function ClanWarsPage() {
         <section>
           <h2 className="section-h2">Old School</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Lives in Ferox Enclave. A captain challenges a captain. Two-minute wall.
-            One hundred a side. Twelve maps. Death is the jail. The bag stays.
+            Lives in Ferox Enclave — a safe pocket of the Wilderness. Ring of dueling,
+            minigame teleport, or a waka canoe. Edgeville is the last ordinary town on
+            the walk north. Yanille is west-country; the Castle Wars door sits past it,
+            not inside Ferox. Giants’ Plateau was the first Old School house. It is not
+            the house anymore.
           </p>
           <ShotStrip items={STRIP_OSRS} />
         </section>
@@ -229,8 +277,10 @@ function ClanWarsPage() {
         <section>
           <h2 className="section-h2">RuneScape</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Lives in Gamers’ Grotto. Safe unless the terms tick unsafe. White portal
-            is practice. Red portal is the tax. Rated Clan Wars is a different lobby.
+            Lives in Gamers’ Grotto, a cave north of Falador. Same idea: captain to
+            captain. The field after the purple portal is the war. Falador east bank
+            was the merch lawn — people stood there to trade, not to pile. Burthorpe
+            is the next hill, not the Grotto.
           </p>
           <ShotStrip items={STRIP_RS3} />
         </section>
