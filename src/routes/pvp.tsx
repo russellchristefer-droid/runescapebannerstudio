@@ -32,7 +32,7 @@ function PvpPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">PvP</h1>
         <p className="mt-1 text-center text-sm text-parchment">
-          Old School. Risk is the tax. What each method is.
+          Old School. Risk is the tax. Freeze first. Eat the incoming. Wiki keeps the skull.
         </p>
         <p className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-[12px] text-muted">
           {PVP_SOURCES.map((src) => (

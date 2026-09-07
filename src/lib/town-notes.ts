@@ -10,7 +10,7 @@ const SHARED: Record<string, TownNote> = {
     title: "Lumbridge",
     region: "Misthalin · RuneScape",
     lore: [
-      "You already know the courtyard. Duke Horacio holds the duchy on the Lum. Chapel west, castle on the hill, mill on the water.",
+      "You already know the courtyard. Duke Horacio holds the duchy on the Lum. Chapel west, castle on the hill, mill on the water. The first bank is still a lesson.",
       "The Battle of Lumbridge tore the meadow when Zamorak and Saradomin made landfall. The crater is current geography on this client, not a rumour.",
       "Adventurers still wake in the yard. The river is the other wall. Guards on the bridge treat the crossing as work.",
       "The church bell and the crater rim share a town. Shops try to forget a war the grass did not.",

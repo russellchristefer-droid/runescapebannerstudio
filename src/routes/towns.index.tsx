@@ -78,7 +78,7 @@ function TownIndex() {
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Towns</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          Two grammars. Same name is not the same street. Pick a client first.
+          Two grammars. Same name is not the same street. Pick a client first. The guard on the card talks for that game only.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <div className="mt-3">

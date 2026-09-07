@@ -2058,12 +2058,12 @@ export function Studio() {
         <article className="mt-3 px-1 text-xs text-muted">
           <h2 className="section-h2">How to use</h2>
           <ol className="list-decimal space-y-1 pl-4">
-            <li>Pick a street you know.</li>
-            <li>Twelve letters. Same rule as the client.</li>
-            <li>Stamp what you wear. The rest can stay in the tray.</li>
-            <li>Wheel to scale. Drag to place.</li>
-            <li>Pixels are the platform’s. Match them.</li>
-            <li>Pete writes the JPEG. That is the work.</li>
+            <li>Pick a street you have actually walked.</li>
+            <li>Twelve letters. Same rule as the client. A PIN is not a name.</li>
+            <li>Stamp what you wear this trip. The rest can stay in the tray.</li>
+            <li>Wheel to scale. Drag the pack. The name sits over the iron you placed.</li>
+            <li>Pixels are the platform’s. Match the chip before you title the stream.</li>
+            <li>Pete writes the JPEG. That is the work. The wiki keeps the hour.</li>
           </ol>
           <p className="mt-2 text-[11px] text-faint">Clips are on the Video editor page.</p>
         </article>

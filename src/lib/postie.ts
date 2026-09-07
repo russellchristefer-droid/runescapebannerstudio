@@ -17,6 +17,10 @@ export const POSTIE_LINES = [
   "Falador white walls. Still not a safe drop for a parcel.",
   "Zanaris has a postbox. Fairies write small.",
   "I am a gnome. The bag is not.",
+  "Entrana mail is light. You already banked the blade.",
+  "Wilderness postage costs a skull if you read the address wrong.",
+  "Bob keeps the sill. I keep the bag. We do not swap jobs.",
+  "Classic worlds are closed. The letters still remember the walk.",
 ] as const;
 
 export function postieLineAt(now = Date.now()) {
@@ -32,6 +36,9 @@ export const PETE_LINES = [
   "Nothing interesting happens. He posted anyway.",
   "Closed worlds. Open Download.",
   "You have reached a higher Pete.",
+  "He counted the letters. He did not count the risk.",
+  "A still is a window. A JPEG is the work.",
+  "Falador holds the plate when a file goes missing. Pride does not.",
 ] as const;
 
 export function peteThreshold(level: number) {

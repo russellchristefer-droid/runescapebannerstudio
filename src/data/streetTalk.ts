@@ -46,12 +46,12 @@ const OSRS: Record<string, string[]> = {
     "Porter: Lletya was the camp. This is the city.",
   ],
   osrscani: [
-    "Innkeep: Hair of the Dog. Humans without leave are prey.",
-    "Tanner: Slayer Tower is upstairs. The village is the door.",
-    "Guard: Salve is behind you. Keep walking.",
+    "Innkeep: Hair of the Dog. Humans without leave are prey. The ale is not a pass.",
+    "Tanner: Slayer Tower is upstairs. The village is the door. Do not start the task in the tap.",
+    "Guard: Salve is behind you. Keep walking. Moonrise is a local ordinance.",
     "Temple acolyte: Zamorak’s house. I do not sell a later campaign.",
-    "Wolf on the lane: Canifis keeps its voice down after dark.",
-    QUIET,
+    "Wolf on the lane: Canifis keeps its voice down after dark. So should you.",
+    "Quiet on this ditch.",
   ],
   osrscath: [
     "Fisher: the spots and the range. You already know the dock.",

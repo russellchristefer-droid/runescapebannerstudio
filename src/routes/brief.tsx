@@ -21,14 +21,14 @@ function BriefPage() {
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Brief</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted">What this desk is, what it does, what it does not.</p>
+        <p className="mt-2 max-w-2xl text-sm text-muted">What this desk is. What it stamps. What it will not pretend to be.</p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main id="content" className="prose-desk mx-auto flex max-w-3xl flex-col gap-6 px-5 py-6 text-sm text-muted md:px-8">
         <section>
           <h2 className="section-h2">What it is</h2>
           <p>
-            RuneScape Banner Studio is an independent fan desk in the browser. It is not Jagex, not a game client, and not an official overlay. Old School RuneScape and RuneScape stay two games. Twitch categories are Old School RuneScape and RuneScape.
+            RuneScape Banner Studio is an independent fan desk in the browser. It is not Jagex, not a game client, and not an official overlay. Old School RuneScape and RuneScape stay two games — two canons, two inventories, two streets. Twitch categories are Old School RuneScape and RuneScape. Wiki keeps the hour. This desk keeps the plate.
           </p>
         </section>
         <section>
