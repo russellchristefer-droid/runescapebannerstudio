@@ -11,7 +11,7 @@ export function UtcClock() {
     timeZone: "UTC",
   });
   return (
-    <p className="mt-1 font-mono text-[10px] tabular-nums text-faint">
+    <p className="mt-1 font-mono text-[10px] tabular-nums text-faint" suppressHydrationWarning>
       {label} · {pad(date.getUTCHours())}:{pad(date.getUTCMinutes())}:{pad(date.getUTCSeconds())} UTC
     </p>
   );
