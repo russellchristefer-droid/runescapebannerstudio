@@ -72,18 +72,22 @@ TWITCH_APP_TOKEN=
 YOUTUBE_API_KEY=
 ```
 
-## One-file Python sidecar
+## Python sidecars (download these files)
 
-The website is still Node. The Python file lives at the repo root:
+The website is still Node. These are separate files if you only have Python.
 
-**[banner_studio.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/banner_studio.py)**
+| File | Open | Raw download |
+| --- | --- | --- |
+| Still compositor | [still_desk.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/still_desk.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/still_desk.py) |
+| Clip bench | [clip_bench.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/clip_bench.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/clip_bench.py) |
+| Serve public/ | [banner_studio.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/banner_studio.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/banner_studio.py) |
 
 ```bash
-python3 banner_studio.py serve
-python3 banner_studio.py compose --still public/Falador.png --name Christefer
+python3 still_desk.py --still public/Falador.png --name Christefer --size 1200x480
+python3 clip_bench.py your-clip.mp4 --in 2 --out 8 --size 1280x720
 ```
 
-`compose` needs Pillow (`python3 -m pip install pillow`). `serve` is stdlib only and just hosts `public/`.
+`still_desk.py` needs Pillow. `clip_bench.py` needs ffmpeg on PATH. Neither file is the live grok.me desk.
 
 ## Legal
 
