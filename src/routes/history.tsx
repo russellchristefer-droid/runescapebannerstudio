@@ -151,6 +151,13 @@ function HistoryPage() {
               way the boards could see. The name became a tense.
             </li>
             <li>
+              <span className="text-parchment">The Old Nite</span> — on the early boards with
+              Zezima and Lilyuffie88 when rank one was still a street argument. Played from
+              2002. The account stayed on friends lists after 2006. Old School put a pub under
+              that name in Ferox Enclave in July 2020. The plaque is the room and the
+              hiscores, not a eulogy this desk will invent.
+            </li>
+            <li>
               <span className="text-parchment">I Mahatma I</span> — an early public max on the
               main client when that word still meant a year of looking. The plaque is the
               account, not a rumour about the person.
