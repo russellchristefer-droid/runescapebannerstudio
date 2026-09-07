@@ -82,24 +82,38 @@ const ROOMS = [
   },
 ] as const;
 
+function doorInk(label: string) {
+  const t = label.toLowerCase();
+  if (t.includes("purple") || t.includes("magenta") || t.includes("the war")) return "#9b4dff";
+  if (t.includes("white")) return "#efe4c8";
+  if (t.includes("green")) return "#3d9b5c";
+  if (t.includes("teal")) return "#3aa8a8";
+  if (t.includes("saradomin") || t.includes("blue")) return "#4a7ec8";
+  if (t.includes("zamorak") || (t.includes("red") && !t.includes("rated"))) return "#9b1b1b";
+  if (t.includes("rated") || t.includes("gold") || t.includes("exit")) return "#c6a45a";
+  return "#c6a45a";
+}
+
 function ShotStrip({ items }: { items: readonly { src: string; name: string }[] }) {
   return (
     <div className="mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2">
       {items.map((item) => (
         <figure
           key={item.src}
-          className="w-[220px] shrink-0 snap-start overflow-hidden rounded-md border border-[#c6a45a]/35 bg-[#120e0a]"
+          className="w-[240px] shrink-0 snap-start overflow-hidden rounded-md border bg-[#120e0a]"
+          style={{ borderColor: "rgba(198,164,90,0.55)" }}
         >
-          <div className="flex h-40 items-center justify-center bg-[#0c0a08] px-2">
+          <div className="h-0.5 bg-[#c6a45a]" aria-hidden="true" />
+          <div className="flex h-44 items-center justify-center bg-[#0c0a08] px-2">
             <img
               src={item.src}
               alt={item.name}
               loading="lazy"
               decoding="async"
-              className="max-h-36 w-full object-contain"
+              className="max-h-40 w-full object-contain"
             />
           </div>
-          <figcaption className="px-2 py-1 text-[11px] text-[#c6a45a]">{item.name}</figcaption>
+          <figcaption className="px-2 py-1.5 text-[11px] tracking-[0.08em] text-[#c6a45a] uppercase">{item.name}</figcaption>
         </figure>
       ))}
     </div>
@@ -116,15 +130,17 @@ function StillGrid({
       {items.map((item) => (
         <figure
           key={item.src}
-          className="overflow-hidden rounded-md border border-[#c6a45a]/35 bg-[#120e0a]"
+          className="overflow-hidden rounded-md border bg-[#120e0a]"
+          style={{ borderColor: doorInk(item.name) }}
         >
-          <div className="flex h-36 items-center justify-center bg-[#0c0a08] px-2 md:h-44">
+          <div className="h-0.5" style={{ background: doorInk(item.name) }} aria-hidden="true" />
+          <div className="flex h-40 items-center justify-center bg-[#0c0a08] px-2 md:h-48">
             <img
               src={item.src}
               alt={item.name}
               loading="lazy"
               decoding="async"
-              className="max-h-32 w-full object-contain md:max-h-40"
+              className="max-h-36 w-full object-contain md:max-h-44"
             />
           </div>
           <figcaption className="border-t border-[#c6a45a]/20 px-2 py-1.5">
@@ -150,8 +166,9 @@ function RoomDeck({
   const src = srcs[i] ?? srcs[0];
   const n = srcs.length;
   return (
-    <figure className="overflow-hidden rounded-md border border-[#c6a45a]/40 bg-[#120e0a]">
-      <div className="relative flex min-h-[260px] items-center justify-center bg-[#0c0a08] md:min-h-[320px]">
+    <figure className="overflow-hidden rounded-md border border-[#c6a45a]/70 bg-[#120e0a] shadow-[inset_0_0_0_1px_rgba(198,164,90,0.15)]">
+      <div className="h-0.5 bg-[#c6a45a]" aria-hidden="true" />
+      <div className="relative flex min-h-[280px] items-center justify-center bg-[#0c0a08] md:min-h-[340px]">
         <img src={src} alt={`${place}, ${era}`} className="max-h-[340px] w-full object-contain md:max-h-[400px]" />
         {n > 1 ? (
           <>
@@ -194,6 +211,9 @@ function ClanWarsPage() {
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <h1 className="page-h1 mt-1">Clan Wars</h1>
+        <p className="mt-2 mx-auto max-w-2xl text-center text-[11px] tracking-[0.22em] text-[#c6a45a] uppercase">
+          The hall
+        </p>
         <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
           The minigame. Not a login. Two chats walk through a purple portal and agree the
           terms. The ditch came first. The flag game is a different map.
@@ -275,35 +295,35 @@ function ClanWarsPage() {
             Three rooms used the same words. Veterans keep them unmingled. Dates are from
             the live wikis.
           </p>
-          <h3 className="mt-5 mb-1 text-fg">Before the name</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Before the name</h3>
           <p className="text-sm leading-relaxed text-muted">
             Classic and early RS2 clans walked north of Edgeville and fought in multi.
             That was a clan war because two chats agreed to stand on the same ditch.
             The bag was live. The skull was live. Worlds are closed on Classic.
           </p>
-          <h3 className="mt-5 mb-1 text-fg">13 December 2004 — the flag</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 December 2004 — the flag</h3>
           <p className="text-sm leading-relaxed text-muted">
             Castle Wars is capture the flag. Saradomin and Zamorak west of Yanille.
             Twenty minutes. Bandages, not food. Clan Wars never asked for a flag.
           </p>
           <StillGrid items={CASTLE_DOORS} />
-          <h3 className="mt-5 mb-1 text-fg">10 December 2007 — the minigame</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">10 December 2007 — the minigame</h3>
           <p className="text-sm leading-relaxed text-muted">
             Jagex named Clan Wars the day it pulled free PvP out of the main-client
             Wilderness. First house sat in the wild. Captains picked terms. Purple
             portal. Two-minute wall.
           </p>
-          <h3 className="mt-5 mb-1 text-fg">1 February 2011 — the Grotto</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">1 February 2011 — the Grotto</h3>
           <p className="text-sm leading-relaxed text-muted">
             Free trade and the old Wilderness came back. Clan Wars moved into Gamers’
             Grotto, north of Falador. The old house became the Bone Yard.
           </p>
-          <h3 className="mt-5 mb-1 text-fg">19 June 2014 — Old School</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">19 June 2014 — Old School</h3>
           <p className="text-sm leading-relaxed text-muted">
             A priority poll put the minigame on the 2007-era client. First house:
             Giants’ Plateau. Oddskull arrived 16 April 2015.
           </p>
-          <h3 className="mt-5 mb-1 text-fg">16 July 2020 — Ferox</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">16 July 2020 — Ferox</h3>
           <p className="text-sm leading-relaxed text-muted">
             The Old School room moved into Ferox Enclave. Still Wilderness level.
             Still a safe pocket. These two doors are the current Clan Wars portals.
