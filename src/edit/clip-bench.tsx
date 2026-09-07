@@ -1153,7 +1153,6 @@ export function ClipBench() {
             <div className="h-full bg-[#9b1b1b]" style={{ width: `${exportPct}%` }} />
           </div>
         ) : null}
-        <p className="text-[11px] text-faint">Space play · I / O marks · J / L skip · , . frames.</p>
       </div>
 
       {moreOpen ? (
