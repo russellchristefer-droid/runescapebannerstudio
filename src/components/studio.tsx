@@ -454,47 +454,15 @@ export function Studio() {
     }
   }
 
-  function packScaleMax(count: number) {
-    const m = plateMetrics(size.width, size.height);
-    const cols = skillPack === "OSRS" ? 8 : 9;
-    const rows = Math.max(1, Math.ceil(count / cols));
-    const cell = m.icon;
-    const gap = m.gap;
-    const pad = 36;
-    const maxW = (size.width - 2 * pad) / Math.max(1, cols * (cell + gap));
-    const strideY = cell + gap;
-    const maxH = (size.height * 0.62) / Math.max(1, rows * strideY);
-    return Math.max(0.8, Math.min(maxW, maxH, 2));
-  }
-
-  function packScale(count: number, mode: "fit" | "room" | "desk" = packFit) {
-    const max = packScaleMax(count);
-    if (mode === "fit") return max;
-    if (mode === "room") return Math.max(0.55, Math.min(max * 0.7, 0.85));
-    return Math.min(1, max);
+  function packScale(_count: number, mode: "fit" | "room" | "desk" = packFit) {
+    if (mode === "fit") return 1;
+    if (mode === "room") return 0.7;
+    return 0.88;
   }
 
   function applyPackFit(mode: "fit" | "room" | "desk") {
     setPackFit(mode);
-    const pack = skillPicksRef.current.filter((item) => !isMark(item.id));
-    if (pack.length >= 8) placeAllPack(packScale(pack.length, mode), mode);
-  }
-
-  function layoutAllGrid(count: number, packScaleValue: number) {
-    const m = plateMetrics(size.width, size.height);
-    const cols = skillPack === "OSRS" ? 8 : 9;
-    const scale = Math.max(0.8, Math.min(packScaleValue, packScaleMax(count)));
-    const icon = Math.round(m.icon * scale);
-    const levelW = Math.round(m.level * 2.1 * scale);
-    const gap = Math.round(m.gap * scale);
-    const strideX = icon + levelW + gap;
-    const strideY = icon + gap;
-    const rows = Math.max(1, Math.ceil(count / cols));
-    const gridW = cols * strideX - gap;
-    const gridH = rows * strideY - gap;
-    const originX = Math.round((size.width - gridW) / 2);
-    const originY = Math.round(Math.max(m.top + m.name + 12, (size.height - gridH) / 2 + m.name * 0.35));
-    return { cols, rows, icon, levelW, gap, strideX, strideY, originX, originY, scale, cell: icon };
+    placeAllPack(packScale(0, mode), mode);
   }
 
   function placeAllPack(packScaleValue?: number, mode: "fit" | "room" | "desk" = packFit) {
