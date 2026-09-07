@@ -216,8 +216,13 @@ function ProtectItemBox() {
       onChange={(event) => {
         const next = event.target.value.slice(0, 12);
         setValue(next);
-        if (next.toLowerCase().replace(/\s+/g, " ") === "protect item") {
+        const said = next.toLowerCase().replace(/\s+/g, " ").trim();
+        if (said === "protect item" || said === "protectitem") {
           eggToast("Good.");
+          setOpen(false);
+        }
+        if (said === "do not chase" || said === "dont chase") {
+          eggToast("You already knew.");
           setOpen(false);
         }
       }}

@@ -39,6 +39,8 @@ export const PETE_LINES = [
   "He counted the letters. He did not count the risk.",
   "A still is a window. A JPEG is the work.",
   "Falador holds the plate when a file goes missing. Pride does not.",
+  "He walked the bag into the Inferno. He still only saves JPEGs.",
+  "Special delivery. The stamp is yellow.",
 ] as const;
 
 export function peteThreshold(level: number) {

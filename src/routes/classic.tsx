@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import { BackLink } from "@/components/back-link";
-import { eggToast, sessionOnce } from "@/lib/eggs";
+import { classicWhisper, eggToast, sessionOnce } from "@/lib/eggs";
 import { HERO_STILLS, type HeroStill } from "@/lib/still-pool";
 import { pageMeta } from "@/lib/page-title";
 
@@ -77,7 +77,8 @@ function ClassicGrid({ cards }: { cards: HeroStill[] }) {
             decoding="async"
             className="aspect-video w-full bg-surface object-cover"
             onClick={() => {
-              if (!/lumbridge/i.test(card.name)) return;
+              const whisper = classicWhisper(card.name);
+              if (!whisper) return;
               const now = Date.now();
               const row = taps.current[card.src] ?? { n: 0, t: 0 };
               if (now - row.t > 900) row.n = 0;
@@ -86,7 +87,7 @@ function ClassicGrid({ cards }: { cards: HeroStill[] }) {
               taps.current[card.src] = row;
               if (row.n < 3) return;
               row.n = 0;
-              if (sessionOnce("rs-classic-worlds")) eggToast("Worlds are closed.");
+              if (sessionOnce(`rs-classic-${card.name}`)) eggToast(whisper);
             }}
           />
           <p className="site-title px-2 pt-1.5 text-center text-sm">{card.name}</p>

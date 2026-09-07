@@ -34,13 +34,38 @@ export const OWNER_LINES = [
   "Grind so long the rocks respawned out of respect.",
 ];
 
+export const WORKWORK_LINES = [
+  "Work, work.",
+  "The bag is already walking.",
+  "Goblin Village understands.",
+];
+
+export const CLASSIC_WHISPERS: Record<string, string> = {
+  lumbridge: "Worlds are closed.",
+  varrock: "The palace still has a square.",
+  falador: "White walls. Empty worlds.",
+  draynor: "The willow remembers the walk.",
+};
+
+export function classicWhisper(name: string) {
+  const key = name.toLowerCase();
+  for (const [place, line] of Object.entries(CLASSIC_WHISPERS)) {
+    if (key.includes(place)) return line;
+  }
+  return "";
+}
+
+export function ownerToast() {
+  eggToast(OWNER_LINES[Math.floor(Math.random() * OWNER_LINES.length)] ?? OWNER_LINES[0]);
+}
+
 export function isOwnerName(raw: string) {
   const n = raw.trim().toLowerCase().replace(/[^a-z]/g, "");
   return n === "christefer";
 }
 
-export function ownerToast() {
-  eggToast(OWNER_LINES[Math.floor(Math.random() * OWNER_LINES.length)] ?? OWNER_LINES[0]);
+export function pickWorkwork() {
+  return WORKWORK_LINES[Math.floor(Math.random() * WORKWORK_LINES.length)] ?? WORKWORK_LINES[0];
 }
 
 export function savedEdition(): "OSRS" | "RS3" {

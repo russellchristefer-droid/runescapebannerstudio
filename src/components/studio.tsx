@@ -30,7 +30,7 @@ import {
 import { EggToast } from "@/components/egg-toast";
 import { useDeskEggs } from "@/hooks/use-desk-eggs";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
-import { eggToast, isOwnerName, sessionOnce } from "@/lib/eggs";
+import { eggToast, isOwnerName, pickWorkwork, sessionOnce } from "@/lib/eggs";
 import { postieLineAt, PETE_LINES, peteThreshold } from "@/lib/postie";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { AppLink, townPath, bossPath } from "@/places";
@@ -225,7 +225,7 @@ export function Studio() {
   }, [streamer]);
   useEffect(() => {
     if (streamer.trim().toLowerCase() !== "workwork") return;
-    setWorkworkLine("Work, work.");
+    setWorkworkLine(pickWorkwork());
     setStreamer("");
   }, [streamer]);
   useEffect(() => {
@@ -239,6 +239,7 @@ export function Studio() {
         if (i === seq.length) {
           i = 0;
           setGoldStar(true);
+          if (sessionOnce("rs-konami-star")) eggToast("A tiny star. No lamp.");
           window.setTimeout(() => setGoldStar(false), 8000);
         }
       } else if (key === seq[0]) {

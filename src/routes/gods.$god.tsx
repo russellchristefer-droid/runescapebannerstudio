@@ -169,7 +169,7 @@ function GodPage() {
 
 function GodFigure({ src, alt, caption, wash }: { src: string; alt: string; caption: string; wash?: string }) {
   const ref = useRef<HTMLElement | null>(null);
-  useEggGestures(ref, () => "The stone remembers a name.");
+  useEggGestures(ref, () => `${alt.split(" in ")[0] ?? "The stone"} still answers to the book.`);
   return (
     <figure ref={ref}>
       <img
