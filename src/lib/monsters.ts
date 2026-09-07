@@ -23,7 +23,7 @@ export function monsterStillSrc(row: Pick<Monster, "edition" | "slug">) {
   const game = row.edition === "OSRS" ? "osrs" : "rs3";
   const slug = row.slug.replace(/-/g, "");
   const file = slug === "warpedterrobird" ? "warpedterrorbird" : slug;
-  return `/stills/${game}/beast-${file}.jpg?v=11`;
+  return `/stills/${game}/beast-${file}.jpg?v=12`;
 }
 
 /** Quiet field colour behind the still. Dragons keep their own hue. */
@@ -123,6 +123,10 @@ const MONSTER_LINE: Record<string, string> = {
   "rs3-celestialdragon": "Not QBD. Dragontooth resource dungeon.",
   "rs3-gemstonedragon": "Several colours. The cavern is the room.",
   "rs3-irondragon": "Metal. Antifire. Brimhaven floor.",
+  "rs3-reddragon": "Brimhaven and the isle. Antifire.",
+  "rs3-bluedragon": "Taverley lane. Antifire.",
+  "rs3-greendragon": "Wilderness bones. Protect item.",
+  "rs3-blackdragontask": "The task. KBD is on Bosses.",
   "rs3-blackdemon": "Heavy demon. Commanders stay on Bosses.",
   "rs3-lavastrykewyrm": "Wildy mound. Protect item.",
   "rs3-icestrykewyrm": "Fire is the old lesson. Confirm the staff.",
@@ -306,6 +310,10 @@ export const MONSTERS: Monster[] = [
   { id: "rs3-celestialdragon", slug: "celestial-dragon", name: "Celestial dragon", edition: "RS3", kind: "monster", slayer: true, where: "Dragontooth Island resource dungeon", hunt: "RuneScape-only. Magic and prayer as the page says. Not QBD.", wiki: rs3Wiki("Celestial_dragon"), still: "" },
   { id: "rs3-gemstonedragon", slug: "gemstone-dragon", name: "Gemstone dragon", edition: "RS3", kind: "monster", slayer: true, where: "Gemstone cavern", hunt: "Several colours. Antifire. The cavern is the room. QBD stays on Bosses.", wiki: rs3Wiki("Gemstone_dragon"), still: "" },
   { id: "rs3-irondragon", slug: "iron-dragon", name: "Iron dragon", edition: "RS3", kind: "monster", slayer: true, where: "Brimhaven Dungeon", hunt: "Antifire. Metal dragons hit. Confirm the floor.", wiki: rs3Wiki("Iron_dragon"), still: "" },
+  { id: "rs3-reddragon", slug: "red-dragon", name: "Red dragon", edition: "RS3", kind: "monster", slayer: true, where: "Brimhaven Dungeon, Red Dragon Isle", hunt: "Antifire. Protect as the page says. KBD stays on Bosses.", wiki: rs3Wiki("Red_dragon"), still: "" },
+  { id: "rs3-bluedragon", slug: "blue-dragon", name: "Blue dragon", edition: "RS3", kind: "monster", slayer: true, where: "Taverley dungeon", hunt: "Antifire. Taverley is the old room. Baby blues are a different assignment.", wiki: rs3Wiki("Blue_dragon"), still: "", placeId: "taverley" },
+  { id: "rs3-greendragon", slug: "green-dragon", name: "Green dragon", edition: "RS3", kind: "monster", slayer: true, where: "Wilderness", hunt: "Wilderness trip. Protect item. Antifire. The ditch is the grammar.", wiki: rs3Wiki("Green_dragon"), still: "" },
+  { id: "rs3-blackdragontask", slug: "black-dragon", name: "Black dragon", edition: "RS3", kind: "monster", slayer: true, where: "Taverley dungeon", hunt: "Heavier dragon. Antifire. KBD stays on Bosses. This sheet is the task.", wiki: rs3Wiki("Black_dragon"), still: "", placeId: "taverley" },
   { id: "rs3-blackdemon", slug: "black-demon", name: "Black demon", edition: "RS3", kind: "monster", slayer: true, where: "Taverley dungeon, Chaos Tunnels", hunt: "Heavy demon. Protect as the page says. K’ril stays on Bosses.", wiki: rs3Wiki("Black_demon"), still: "", placeId: "taverley" },
   { id: "rs3-lavastrykewyrm", slug: "lava-strykewyrm", name: "Lava strykewyrm", edition: "RS3", kind: "monster", slayer: true, where: "Wilderness", gate: "Slayer", hunt: "Wildy task. Protect item. The live page owns the mound.", wiki: rs3Wiki("Lava_strykewyrm"), still: "" },
   { id: "rs3-icestrykewyrm", slug: "ice-strykewyrm", name: "Ice strykewyrm", edition: "RS3", kind: "monster", slayer: true, where: "Cave north of the cave", gate: "Slayer", hunt: "Fire is the old lesson. Confirm the room and the staff on the wiki.", wiki: rs3Wiki("Ice_strykewyrm"), still: "" },
