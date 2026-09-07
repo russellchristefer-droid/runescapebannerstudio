@@ -1,7 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceRail } from "@/components/place-rail";
-import { StillPhoto } from "@/components/still-photo";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/clan-wars")({
@@ -93,6 +92,37 @@ const SHOTS = [
     note: "The Grotto is north. White walls stay white.",
   },
 ] as const;
+
+function HallStill({
+  src,
+  name,
+  era,
+  note,
+  wide = false,
+}: (typeof SHOTS)[number] & { wide?: boolean }) {
+  return (
+    <figure
+      className={`overflow-hidden rounded-md border border-[#c6a45a]/40 bg-[#120e0a] ${
+        wide ? "sm:col-span-2" : ""
+      }`}
+    >
+      <div className={`flex items-center justify-center bg-[#0c0a08] ${wide ? "min-h-[280px] md:min-h-[360px]" : "min-h-[200px] md:min-h-[240px]"}`}>
+        <img
+          src={src}
+          alt={`${name}, ${era}`}
+          loading={wide ? "eager" : "lazy"}
+          decoding="async"
+          className="max-h-[360px] w-full object-contain md:max-h-[420px]"
+        />
+      </div>
+      <figcaption className="border-t border-[#c6a45a]/25 px-3 py-2">
+        <p className="text-sm text-[#efe4c8]">{name}</p>
+        <p className="text-[11px] tracking-[0.12em] text-[#c6a45a] uppercase">{era}</p>
+        <p className="mt-1 text-[12px] text-[#b7a989]">{note}</p>
+      </figcaption>
+    </figure>
+  );
+}
 
 function ClanWarsPage() {
   return (
@@ -273,22 +303,17 @@ function ClanWarsPage() {
 
         <section>
           <h2 className="section-h2 mb-3 text-center">The rooms</h2>
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {SHOTS.map((shot) => (
-              <li key={shot.src} className="overflow-hidden rounded-md border border-line bg-raised">
-                <StillPhoto
-                  src={shot.src}
-                  alt={`${shot.name}, ${shot.era}`}
-                  className="aspect-[5/3] w-full bg-[#1a1612] object-cover"
-                />
-                <p className="px-3 pt-2 text-sm text-fg">{shot.name}</p>
-                <p className="px-3 text-[11px] text-parchment">{shot.era}</p>
-                <p className="px-3 pb-3 text-[12px] text-muted">{shot.note}</p>
-              </li>
+              <HallStill
+                key={shot.src}
+                {...shot}
+                wide={shot.src.includes("ferox") || shot.src.includes("grotto")}
+              />
             ))}
-          </ul>
+          </div>
           <p className="mt-2 text-center text-[11px] text-faint">
-            Identification stills from official wiki File pages and the Classic archive on this origin.
+            Stills sit in the frame. Nothing is cropped to a town card.
           </p>
         </section>
 
