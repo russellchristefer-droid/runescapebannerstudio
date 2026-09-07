@@ -3,6 +3,7 @@ import { SKILLS, type Skill } from "./skills";
 export type SkillGuide = {
   skill: Skill;
   slug: string;
+  hook: string;
   afk: string;
   fast: string;
   watch: string;
@@ -568,6 +569,40 @@ const RS3_NOTE: Record<string, Note> = {
   },
 };
 
+const HOOK: Record<string, string> = {
+  attack: "The style you clicked. Wrong one is the wipe.",
+  strength: "The hit. Not a second pilgrimage.",
+  defence: "The tank. Wear it before the room asks.",
+  ranged: "Distance. Ammo is the tax.",
+  prayer: "The overhead they can see.",
+  magic: "Burst or barrage. The room still has a face.",
+  runecraft: "Essence, then the altar.",
+  construction: "Mahogany if you can. Teak if you must.",
+  hitpoints: "The same slayer hour. Food is the grammar.",
+  constitution: "The same slayer hour. Food is the grammar.",
+  agility: "The course. Sepulchre talks after 62.",
+  herblore: "The potion the wiki ranks this month.",
+  thieving: "Pickpocket or stall. Stun is the wipe.",
+  crafting: "Hide and gold. Battlestaves if you bought them.",
+  fletching: "String and tip. The bank is the room.",
+  slayer: "The assignment. Skip tables live on the wiki.",
+  hunter: "Box or chin. The trap is the method.",
+  mining: "The rock the page ranks. Pay dirt is a tax.",
+  smithing: "Bars, then the anvil. Blast Furnace is a room.",
+  fishing: "The spot that does not move.",
+  cooking: "The same fish. Burn is the wipe.",
+  firemaking: "Wintertodt or the log in front of you.",
+  woodcutting: "The tree the wiki ranks.",
+  farming: "Tithe or the patch. Trees run while you walk.",
+  sailing: "Trials or the task page. Confirm it is live.",
+  summoning: "Charms, then the pouch. The familiar is not a pet.",
+  dungeoneering: "Floors. Bind the weapon you will keep.",
+  divination: "Wisp to crater. Energy is the tax.",
+  invention: "Components from the junk you already made.",
+  archaeology: "The dig. Restore at the bench.",
+  necromancy: "The well. Talent tree first. Bosses stay on Bosses.",
+};
+
 function keyOf(skill: Skill) {
   return skill.name.toLowerCase().replace(/[^a-z]/g, "");
 }
@@ -583,6 +618,7 @@ export function skillGuides(): SkillGuide[] {
     return {
       skill,
       slug: skill.id,
+      hook: HOOK[key] ?? "The live page owns the hour.",
       afk: note?.afk ?? "Quiet on this ditch. Confirm the live wiki.",
       fast: note?.fast ?? "The live training page owns the hour.",
       watch: note?.watch ?? "Wiki wins on numbers.",

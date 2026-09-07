@@ -92,7 +92,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
     <li className="w-full max-w-[11rem]">
       <AppLink
         href={`/skills/${row.slug}`}
-        className="flex h-full min-h-[9.5rem] flex-col items-center justify-center gap-2 rounded-md border border-line bg-raised px-3 py-4 text-center hover:border-[#F5C400]"
+        className="flex h-full min-h-[10.5rem] flex-col items-center justify-center gap-2 rounded-md border border-line bg-raised px-3 py-4 text-center hover:border-[#F5C400]"
       >
         <span className="flex h-16 w-16 items-center justify-center">
           <img
@@ -106,7 +106,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
           />
         </span>
         <span className="site-title text-sm leading-tight">{row.skill.name}</span>
-        <span className="text-[10px] leading-tight text-faint">{row.skill.editions.includes("OSRS") && row.skill.editions.includes("RS3") ? "Both clients" : game === "Old School RuneScape" ? "Old School" : "RuneScape"}</span>
+        <span className="px-1 text-[10px] leading-snug text-muted">{row.hook}</span>
       </AppLink>
     </li>
   );
