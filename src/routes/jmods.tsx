@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
-import { JAGEX_X_MODS, JAGEX_X_OFFICIAL, type JagexX } from "@/lib/jagex-x";
+import { JAGEX_SOCIAL, JAGEX_X_MODS, JAGEX_X_OFFICIAL, type JagexLink, type JagexX } from "@/lib/jagex-x";
 
 import { pageTitle } from "@/lib/page-title";
 
@@ -43,6 +43,12 @@ function JmodsPage() {
         </section>
         <section>
           <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">
+            GAME CHANNELS
+          </h2>
+          <LinkList rows={JAGEX_SOCIAL} />
+        </section>
+        <section>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">
             J-MOD HANDLES
           </h2>
           <List rows={JAGEX_X_MODS} />
@@ -80,6 +86,29 @@ function List({ rows }: { rows: JagexX[] }) {
               <span className="text-xs text-muted">{row.role}</span>
             </span>
             <span className="text-sm text-parchment">@{row.handle}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function LinkList({ rows }: { rows: JagexLink[] }) {
+  return (
+    <ul className="flex flex-col gap-2">
+      {rows.map((row) => (
+        <li key={row.href}>
+          <a
+            href={row.href}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-between rounded-md border border-line bg-raised px-3 py-3"
+          >
+            <span>
+              <span className="block text-sm font-medium">{row.name}</span>
+              <span className="text-xs text-muted">{row.note}</span>
+            </span>
+            <span className="text-sm text-parchment">{row.label}</span>
           </a>
         </li>
       ))}

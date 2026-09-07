@@ -1,4 +1,26 @@
-export type JagexX = {
+export type JagexLink = {
+  name: string;
+  href: string;
+  label: string;
+  note: string;
+};
+
+export const JAGEX_SOCIAL: JagexLink[] = [
+  { name: "Old School Twitch", href: "https://www.twitch.tv/oldschoolrs", label: "Twitch", note: "Official Old School live" },
+  { name: "RuneScape Twitch", href: "https://www.twitch.tv/runescape", label: "Twitch", note: "Official RuneScape live" },
+  { name: "Old School YouTube", href: "https://www.youtube.com/@OldSchoolRuneScape", label: "YouTube", note: "Official Old School channel" },
+  { name: "RuneScape YouTube", href: "https://www.youtube.com/@RuneScape", label: "YouTube", note: "Official RuneScape channel" },
+  { name: "Old School Discord", href: "https://discord.com/invite/osrs", label: "Discord", note: "Official Old School server" },
+  { name: "RuneScape Discord", href: "https://discord.com/invite/rs", label: "Discord", note: "Official RuneScape server" },
+  { name: "Old School Instagram", href: "https://www.instagram.com/oldschool.runescape/", label: "Instagram", note: "Official Old School" },
+  { name: "RuneScape Instagram", href: "https://www.instagram.com/runescape/", label: "Instagram", note: "Official RuneScape" },
+  { name: "Old School Facebook", href: "https://www.facebook.com/OfficialOldSchoolRuneScape", label: "Facebook", note: "Official Old School" },
+  { name: "RuneScape Facebook", href: "https://www.facebook.com/RuneScape", label: "Facebook", note: "Official RuneScape" },
+  { name: "r/2007scape", href: "https://www.reddit.com/r/2007scape/", label: "Reddit", note: "Player board. Jagex posts here." },
+  { name: "r/runescape", href: "https://www.reddit.com/r/runescape/", label: "Reddit", note: "Player board. Jagex posts here." },
+  { name: "Support", href: "https://support.runescape.com/hc/en-gb", label: "Support", note: "Account help. Not a J-Mod mention." },
+];
+
   name: string;
   handle: string;
   role: string;
