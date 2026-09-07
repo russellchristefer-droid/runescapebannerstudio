@@ -18,6 +18,4 @@ RuneScape® and Old School RuneScape® are registered trademarks of Jagex Limite
 
 RuneLite: developer mode, `mvn -q package` in `overlays/runelite`, copy `target/banner-studio-1.0.0.jar` to `~/.runelite/sideloaded-plugins` (or `externalplugins`).
 
-```bash
-node overlays/check.mjs
-```
+Credits a RuneLite or Alt1 author would expect: [CREDITS.md](CREDITS.md)

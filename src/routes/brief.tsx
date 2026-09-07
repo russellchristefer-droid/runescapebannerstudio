@@ -28,7 +28,7 @@ function BriefPage() {
         <section>
           <h2 className="section-h2">What it is</h2>
           <p>
-            RuneScape Banner Studio is an independent fan desk in the browser. It is not Jagex, not a game client, and not an official overlay. Old School RuneScape and RuneScape stay two games — two canons, two inventories, two streets. Twitch categories are Old School RuneScape and RuneScape. Wiki keeps the hour. This desk keeps the plate.
+            RuneScape Banner Studio is an independent fan desk in the browser. It is not Jagex, not a game client, and not an official overlay. Old School RuneScape® and RuneScape® stay two games — two canons, two inventories, two streets. Twitch categories are Old School RuneScape and RuneScape. Wiki keeps the hour. This desk keeps the plate.
           </p>
         </section>
         <section>
@@ -72,6 +72,9 @@ function BriefPage() {
             </li>
             <li>
               <In to="/edit">Clips</In> — local video bench. Upload, In / Out, mute, gain, fades, Save a WebM. The clip stays on this device. It does not go live.
+            </li>
+            <li>
+              Alt1 and RuneLite sidecars live on GitHub only. Still compositor and clip bench are separate add-app / sideload plugins. They do not click. They are not Plugin Hub. Marks stay Jagex's.
             </li>
             <li>
               <In to="/legal">Legal</In> — Fan Content Policy sentence, name, mail. <In to="/donate">Donate</In> — optional Cash App tip. Not Jagex. Not a guild bank.

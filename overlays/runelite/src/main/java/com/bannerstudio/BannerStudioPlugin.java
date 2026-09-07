@@ -1,3 +1,7 @@
+/*
+ * Sideload plugin. Not Plugin Hub.
+ * Credits: RuneLite (BSD-2-Clause), Jagex Limited marks, studio LICENSE.
+ */
 package com.bannerstudio;
 
 import com.google.inject.Provides;

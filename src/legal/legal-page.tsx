@@ -55,7 +55,7 @@ export function LegalPage() {
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Jagex property</h2>
           <p>
-            RuneScape, Old School RuneScape, RuneScape Classic, Jagex, Gielinor, skill icons, marks,
+            RuneScape®, Old School RuneScape®, RuneScape Classic, Jagex®, Gielinor, skill icons, marks,
             partyhats, and in-game stills belong to Jagex Limited or its licensors. Shown here for
             identification under Jagex's Fan Content Policy.
           </p>
@@ -78,6 +78,15 @@ export function LegalPage() {
             </a>
           </p>
           <p className="mt-3">Official news and the wiki win on numbers. This page does not call anyone a god player.</p>
+        </section>
+        <section>
+          <h2 className="mb-2 font-semibold text-parchment">Other software</h2>
+          <p>
+            RuneLite is a third-party Old School client (BSD-2-Clause). Alt1 Toolkit is skillbert /
+            runeapps.org. This studio does not ship those programs. Sidecar plugins on GitHub are
+            fan add-ons: they do not click, they are not on Plugin Hub, and they are not official
+            Jagex, RuneLite, or Alt1 products.
+          </p>
         </section>
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Your files</h2>

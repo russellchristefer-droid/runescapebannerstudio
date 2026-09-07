@@ -233,6 +233,11 @@ function ChroniclePage() {
             Officers change. The two live games keep their names. Ban mail still goes to
             Support, not a J-Mod mention.
           </p>
+          <p className="mt-2">
+            A still compositor and a clip bench also exist as Alt1 and RuneLite sidecars on
+            GitHub. They are doors off the client, not a patch and not a bot. Credit RuneLite
+            and runeapps.org for the seats they sit in. Marks stay Jagex's.
+          </p>
         </section>
 
         <section>

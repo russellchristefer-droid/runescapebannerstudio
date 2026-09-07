@@ -4,19 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Clip bench · Alt1</title>
-    <style>
-      :root { color-scheme: dark; --bg:#16130f; --ink:#efe4c8; --gold:#c6a45a; --muted:#a89878; --play:#9b1b1b; }
-      html,body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 "Segoe UI",system-ui,sans-serif; }
-      header,label,p,.row,.save,video { margin:0 12px 10px; }
-      h1 { font-size:18px; margin:12px 12px 4px; }
-      header p,.fine,#status { color:var(--muted); font-size:12px; }
-      video { display:block; width:calc(100% - 24px); background:#120e0a; border:1px solid var(--gold); max-height:240px; }
-      .row { display:flex; flex-wrap:wrap; gap:8px; }
-      .chip,.save { min-height:44px; border:1px solid var(--gold); background:#1a1610; color:var(--ink); padding:0 12px; cursor:pointer; }
-      #play { background:var(--play); }
-      .save { width:calc(100% - 24px); background:#241e16; }
-      label.chip { display:inline-flex; align-items:center; }
-    </style>
+    <link rel="stylesheet" href="./app.css" />
   </head>
   <body>
     <header>
@@ -34,76 +22,11 @@
     </div>
     <p id="span">In 0.00 · Out 0.00</p>
     <button type="button" class="save" id="save">Save WebM</button>
-    <p class="fine">Don't export a Bank PIN. Add app: <a href="alt1://addapp/https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/appconfig.json">alt1://addapp/…</a></p>
-    <script>
-      const vid = document.getElementById("vid");
-      const status = document.getElementById("status");
-      const span = document.getElementById("span");
-      const fileEl = document.getElementById("file");
-      let url = "";
-      let inT = 0;
-      let outT = 0;
-      function say(line) { status.textContent = line; }
-      function show() {
-        span.textContent = "In " + inT.toFixed(2) + " · Out " + outT.toFixed(2);
-      }
-      function take(file) {
-        if (!file) return;
-        if (url) URL.revokeObjectURL(url);
-        url = URL.createObjectURL(file);
-        vid.src = url;
-        vid.onloadedmetadata = () => {
-          inT = 0;
-          outT = vid.duration || 0;
-          show();
-          say(file.name + " · " + (vid.duration || 0).toFixed(2) + "s");
-        };
-        vid.onerror = () => say("Could not read that file.");
-      }
-      fileEl.addEventListener("change", () => {
-        const f = fileEl.files && fileEl.files[0];
-        fileEl.value = "";
-        take(f);
-      });
-      document.body.addEventListener("dragover", (e) => e.preventDefault());
-      document.body.addEventListener("drop", (e) => {
-        e.preventDefault();
-        take(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]);
-      });
-      document.getElementById("play").onclick = () => vid.play().catch(() => say("Could not play that file."));
-      document.getElementById("pause").onclick = () => vid.pause();
-      document.getElementById("markIn").onclick = () => { inT = vid.currentTime || 0; if (inT > outT) outT = vid.duration || inT; show(); };
-      document.getElementById("markOut").onclick = () => { outT = vid.currentTime || 0; if (outT < inT) inT = 0; show(); };
-      document.getElementById("save").onclick = async () => {
-        if (!vid.src || !vid.duration) { say("No clip."); return; }
-        if (typeof MediaRecorder === "undefined") { say("This window cannot record."); return; }
-        const stream = vid.captureStream ? vid.captureStream() : vid.mozCaptureStream && vid.mozCaptureStream();
-        if (!stream) { say("This window cannot record."); return; }
-        const mime = MediaRecorder.isTypeSupported("video/webm;codecs=vp8") ? "video/webm;codecs=vp8" : "video/webm";
-        const rec = new MediaRecorder(stream, { mimeType: mime });
-        const chunks = [];
-        rec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
-        rec.onstop = () => {
-          const blob = new Blob(chunks, { type: rec.mimeType || "video/webm" });
-          const a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
-          a.download = "clip-" + Math.round(inT) + "-" + Math.round(outT) + ".webm";
-          a.click();
-          URL.revokeObjectURL(a.href);
-          say("In the bag.");
-        };
-        vid.currentTime = inT;
-        await vid.play().catch(() => {});
-        rec.start();
-        const tick = () => {
-          if (vid.currentTime >= outT || vid.ended) {
-            vid.pause();
-            rec.stop();
-            vid.removeEventListener("timeupdate", tick);
-          }
-        };
-        vid.addEventListener("timeupdate", tick);
-      };
-    </script>
+    <p class="fine">
+      Don't export a Bank PIN. Credit: Alt1 Toolkit by skillbert / runeapps.org.
+      Add app:
+      <a href="alt1://addapp/https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/appconfig.json">alt1://addapp</a>
+    </p>
+    <script src="./app.js"></script>
   </body>
 </html>
