@@ -113,15 +113,15 @@ export function loadImage(src: string) {
 
 export function plateMetrics(width: number, height: number) {
   if (width >= 1920 && height >= 1000) {
-    return { name: 56, clan: 22, line: 20, level: 22, icon: 52, gap: 14, pad: 36, top: 40 };
+    return { name: 56, clan: 22, line: 20, level: 26, icon: 52, gap: 14, pad: 36, top: 40 };
   }
   if (width >= 1920) {
-    return { name: 40, clan: 18, line: 16, level: 18, icon: 40, gap: 12, pad: 36, top: 24 };
+    return { name: 40, clan: 18, line: 16, level: 22, icon: 40, gap: 12, pad: 36, top: 24 };
   }
   if (width >= 1280 && height >= 700) {
-    return { name: 44, clan: 20, line: 18, level: 20, icon: 44, gap: 14, pad: 36, top: 32 };
+    return { name: 44, clan: 20, line: 18, level: 24, icon: 44, gap: 14, pad: 36, top: 32 };
   }
-  return { name: 36, clan: 16, line: 15, level: 18, icon: 40, gap: 12, pad: 36, top: 22 };
+  return { name: 36, clan: 16, line: 15, level: 22, icon: 40, gap: 12, pad: 36, top: 22 };
 }
 
 export function packBounds(
@@ -530,7 +530,7 @@ export function drawBanner(
       ctx.drawImage(slot.img, px, py, icon, icon);
       const label = slot.level.trim();
       if (label) {
-        const levelSize = Math.max(10, Math.round((chip.level || 14) * scale));
+        const levelSize = Math.max(16, Math.round(Math.max(chip.level || 22, icon * 0.55) * scale));
         ctx.save();
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";

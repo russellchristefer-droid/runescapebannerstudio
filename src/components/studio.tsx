@@ -986,7 +986,7 @@ export function Studio() {
         setSaveNote(`Saved ${size.width}×${size.height}.`);
       },
       "image/jpeg",
-      0.92,
+      0.96,
     );
   }
 
@@ -1099,7 +1099,7 @@ export function Studio() {
         URL.revokeObjectURL(a.href);
         done += 1;
         if (done === jobs.length) setSaveNote("Saved 1200×480 and 1280×720.");
-      }, "image/jpeg", 0.92);
+      }, "image/jpeg", 0.96);
     }
   }
 
@@ -1130,7 +1130,7 @@ export function Studio() {
       a.click();
       URL.revokeObjectURL(a.href);
       setSaveNote("Saved holding card.");
-    }, "image/jpeg", 0.92);
+    }, "image/jpeg", 0.96);
   }
 
   const visible = LOCATIONS.filter((loc) => {
