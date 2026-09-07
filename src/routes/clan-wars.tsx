@@ -91,6 +91,14 @@ function ClanWarsPage() {
           >
             RuneScape wiki
           </a>
+          <a
+            className="text-parchment"
+            href="https://oldschool.runescape.wiki/w/Castle_Wars"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Castle Wars
+          </a>
           <Link to="/pvp" className="text-parchment">
             PvP
           </Link>
@@ -180,12 +188,45 @@ function ClanWarsPage() {
         </section>
 
         <section>
-          <h2 className="section-h2">Classic</h2>
+          <h2 className="section-h2">History</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            RuneScape Classic never got the purple portal. Clans walked the Wilderness
-            and Edgeville ditch. The stills above are that walk. The minigame arrived
-            10 December 2007 on the main client. Worlds are closed. The letters still
-            remember the bag.
+            Three rooms used the same words. Veterans keep them unmingled.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            Before there was a portal there was the Wilderness. Classic and early RS2
+            clans walked north of Edgeville and fought in multi. That was a clan war
+            because two chats agreed to stand on the same ditch. The bag was live. The
+            skull was live. Worlds are closed on Classic. The letters still remember
+            that walk.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            Jagex named the minigame on 10 December 2007. It was compensation when the
+            main client pulled free PvP out of the wild. The first house sat in the
+            Wilderness. On 1 February 2011 the hall moved into Gamers’ Grotto, north of
+            Falador, with Stealing Creation and the rest of that cave. Rated Clan Wars
+            at the Clan Camp is a later sheet. If that lobby is quiet, the wiki is the
+            verdict.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            Old School put Clan Wars back on 19 June 2014 after a priority poll. The
+            first house was Giants’ Plateau. On 16 July 2020 the whole room moved into
+            Ferox Enclave — still Wilderness level, still a safe pocket. White portal
+            for practice. Purple for the arranged war. Official F2P chaos still uses a
+            numbered world when Jagex hosts it.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            The flag game is Castle Wars. 13 December 2004. Saradomin and Zamorak
+            castles west of Yanille, later a Ferox portal for free-to-play. Twenty
+            minutes. Take their standard home. Bandages, not food. Tickets at the
+            exchange. That is capture the flag. Clan Wars never asked for a flag. If
+            someone says they warred at the ditch with a standard on their back, they
+            are mixing two maps.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            Wilderness clan wars after the minigame still happen: two chats pick a
+            multi tile and a world. That is not Ferox. That is the tax. Protect Item
+            is on or you are sightseeing. The PvP page keeps that skull. This page
+            keeps the portals.
           </p>
         </section>
 
