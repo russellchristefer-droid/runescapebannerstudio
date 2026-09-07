@@ -15,7 +15,7 @@ const LIST = [
   "Pete ×7 — mail that is not mail.",
   "Konami on /still — 2001 if the stills are hosted.",
   "/guthix-ledger — a balance sheet.",
-  "Bob’s quote turns with the five-minute clock.",
+  "Bob’s quote sits under the town still. The word of the day sits between the cats.",
 ];
 
 function EggPage() {

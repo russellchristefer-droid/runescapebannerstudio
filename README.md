@@ -25,7 +25,7 @@ Old School and RuneScape 3 are different games. Different stills, different stre
 
 Plate type is yellow Chat Bold with a black edge. Random stills come from `public/era/`, not a live Wayback scrape. Hiscores and live badges fail quietly. Clip Save records the Web Audio graph so mute actually lands in the file.
 
-Town street lines flip every five minutes. Bob’s word of the day flips every thirty seconds.
+Town plates on the desk turn every two minutes and three seconds. Bob’s quote sits under that still, marked as his. Street lines on town pages stay five minutes. Bob’s word of the day flips every thirty seconds.
 
 Choices are written down in [docs/adr/](docs/adr/). One-page map: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Security colours on GitHub are Old School partyhats, not status dots — [SECURITY.md](SECURITY.md).
 

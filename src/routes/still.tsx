@@ -20,8 +20,7 @@ function StillPage() {
         <p className="mt-2 max-w-2xl text-sm text-muted">
           One hosted photograph at a time from official wiki File pages.
           Classic, Old School, and RuneScape. Places and people.
-          Same picture for everyone on the UTC five-minute mark.
-          Identification only. Not a Jagex product.
+          Same picture for everyone on the cycle. Identification only. Not a Jagex product.
         </p>
       </header>
       <RotatingStill />

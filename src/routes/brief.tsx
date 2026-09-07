@@ -41,7 +41,7 @@ function BriefPage() {
               Sizes — 1200×480 Twitch profile banner, 1280×720 YouTube thumb, 1920×1080 offline / player banner, 1920×480 wide panel. The preview can look smaller. The file is those pixels.
             </li>
             <li>
-              <In to="/towns">Towns</In> — one sheet per town and game: still, street line on a five-minute clock, wiki for that slug. Use on banner stamps the picture. Cards are <code>/towns/:slug</code>.
+              <In to="/towns">Towns</In> — one sheet per town and game: still, street line on a five-minute clock, wiki for that slug. On the desk the top plate turns every two minutes and three seconds. Bob’s quote sits under it. Use on banner stamps the picture. Cards are <code>/towns/:slug</code>.
             </li>
             <li>
               <In to="/gods">Gods</In> — two canons. Each still sits on that god’s prayer-book field, same idea as the dragon colours. Use on banner loads a home town for that god, not a statue as the whole plate.
