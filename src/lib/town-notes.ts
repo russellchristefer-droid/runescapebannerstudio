@@ -595,6 +595,210 @@ const OSRS: Record<string, TownNote> = {
   },
 };
 
+const EXTRA_LORE: Record<string, string[]> = {
+  lumbridge: [
+    "Cook’s Assistant is still the first kitchen. The cellar rats are a later sentence. Bank west of the castle before you title the stream a beginner town.",
+  ],
+  falador: [
+    "The park is a pause. Mole is under the hill, not on this street. White Knight ranks are a grind you already know how to wear.",
+  ],
+  varrock: [
+    "Champion’s Guild south of the wall. Scurrius is under the city if the page still says the hole is open. The museum is bones and a quiz, not a raid.",
+  ],
+  prifddinas: [
+    "Gauntlet and Zalcano sit under the city. The street is still a street. Confirm Voice of Seren on Today, not on a banner.",
+  ],
+  canifis: [
+    "Slayer Tower is the hill behind the houses. Barrows is further east. Hair of the Dog is the door you already used.",
+  ],
+  catherby: [
+    "The fishing spots and the range are the whole method. White Wolf is the climb. Do not print a shark mid on this card.",
+  ],
+  portsarim: [
+    "Karamja is the other slip. Charter if the page still sells it. The jail hulks are scenery you walk past on the way to Entrana.",
+  ],
+  taverley: [
+    "Herblore shop and the crystal chest rumour sit on this street. The dungeon mouth is a separate sheet. Guthix does not walk.",
+  ],
+  burthorpe: [
+    "Games Room is a room. Death Plateau is the climb. Troll Stronghold is the next sentence if you already finished the first.",
+  ],
+  edgeville: [
+    "Jewellery on the body, not under the sharks. Monastery prayer on the hill. The ditch does not grade your intention.",
+  ],
+  alkharid: [
+    "Silk stall and the palace garden share a gate tax. Duel Arena is memory and a scar. Shantay sells the desert pass.",
+  ],
+  daemonheim: [
+    "Dungeoneering is the floors. Complexity and floor number are the method. The surface keep is a lid you already walked.",
+  ],
+  menaphos: [
+    "Imperial, Merchant, Port, Worker. Reputation is the key the wiki still keeps. Sophanem is across the river, not a district.",
+  ],
+  lostgrove: [
+    "Solak is the warden. Anachronia is the island that holds the wood. Do not banner the grove as a bank town.",
+  ],
+  tears: [
+    "Story of the week, then the cave. XP is a drip, not a grind hour. Juna has heard every boast already.",
+  ],
+  zanaris: [
+    "Dramen or lunar staff, then the shed. Fairy rings are the later grammar. Cosmic altar is work if you already know the room.",
+  ],
+  ardougne: [
+    "East market is pickpocket weather. West is the wall you already opened. Clocktower and the zoo are walks, not titles.",
+  ],
+  gnome: [
+    "Spirit trees and gliders if the page still says so. Grand Tree Agility is the route in the bark. Toad crunchies are work.",
+  ],
+  seers: [
+    "Flax to bowstrings is an old hour. Camelot teleport is the door. The workshop elements stay in the workshop.",
+  ],
+  anachronia: [
+    "Base camp first. Totems and the pond are later. Dinosaurs are a slayer sentence, not a postcard.",
+  ],
+  yanille: [
+    "Wizards’ Guild upstairs if you have the level. Watchtower quest is the south look. Ogre land is not a joke walk.",
+  ],
+  empyrean: [
+    "Armadyl’s court. Sliske’s game walked these halls. Confirm whether the citadel is a hub or a memory on the live page.",
+  ],
+  senntisten: [
+    "Archaeology of empire. Nex and the Elder God Wars sit on Bosses. The colosseum is a floor, not a price.",
+  ],
+  sophanem: [
+    "Pyramid Plunder if the minigame is still the hour. Contact! is the door. Cats walk. Tourists argue.",
+  ],
+  apeatoll: [
+    "Marim is the town. Monkey Madness I and II are the crossings. Altar of Marimbo is the law. Speak ape or stay on the boat.",
+  ],
+  goblin: [
+    "Goblin Diplomacy is the colour argument. Generals sit in the huts. Bandos’s name is louder than the yard.",
+  ],
+  heart: [
+    "Twin Furies, Vindicta, Helwyr, Gregorovic. One stone, four champions. Sliske opened the door. The fights are on Bosses.",
+  ],
+  entrana: [
+    "Lost City starts in the law. Law altar if you already walk it. The dock search is the wipe. Bank the blade at Sarim.",
+  ],
+  warsretreat: [
+    "Bank, instance, adrenaline. Reaper assignments hang here. It is a lobby. The kill is somewhere else.",
+  ],
+  cityofum: [
+    "Necromancy well and the dead market. Rasial is the exam. The living are guests. Leave a surface GP title home.",
+  ],
+  darkmeyer: [
+    "Sins of the Father is the cloak. Vyrewatch look at the colour first. Meiyerditch is the factory under the capital.",
+  ],
+  hosidius: [
+    "Tithe Farm and the spirit tree if the page still plants it. Favour is the old word. Kourend eats what this house grows.",
+  ],
+  osrslumbridge: [
+    "Sheep, cows, and goblins on the east road. Cook’s kitchen still burns. The cellar is a later key. No crater. Grass.",
+  ],
+  osrsfalador: [
+    "Giant Mole under the park. Party Room is still a room. Rising Sun is the post. White Knight armour is a grind, not a personality.",
+  ],
+  osrsvarrock: [
+    "Grand Exchange tax is public. Champion’s Guild south. Scurrius under the sewers if the hole is live. Gertrude’s cat is the sill.",
+  ],
+  osrsprif: [
+    "Gauntlet downstairs. Zalcano is a rock. Song of the Elves is the constitution. No Voice of Seren hour-clan on this card.",
+  ],
+  osrscani: [
+    "Priest in Peril is the Salve key. Slayer Tower is the hill. Barrows is the next walk east if you already packed the set.",
+  ],
+  osrscath: [
+    "Fishing guild is a walk north. Beehives are work. The range is public. White Wolf is the climb to Taverley.",
+  ],
+  osrsport: [
+    "Karamja fare on the slip. Entrana search on the other. Void Knight outpost if the pest boat still runs. Jail hulks stay scenery.",
+  ],
+  osrstav: [
+    "Crystal chest rumour and the herblore stall. Dungeon is Taverley Dungeon, a sheet of its own. Sanfew does not sell a raid.",
+  ],
+  osrsburth: [
+    "Death Plateau, then Troll Stronghold. Games Necklace is the teleport you already own. The prince’s camp is not a city title.",
+  ],
+  osrsedge: [
+    "Glory and the ditch. Monastery on the hill. Brass key and the sewers if you still use that door. Protect Item before the line.",
+  ],
+  osrsalk: [
+    "Prince Ali Rescue is the old palace story. Duel Arena is a scar. Shantay south. Menaphos stays shut on this client.",
+  ],
+  osrstears: [
+    "One small weekly mercy. A quest point story Juna has not heard. He does not walk Old School. The drip is the hour.",
+  ],
+  osrszanaris: [
+    "Lost City shed, Dramen staff, then the market. Fairy rings after Fairytale. Cosmic runes if you already know the altar.",
+  ],
+  osrsard: [
+    "Ardougne cloak is the diary you already wear. West plague houses after the truth. Zoo and clocktower are walks.",
+  ],
+  osrsgnome: [
+    "Grand Tree quest is the wound. Gliders and spirit trees if unlocked. Gnome Restaurant is work. Agility in the bark.",
+  ],
+  osrsseers: [
+    "Camelot castle next door. Elemental workshop under the village. Flax field is an old hour. Bank here, not in the legend.",
+  ],
+  osrsyan: [
+    "Watchtower quest looks south. Wizards’ Guild if the level holds. Nightmare Zone is a later dream, not this street.",
+  ],
+  osrssoph: [
+    "Icthlarin’s Little Helper, then Contact!. Pyramid Plunder if you came for the minigame. Menaphos gates stay shut.",
+  ],
+  osrsape: [
+    "Monkey Madness I is the boat. II is the later crossing. Greegree in the pack. Marim stalls do not take a human face.",
+  ],
+  osrsgob: [
+    "Green or brown mail. The generals will not finish the argument. Bandos’s name is the shout. The yard is the politics.",
+  ],
+  osrsent: [
+    "Law altar and Lost City. The monk at Sarim is the first wipe. No weapons means no weapons. The island is a vow.",
+  ],
+  draynor: [
+    "Willow trees on the water. Master Farmer if the pickpocket still pays. Manor on the hill. Bank after dark is still a bank.",
+  ],
+  grandexchange: [
+    "Tax is public. Clerks do not sell a mid. Varrock west wall is the address. This desk stamps a still, not a price.",
+  ],
+  rellekka: [
+    "The Fremennik Trials are the door. Peer the Seer, the longhall, the slip. Miscellania is a boat if you already finished the tests.",
+  ],
+  keldagrim: [
+    "The Giant Dwarf is the door. Consortium companies argue the blast. Cart and cave are how you arrive. Surface titles stay up top.",
+  ],
+  phasmatys: [
+    "Ghosts Ahoy is the ectophial. Dock and brewery. Canifis is inland. The veil is the town, not a joke about sheets.",
+  ],
+  lletya: [
+    "Mourning’s End and Song of the Elves walk through this camp. Crystal singing is later. Prif is the city this camp was waiting for.",
+  ],
+  fortforinthry: [
+    "New Fort after the old one fell. Workshop and the ditch to the north. Edgeville is a different grammar. Rebuild is the work.",
+  ],
+  waiko: [
+    "Player-owned ports and the Arc. Chimes and voyages. The mainland bank is a different sea. Confirm the island on the wiki.",
+  ],
+  osrsrel: [
+    "The Trials, then the longhall. Waterbirth dagannoth kings are a boat, not this street. Rock crabs on the shore if that is still the hour.",
+  ],
+  shayzien: [
+    "Lizardmen canyon is the hill. Medical bay and the drill. Kourend’s army eats Hosidius grain. This house is the spear.",
+  ],
+  lovakengj: [
+    "Blast mine and sulphur. The forge feeds Shayzien. Favour was the old word. Heat is the weather.",
+  ],
+  arceuus: [
+    "Dark Altar and the library. Blood and soul if the page still grants them. This house is books. Hosidius is green.",
+  ],
+  piscarilius: [
+    "Thieving and the wet docks. Kourend’s sea door. Repair the cranes if that is still the favour work. Shayzien is inland.",
+  ],
+  fortis: [
+    "Varlamore’s capital after the voyage west. Colosseum is on Bosses. The square is work. Do not file it as a second Varrock.",
+  ],
+};
+
 function fillEssay(id: string, note: TownNote): TownNote {
   const osrs =
     id.startsWith("osrs") ||
@@ -613,7 +817,7 @@ function fillEssay(id: string, note: TownNote): TownNote {
             "Do not copy this paragraph onto an Old School card of the same name.",
             "The RuneScape wiki keeps the hour.",
           ];
-  return { ...note, history };
+  return { ...note, lore: [...note.lore, ...(EXTRA_LORE[id] ?? [])], history };
 }
 
 export function townNote(id: string): TownNote | undefined {
