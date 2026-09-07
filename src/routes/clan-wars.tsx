@@ -93,6 +93,64 @@ const SHOTS = [
   },
 ] as const;
 
+const STRIP_WHAT = [
+  { src: "/clan-wars/osrs-ferox.png", name: "Ferox" },
+  { src: "/clan-wars/rs3-grotto.png", name: "Grotto" },
+  { src: "/clan-wars/classic-wild1.jpg", name: "2001 wild" },
+  { src: "/clan-wars/osrs-castle-wars.png", name: "Castle Wars" },
+  { src: "/clan-wars/rsc-edge-store.png", name: "Edgeville store" },
+] as const;
+
+const STRIP_OSRS = [
+  { src: "/clan-wars/more/osrs-portal-magenta.png", name: "Magenta portal" },
+  { src: "/clan-wars/more/osrs-portal-green.png", name: "Green portal" },
+  { src: "/clan-wars/more/osrs-portal-teal.png", name: "Teal portal" },
+  { src: "/clan-wars/more/osrs-exit-challenge.png", name: "Challenge exit" },
+  { src: "/clan-wars/more/osrs-exit-ffa.png", name: "FFA exit" },
+] as const;
+
+const STRIP_RS3 = [
+  { src: "/clan-wars/more/rs3-arena.png", name: "Arena" },
+  { src: "/clan-wars/more/rs3-victory.png", name: "Victory" },
+  { src: "/clan-wars/more/rs3-defeat.png", name: "Defeat" },
+  { src: "/clan-wars/more/rs3-ffa.png", name: "Free-for-all" },
+  { src: "/clan-wars/more/rs3-rated-portal.png", name: "Rated portal" },
+] as const;
+
+const STRIP_HISTORY = [
+  { src: "/clan-wars/classic-wild2.jpg", name: "2001 wild" },
+  { src: "/clan-wars/more/rsc-moss.png", name: "Moss giant" },
+  { src: "/clan-wars/more/rsc-map-2001.jpg", name: "August 2001 map" },
+  { src: "/stills/rsc/rsc-ranging.jpg", name: "Classic fight" },
+  { src: "/clan-wars/more/osrs-cw-portal.png", name: "Castle Wars door" },
+] as const;
+
+const STRIP_WIN = [
+  { src: "/clan-wars/more/osrs-cw-red.png", name: "Zamorak portal" },
+  { src: "/clan-wars/more/osrs-cw-blue.png", name: "Saradomin portal" },
+  { src: "/clan-wars/more/rs3-classic-mode.png", name: "Classic mode" },
+  { src: "/clan-wars/more/rs3-ruins.png", name: "Ruins" },
+  { src: "/clan-wars/osrs-ffa-portal.png", name: "White portal" },
+] as const;
+
+function ShotStrip({ items }: { items: readonly { src: string; name: string }[] }) {
+  return (
+    <div className="mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2">
+      {items.map((item) => (
+        <figure
+          key={item.src}
+          className="w-[220px] shrink-0 snap-start overflow-hidden rounded-md border border-[#c6a45a]/35 bg-[#120e0a]"
+        >
+          <div className="flex h-40 items-center justify-center bg-[#0c0a08] px-2">
+            <img src={item.src} alt={item.name} loading="lazy" decoding="async" className="max-h-36 w-full object-contain" />
+          </div>
+          <figcaption className="px-2 py-1 text-[11px] text-[#c6a45a]">{item.name}</figcaption>
+        </figure>
+      ))}
+    </div>
+  );
+}
+
 function HallStill({
   src,
   name,
@@ -178,6 +236,7 @@ function ClanWarsPage() {
             clans practice here and why F2P masses still fill a world. The Wilderness is
             a different tax. Do not mix the two sheets.
           </p>
+          <ShotStrip items={STRIP_WHAT} />
         </section>
 
         <section>
@@ -216,6 +275,7 @@ function ClanWarsPage() {
             the pile. Freeze first if magic is on. F2P Classic magic is Bind only if
             that box was ticked. Do not spec into a PJ timer you asked for.
           </p>
+          <ShotStrip items={STRIP_OSRS} />
         </section>
 
         <section>
@@ -245,6 +305,7 @@ function ClanWarsPage() {
             then the board. Revolution bars do not replace a caller. Leave the enrage
             bosses on Bosses.
           </p>
+          <ShotStrip items={STRIP_RS3} />
         </section>
 
         <section>
@@ -288,6 +349,7 @@ function ClanWarsPage() {
             is on or you are sightseeing. The PvP page keeps that skull. This page
             keeps the portals.
           </p>
+          <ShotStrip items={STRIP_HISTORY} />
         </section>
 
         <section>
@@ -299,6 +361,7 @@ function ClanWarsPage() {
             <li>4. Do not chase through a rule you disabled. Freeze immunity still exists.</li>
             <li>5. White portal is practice. Purple is the match. Red on RuneScape is the tax.</li>
           </ol>
+          <ShotStrip items={STRIP_WIN} />
         </section>
 
         <section>
