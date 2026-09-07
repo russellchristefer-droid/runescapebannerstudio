@@ -39,7 +39,7 @@ export function PlaceCard({
   const [gone, setGone] = useState(false);
   if (!src) return null;
   return (
-    <li>
+    <li className="[content-visibility:auto] [contain-intrinsic-size:auto_220px]">
       <div className="overflow-hidden rounded-md border border-line bg-raised hover:border-[#F5C400]">
         <AppLink href={href} className="block [touch-action:manipulation]">
           {gone ? (

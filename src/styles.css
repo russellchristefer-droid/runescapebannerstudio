@@ -3,7 +3,7 @@
 @font-face {
   font-family: "RS Chat Bold";
   src: url("/fonts/rs-chat-bold.ttf") format("truetype");
-  font-display: block;
+  font-display: swap;
 }
 
 .rs-plate-probe {
