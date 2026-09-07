@@ -63,6 +63,13 @@ const CASTLE_DOORS = [
   { src: "/clan-wars/more/osrs-cw-red.png", name: "Zamorak", era: "Red portal", note: "The dark castle. Twenty minutes." },
 ] as const;
 
+const PIT_STILLS = [
+  { src: "/clan-wars/pits/osrs-champion.png", name: "Champion", era: "Old School", note: "Last one standing. Tokkul, not a flag." },
+  { src: "/clan-wars/pits/rs3-pits.png", name: "The bowl", era: "RuneScape", note: "TzHaar City. People in the pit." },
+  { src: "/clan-wars/pits/rs3-waiting.png", name: "Waiting room", era: "RuneScape", note: "Safe now. 13 May 2008 was not." },
+  { src: "/clan-wars/pits/rs3-celebration.png", name: "The win", era: "RuneScape", note: "The city watches." },
+] as const;
+
 const ROOMS = [
   {
     place: "Wilderness",
@@ -228,6 +235,12 @@ function ClanWarsPage() {
           <a className="text-parchment" href="https://oldschool.runescape.wiki/w/Castle_Wars" target="_blank" rel="noopener noreferrer">
             Castle Wars
           </a>
+          <a className="text-parchment" href="https://oldschool.runescape.wiki/w/TzHaar_Fight_Pit" target="_blank" rel="noopener noreferrer">
+            Fight Pit
+          </a>
+          <a className="text-parchment" href="https://runescape.wiki/w/TzHaar_Fight_Pit" target="_blank" rel="noopener noreferrer">
+            Fight Pit · RS
+          </a>
           <Link to="/pvp" className="text-parchment">
             PvP
           </Link>
@@ -317,6 +330,15 @@ function ClanWarsPage() {
             warred at the ditch with a standard on their back, they are mixing two maps.
           </p>
           <StillGrid items={CASTLE_DOORS} />
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">19 September 2005 — the pit</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            TzHaar Fight Pit. Last player standing under Karamja. Not a clan room. Not
+            the Cave. Not the Kiln. Tokkul for the champion. Safe PvP on both live
+            clients unless a bug made the waiting room hot — 13 May 2008 on the main
+            client, fixed the same day. File that hour as history, not as the current
+            rule.
+          </p>
 
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">18 April 2007 — the ditch you have to confirm</h3>
           <p className="text-sm leading-relaxed text-muted">
@@ -431,6 +453,32 @@ function ClanWarsPage() {
             is the next hill, not the Grotto.
           </p>
           <ShotStrip items={STRIP_RS3} />
+        </section>
+
+        <section>
+          <h2 className="section-h2">Fight Pits</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            TzHaar built a bowl. You walk in with a crowd. You walk out alone or you
+            sit the orb. There is no captain and no two-minute wall. The jingle is
+            called Last Man Standing. That name later went to a different minigame.
+            Do not mix the two sheets.
+          </p>
+          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Old School — Mor Ul Rek</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            West of the inner city, under the volcano. Minigame teleport: TzHaar Fight
+            Pit. Fairy ring BLP, then north and west. Safe. Last one standing is
+            champion. Tokkul scales with who you beat. Hard Karamja diary wants that
+            crown. The Cave next door is Jad. The Pit is people.
+          </p>
+          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">RuneScape — TzHaar City</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Same bowl, later grammar. TokKul-Zo is the fast door. Official world is
+            printed on the wiki when the city is quiet. 21 June 2011 tried a global
+            instance so any world could fill a pit. 14 February 2012 took that search
+            off. If the lobby is empty this month, the wiki is the verdict. Waves of
+            TzHaar can rush a stall — that is this client’s finish, not Old School’s.
+          </p>
+          <StillGrid items={PIT_STILLS} />
         </section>
 
         <section>
