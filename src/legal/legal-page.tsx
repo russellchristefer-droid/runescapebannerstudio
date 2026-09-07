@@ -8,7 +8,7 @@ export function LegalPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Legal</h1>
         <p className="mt-2 text-center text-sm text-muted">
-          Independent fan studio. Not a Jagex product. Not a law firm.
+          Independent fan studio. Not a Jagex product.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
@@ -32,8 +32,7 @@ export function LegalPage() {
             </a>
           </p>
           <p className="mt-3">
-            This page is a notice, not legal advice. If Jagex, a host, or a court writes, that letter
-            wins over this paragraph.
+            This page says who runs the desk and what the stills are. It is not legal advice.
           </p>
         </section>
         <section>
@@ -45,16 +44,12 @@ export function LegalPage() {
           </p>
         </section>
         <section>
-          <h2 className="mb-2 font-semibold text-parchment">What a hostile reader will try</h2>
+          <h2 className="mb-2 font-semibold text-parchment">Clear lines</h2>
           <p>
-            Passing off — we do not use official Jagex logos, we do not say endorsed, and we do not
-            sell gold, bonds, or accounts. Confusion with a client — this origin does not log in,
-            does not touch your cache, and does not run a world. Licence overreach — original code
-            and original prose are studio-owned; the stills, icons, and names stay Jagex or their
-            licensors. User clips — the bench records on your machine; if you export someone else’s
-            stream, that is your problem, not a studio licence. Guides — PvP and skills are
-            commentary from public pages and public fights. They are not a coaching contract and
-            not a cheat client.
+            This origin does not log into the game, does not sell gold or accounts, and does not
+            print official Jagex logos. Guides are notes from public pages. The clip bench stays on
+            your machine. If you export a file you do not have a right to use, that file is still
+            yours.
           </p>
         </section>
         <section>
@@ -69,9 +64,8 @@ export function LegalPage() {
             Jagex's Fan Content Policy. This content is not endorsed by or affiliated with Jagex.
           </p>
           <p className="mt-3">
-            That policy is permission, not a sale. If Jagex withdraws it or sends a clear take-down,
-            the named file comes off. We do not print official marks on merch. We do not claim the
-            Hiscores, the wiki, or a streamer's face.
+            Identification only. If Jagex or a rights holder asks for a file to come down, it comes
+            down. We do not print official marks on merch.
           </p>
           <p className="mt-2">
             <a
@@ -88,9 +82,8 @@ export function LegalPage() {
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Your files</h2>
           <p>
-            Desk JPEGs and clip WebMs stay on your device unless you upload them somewhere else. We
-            do not want your Bank PIN, recovery, or other people's accounts. If you stamp a still
-            you do not have a right to use, the export is still your file.
+            Desk JPEGs and clip WebMs stay on your device unless you upload them somewhere else.
+            Do not export a Bank PIN or someone else's account.
           </p>
         </section>
         <section>
@@ -123,9 +116,7 @@ export function LegalPage() {
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Warranty</h2>
           <p>
-            Provided as-is. No promise of uptime, Hiscores accuracy, drop tables, or income. Use at
-            your own risk. To the extent the law allows, the operator is not liable for lost bags,
-            banned accounts, or a JPEG you posted.
+            Provided as-is. No promise of uptime, Hiscores accuracy, or income.
           </p>
         </section>
         <section>
@@ -145,12 +136,11 @@ export function LegalPage() {
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Takedown</h2>
           <p>
-            Honour a clear notice from Jagex, a rights holder, or the wiki projects. Say what file,
-            what page, and why. Write to{" "}
+            Honour a clear notice from Jagex, a rights holder, or the wiki projects. Write to{" "}
             <a className="text-parchment" href="mailto:russell.christefer@gmail.com">
               russell.christefer@gmail.com
             </a>
-            . This origin is not a registered DMCA agent. A letter still gets read.
+            . A letter still gets read.
           </p>
         </section>
         <p className="text-parchment">
