@@ -292,43 +292,121 @@ function ClanWarsPage() {
         <section>
           <h2 className="section-h2">History</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Three rooms used the same words. Veterans keep them unmingled. Dates are from
-            the live wikis.
+            The Wilderness is the older law. Clan Wars is the named room that came
+            after the law broke. Castle Wars is the flag. Three grammars. Dates below
+            are from the live wikis and the official newsposts they cite. If a lobby
+            went quiet, the wiki is the verdict.
           </p>
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Before the name</h3>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 August 2001 — the ditch is born</h3>
           <p className="text-sm leading-relaxed text-muted">
-            Classic and early RS2 clans walked north of Edgeville and fought in multi.
-            That was a clan war because two chats agreed to stand on the same ditch.
-            The bag was live. The skull was live. Worlds are closed on Classic.
+            Jagex switched the Wilderness on. Forinthry on the map. PvP as weather.
+            Combat bracket walks with the level number painted on the ground. A skull
+            means you attacked first and you keep fewer pieces. That is the original
+            tax. Free players learned PKing here because there was nowhere else that
+            dropped the bag. Clans did not need a minigame. Two chats picked a multi
+            tile north of Edgeville and walked. Worlds are closed on Classic. The
+            letters still remember that walk.
           </p>
+
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 December 2004 — the flag</h3>
           <p className="text-sm leading-relaxed text-muted">
             Castle Wars is capture the flag. Saradomin and Zamorak west of Yanille.
-            Twenty minutes. Bandages, not food. Clan Wars never asked for a flag.
+            Twenty minutes. Bandages, not food. Tickets at the exchange. It taught
+            clans to pile without the skull. It is not Clan Wars. If someone says they
+            warred at the ditch with a standard on their back, they are mixing two maps.
           </p>
           <StillGrid items={CASTLE_DOORS} />
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">10 December 2007 — the minigame</h3>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">18 April 2007 — the ditch you have to confirm</h3>
           <p className="text-sm leading-relaxed text-muted">
-            Jagex named Clan Wars the day it pulled free PvP out of the main-client
-            Wilderness. First house sat in the wild. Captains picked terms. Purple
-            portal. Two-minute wall.
+            The Wilderness ditch went in so a lure could not walk you over the line
+            without a click. Old School still wears that fence. The Doomsayer can
+            quiet the warning. The line is still the line.
           </p>
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">1 February 2011 — the Grotto</h3>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">10 December 2007 — the law breaks and the room is named</h3>
           <p className="text-sm leading-relaxed text-muted">
-            Free trade and the old Wilderness came back. Clan Wars moved into Gamers’
-            Grotto, north of Falador. The old house became the Bone Yard.
+            Official post: Wilderness Changes, Bounty Hunter and Clan Wars. Free trade
+            and open Wilderness PvP left the main client in a fight about real-world
+            gold. Revenants took the monster slot. The PKing crater was renamed Bounty
+            Hunter. Clan Wars was the first named clan room: captains, terms, purple
+            portal, two-minute wall. The first house sat in the wild as compensation,
+            not as a skin. Clans that had lived on the ditch learned a ceiling. The bag
+            could stay. That is why the minigame still exists.
           </p>
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">19 June 2014 — Old School</h3>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">2008–2009 — PvP worlds and bounty worlds</h3>
           <p className="text-sm leading-relaxed text-muted">
-            A priority poll put the minigame on the 2007-era client. First house:
-            Giants’ Plateau. Oddskull arrived 16 April 2015.
+            15 October 2008: PvP worlds, so the tax could live on a server instead of
+            only on a crater. 6 May 2009: Bounty Hunter worlds put target PvP across
+            the Wilderness on those worlds. Those sheets were for the main client of
+            that hour. Confirm what is live on the wiki before you describe them as
+            current.
           </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Winter 2010 — the vote</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            24 December 2010 to 14 January 2011: a referendum to bring back the old
+            Wilderness and free trade. Ninety-one percent said yes. That number is why
+            the next date exists.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">1 February 2011 — the wild comes home, the hall leaves</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Open PvP and free trade returned on the main client. Revenants were pushed
+            into Forinthry Dungeon. Clan Wars, Fist of Guthix, and Stealing Creation
+            left the Wilderness for Gamers’ Grotto, north of Falador. The old Clan Wars
+            house became the Bone Yard. Bounty worlds of that era were stood down. The
+            ditch was a ditch again. The named room kept the ceiling in a cave.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">22 February 2013 — two grammars</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Old School RuneScape is the 2007-era client voted back. It inherits the
+            ditch, the skull, and the combat bracket. It does not inherit the 2011
+            Grotto as its first Clan Wars house. That comes later, by poll.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">19 June 2014 — Old School names the room</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            A priority poll put Clan Wars on the 2007-era client. First house: Giants’
+            Plateau. 26 June added Soggy Swamp as a free-to-play arena. 6 November added
+            the Classic Arena. 16 April 2015 added timed deathmatch and Oddskull. The
+            maps changed. The rule did not: captain to captain, then the wall. The
+            Wilderness outside that house stayed the tax.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The main client after the split</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            RuneScape kept the Grotto. Deep Wilderness opened to free players on 9
+            October 2017. PvP on that client is opt-in now — Vala in Edgeville is the
+            switch the wiki names. Skulled in a dangerous tile still means a fight.
+            The first two tiles north of the wall are safe. Confirm the current toggle
+            on the RuneScape wiki. Do not paste an Old School skull onto that well.
+          </p>
+
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">16 July 2020 — Ferox</h3>
           <p className="text-sm leading-relaxed text-muted">
-            The Old School room moved into Ferox Enclave. Still Wilderness level.
-            Still a safe pocket. These two doors are the current Clan Wars portals.
+            Official Old School news: Ferox Enclave. Carrallanger’s old stone, a safe
+            pocket in Wilderness 13–16. Bank. Pool of Refreshment. Clan Wars and Last
+            Man Standing moved here from Giants’ Plateau. White portal to practice.
+            Purple for the war. Ring of dueling, minigame teleport, or a waka canoe.
+            Teleblocked players stay outside. 23 May 2024 added Classic F2P magic —
+            Bind as the only freeze if that box is ticked. The current doors sit below.
           </p>
           <StillGrid items={CURRENT_DOORS} />
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The ditch after the portal</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Wilderness clan wars after the minigame still happen: two chats pick a
+            multi tile and a world. That is not Ferox. That is not the Grotto. That is
+            the tax. Protect Item is on or you are sightseeing. PvP worlds on Old
+            School treat the map outside the wild as level 15 for the bracket. Bounty
+            Hunter is its own crater and its own world list — file it on the wiki, not
+            as a second Clan Wars. This page keeps the portals. The PvP page keeps the
+            skull.
+          </p>
           <ShotStrip items={STRIP_HISTORY} />
         </section>
 
