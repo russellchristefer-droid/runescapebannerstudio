@@ -36,7 +36,6 @@ export function ClipBench() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const stillRef = useRef<HTMLInputElement | null>(null);
   const objectUrl = useRef<string | null>(null);
   const bannerUrl = useRef<string | null>(null);
   const bannerImg = useRef<CanvasImageSource | null>(null);
@@ -508,10 +507,6 @@ export function ClipBench() {
     fileRef.current?.click();
   }
 
-  function openStillPicker() {
-    stillRef.current?.click();
-  }
-
   function snapValue(t: number) {
     if (snapOn) return Math.max(0, Math.min(duration || t, Math.round(t)));
     return snapTime(t, fps || 30);
@@ -775,11 +770,7 @@ export function ClipBench() {
   async function exportClip(pair = false) {
     const video = videoRef.current;
     if (!hasClip && !video?.src) {
-      if (bannerImg.current) {
-        await holdingCard();
-        return;
-      }
-      setStatus("Upload a clip or a still first.");
+      setStatus("Upload a clip first.");
       return;
     }
     if (typeof MediaRecorder === "undefined") {
@@ -835,21 +826,7 @@ export function ClipBench() {
         onChange={(e) => {
           const file = e.target.files?.[0];
           e.target.value = "";
-          if (!file) return;
-          if (file.type.startsWith("image/")) void takeBanner(file);
-          else takeVideo(file);
-        }}
-      />
-      <input
-        id="clip-still-file"
-        ref={stillRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        className="sr-only"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          e.target.value = "";
-          if (file) void takeBanner(file);
+          if (file) takeVideo(file);
         }}
       />
       <div
@@ -876,13 +853,6 @@ export function ClipBench() {
                 onClick={openClipPicker}
               >
                 Upload video
-              </button>
-              <button
-                type="button"
-                className="pointer-events-auto min-h-11 rounded-md border border-[#c6a45a]/40 bg-[#241e16] px-4 text-sm text-parchment"
-                onClick={openStillPicker}
-              >
-                Upload still
               </button>
             </div>
           ) : null}
@@ -1065,16 +1035,13 @@ export function ClipBench() {
               Upload video
             </button>
           )}
-          <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openStillPicker}>
-            Upload still
-          </button>
           {busy ? (
             <button type="button" className={CHIP} onClick={cancelExport}>
               Cancel
             </button>
           ) : (
-            <button type="button" disabled={!hasClip && overlay === "off"} className={CHIP} onClick={() => void exportClip(false)}>
-              Save
+            <button type="button" disabled={!hasClip} className={CHIP} onClick={() => void exportClip(false)}>
+              Save clip
             </button>
           )}
         </div>
