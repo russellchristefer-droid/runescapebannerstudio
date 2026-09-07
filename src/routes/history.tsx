@@ -132,6 +132,68 @@ function HistoryPage() {
             . The long story stays here.
           </p>
         </article>
+
+        <aside
+          id="guild-left"
+          className="mt-12 rounded-md border border-[#c6a45a]/50 bg-[#1a1610] px-4 py-5 shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]"
+        >
+          <p className="text-[10px] uppercase tracking-[0.18em] text-faint">Ardougne · Legends' Guild</p>
+          <h2 className="mt-1 font-display text-lg text-parchment">First room on the left</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            In both grammars the Guild sits north of East Ardougne. The first small house on
+            the left as you come in from the courtyard is not the hall of totems. It is a desk
+            someone left a kettle on. This page keeps a few public names on that sill — work
+            the street already watched. Not a rank. Not a private Discord dump.
+          </p>
+          <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
+            <li>
+              <span className="text-parchment">Zezima</span> — first through the old 99s in a
+              way the boards could see. The name became a tense.
+            </li>
+            <li>
+              <span className="text-parchment">I Mahatma I</span> — an early public max on the
+              main client when that word still meant a year of looking. The plaque is the
+              account, not a rumour about the person.
+            </li>
+            <li>
+              <span className="text-parchment">Lynx Titan</span> — 200 million as weather. The
+              boards still say the name when they mean a ceiling.
+            </li>
+            <li>
+              <span className="text-parchment">Woox</span> — first Inferno cape the street
+              could watch. The room learned the zuk set from that walk, not from a paste.
+            </li>
+            <li>
+              <span className="text-parchment">B0aty</span> — made the weekly grind a room other
+              people could sit in. Public VOD is the source.
+            </li>
+            <li>
+              <span className="text-parchment">Settled</span> — a limited tile and a UIM bag
+              turned into stories the wiki could footnote.
+            </li>
+            <li>
+              <span className="text-parchment">Torvesta</span> — the ditch in public, so the
+              skull rule was not a private theory.
+            </li>
+            <li>
+              <span className="text-parchment">Odablock</span> — Old School as a broadcast
+              craft. Raids and the weekly hour, on camera.
+            </li>
+            <li>
+              <span className="text-parchment">BlueIvy</span> — a name the street already
+              used. This desk will not invent a biography. The plaque is that the work was
+              public.
+            </li>
+            <li>
+              <span className="text-parchment">25 Buttholes</span> — clan tag as joke and as
+              banner. Identification, not a mid this page will print.
+            </li>
+          </ul>
+          <p className="mt-4 text-[11px] text-faint">
+            If a name is not on a public board, a public VOD, or the wiki, it does not belong
+            on this sill. The Guild quest stays on the wiki. This room is only the kettle.
+          </p>
+        </aside>
         <p className="mt-8 flex flex-wrap gap-x-3 gap-y-1 text-sm text-parchment">
           <a href="https://oldschool.runescape.wiki/" target="_blank" rel="noopener noreferrer">
             Old School wiki
