@@ -1,10 +1,12 @@
 import { fetchHiscoreLite } from "../../src/lib/hiscores.server";
+import { clientKey, limited, tooMany } from "./_limit";
 
 export default async function handler(event: {
   node?: { req: { url?: string } };
   path?: string;
 }) {
   try {
+    if (tooMany(`hiscores:${clientKey(event)}`, 20)) return limited();
     const raw = event.node?.req.url ?? event.path ?? "";
     const url = new URL(raw, "http://local");
     const edition = url.searchParams.get("edition") ?? "OSRS";

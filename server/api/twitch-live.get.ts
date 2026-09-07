@@ -1,11 +1,13 @@
 import { CHANNELS } from "../../src/data/channels";
 import { fetchTwitchLiveBoard } from "../../src/lib/live.server";
+import { clientKey, limited, tooMany } from "./_limit";
 
 export default async function handler(event: {
   node?: { req: { url?: string } };
   path?: string;
 }) {
   try {
+    if (tooMany(`twitch:${clientKey(event)}`, 30)) return limited();
     const raw = event.node?.req.url ?? event.path ?? "";
     const url = new URL(raw, "http://local");
     const asked = (url.searchParams.get("logins") ?? "")
