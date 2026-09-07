@@ -49,9 +49,9 @@ function GodPage() {
           ]}
         />
         <div className="grid gap-3 sm:grid-cols-2">
-          {godStill(god, "OSRS") ? (
+          {osrsStill ? (
             <GodFigure
-              src={godStill(god, "OSRS")!}
+              src={osrsStill}
               alt={`${brief.god} in Old School RuneScape`}
               caption={godStillLine(god, "OSRS")}
               wash={godWash(god)}
@@ -59,9 +59,9 @@ function GodPage() {
           ) : (
             <p className="text-sm text-muted">Still needed — Old School RuneScape.</p>
           )}
-          {godStill(god, "RS3") ? (
+          {rs3Still ? (
             <GodFigure
-              src={godStill(god, "RS3")!}
+              src={rs3Still}
               alt={`${brief.god} in RuneScape`}
               caption={godStillLine(god, "RS3")}
               wash={godWash(god)}

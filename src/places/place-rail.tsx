@@ -18,8 +18,6 @@ export function PlaceRail({
   edition,
   god,
   onEdition,
-  onGod,
-  onSection,
 }: {
   section: PlaceSection;
   edition?: Edition;

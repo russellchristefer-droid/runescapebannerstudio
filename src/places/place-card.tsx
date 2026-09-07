@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { StillPhoto } from "@/components/still-photo";
 import { godInk } from "@/lib/gods";
-import { AppLink } from "./place-chip";
+import { AppLink, bossPath, townPath } from "./place-chip";
 
 type PlaceTo = "/towns/$id" | "/bosses/$id" | "/gods/$god" | "/monsters/$id";
 
 function hrefFor(to: PlaceTo, params: { id?: string; god?: string }) {
   if (to === "/gods/$god") return `/gods/${params.god ?? ""}`;
-  if (to === "/towns/$id") return `/towns/${params.id ?? ""}`;
-  if (to === "/bosses/$id") return `/bosses/${params.id ?? ""}`;
+  if (to === "/towns/$id") return townPath(params.id ?? "");
+  if (to === "/bosses/$id") return bossPath(params.id ?? "");
   return `/monsters/${params.id ?? ""}`;
 }
 
@@ -61,13 +61,12 @@ export function PlaceCard({
               onError={() => setGone(true)}
             />
           )}
-        </AppLink>
-        <AppLink
-          href={href}
-          className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline"
-          style={kind === "God" ? { color: godInk(name) } : undefined}
-        >
-          {name}
+          <span
+            className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline"
+            style={kind === "God" ? { color: godInk(name) } : undefined}
+          >
+            {name}
+          </span>
         </AppLink>
         {caption ? (
           <p className="px-2 pb-2 text-center text-[10px] text-muted">{caption}</p>

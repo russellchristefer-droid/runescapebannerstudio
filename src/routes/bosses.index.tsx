@@ -13,7 +13,7 @@ export const Route = createFileRoute("/bosses/")({
 });
 
 function BossIndex() {
-  const { edition, setEdition, god, setGod } = usePlaceFilter("OSRS");
+  const { edition, setEdition } = usePlaceFilter("OSRS");
   const game = edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   const rows = Object.values(BOSS_NOTES).filter((note) => {
     if (note.edition !== edition) return false;
@@ -21,7 +21,6 @@ function BossIndex() {
     if (!loc) return false;
     if (!sheetFor(note.id)) return false;
     if (!loc.viewA) return false;
-    if (god && loc.god !== god) return false;
     return true;
   });
   return (
@@ -34,7 +33,7 @@ function BossIndex() {
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <div className="mt-3">
-          <PlaceRail section="bosses" edition={edition} god={god} onEdition={setEdition} onGod={setGod} />
+          <PlaceRail section="bosses" edition={edition} onEdition={setEdition} />
         </div>
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
