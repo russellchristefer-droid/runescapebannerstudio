@@ -1,4 +1,4 @@
-import { layoutName, packBounds, paintRSYellow, plateMetrics } from "@/lib/draw-banner";
+import { cropInset, layoutName, packBounds, paintRSYellow, plateMetrics } from "@/lib/draw-banner";
 
 export type Stamp = {
   id: string;
@@ -28,13 +28,13 @@ export function layoutPack<T extends Stamp>(
 ): T[] {
   if (!stamps.length) return stamps;
   const m = plateMetrics(exportW, exportH);
+  const inset = cropInset(exportW, exportH);
   const n = stamps.length;
   const cols = n >= 24 ? 9 : n >= 16 ? 8 : Math.min(8, Math.max(4, n));
   const rows = Math.max(1, Math.ceil(n / cols));
-  const namePad = m.top + m.name + 8;
-  const pad = m.pad;
-  const availW = Math.max(80, exportW - pad * 2);
-  const availH = Math.max(48, exportH - namePad - pad);
+  const namePad = Math.max(inset.top, m.top + m.name + 8);
+  const availW = Math.max(80, exportW - inset.left - inset.right);
+  const availH = Math.max(48, exportH - namePad - inset.bottom);
   const levelRatio = (m.level * 2.1) / Math.max(1, m.icon);
   const gapRatio = 0.22;
   const unitX = 1 + levelRatio + gapRatio;
@@ -48,7 +48,7 @@ export function layoutPack<T extends Stamp>(
   const stride = cell + levelW + gap;
   const gridW = cols * stride - gap;
   const gridH = rows * (cell + gap) - gap;
-  const originX = Math.round((exportW - gridW) / 2);
+  const originX = Math.round(inset.left + Math.max(0, (availW - gridW) / 2));
   const originY = Math.round(namePad + Math.max(0, (availH - gridH) / 2));
   return stamps.map((s, i) => {
     const col = i % cols;

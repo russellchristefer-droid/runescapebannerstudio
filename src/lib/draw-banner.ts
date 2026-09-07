@@ -111,6 +111,20 @@ export function loadImage(src: string) {
   });
 }
 
+export function cropInset(width: number, height: number) {
+  const r = width / Math.max(1, height);
+  if (Math.abs(r - 1280 / 720) < 0.04) {
+    return { left: Math.round(width * 0.06), right: Math.round(width * 0.06), top: Math.round(height * 0.08), bottom: Math.round(height * 0.14) };
+  }
+  if (Math.abs(r - 1920 / 1080) < 0.04) {
+    return { left: Math.round(width * 0.05), right: Math.round(width * 0.05), top: Math.round(height * 0.07), bottom: Math.round(height * 0.1) };
+  }
+  if (Math.abs(r - 1920 / 480) < 0.04) {
+    return { left: Math.round(width * 0.06), right: Math.round(width * 0.06), top: Math.round(height * 0.1), bottom: Math.round(height * 0.1) };
+  }
+  return { left: Math.round(width * 0.07), right: Math.round(width * 0.07), top: Math.round(height * 0.1), bottom: Math.round(height * 0.1) };
+}
+
 export function plateMetrics(width: number, height: number) {
   if (width >= 1920 && height >= 1000) {
     return { name: 56, clan: 22, line: 20, level: 26, icon: 52, gap: 14, pad: 36, top: 40 };

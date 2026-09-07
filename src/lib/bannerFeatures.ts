@@ -84,33 +84,40 @@ export function iconStorySkills(game: Game, story: IconStory): string[] {
 export function safeZoneRects(zone: SafeZone) {
   if (zone === "twitch")
     return [
-      { x: 0, y: 0, w: 0.18, h: 1, label: "Avatar crop" },
-      { x: 0.82, y: 0, w: 0.18, h: 1, label: "Edge crop" },
+      { x: 0, y: 0, w: 0.08, h: 1, label: "Side" },
+      { x: 0.92, y: 0, w: 0.08, h: 1, label: "Side" },
     ];
   if (zone === "youtube")
     return [
-      { x: 0, y: 0, w: 1, h: 0.35, label: "Desktop crop" },
-      { x: 0, y: 0.65, w: 1, h: 0.35, label: "Desktop crop" },
-      { x: 0, y: 0.35, w: 0.12, h: 0.3, label: "" },
-      { x: 0.88, y: 0.35, w: 0.12, h: 0.3, label: "" },
+      { x: 0.78, y: 0.86, w: 0.2, h: 0.12, label: "Time" },
+      { x: 0, y: 0, w: 1, h: 0.06, label: "" },
+      { x: 0, y: 0.94, w: 1, h: 0.06, label: "" },
     ];
-  if (zone === "discord") return [{ x: 0, y: 0, w: 1, h: 0.22, label: "Profile crop" }];
+  if (zone === "discord") return [{ x: 0, y: 0, w: 1, h: 0.18, label: "Profile" }];
   if (zone === "x")
     return [
-      { x: 0, y: 0, w: 0.12, h: 1, label: "Mobile" },
-      { x: 0.88, y: 0, w: 0.12, h: 1, label: "Mobile" },
+      { x: 0, y: 0, w: 0.08, h: 1, label: "" },
+      { x: 0.92, y: 0, w: 0.08, h: 1, label: "" },
     ];
   if (zone === "tiktok")
     return [
-      { x: 0, y: 0, w: 1, h: 0.14, label: "TikTok top" },
-      { x: 0, y: 0.78, w: 1, h: 0.22, label: "TikTok UI" },
+      { x: 0, y: 0, w: 1, h: 0.12, label: "" },
+      { x: 0, y: 0.82, w: 1, h: 0.18, label: "UI" },
     ];
   if (zone === "facebook")
     return [
-      { x: 0, y: 0.72, w: 1, h: 0.28, label: "Profile strip" },
+      { x: 0, y: 0.78, w: 1, h: 0.22, label: "Strip" },
     ];
-  if (zone === "rs") return [{ x: 0, y: 0, w: 0.22, h: 1, label: "Nav" }];
+  if (zone === "rs") return [{ x: 0, y: 0, w: 0.18, h: 1, label: "Nav" }];
   return [];
+}
+
+export function zoneForPlate(width: number, height: number): SafeZone {
+  const r = width / Math.max(1, height);
+  if (Math.abs(r - 1280 / 720) < 0.04) return "youtube";
+  if (Math.abs(r - 1200 / 480) < 0.04) return "twitch";
+  if (Math.abs(r - 1920 / 480) < 0.04) return "twitch";
+  return "none";
 }
 
 export function drawSafeZoneGhosts(

@@ -10,7 +10,7 @@ import { loadStudioSave, writeStudioSave } from "@/desk/save";
 import { deskSharePath, readDeskQuery } from "@/desk/desk-link";
 import { PlaceRail } from "@/places";
 import { stillIndex } from "@/lib/still-clock";
-import { safeZoneRects, type SafeZone } from "@/lib/bannerFeatures";
+import { safeZoneRects, zoneForPlate, type SafeZone } from "@/lib/bannerFeatures";
 import { MARKS } from "@/lib/marks";
 import { godInk } from "@/lib/gods";
 import { sanitizeSkillLevel, skillIdForHiscore, skillLevelCap, SKILLS } from "@/lib/skills";
@@ -1671,7 +1671,9 @@ export function Studio() {
           <button
             type="button"
             className={`min-h-11 rounded-md border px-2 text-[10px] ${ghostZone === "none" ? "border-parchment" : "border-line"}`}
-            onClick={() => setGhostZone((zone) => (zone === "none" ? "twitch" : "none"))}
+            onClick={() => {
+              setGhostZone((zone) => (zone === "none" ? zoneForPlate(size.width, size.height) : "none"));
+            }}
           >
             Ghosts {ghostZone === "none" ? "off" : "on"}
           </button>
