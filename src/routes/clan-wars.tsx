@@ -44,12 +44,17 @@ const STRIP_WIN = [
 ] as const;
 
 const STRIP_DOORS = [
-  { src: "/clan-wars/more/osrs-portal-magenta.png", name: "Purple — the war" },
-  { src: "/clan-wars/osrs-ffa-portal.png", name: "White — practice" },
   { src: "/clan-wars/more/osrs-portal-green.png", name: "Green — Ferox exit" },
   { src: "/clan-wars/more/osrs-portal-teal.png", name: "Teal — Ferox exit" },
   { src: "/clan-wars/more/rs3-rated-portal.png", name: "Rated door" },
+  { src: "/clan-wars/more/rs3-clan-wars-portal.png", name: "RuneScape — the war" },
+  { src: "/clan-wars/more/rs3-clan-wars-exit.png", name: "RuneScape — exit" },
   { src: "/clan-wars/more/rs3-ffa.png", name: "Grotto FFA" },
+] as const;
+
+const CURRENT_DOORS = [
+  { src: "/clan-wars/more/osrs-portal-magenta.png", name: "Purple portal", era: "Current Clan Wars", note: "Ferox. The arranged war." },
+  { src: "/clan-wars/osrs-ffa-portal.png", name: "White portal", era: "Current FFA", note: "Ferox. Practice. No terms." },
 ] as const;
 
 const CASTLE_DOORS = [
@@ -232,8 +237,8 @@ function ClanWarsPage() {
           </p>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted">
             <li>
-              <span className="text-fg">Purple / magenta.</span> The arranged war. Captains
-              already agreed the terms. Two-minute wall. This is the match.
+              <span className="text-fg">Purple / magenta.</span> Current Clan Wars at
+              Ferox. Captains already agreed the terms. Two-minute wall. This is the match.
             </li>
             <li>
               <span className="text-fg">White.</span> Free-for-all. Practice. Stats restore.
@@ -250,6 +255,11 @@ function ClanWarsPage() {
             <li>
               <span className="text-fg">Red on RuneScape FFA.</span> Dangerous. Items drop.
               Protect Item is the keep. White on that client is the safe FFA.
+            </li>
+            <li>
+              <span className="text-fg">RuneScape purple.</span> The current Clan Wars
+              portal in Gamers’ Grotto. Same job as Old School magenta: the arranged war.
+              The gold door next to it is the exit.
             </li>
             <li>
               <span className="text-fg">Rated door.</span> Clan Camp sheet. If the lobby is
@@ -296,8 +306,9 @@ function ClanWarsPage() {
           <h3 className="mt-5 mb-1 text-fg">16 July 2020 — Ferox</h3>
           <p className="text-sm leading-relaxed text-muted">
             The Old School room moved into Ferox Enclave. Still Wilderness level.
-            Still a safe pocket. White portal to practice. Purple for the war.
+            Still a safe pocket. These two doors are the current Clan Wars portals.
           </p>
+          <StillGrid items={CURRENT_DOORS} />
           <ShotStrip items={STRIP_HISTORY} />
         </section>
 
