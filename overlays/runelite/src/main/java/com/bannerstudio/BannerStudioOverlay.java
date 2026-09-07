@@ -41,8 +41,11 @@ public class BannerStudioOverlay extends Overlay
 		{
 			return null;
 		}
-		graphics.drawImage(cached, 0, 0, null);
-		return new Dimension(cached.getWidth(), cached.getHeight());
+		final int maxW = 240;
+		final int dw = Math.min(maxW, cached.getWidth());
+		final int dh = Math.max(1, cached.getHeight() * dw / Math.max(1, cached.getWidth()));
+		graphics.drawImage(cached, 0, 0, dw, dh, null);
+		return new Dimension(dw, dh);
 	}
 
 	private static BufferedImage read(String path)

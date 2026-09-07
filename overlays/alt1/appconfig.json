@@ -1,9 +1,9 @@
 {
   "appName": "Banner Studio",
   "description": "Local still compositor for a RuneScape stream banner. Not a bot. Not official.",
-  "appUrl": "./index.html",
-  "configUrl": "./appconfig.json",
-  "iconUrl": "./icon.png",
+  "appUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/alt1/index.html",
+  "configUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/alt1/appconfig.json",
+  "iconUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/alt1/icon.png",
   "defaultWidth": 420,
   "defaultHeight": 580,
   "minWidth": 320,
