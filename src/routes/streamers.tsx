@@ -80,7 +80,7 @@ function StreamersPage() {
       const timer = window.setTimeout(() => mine.abort(), 20000);
       const logins = CHANNELS.map((row) => row.twitch ?? "")
         .filter(Boolean)
-        .slice(0, 100)
+        .slice(0, 200)
         .join(",");
       fetch(`/api/twitch-live?logins=${encodeURIComponent(logins)}`, { cache: "no-store", signal: mine.signal })
         .then((res) => (res.ok ? res.json() : null))
@@ -192,7 +192,7 @@ function StreamersPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Streamers</h1>
         <p className="mt-2 text-center text-sm text-muted">
-          Independent hall. YouTube stays on Youtubers.
+          Independent hall of public RuneScape Twitch names. Not every world. YouTube stays on Youtubers.
         </p>
         <p className="mt-1 text-center text-[11px] text-faint">
           {probe === "off" || probe === "down"
@@ -228,6 +228,17 @@ function StreamersPage() {
             ))}
           </ul>
         </section>
+        <p className="text-sm text-muted">
+          Live worlds sit on{" "}
+          <a className="text-parchment" href="https://www.twitch.tv/directory/category/old-school-runescape" target="_blank" rel="noopener noreferrer">
+            Old School
+          </a>
+          {" · "}
+          <a className="text-parchment" href="https://www.twitch.tv/directory/category/runescape" target="_blank" rel="noopener noreferrer">
+            RuneScape
+          </a>
+          . This hall is the names we keep.
+        </p>
         <p className="text-sm text-parchment">
           <Link to="/">Desk</Link>
           {" · "}
