@@ -16,6 +16,8 @@ The colours below are Old School partyhats — the same inventory icons from the
 
 Operator: Christefer Lee Russell-Barnett · russell.christefer@gmail.com
 
+A security mail and a rights-holder take-down use the same address. Do not send a Bank PIN. Do not attach a token.
+
 - Public: [russellchristefer-droid/runescapebannerstudio](https://github.com/russellchristefer-droid/runescapebannerstudio)
 - Private backup: [russellchristefer-droid/runescapebannerstudio-private](https://github.com/russellchristefer-droid/runescapebannerstudio-private)
 - Live: [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)

@@ -93,6 +93,6 @@ python3 clip_bench.py your-clip.mp4 --in 2 --out 8 --size 1280x720
 
 ## Legal
 
-Stills are identification. Jagex owns the game art. Policy: [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
+Stills are identification. Jagex owns the game art. The Fan Content Policy is permission, not a sale — [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
 
-[LICENSE](LICENSE). Operator: Christefer Lee Russell-Barnett.
+This README is not a licence to print official marks. [LICENSE](LICENSE) covers original studio code and prose only. Operator: Christefer Lee Russell-Barnett.

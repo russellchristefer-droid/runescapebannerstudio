@@ -14,7 +14,7 @@ function DonatePage() {
       </header>
       <main id="content" className="mx-auto flex max-w-2xl flex-col gap-4 px-5 py-8 md:px-8">
         <p className="text-sm text-muted">
-          Christefer Lee Russell-Barnett. Optional tip for the person who built this fan studio. Not Jagex.
+          Christefer Lee Russell-Barnett. Optional tip for the person who built this fan studio. Not Jagex. Not a purchase of game art.
           Not a guild bank.
         </p>
         <p className="text-sm">
