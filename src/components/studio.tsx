@@ -480,34 +480,46 @@ export function Studio() {
     return 0.88;
   }
 
-  function applyPackFit(mode: "fit" | "room" | "desk") {
-    setPackFit(mode);
-    placeAllPack(packScale(0, mode), mode);
-  }
-
-  function placeAllPack(packScaleValue?: number, mode: "fit" | "room" | "desk" = packFit) {
-    const pack = SKILLS.filter((skill) => skill.editions.includes(skillPack));
-    const kept = skillPicksRef.current.filter((item) => isMark(item.id)).slice(0, 16);
-    const wanted = packScaleValue ?? packScale(pack.length, mode);
-    const laid = layoutPack(
-      pack.map((skill) => ({
+  function fitPackToPlate(w: number, h: number, mode: "fit" | "room" | "desk" = packFit, fillAll = false) {
+    const marks = skillPicksRef.current.filter((item) => isMark(item.id)).slice(0, 16);
+    let skills = skillPicksRef.current.filter((item) => !isMark(item.id));
+    if (fillAll || !skills.length) {
+      skills = SKILLS.filter((skill) => skill.editions.includes(skillPack)).map((skill) => ({
         id: skill.id,
         game: skillPack,
         level: boardLevels[skillPack][skill.id] ?? "",
         group: "skills-all" as const,
         size: skillSize,
         scale: 1,
+      }));
+    }
+    const laid = layoutPack(
+      skills.map((item) => ({
+        ...item,
+        size: item.size ?? skillSize,
+        scale: 1,
       })),
-      size.width,
-      size.height,
-      wanted,
+      w,
+      h,
+      packScale(skills.length, mode),
     );
     const cell = Number(laid[0] && "size" in laid[0] ? laid[0].size : skillSize) || skillSize;
     setSkillSize(cell);
-    const next = [...laid, ...kept];
+    const next = [...laid, ...marks];
     skillPicksRef.current = next;
     setSkillPicks(next);
     centerNameOverStamps(next);
+    setSaveNote(mode === "fit" ? `Fit ${w}×${h}.` : mode === "room" ? `Room on ${w}×${h}.` : `Desk on ${w}×${h}.`);
+  }
+
+  function applyPackFit(mode: "fit" | "room" | "desk") {
+    setPackFit(mode);
+    fitPackToPlate(size.width, size.height, mode, false);
+  }
+
+  function placeAllPack(packScaleValue?: number, mode: "fit" | "room" | "desk" = packFit) {
+    fitPackToPlate(size.width, size.height, mode, true);
+    void packScaleValue;
   }
 
   function placeStamp(id: string) {
@@ -1670,7 +1682,8 @@ export function Studio() {
               setSizeId("1200x480");
               setGhostZone("twitch");
               requestPaint();
-              setSaveNote("1200×480 Twitch crop.");
+              fitPackToPlate(1200, 480, packFit, false);
+              setSaveNote("1200×480 Twitch crop. Pack fitted.");
             }}
           >
             Twitch crop
@@ -1682,7 +1695,8 @@ export function Studio() {
               setSizeId("1280x720");
               setGhostZone("youtube");
               requestPaint();
-              setSaveNote("1280×720 YouTube crop.");
+              fitPackToPlate(1280, 720, packFit, false);
+              setSaveNote("1280×720 YouTube crop. Pack fitted.");
             }}
           >
             YouTube crop
@@ -1709,6 +1723,7 @@ export function Studio() {
               setGhostZone("none");
               requestPaint();
               const box = BANNER_SIZES.find((row) => row.id === next);
+              if (box) fitPackToPlate(box.width, box.height, packFit, false);
               setSaveNote(`Full still · ${box?.width}×${box?.height}.`);
             }}
           >
@@ -1894,7 +1909,8 @@ export function Studio() {
                   onClick={() => {
                     setSizeId(box.id);
                     requestPaint();
-                    setSaveNote(`${box.width}×${box.height}.`);
+                    fitPackToPlate(box.width, box.height, packFit, false);
+                    setSaveNote(`${box.width}×${box.height}. Pack fitted.`);
                   }}
                   className={`min-h-11 rounded-md border px-2 text-[10px] ${sizeId === box.id ? "border-parchment" : "border-line"}`}
                 >
@@ -1903,10 +1919,10 @@ export function Studio() {
               ))}
               <button
                 type="button"
-                className="h-7 rounded-md border border-line px-2 text-[10px]"
-                onClick={() => placeAllPack()}
+                className="h-7 min-h-11 rounded-md border border-line px-2 text-[10px]"
+                onClick={() => fitPackToPlate(size.width, size.height, packFit, true)}
               >
-                All
+                All skills
               </button>
               {(["fit", "room", "desk"] as const).map((mode) => (
                 <button
