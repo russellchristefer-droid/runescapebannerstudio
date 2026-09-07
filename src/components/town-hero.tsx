@@ -30,11 +30,8 @@ export function TownHero({
   const next = n ? pool[(idx + 1) % n] : undefined;
   const [shown, setShown] = useState(shot?.src);
   const remain = HERO_PERIOD_MS - (clock % HERO_PERIOD_MS);
-  const gameKey = edition === "RS3" ? "rs3" : "osrs";
-  const quote =
-    edition === "RSC"
-      ? "Worlds are closed."
-      : bobLine(gameKey, placeSlug(shot?.name || ""), now);
+  const gameKey = edition === "RS3" ? "rs3" : edition === "RSC" ? "rsc" : "osrs";
+  const quote = bobLine(gameKey, placeSlug(shot?.name || ""), now);
 
   const [caption, setCaption] = useState(shot?.name ?? "");
 

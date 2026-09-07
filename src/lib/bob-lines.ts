@@ -111,10 +111,49 @@ export const BOB_BY_PLACE: Record<string, string[]> = {
   "rs3:anachronia": [
     "Dinosaurs are a thesis about time. The cat is unimpressed.",
   ],
+  "rs3:daemonheim": [
+    "Floors all the way down. Bind the weapon you will keep.",
+    "The rift is a door. The cat does not queue.",
+  ],
+  "rs3:lostgrove": [
+    "The grove was lost on purpose. VoS stays on this client.",
+  ],
+  "rs3:fortforinthry": [
+    "A fort you built. The street is still the street.",
+  ],
+  "osrs:burthorpe": [
+    "Games Room is a room. Death Plateau is the climb.",
+  ],
+  "osrs:taverley": [
+    "Druids and a well. Guthix is a colour here, not a landfall.",
+  ],
+  "osrs:seers": [
+    "The mill and the court. Camelot is the next sentence.",
+  ],
+  "rsc:lumbridge": [
+    "Worlds are closed. The castle still faces the river.",
+    "Tutorial Island is a rumour this brick remembers.",
+  ],
+  "rsc:varrock": [
+    "Worlds are closed. The square still has a palace.",
+  ],
+  "rsc:draynor": [
+    "Worlds are closed. The willow still has a bank.",
+  ],
+  "rsc:edgeville": [
+    "Worlds are closed. The ditch is still north.",
+  ],
+  "rsc:wilderness": [
+    "Worlds are closed. The skull still meant the bag.",
+  ],
 };
 
 export function placeSlug(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const raw = name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  if (raw === "seersvillage" || raw === "seers") return "seers";
+  if (raw === "thelostgrove" || raw === "lostgrove") return "lostgrove";
+  if (raw === "alkharid") return "alkharid";
+  return raw;
 }
 
 export function rememberBobPlace(game: "osrs" | "rs3", slug: string) {
@@ -138,8 +177,8 @@ export function heldBobPlace(game: "osrs" | "rs3", slug: string, now = Date.now(
   return slug;
 }
 
-export function bobLine(game: "osrs" | "rs3", slug: string, now = Date.now()) {
-  const key = heldBobPlace(game, slug, now);
-  const pool = BOB_BY_PLACE[`${game}:${key}`] ?? BOB_LINES;
+export function bobLine(game: "osrs" | "rs3" | "rsc", slug: string, now = Date.now()) {
+  const key = game === "rsc" ? slug : heldBobPlace(game, slug, now);
+  const pool = BOB_BY_PLACE[`${game}:${key}`] ?? (game === "rsc" ? ["Worlds are closed. The letters still remember the walk."] : BOB_LINES);
   return pool[Math.floor(now / 300000) % pool.length] ?? pool[0] ?? BOB_LINES[0];
 }
