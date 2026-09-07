@@ -42,7 +42,7 @@ def cover(src, width: int, height: int):
     return crop.resize((width, height), Image.Resampling.LANCZOS)
 
 
-def paint_name(draw, name: str, width: int, height: int) -> None:
+def paint_name(draw, name: str, width: int, height: int, pack_left: int | None = None, pack_right: int | None = None) -> None:
     label = (name or "").strip()[:12]
     if not label:
         return
@@ -53,19 +53,27 @@ def paint_name(draw, name: str, width: int, height: int) -> None:
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size)
     except OSError:
         font = ImageFont.load_default()
-    x, y = 36, 24
+    box = draw.textbbox((0, 0), label, font=font)
+    name_w = box[2] - box[0]
+    if pack_left is not None and pack_right is not None:
+        x = pack_left + (pack_right - pack_left - name_w) / 2
+        y = 24
+    else:
+        x, y = 36, 24
     for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2)):
         draw.text((x + dx, y + dy), label, font=font, fill=(0, 0, 0))
     draw.text((x, y), label, font=font, fill=(255, 255, 0))
 
 
-def stamp_icons(plate, skills: list[str], width: int, height: int) -> None:
+def stamp_icons(plate, skills: list[str], width: int, height: int) -> tuple[int, int] | None:
     from PIL import Image
 
-    cell = 40 if width <= 1280 else 52
+    cell = 40 if width < 1280 else 44 if width < 1920 else 52
     left = 36
-    top = max(60, height // 2)
+    top = max(60, height // 3)
     folder = PUBLIC / "skills"
+    last = None
+    count = 0
     for i, skill in enumerate(skills[:16]):
         path = folder / f"{skill}.png"
         if not path.is_file():
@@ -77,6 +85,11 @@ def stamp_icons(plate, skills: list[str], width: int, height: int) -> None:
         x = left + (i % 8) * (cell + 8)
         y = top + (i // 8) * (cell + 8)
         plate.paste(icon, (x, y), icon)
+        last = x + cell
+        count += 1
+    if not count:
+        return None
+    return left, last
 
 
 def compose(still: Path, name: str, out: Path, size_id: str, skills: list[str]) -> int:
@@ -91,9 +104,14 @@ def compose(still: Path, name: str, out: Path, size_id: str, skills: list[str]) 
     width, height = SIZES.get(size_id, SIZES["1200x480"])
     src = Image.open(still).convert("RGB")
     plate = cover(src, width, height)
+    pack = None
     if skills:
-        stamp_icons(plate, skills, width, height)
-    paint_name(ImageDraw.Draw(plate), name, width, height)
+        pack = stamp_icons(plate, skills, width, height)
+    draw = ImageDraw.Draw(plate)
+    if pack:
+        paint_name(draw, name, width, height, pack[0], pack[1])
+    else:
+        paint_name(draw, name, width, height)
     out.parent.mkdir(parents=True, exist_ok=True)
     plate.save(out, "JPEG", quality=96)
     print(f"Wrote {out} ({width}x{height})")

@@ -86,7 +86,8 @@ The website is still Node. These are separate files if you only have Python.
 
 ```bash
 python3 still_desk.py --still public/Falador.png --name Christefer --size 1200x480
-python3 clip_bench.py your-clip.mp4 --in 2 --out 8 --size 1280x720
+python3 clip_bench.py your-clip.mp4 --in 2 --out 8 --size 1280x720 --gain 1
+python3 banner_studio.py serve
 ```
 
 `still_desk.py` needs Pillow. `clip_bench.py` needs ffmpeg on PATH. Neither file is the live grok.me desk.

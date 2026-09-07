@@ -40,6 +40,7 @@ def trim(
     mute: bool,
     fade_in: float,
     fade_out: float,
+    gain: float,
 ) -> int:
     bin_ = ffmpeg_bin()
     if not bin_:
@@ -76,6 +77,8 @@ def trim(
         cmd += ["-an"]
     else:
         af = []
+        if gain != 1:
+            af.append(f"volume={max(0.0, min(2.0, gain))}")
         if fade_in > 0:
             af.append(f"afade=t=in:st=0:d={fade_in}")
         if fade_out > 0:
@@ -104,8 +107,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--mute", action="store_true")
     p.add_argument("--fade-in", type=float, default=0.0)
     p.add_argument("--fade-out", type=float, default=0.0)
+    p.add_argument("--gain", type=float, default=1.0, help="Linear gain 0–2")
     args = p.parse_args(argv)
-    return trim(args.clip, args.write, args.in_t, args.out_t, args.size, args.mute, args.fade_in, args.fade_out)
+    return trim(args.clip, args.write, args.in_t, args.out_t, args.size, args.mute, args.fade_in, args.fade_out, args.gain)
 
 
 if __name__ == "__main__":

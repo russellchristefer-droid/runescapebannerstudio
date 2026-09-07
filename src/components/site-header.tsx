@@ -11,18 +11,20 @@ function navActive(path: string, to: string) {
   return path === to || path.startsWith(`${to}/`);
 }
 
-export function StudioNavLinks({ onPick }: { onPick?: () => void }) {
+export function StudioNavLinks({ onPick, stacked }: { onPick?: () => void; stacked?: boolean }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   return (
     <>
       {STUDIO_NAV.map(([to, label], i) => (
-        <span key={to}>
-          {i ? " · " : null}
+        <span key={to} className={stacked ? "block" : undefined}>
+          {!stacked && i ? " · " : null}
           <Link
             to={to}
             preload={to === "/streamers" || to === "/youtubers" ? "intent" : false}
             aria-current={navActive(path, to) ? "page" : undefined}
-            className={navActive(path, to) ? "font-semibold text-parchment underline decoration-parchment/60 underline-offset-4" : ""}
+            className={`${stacked ? "flex min-h-11 items-center px-2 [touch-action:manipulation] " : ""}${
+              navActive(path, to) ? "font-semibold text-parchment underline decoration-parchment/60 underline-offset-4" : ""
+            }`}
             onClick={() => onPick?.()}
           >
             {label}
@@ -101,7 +103,7 @@ export function SiteHeader({
           </button>
           {menu ? (
             <div className="mt-2 flex flex-col gap-1 border border-line bg-[#1a1610] p-2 text-sm text-parchment">
-              <StudioNavLinks onPick={() => setMenu(false)} />
+              <StudioNavLinks stacked onPick={() => setMenu(false)} />
             </div>
           ) : null}
         </div>

@@ -27,11 +27,17 @@ DEFAULT_OUT = ROOT / "banner-1200x480.jpg"
 def serve(host: str, port: int) -> None:
     folder = PUBLIC if PUBLIC.is_dir() else ROOT
     os.chdir(folder)
-    handler = http.server.SimpleHTTPRequestHandler
-    with socketserver.ThreadingTCPServer((host, port), handler) as httpd:
+
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def end_headers(self) -> None:
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Referrer-Policy", "no-referrer")
+            super().end_headers()
+
+    with socketserver.ThreadingTCPServer((host, port), Handler) as httpd:
         httpd.allow_reuse_address = True
         print(f"Serving {folder} at http://{host}:{port}/")
-        print("Stills and marks only. The desk compositor is still the Node app.")
+        print("Stills only. The desk compositor is still the Node app.")
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
