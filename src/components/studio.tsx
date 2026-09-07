@@ -1814,13 +1814,33 @@ export function Studio() {
           >
             −
           </button>
-          <button
-            type="button"
-            className="h-8 min-h-11 rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"
-            onClick={() => fileRef.current?.click()}
-          >
+          <label className="inline-flex h-8 min-h-11 cursor-pointer items-center rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]">
             Upload still
-          </button>
+            <input
+              ref={fileRef}
+              id="desk-still"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="sr-only"
+              tabIndex={0}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                e.target.value = "";
+                if (!file) return;
+                if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp)$/i.test(file.name)) {
+                  setSaveNote("That file is not a still.");
+                  return;
+                }
+                if (customSrc?.startsWith("blob:")) URL.revokeObjectURL(customSrc);
+                customFileRef.current = file;
+                setCustomSrc(URL.createObjectURL(file));
+                setDeskStillSrc(null);
+                setSceneReady(true);
+                setPlateCaption(file.name.slice(0, 48));
+                setSaveNote("Still on the plate. Pick a crop, then Download.");
+              }}
+            />
+          </label>
           <button
             type="button"
             className="h-8 min-h-11 rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"
@@ -2186,31 +2206,6 @@ export function Studio() {
             <input value={world} onChange={(e) => setWorld(sanitizeWorld(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
           </label>
         </div>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          className="sr-only"
-          tabIndex={-1}
-          aria-hidden="true"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            e.target.value = "";
-            if (!file) return;
-            if (!file.type.startsWith("image/")) {
-              setSaveNote("That file is not a still.");
-              return;
-            }
-            if (customSrc?.startsWith("blob:")) URL.revokeObjectURL(customSrc);
-            customFileRef.current = file;
-            setCustomSrc(URL.createObjectURL(file));
-            setDeskStillSrc(null);
-            setSceneReady(true);
-            setPlateCaption(file.name.slice(0, 48));
-            setSaveNote("Still on the plate. Pick a crop, then Download.");
-          }}
-        />
-
         <Suspense fallback={null}>
         <HiscoresLookup
           bare

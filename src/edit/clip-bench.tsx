@@ -438,10 +438,14 @@ export function ClipBench() {
       setStatus("That file is over 500 MB. Cut it smaller first.");
       return;
     }
-    const video = videoRef.current;
+    let video = videoRef.current;
     if (!video) {
-      setStatus("Could not read that file.");
-      return;
+      video = document.createElement("video");
+      video.playsInline = true;
+      video.controls = false;
+      video.preload = "metadata";
+      video.className = "pointer-events-none absolute h-px w-px opacity-0";
+      videoRef.current = video;
     }
     releaseVideo(video, objectUrl.current);
     const url = URL.createObjectURL(file);
@@ -846,14 +850,12 @@ export function ClipBench() {
           {!hasClip ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
               <p className="text-sm text-muted">{ready === "loading" ? "Reading clip…" : "No clip"}</p>
-              <button
-                id="clip-upload"
-                type="button"
-                className="pointer-events-auto min-h-11 rounded-md border border-[#c6a45a] bg-[#241e16] px-4 text-sm text-parchment"
-                onClick={openClipPicker}
+              <label
+                htmlFor="clip-file"
+                className="pointer-events-auto inline-flex min-h-11 cursor-pointer items-center rounded-md border border-[#c6a45a] bg-[#241e16] px-4 text-sm text-parchment"
               >
                 Upload video
-              </button>
+              </label>
             </div>
           ) : null}
           <canvas ref={canvasRef} className="block h-full w-full object-contain" />
@@ -1027,13 +1029,13 @@ export function ClipBench() {
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {hasClip ? (
-            <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openClipPicker}>
+            <label htmlFor="clip-file" className={`${CHIP} pointer-events-auto cursor-pointer`}>
               Replace clip
-            </button>
+            </label>
           ) : (
-            <button type="button" className={`${CHIP} pointer-events-auto`} onClick={openClipPicker}>
+            <label htmlFor="clip-file" className={`${CHIP} pointer-events-auto cursor-pointer`}>
               Upload video
-            </button>
+            </label>
           )}
           {busy ? (
             <button type="button" className={CHIP} onClick={cancelExport}>
