@@ -125,11 +125,13 @@ Plugin pack: [overlays/runelite](https://github.com/russellchristefer-droid/rune
 
 ### Optional Python (no Alt1 / no RuneLite)
 
+Works on Kali the same way: `apt install python3 python3-pil ffmpeg`, then the scripts. Not attack tooling.
+
 | Script | Open | Raw download |
 | --- | --- | --- |
 | Still compositor | [still_desk.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/still_desk.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/still_desk.py) |
 | Clip bench | [clip_bench.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/clip_bench.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/clip_bench.py) |
-| Static stills | [banner_studio.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/banner_studio.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/banner_studio.py) |
+| Kali wrappers | [sidecars/kali](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/sidecars/kali) | [README](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/kali/README.md) |
 
 Folder: [sidecars/](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/sidecars)
 

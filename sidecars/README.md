@@ -10,4 +10,5 @@ python3 sidecars/clip_bench.py clip.mp4 --in 2 --out 8
 python3 sidecars/banner_studio.py serve
 ```
 
-Do not point a host at these files.
+Kali Linux uses the same files. Install with apt, not an exploit kit: [kali/README.md](kali/README.md)
+
