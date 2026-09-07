@@ -41,6 +41,28 @@ function SkillPage() {
           className="mx-auto h-24 w-24 object-contain"
         />
         <p className="mt-3 text-center text-[11px] text-muted">{game}</p>
+        <p className="mt-2 text-center text-[12px] text-faint">A paid hour is you on a call. This is the sheet. Wiki keeps the number.</p>
+        <section className="mt-6">
+          <h2 className="section-h2">Levels</h2>
+          <dl className="mt-3 divide-y divide-line/40 rounded-md border border-line">
+            <div className="grid grid-cols-[5.5rem_1fr] gap-3 px-3 py-2 text-sm">
+              <dt className="text-parchment">Early</dt>
+              <dd className="text-muted">{row.early}</dd>
+            </div>
+            <div className="grid grid-cols-[5.5rem_1fr] gap-3 px-3 py-2 text-sm">
+              <dt className="text-parchment">Mid</dt>
+              <dd className="text-muted">{row.mid}</dd>
+            </div>
+            <div className="grid grid-cols-[5.5rem_1fr] gap-3 px-3 py-2 text-sm">
+              <dt className="text-parchment">Late</dt>
+              <dd className="text-muted">{row.late}</dd>
+            </div>
+          </dl>
+        </section>
+        <section className="mt-6">
+          <h2 className="section-h2">Wear</h2>
+          <p className="text-sm text-muted">{row.wear}</p>
+        </section>
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <section>
             <h2 className="section-h2">Afk</h2>

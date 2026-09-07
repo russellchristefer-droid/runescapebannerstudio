@@ -27,7 +27,7 @@ function SkillsPage() {
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Skills</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
-          Sequence as the client lists them. Afk and fast. Wiki keeps the hour. Sailing moves — confirm that page.
+          Sequence as the client lists them. Early, mid, late, and what to wear. Wiki keeps the hour.
         </p>
         <p className="mt-1 text-center text-sm">
           <Link to="/monsters" className="text-parchment">
