@@ -27,8 +27,8 @@ const STRIP_OSRS = [
 
 const STRIP_RS3 = [
   { src: "/clan-wars/more/rs3-arena.png", name: "The field" },
-  { src: "/locations/falador.jpg", name: "Falador" },
-  { src: "/locations/rs3-falador-a.jpg", name: "Falador square" },
+  { src: "/locations/falador.jpg", name: "Falador gate" },
+  { src: "/locations/burthorpe.jpg", name: "Burthorpe" },
 ] as const;
 
 const STRIP_HISTORY = [
@@ -38,8 +38,8 @@ const STRIP_HISTORY = [
 ] as const;
 
 const STRIP_WIN = [
-  { src: "/Falador.png", name: "Falador walls" },
-  { src: "/locations/osrsfalador.jpg", name: "White city" },
+  { src: "/locations/varrock.jpg", name: "Varrock" },
+  { src: "/locations/osrsfalador.jpg", name: "Falador east bank" },
   { src: "/locations/osrsedge.jpg", name: "Edgeville road" },
 ] as const;
 
