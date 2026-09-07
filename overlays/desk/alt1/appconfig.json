@@ -1,6 +1,6 @@
 {
   "appName": "Still compositor",
-  "description": "Moved. Use the still compositor appconfig.",
+  "description": "Local still compositor. Not a bot. RuneScape® and Old School RuneScape® are Jagex Limited trademarks.",
   "appUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/index.html",
   "configUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/appconfig.json",
   "iconUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/icon.png",
@@ -8,5 +8,9 @@
   "defaultHeight": 580,
   "minWidth": 320,
   "minHeight": 420,
+  "maxWidth": 900,
+  "maxHeight": 900,
+  "requestHandlers": [],
+  "activators": [],
   "permissions": "pixel"
 }

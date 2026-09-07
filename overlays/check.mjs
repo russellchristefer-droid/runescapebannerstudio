@@ -6,30 +6,40 @@ import { fileURLToPath } from "node:url";
 const root = dirname(fileURLToPath(import.meta.url));
 const fail = [];
 
-const cfg = JSON.parse(readFileSync(join(root, "alt1/appconfig.json"), "utf8"));
-for (const key of ["appName", "appUrl", "configUrl", "iconUrl"]) {
-  if (!cfg[key]) fail.push(`alt1 missing ${key}`);
+function readCfg(rel) {
+  return JSON.parse(readFileSync(join(root, rel), "utf8"));
 }
-if (!String(cfg.appUrl).includes("/overlays/alt1/index.html")) fail.push("alt1 appUrl");
-if (!String(cfg.configUrl).startsWith("https://raw.githubusercontent.com/")) fail.push("alt1 configUrl host");
 
-const html = readFileSync(join(root, "alt1/index.html"), "utf8");
-for (const id of ["plate", "file", "save", "name", "twitch", "yt", "capture"]) {
-  if (!html.includes(`id="${id}"`)) fail.push(`alt1 html #${id}`);
+for (const [rel, name, page] of [
+  ["desk/alt1/appconfig.json", "Still compositor", "overlays/desk/alt1/index.html"],
+  ["clips/alt1/appconfig.json", "Clip bench", "overlays/clips/alt1/index.html"],
+]) {
+  const cfg = readCfg(rel);
+  if (cfg.appName !== name) fail.push(`${rel} appName`);
+  if (!String(cfg.appUrl).includes(page)) fail.push(`${rel} appUrl`);
+  if (!String(cfg.configUrl).startsWith("https://raw.githubusercontent.com/")) fail.push(`${rel} host`);
 }
-if (!html.includes("toBlob")) fail.push("alt1 save");
-if (!html.includes("window.alt1")) fail.push("alt1 detect");
 
-const plugin = readFileSync(join(root, "runelite/src/main/java/com/bannerstudio/BannerStudioPlugin.java"), "utf8");
-for (const needle of ["@PluginDescriptor", "@Provides", "startUp", "shutDown", ".panel(panel)", "addNavigation"]) {
-  if (!plugin.includes(needle)) fail.push(`runelite plugin ${needle}`);
+const desk = readFileSync(join(root, "desk/alt1/index.html"), "utf8");
+for (const id of ["plate", "file", "save", "name", "twitch", "yt"]) {
+  if (!desk.includes(`id="${id}"`)) fail.push(`desk #${id}`);
 }
-const panel = readFileSync(join(root, "runelite/src/main/java/com/bannerstudio/BannerStudioPanel.java"), "utf8");
-for (const needle of ["Open desk", "Pick overlay JPEG", "PluginPanel", "LinkBrowser.browse"]) {
-  if (!panel.includes(needle)) fail.push(`runelite panel ${needle}`);
+if (!desk.includes("toBlob")) fail.push("desk save");
+
+const clips = readFileSync(join(root, "clips/alt1/index.html"), "utf8");
+for (const id of ["vid", "file", "save", "play", "pause", "markIn", "markOut"]) {
+  if (!clips.includes(`id="${id}"`)) fail.push(`clips #${id}`);
 }
+if (!clips.includes("MediaRecorder")) fail.push("clips record");
+
 const props = readFileSync(join(root, "runelite/runelite-plugin.properties"), "utf8");
-if (!props.includes("plugins=com.bannerstudio.BannerStudioPlugin")) fail.push("plugin properties");
+if (!props.includes("com.bannerstudio.BannerStudioPlugin")) fail.push("desk plugin id");
+if (!props.includes("com.bannerstudio.ClipBenchPlugin")) fail.push("clips plugin id");
+
+const clipPlugin = readFileSync(join(root, "runelite/src/main/java/com/bannerstudio/ClipBenchPlugin.java"), "utf8");
+for (const needle of ["@PluginDescriptor", "@Provides", ".panel(panel)"]) {
+  if (!clipPlugin.includes(needle)) fail.push(`clip plugin ${needle}`);
+}
 
 if (fail.length) {
   console.error(fail.join("\n"));

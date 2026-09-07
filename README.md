@@ -91,10 +91,10 @@ Stills are identification. RuneScape® and Old School RuneScape® are registered
 
 ## Client plugins (not the website)
 
-| Client | Add |
-| --- | --- |
-| Alt1 Toolkit | [Add app config](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/alt1/appconfig.json) · [folder](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/overlays/alt1) |
-| RuneLite | [Plugin folder](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/overlays/runelite) · sideload, not Plugin Hub |
+| App | Alt1 | RuneLite |
+| --- | --- | --- |
+| Still compositor | [appconfig](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/appconfig.json) | Enable **Banner Studio** after sideload |
+| Clip bench | [appconfig](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/appconfig.json) | Enable **Clip bench** after sideload |
 
 How-to: [overlays/README.md](overlays/README.md)
 

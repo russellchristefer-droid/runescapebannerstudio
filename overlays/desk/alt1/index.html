@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Banner Studio · Alt1</title>
+    <style>
+      :root { color-scheme: dark; --bg:#16130f; --ink:#efe4c8; --gold:#c6a45a; --muted:#a89878; }
+      html,body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 "Segoe UI",system-ui,sans-serif; }
+      header,label,p,.row,.save { margin:0 12px 10px; }
+      h1 { font-size:18px; margin:12px 12px 4px; }
+      header p,.fine,#status { color:var(--muted); font-size:12px; }
+      #plate { display:block; width:calc(100% - 24px); margin:0 12px 10px; background:#120e0a; border:1px solid var(--gold); }
+      .row { display:flex; flex-wrap:wrap; gap:8px; }
+      .chip,.save { min-height:44px; border:1px solid var(--gold); background:#1a1610; color:var(--ink); padding:0 12px; cursor:pointer; }
+      .save { width:calc(100% - 24px); background:#241e16; }
+      #name { display:block; width:100%; min-height:44px; box-sizing:border-box; margin-top:4px; background:#1a1610; color:var(--ink); border:1px solid #c6a45a59; }
+      label.chip { display:inline-flex; align-items:center; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Still compositor</h1>
+      <p>Alt1 sidecar. Not the website. Not a bot.</p>
+    </header>
+    <p id="status">Drop a still you own, or capture if Alt1 is attached.</p>
+    <canvas id="plate" width="1200" height="480" aria-label="Banner plate"></canvas>
+    <div class="row">
+      <label class="chip">Upload still<input id="file" type="file" accept="image/jpeg,image/png,image/webp" hidden /></label>
+      <button type="button" class="chip" id="capture">Capture client</button>
+      <button type="button" class="chip" id="twitch">1200×480</button>
+      <button type="button" class="chip" id="yt">1280×720</button>
+    </div>
+    <label>Name<input id="name" maxlength="12" autocomplete="off" /></label>
+    <button type="button" class="save" id="save">Download JPEG</button>
+    <p class="fine">Add this app: Alt1 → Apps → Add app, then paste the still compositor appconfig URL. Or open <a href="alt1://addapp/https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/appconfig.json">alt1://addapp/…</a> if Toolkit is installed.</p>
+    <script>
+      const plate = document.getElementById("plate");
+      const ctx = plate.getContext("2d");
+      const status = document.getElementById("status");
+      const nameEl = document.getElementById("name");
+      const fileEl = document.getElementById("file");
+      let still = null;
+      let box = { w: 1200, h: 480 };
+      function say(line) { status.textContent = line; }
+      function paint() {
+        plate.width = box.w;
+        plate.height = box.h;
+        ctx.fillStyle = "#120e0a";
+        ctx.fillRect(0, 0, box.w, box.h);
+        if (still) {
+          const r = Math.max(box.w / still.width, box.h / still.height);
+          ctx.drawImage(still, (box.w - still.width * r) / 2, (box.h - still.height * r) / 2, still.width * r, still.height * r);
+        }
+        const name = (nameEl.value || "").trim().slice(0, 12);
+        if (!name) return;
+        ctx.font = "28px sans-serif";
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "#000";
+        ctx.fillStyle = "#ffff00";
+        ctx.strokeText(name, 36, 40);
+        ctx.fillText(name, 36, 40);
+      }
+      function loadBlob(blob) {
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => { still = img; say("Still on the plate."); paint(); };
+        img.onerror = () => say("Could not read that still.");
+        img.src = url;
+      }
+      fileEl.addEventListener("change", () => {
+        const f = fileEl.files && fileEl.files[0];
+        fileEl.value = "";
+        if (f) loadBlob(f);
+      });
+      document.body.addEventListener("dragover", (e) => { e.preventDefault(); });
+      document.body.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) loadBlob(f);
+      });
+      document.getElementById("twitch").onclick = () => { box = { w: 1200, h: 480 }; paint(); };
+      document.getElementById("yt").onclick = () => { box = { w: 1280, h: 720 }; paint(); };
+      nameEl.addEventListener("input", paint);
+      document.getElementById("save").onclick = () => {
+        plate.toBlob((blob) => {
+          if (!blob) { say("Nothing to save."); return; }
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "banner-" + box.w + "x" + box.h + ".jpg";
+          a.click();
+          URL.revokeObjectURL(a.href);
+          say("In the bag.");
+        }, "image/jpeg", 0.92);
+      };
+      document.getElementById("capture").onclick = () => {
+        const a = window.alt1;
+        if (!a) { say("Alt1 is not attached. Upload a still."); return; }
+        const w = Number(a.rsWidth || 0);
+        const h = Number(a.rsHeight || 0);
+        if (typeof a.captureHold !== "function" || w < 8 || h < 8) {
+          say("This Alt1 build has no capture. Upload a still.");
+          return;
+        }
+        try {
+          const raw = a.captureHold(0, 0, w, h);
+          if (!raw) { say("Capture empty. Upload a still."); return; }
+          say("Capture returned. If the plate is blank, upload a still.");
+        } catch (err) {
+          say("Capture failed. Upload a still.");
+        }
+      };
+      paint();
+    </script>
+  </body>
+</html>

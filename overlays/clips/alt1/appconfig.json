@@ -1,0 +1,16 @@
+{
+  "appName": "Clip bench",
+  "description": "Local clip trim. Not a live studio. Not a bot. RuneScape® and Old School RuneScape® are Jagex Limited trademarks.",
+  "appUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/index.html",
+  "configUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/appconfig.json",
+  "iconUrl": "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/icon.png",
+  "defaultWidth": 480,
+  "defaultHeight": 640,
+  "minWidth": 320,
+  "minHeight": 420,
+  "maxWidth": 900,
+  "maxHeight": 900,
+  "requestHandlers": [],
+  "activators": [],
+  "permissions": ""
+}

@@ -14,7 +14,7 @@ public interface BannerStudioConfig extends Config
 	)
 	default String deskUrl()
 	{
-		return "https://runescapebannerstudio.grok.me/";
+		return "https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/desk/alt1/index.html";
 	}
 
 	@ConfigItem(
