@@ -173,7 +173,7 @@ export function Studio() {
   const peteClicks = useRef(0);
   const peteLevel = useRef(0);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
-  const pinchRef = useRef<{ dist: number; scale: number } | null>(null);
+  const pinchRef = useRef<{ dist: number; scale: number; id?: string | null } | null>(null);
   useEffect(() => {
     void ensurePlateFont().then((ok) => {
       setPlateFontOk(ok);
@@ -409,6 +409,25 @@ export function Studio() {
     const hit = skillPicksRef.current.find((item) => item.id === id);
     if (!hit?.group) return skillPicksRef.current.filter((item) => item.id === id);
     return skillPicksRef.current.filter((item) => item.group === hit.group);
+  }
+
+  function stampHit(x: number, y: number, slop: number) {
+    let best: (typeof skillPicksRef.current)[number] | null = null;
+    let bestD = Infinity;
+    for (const item of skillPicksRef.current) {
+      if (item.x == null || item.y == null) continue;
+      const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
+      const cx = item.x + mark / 2;
+      const cy = item.y + mark / 2;
+      const dx = Math.max(0, Math.abs(x - cx) - mark / 2);
+      const dy = Math.max(0, Math.abs(y - cy) - mark / 2);
+      const d = Math.hypot(dx, dy);
+      if (d <= slop && d <= bestD) {
+        best = item;
+        bestD = d;
+      }
+    }
+    return best;
   }
 
   function nudgePack(dx: number, dy: number) {
@@ -1329,14 +1348,23 @@ export function Studio() {
               const rect = canvas.getBoundingClientRect();
               const x = ((e.clientX - rect.left) / rect.width) * size.width;
               const y = ((e.clientY - rect.top) / rect.height) * size.height;
-              const pad = Math.max(8, (44 * size.width) / Math.max(1, rect.width));
-              if (pointersRef.current.size >= 2 && (pickedSkill || pickedText)) {
+              const slop = Math.max(12, (44 * size.width) / Math.max(1, rect.width));
+              if (pointersRef.current.size >= 2) {
+                const midX = x;
+                const midY = y;
+                const under = stampHit(midX, midY, slop);
+                if (under) {
+                  setPickedSkill(under.id);
+                  setPickedText(null);
+                }
                 const pts = [...pointersRef.current.values()];
+                const skillId = under?.id ?? pickedSkill;
                 pinchRef.current = {
                   dist: Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y),
-                  scale: pickedSkill
-                    ? skillPicksRef.current.find((item) => item.id === pickedSkill)?.scale ?? 1
+                  scale: skillId
+                    ? skillPicksRef.current.find((item) => item.id === skillId)?.scale ?? 1
                     : textScaleRef.current[pickedText ?? ""] ?? 1,
+                  id: skillId,
                 };
                 canvas.setPointerCapture(e.pointerId);
                 return;
@@ -1371,7 +1399,12 @@ export function Studio() {
               }
               const textHit = [...boxesRef.current].reverse().find((box) => {
                 if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
-                return x >= box.x && x <= box.x + Math.max(28, box.w) && y >= box.y && y <= box.y + Math.max(28, box.h);
+                return (
+                  x >= box.x - slop &&
+                  x <= box.x + Math.max(28, box.w) + slop &&
+                  y >= box.y - slop &&
+                  y <= box.y + Math.max(28, box.h) + slop
+                );
               });
               if (textHit) {
                 setPickedText(textHit.id);
@@ -1390,17 +1423,19 @@ export function Studio() {
                 (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
                 return;
               }
-              const skillHit = [...skillPicksRef.current].reverse().find((item) => {
-                if (item.x == null || item.y == null) return false;
-                const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
-                return x >= item.x && x <= item.x + mark && y >= item.y && y <= item.y + mark;
-              });
+              const skillHit = stampHit(x, y, slop);
               if (skillHit && skillHit.x != null && skillHit.y != null) {
                 setPickedSkill(skillHit.id);
                 setPickedText(null);
                 if (e.detail >= 2) return;
                 setGrabbing(true);
                 draggingRef.current = true;
+                const touch = e.pointerType === "touch";
+                const mates = touch
+                  ? [{ id: skillHit.id, x0: skillHit.x, y0: skillHit.y }]
+                  : packMates(skillHit.id)
+                      .filter((item) => item.x != null && item.y != null)
+                      .map((item) => ({ id: item.id, x0: item.x as number, y0: item.y as number }));
                 dragRef.current = {
                   id: skillHit.id,
                   x0: skillHit.x,
@@ -1408,14 +1443,12 @@ export function Studio() {
                   px: e.clientX,
                   py: e.clientY,
                   kind: "skill",
-                  mates: packMates(skillHit.id)
-                    .filter((item) => item.x != null && item.y != null)
-                    .map((item) => ({ id: item.id, x0: item.x as number, y0: item.y as number })),
+                  mates,
                 };
                 (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
                 return;
               }
-              if (pickedSkill) {
+              if (pickedSkill && e.pointerType !== "touch") {
                 const lead = skillPicksRef.current.find((item) => item.id === pickedSkill);
                 if (lead) {
                   const mark = Math.max(28, (lead.size ?? skillSize) * (lead.scale ?? 1));
@@ -1450,18 +1483,19 @@ export function Studio() {
               const canvas = canvasRef.current;
               if (!canvas) return;
               if (pointersRef.current.has(e.pointerId)) pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-              if (pointersRef.current.size >= 2 && pinchRef.current && (pickedSkill || pickedText)) {
+              if (pointersRef.current.size >= 2 && pinchRef.current && (pickedSkill || pickedText || pinchRef.current.id)) {
                 e.preventDefault();
                 const pts = [...pointersRef.current.values()];
                 const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
                 const ratio = dist / Math.max(8, pinchRef.current.dist);
-                const next = pickedSkill
+                const target = pinchRef.current.id ?? pickedSkill;
+                const next = target
                   ? Math.min(2.5, Math.max(0.5, pinchRef.current.scale * ratio))
                   : Math.min(2, Math.max(0.75, pinchRef.current.scale * ratio));
-                const current = pickedSkill
-                  ? skillPicksRef.current.find((item) => item.id === pickedSkill)?.scale ?? 1
+                const current = target
+                  ? skillPicksRef.current.find((item) => item.id === target)?.scale ?? 1
                   : textScaleRef.current[pickedText ?? ""] ?? 1;
-                scaleSelected(next - current);
+                scaleSelected(next - current, target);
                 return;
               }
               const rect = canvas.getBoundingClientRect();
@@ -1798,10 +1832,16 @@ export function Studio() {
                       title={skill.name}
                       aria-label={`Place ${skill.name}`}
                       aria-pressed={on}
+                      onPointerUp={(ev) => {
+                        if (ev.pointerType === "touch") {
+                          ev.preventDefault();
+                          placeStamp(skill.id);
+                        }
+                      }}
                       onClick={() => placeStamp(skill.id)}
-                      className={`flex size-8 shrink-0 items-center justify-center rounded-sm p-0 ${on ? "bg-[#241e16]" : "bg-[#1a140c]"}`}
+                      className={`flex size-11 shrink-0 items-center justify-center rounded-sm p-0 [touch-action:manipulation] ${on ? "bg-[#241e16]" : "bg-[#1a140c]"}`}
                     >
-                      <img src={skill.src} alt="" className={`size-6 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
+                      <img src={skill.src} alt="" className={`size-8 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
                     </button>
                     <input
                       aria-label={`${skill.name} level`}
@@ -1840,8 +1880,14 @@ export function Studio() {
                   title={mark.name}
                   aria-label={`Place ${mark.name}`}
                   aria-pressed={on}
+                  onPointerUp={(ev) => {
+                    if (ev.pointerType === "touch") {
+                      ev.preventDefault();
+                      placeStamp(mark.id);
+                    }
+                  }}
                   onClick={() => placeStamp(mark.id)}
-                  className={`flex size-12 items-center justify-center rounded-none bg-transparent p-0 ${on ? "outline outline-1 outline-[#F5C400]" : ""}`}
+                  className={`flex size-12 items-center justify-center rounded-none bg-transparent p-0 [touch-action:manipulation] ${on ? "outline outline-1 outline-[#F5C400]" : ""}`}
                 >
                   <img src={mark.src} alt="" className={`size-8 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
                 </button>
