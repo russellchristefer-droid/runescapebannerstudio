@@ -185,8 +185,10 @@ function HistoryPage() {
               public.
             </li>
             <li>
-              <span className="text-parchment">25 Buttholes</span> — clan tag as joke and as
-              banner. Identification, not a mid this page will print.
+              <span className="text-parchment">25 Buttholes</span> — Old School on camera as
+              sketches and as a pair of eyes in the wild. Chin hunters, gold-farmer walks,
+              the ditch told as a joke that still knows the skull rule. The name is a banner.
+              The work is the VOD.
             </li>
           </ul>
           <p className="mt-4 text-[11px] text-faint">
