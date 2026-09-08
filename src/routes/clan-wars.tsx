@@ -8,7 +8,7 @@ export const Route = createFileRoute("/clan-wars")({
   head: () =>
     pageMeta(
       "Clan Wars",
-      "The minigame. Two canons. The ditch came first. Wiki keeps the portals.",
+      "The minigame. Two canons. Before the ditch you could fight almost anywhere. Wiki keeps the hour.",
     ),
   component: ClanWarsPage,
 });
@@ -258,7 +258,8 @@ function ClanWarsPage() {
             Two Friends Chat / chat-channel sides fight under rules the captains picked.
             It is PvP with a ceiling. Most wars are safe: you keep the bag. That is why
             clans practice here and why F2P masses still fill a world. The Wilderness is
-            a different tax. Do not mix the two sheets.
+            a different tax. Before August 2001 there was not even a ditch — Player Killer
+            mode meant most of the map. Do not mix those sheets.
           </p>
           <ShotStrip items={STRIP_WHAT} />
         </section>
@@ -305,21 +306,35 @@ function ClanWarsPage() {
         <section>
           <h2 className="section-h2">History</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            The Wilderness is the older law. Clan Wars is the named room that came
-            after the law broke. Castle Wars is the flag. Three grammars. Dates below
-            are from the live wikis and the official newsposts they cite. If a lobby
-            went quiet, the wiki is the verdict.
+            The Wilderness is not the first PvP law. Clan Wars is not the first clan
+            fight. Dates below are from the live wikis and the official newsposts they
+            cite. If a lobby went quiet, the wiki is the verdict.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">4 January 2001 — fight almost anywhere</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            RuneScape Classic launched. There was no Wilderness. A character was Player
+            Killer or not. PK mode put an Attack option on other players in most of the
+            world. Lumbridge and banks were the usual safe tiles. Guards tried to stop a
+            fight in town. You could flip PK / non-PK a few times; after that the choice
+            stuck. Combat colour on the name told you higher, even, or lower. Multi was
+            the default weather. Clans did not have a portal. They had a world, a time,
+            and a tile people already used — Varrock road, Edgeville, the walk out of
+            Lumbridge. That is how the first piles formed. Official Classic wiki:
+            player killing, before 13 August 2001.
           </p>
 
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 August 2001 — the ditch is born</h3>
           <p className="text-sm leading-relaxed text-muted">
-            Jagex switched the Wilderness on. Forinthry on the map. PvP as weather.
-            Combat bracket walks with the level number painted on the ground. A skull
-            means you attacked first and you keep fewer pieces. That is the original
-            tax. Free players learned PKing here because there was nowhere else that
-            dropped the bag. Clans did not need a minigame. Two chats picked a multi
-            tile north of Edgeville and walked. Worlds are closed on Classic. The
-            letters still remember that walk.
+            Update: Wilderness system online. Forinthry on the map. The world roughly
+            doubled. PK / non-PK modes left with that patch. PvP became a place, not a
+            character flag. Combat bracket walks with the level number painted on the
+            ground. A skull means you attacked first and you keep fewer pieces. That is
+            the original tax. Jagex put the ditch in because players could not leave
+            Lumbridge without walking into a pile. Free players learned PKing here
+            because there was nowhere else that dropped the bag. Clans still did not
+            need a minigame. Two chats picked a multi tile north of Edgeville and
+            walked. Worlds are closed on Classic. The letters still remember that walk.
           </p>
 
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 December 2004 — the flag</h3>
@@ -356,6 +371,13 @@ function ClanWarsPage() {
             portal, two-minute wall. The first house sat in the wild as compensation,
             not as a skin. Clans that had lived on the ditch learned a ceiling. The bag
             could stay. That is why the minigame still exists.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">9 September 2008 — white and red</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Clan Wars Update on the main client. White portal: safe free-for-all.
+            Red portal: dangerous free-for-all, items drop. Purple stayed the arranged
+            war. People still mix those three colours. Read the door.
           </p>
 
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">2008–2009 — PvP worlds and bounty worlds</h3>
@@ -418,6 +440,22 @@ function ClanWarsPage() {
             Bind as the only freeze if that box is ticked. The current doors sit below.
           </p>
           <StillGrid items={CURRENT_DOORS} />
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">How the piles actually worked</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Classic, before the ditch: call a world, stand on a road people already
+            used, hope the non-PK flag was off. After August 2001: call a wilderness
+            level and a landmark — graveyard, green dragons, Chaos Temple, the ditch
+            north of Edgeville. Multi meant the pile. Single meant you picked one
+            name. A runner into multi was bait, not a kill. Old School still uses
+            that grammar on the ditch and on PvP worlds. RuneScape 3 moved the opt-in
+            to Vala in Edgeville and kept dangerous FFA behind the red Grotto door.
+            Official Clan Wars on both live clients is the ceiling: captains, terms,
+            two-minute wall, bag usually stays. Wilderness clan wars after that are
+            still just two chats and a tile. Protect Item or you are sightseeing.
+            Named clans from public memory belong on History. This page keeps the
+            rooms.
+          </p>
 
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The ditch after the portal</h3>
           <p className="text-sm leading-relaxed text-muted">
