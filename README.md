@@ -123,17 +123,18 @@ Turn on RuneLite → Settings → RuneLite → Developer mode, restart, enable *
 
 Plugin pack: [overlays/runelite](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/overlays/runelite)
 
-### Optional Python (no Alt1 / no RuneLite)
+### Other languages (optional)
 
-Works on Kali the same way: `apt install python3 python3-pil ffmpeg`, then the scripts. Not attack tooling.
+Same two jobs. GitHub will highlight these as code. They are not the client plugins.
 
-| Script | Open | Raw download |
+| Language | Still compositor | Clip bench |
 | --- | --- | --- |
-| Still compositor | [still_desk.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/still_desk.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/still_desk.py) |
-| Clip bench | [clip_bench.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/clip_bench.py) | [raw](https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/sidecars/clip_bench.py) |
-| Kali wrappers | [sidecars/kali](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/sidecars/kali) | [README](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/kali/README.md) |
+| Python | [still_desk.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/still_desk.py) | [clip_bench.py](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/clip_bench.py) |
+| Node 22 | [still-desk.mjs](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/node/still-desk.mjs) | [clip-bench.mjs](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/node/clip-bench.mjs) |
+| Kali / bash | [still-compositor.sh](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/kali/still-compositor.sh) | [clip-bench.sh](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/kali/clip-bench.sh) |
+| PowerShell | [still-desk.ps1](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/win/still-desk.ps1) | [clip-bench.ps1](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/win/clip-bench.ps1) |
 
-Folder: [sidecars/](https://github.com/russellchristefer-droid/runescapebannerstudio/tree/main/sidecars)
+Index: [sidecars/README.md](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/README.md)
 
 ---
 
