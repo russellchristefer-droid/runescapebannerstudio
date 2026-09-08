@@ -65,7 +65,7 @@ function BriefPage() {
               <In to="/history">History</In> — one fan story of public memory. <In to="/chronicle">Chronicle</In> — ages and doors, still two canons.
             </li>
             <li>
-              <In to="/knowledge">Sites</In> — official Jagex and wiki links. <In to="/jmods">Jagex directory</In> — official pages, not a staff login.
+              <In to="/knowledge">Sites</In> — official Jagex first, then Jagex Launcher, RuneLite, Alt1, wikis. <In to="/jmods">Jagex directory</In> — official pages, not a staff login.
             </li>
             <li>
               <In to="/stream">Stream</In> — go-live notes. <In to="/streamers">Streamers</In> — one Twitch hall, search, live first when Helix has a Client-ID and app token. No key: <code>Live check is off.</code> Names still list. No YouTube buttons there. <In to="/youtubers">Youtubers</In> — YouTube hall only.

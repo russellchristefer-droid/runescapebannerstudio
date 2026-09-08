@@ -1,11 +1,21 @@
 export const OFFICIAL_SITES = [
+  ["Jagex", "https://www.jagex.com/"],
+  ["Jagex Launcher", "https://www.jagex.com/launcher"],
   ["Old School RuneScape", "https://oldschool.runescape.com/"],
   ["RuneScape", "https://www.runescape.com/"],
+  ["Dragonwilds", "https://dragonwilds.runescape.com/"],
+  ["Support", "https://support.runescape.com/"],
+  ["Help", "https://help.jagex.com/hc/en-gb"],
+  ["Legal", "https://legal.jagex.com/"],
+  ["Terms", "https://legal.jagex.com/docs/terms/terms-and-conditions"],
+  ["Rules of Old School", "https://legal.jagex.com/docs/rules/rules-of-old-school-runescape"],
+  ["Rules of RuneScape", "https://legal.jagex.com/docs/rules/rules-of-runescape"],
+  ["Fan Content Policy", "https://legal.jagex.com/docs/policies/fan-content-policy"],
   ["Old School wiki", "https://oldschool.runescape.wiki/"],
   ["RuneScape wiki", "https://runescape.wiki/"],
-  ["Fan Content Policy", "https://legal.jagex.com/docs/policies/fan-content-policy"],
-  ["Jagex Support", "https://support.runescape.com/"],
+  ["Classic wiki", "https://classic.runescape.wiki/"],
 ] as const;
+
 
 export function OfficialSites() {
   return (
