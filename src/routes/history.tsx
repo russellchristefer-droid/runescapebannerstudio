@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { pageMeta } from "@/lib/page-title";
 import { BackLink } from "@/components/back-link";
+import { GOLDEN_GNOMES, GNOME_WIKI } from "@/data/golden-gnomes";
 
 export const Route = createFileRoute("/history")({
   head: () => pageMeta("History", "A fan story of public RuneScape memory. Two games. Named work. Not a rank."),
@@ -147,8 +148,11 @@ function HistoryPage() {
           </p>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
             <li>
-              <span className="text-parchment">Zezima</span> — first through the old 99s in a
-              way the boards could see. The name became a tense.
+              <a href="https://runescape.wiki/w/Golden_Gnome_Awards" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Zezima
+              </a>{" "}
+              — first through the old 99s in a way the boards could see. The name became a
+              tense. Golden Gnome, lifetime achievement, 2013.
             </li>
             <li>
               <span className="text-parchment">The Old Nite</span> — on the early boards with
@@ -163,30 +167,47 @@ function HistoryPage() {
               account, not a rumour about the person.
             </li>
             <li>
-              <span className="text-parchment">Lynx Titan</span> — 200 million as weather. The
-              boards still say the name when they mean a ceiling.
+              <a href="https://runescape.wiki/w/Golden_Gnome_Awards" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Lynx Titan
+              </a>{" "}
+              — 200 million as weather. Hall of Fame gnome, 2015. The boards still say the
+              name when they mean a ceiling.
             </li>
             <li>
-              <span className="text-parchment">Woox</span> — first Inferno cape the street
-              could watch. The room learned the zuk set from that walk, not from a paste.
+              <a href="https://www.youtube.com/@Woox" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Woox
+              </a>{" "}
+              — first Inferno cape the street could watch. Hall of Fame 2016, lifetime gnome
+              2017. The room learned the zuk set from that walk, not from a paste.
             </li>
             <li>
-              <span className="text-parchment">B0aty</span> — made the weekly grind a room other
-              people could sit in. Public VOD is the source.
+              <a href="https://www.youtube.com/@B0aty" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                B0aty
+              </a>{" "}
+              — made the weekly grind a room other people could sit in. Stream series, Old
+              School streamer, community champion, lifetime. Public VOD is the source.
             </li>
             <li>
-              <span className="text-parchment">Settled</span> — a limited tile and a UIM bag
-              turned into stories the wiki could footnote. Golden Gnome, Best Old School Video
-              Creator — Swampletics was the public film.
+              <a href="https://www.youtube.com/watch?v=fijvm6uv0w8" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Settled
+              </a>{" "}
+              — a limited tile and a UIM bag turned into stories the wiki could footnote.
+              Golden Gnome film: Swampletics: The Movie. Video creator and gamer of the year
+              after that.
             </li>
             <li>
-              <span className="text-parchment">Torvesta</span> — the ditch in public, so the
-              skull rule was not a private theory. Golden Gnome, Best Old School Video Maker,
-              2018.
+              <a href="https://www.youtube.com/@torvestars" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Torvesta
+              </a>{" "}
+              — the ditch in public, so the skull rule was not a private theory. Golden
+              Gnome, Best Old School Video Maker, 2018.
             </li>
             <li>
-              <span className="text-parchment">Odablock</span> — Old School as a broadcast
-              craft. Raids and the weekly hour, on camera.
+              <a href="https://www.youtube.com/@Odablock" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Odablock
+              </a>{" "}
+              — Old School as a broadcast craft. Best Old School streamer gnome, more than
+              once. Raids and the weekly hour, on camera.
             </li>
             <li>
               <span className="text-parchment">25 Buttholes</span> — Old School on camera as
@@ -195,191 +216,39 @@ function HistoryPage() {
               The work is the VOD.
             </li>
             <li>
-              <span className="text-parchment">RSWillMissIt</span> — Will Miss It. RS3 comedy
-              when that client still filled the room: Stuff Players Say, Golden Gnomes (Best
-              YouTube Channel, series, Video of the Year — Completionist Heist, Historical
-              Timeline), then the long history films the street actually watches — Falador
-              Massacre, EoC, the cartel. The plaque is the VOD, not a private Discord.
+              <a href="https://www.youtube.com/watch?v=2cORFYpwyic" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                RSWillMissIt
+              </a>{" "}
+              — Will Miss It. RS3 comedy when that client still filled the room: Stuff Players
+              Say, then the films that took the gnome — Completionist Heist, Historical
+              Timeline 1998–2018 — then Falador Massacre, EoC, the cartel. The plaque is the
+              VOD, not a private Discord.
             </li>
           </ul>
-          <h3 className="mt-8 text-sm font-semibold text-parchment">Golden Gnomes · video</h3>
+          <h3 className="mt-8 text-sm font-semibold text-parchment">Golden Gnomes</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Jagex’s yearly video gnomes, read off the public ceremony and the wiki. Not a
-            hiscores rank. Not art, not cosplay — those gnomes live on that news post. If a
-            name already sat on the kettle above, it stays there. The rest of the video
-            winners sit here so the room is complete.
+            Every public name Jagex handed a Golden Gnome, 2010 through 2025, as the wiki
+            lists them. Video winners open the winning film when that upload is still up.
+            Art, cosplay, and community gnomes open the ceremony page. The kettle above keeps
+            the street names. This list is the gnomes.
           </p>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
-            <li>
-              <span className="text-parchment">A Friend</span> — Best Guide, 2013. Best Old
-              School Video Maker, 2016. The quest walk the street still copies.
-            </li>
-            <li>
-              <span className="text-parchment">Soup</span> — Gielinor Games. Best Old School
-              Video Creator, Best Video, Best Series. The public party, on a schedule.
-            </li>
-            <li>
-              <span className="text-parchment">TheRSGuy</span> — Best RuneScape Video Creator.
-              The weekly hour on the main client when that hall still filled.
-            </li>
-            <li>
-              <span className="text-parchment">J1mmy</span> — Best New Old School Video Maker,
-              then Best Old School Video Creator, then a RuneScape Video gnome for the
-              twenty-year film. Music gnome too. The edit is the craft.
-            </li>
-            <li>
-              <span className="text-parchment">Maikeru</span> — Best RuneScape Video Maker more
-              than once. Solak as a public lesson.
-            </li>
-            <li>
-              <span className="text-parchment">Protoxx</span> — Best RuneScape Video Creator,
-              Best RuneScape Video. The main-client desk after the comedy years.
-            </li>
-            <li>
-              <span className="text-parchment">C Engineer</span> — Best New Video Maker, 2017.
-              The account as an experiment the street could watch.
-            </li>
-            <li>
-              <span className="text-parchment">Gnomonkey</span> — Best Guidemaker, 2025. The
-              numbers said out loud.
-            </li>
-            <li>
-              <span className="text-parchment">SoloMission</span> — Best Old School Video
-              Creator, 2023. Deadman All-Stars as a streamed event gnome the year after.
-            </li>
-            <li>
-              <span className="text-parchment">Sir Pugger</span> — Video of the Year, 2017.
-              Pretending to be a girl in RuneScape. The joke was the film.
-            </li>
-            <li>
-              <span className="text-parchment">GunsChilli</span> — Best Old School Video Maker,
-              2017. Debt for a pet, on camera.
-            </li>
-            <li>
-              <span className="text-parchment">FatNooblet</span> — Best RuneScape Video Maker,
-              2017.
-            </li>
-            <li>
-              <span className="text-parchment">DitterBitter</span> — Best New Old School Video
-              Maker, 2018.
-            </li>
-            <li>
-              <span className="text-parchment">TanzooRS & Virtoso</span> — Old School Video
-              of the Year, 2018. The group challenge with C Engineer and the rest on the
-              thumbnail.
-            </li>
-            <li>
-              <span className="text-parchment">Mr Mammal</span> — Best Old School Video Guide,
-              2015.
-            </li>
-            <li>
-              <span className="text-parchment">Tehnoobshow</span> — Best RuneScape Video, 2016.
-            </li>
-            <li>
-              <span className="text-parchment">Mr Bug</span> — Best Old School Video, 2016.
-            </li>
-            <li>
-              <span className="text-parchment">RunescapeOmid</span> — Best RuneScape Video,
-              2025: Solak Log — The Journey. Streamer gnome before that.
-            </li>
-            <li>
-              <span className="text-parchment">Evil Lucario</span> — Best RuneScape Video, 2021:
-              first 4000% Arch-Glacor on a public film.
-            </li>
-            <li>
-              <span className="text-parchment">Rendi</span> and{" "}
-              <span className="text-parchment">xzact</span> — Best Old School Video, 2020.
-              Shared gnome. Shared VOD.
-            </li>
-            <li>
-              <span className="text-parchment">LilSmokey</span> — Old School Video of the Year,
-              2019: Swampletics Exposed.
-            </li>
-            <li>
-              <span className="text-parchment">Hanannie</span> — Best New Video Creator, both
-              grammars across 2020 and 2021.
-            </li>
-            <li>
-              <span className="text-parchment">Alien Food</span> — Best New Old School Video
-              Creator, 2025.
-            </li>
-            <li>
-              <span className="text-parchment">Iron Araxxor</span> — Best New RuneScape Video
-              Creator, 2025.
-            </li>
-            <li>
-              <span className="text-parchment">Waydot</span> — Best New RuneScape Video Creator,
-              2023.
-            </li>
-            <li>
-              <span className="text-parchment">Rhys</span> — Best New Old School Video Creator,
-              2023.
-            </li>
-            <li>
-              <span className="text-parchment">Nuzz Nuzz</span> — Best New RuneScape Video
-              Creator, 2021.
-            </li>
-            <li>
-              <span className="text-parchment">9Rain</span> — Best New Old School Video Creator,
-              2020.
-            </li>
-            <li>
-              <span className="text-parchment">DarkWorldOrder</span> — Best New RuneScape Video
-              Maker, 2019.
-            </li>
-            <li>
-              <span className="text-parchment">Ravlar RS</span> — Best New RuneScape Video Maker,
-              2018.
-            </li>
-            <li>
-              <span className="text-parchment">TheCompleteRS</span> — Best RuneScape Video Guide,
-              2015.
-            </li>
-            <li>
-              <span className="text-parchment">Egg Beard</span> — Best Old School Original
-              Content, 2015.
-            </li>
-            <li>
-              <span className="text-parchment">M0te pl0x</span> — Best Old School Video Maker,
-              2015.
-            </li>
-            <li>
-              <span className="text-parchment">Munclesonkey</span> — Best Video Guide, 2014.
-            </li>
-            <li>
-              <span className="text-parchment">Skyzah</span> — Best Machinima, 2014.
-            </li>
-            <li>
-              <span className="text-parchment">Geese Go Moo</span> — Best Live-Action Video,
-              2014.
-            </li>
-            <li>
-              <span className="text-parchment">Realscaperz</span> — Funniest Video, 2013.
-            </li>
-            <li>
-              <span className="text-parchment">Nozfrateu</span> — Best Live Action, 2013.
-            </li>
-            <li>
-              <span className="text-parchment">Zarakye</span> — Machinima one-to-watch, 2013.
-            </li>
-            <li>
-              <span className="text-parchment">BumBum007</span> — Funniest Video / Best Video,
-              2011, when the ceremony still fit in one room.
-            </li>
-            <li>
-              <span className="text-parchment">2010 RuneFest</span> — first video gnomes: Robz,
-              Neon Slay, 1carrot, KKComics, Mino-Tauros, Josh1391. Machinima and live action
-              before the weekly hour existed. The wiki still has the categories.
-            </li>
+            {GOLDEN_GNOMES.map((row) => (
+              <li key={row.name}>
+                <a href={row.href} target="_blank" rel="noopener noreferrer" className="text-parchment">
+                  {row.name}
+                </a>{" "}
+                — {row.years}
+              </li>
+            ))}
           </ul>
           <p className="mt-4 text-[11px] text-faint">
             If a name is not on a public board, a public VOD, or the wiki, it does not belong
-            on this sill. Video gnomes follow{" "}
-            <a href="https://runescape.wiki/w/Golden_Gnome_Awards" target="_blank" rel="noopener noreferrer" className="text-parchment">
+            on this sill. Source:{" "}
+            <a href={GNOME_WIKI} target="_blank" rel="noopener noreferrer" className="text-parchment">
               Golden Gnome Awards
             </a>
-            . Art, cosplay, and community gnomes stay on that page. The Guild quest stays on
-            the wiki. This room is only the kettle.
+            . The Guild quest stays on the wiki. This room is only the kettle.
           </p>
         </aside>
         <p className="mt-8 flex flex-wrap gap-x-3 gap-y-1 text-sm text-parchment">
