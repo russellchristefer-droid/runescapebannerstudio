@@ -32,6 +32,7 @@ import { Route as StoryRouteImport } from './routes/story'
 import { Route as StreamRouteImport } from './routes/stream'
 import { Route as StreamersRouteImport } from './routes/streamers'
 import { Route as VarrockRouteImport } from './routes/varrock'
+import { Route as XLiveRouteImport } from './routes/x-live'
 import { Route as YoutubersRouteImport } from './routes/youtubers'
 import { Route as BossesIndexRouteImport } from './routes/bosses.index'
 import { Route as BossesIdRouteImport } from './routes/bosses.$id'
@@ -159,6 +160,11 @@ const VarrockRoute = VarrockRouteImport.update({
   path: '/varrock',
   getParentRoute: () => rootRouteImport,
 } as any)
+const XLiveRoute = XLiveRouteImport.update({
+  id: '/x-live',
+  path: '/x-live',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const YoutubersRoute = YoutubersRouteImport.update({
   id: '/youtubers',
   path: '/youtubers',
@@ -239,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/stream': typeof StreamRoute
   '/streamers': typeof StreamersRoute
   '/varrock': typeof VarrockRoute
+  '/x-live': typeof XLiveRoute
   '/youtubers': typeof YoutubersRoute
   '/bosses/$id': typeof BossesIdRoute
   '/gods/$god': typeof GodsGodRoute
@@ -275,6 +282,7 @@ export interface FileRoutesByTo {
   '/stream': typeof StreamRoute
   '/streamers': typeof StreamersRoute
   '/varrock': typeof VarrockRoute
+  '/x-live': typeof XLiveRoute
   '/youtubers': typeof YoutubersRoute
   '/bosses/$id': typeof BossesIdRoute
   '/gods/$god': typeof GodsGodRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/stream': typeof StreamRoute
   '/streamers': typeof StreamersRoute
   '/varrock': typeof VarrockRoute
+  '/x-live': typeof XLiveRoute
   '/youtubers': typeof YoutubersRoute
   '/bosses/$id': typeof BossesIdRoute
   '/gods/$god': typeof GodsGodRoute
@@ -350,6 +359,7 @@ export interface FileRouteTypes {
     | '/stream'
     | '/streamers'
     | '/varrock'
+    | '/x-live'
     | '/youtubers'
     | '/bosses/$id'
     | '/gods/$god'
@@ -386,6 +396,7 @@ export interface FileRouteTypes {
     | '/stream'
     | '/streamers'
     | '/varrock'
+    | '/x-live'
     | '/youtubers'
     | '/bosses/$id'
     | '/gods/$god'
@@ -422,6 +433,7 @@ export interface FileRouteTypes {
     | '/stream'
     | '/streamers'
     | '/varrock'
+    | '/x-live'
     | '/youtubers'
     | '/bosses/$id'
     | '/gods/$god'
@@ -459,6 +471,7 @@ export interface RootRouteChildren {
   StreamRoute: typeof StreamRoute
   StreamersRoute: typeof StreamersRoute
   VarrockRoute: typeof VarrockRoute
+  XLiveRoute: typeof XLiveRoute
   YoutubersRoute: typeof YoutubersRoute
   BossesIdRoute: typeof BossesIdRoute
   GodsGodRoute: typeof GodsGodRoute
@@ -635,6 +648,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VarrockRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/x-live': {
+      id: '/x-live'
+      path: '/x-live'
+      fullPath: '/x-live'
+      preLoaderRoute: typeof XLiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/youtubers': {
       id: '/youtubers'
       path: '/youtubers'
@@ -739,6 +759,7 @@ const rootRouteChildren: RootRouteChildren = {
   StreamRoute: StreamRoute,
   StreamersRoute: StreamersRoute,
   VarrockRoute: VarrockRoute,
+  XLiveRoute: XLiveRoute,
   YoutubersRoute: YoutubersRoute,
   BossesIdRoute: BossesIdRoute,
   GodsGodRoute: GodsGodRoute,

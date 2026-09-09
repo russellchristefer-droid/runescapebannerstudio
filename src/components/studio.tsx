@@ -2321,6 +2321,8 @@ export function Studio() {
           <p className="flex max-w-md flex-wrap justify-center gap-x-2 gap-y-1 text-center text-sm text-parchment">
             <Link to="/stream">How to go live</Link>
             <span className="text-faint">·</span>
+            <Link to="/x-live">X live</Link>
+            <span className="text-faint">·</span>
             <Link to="/brief">Brief</Link>
             <span className="text-faint">·</span>
             <Link to="/legal">Legal</Link>

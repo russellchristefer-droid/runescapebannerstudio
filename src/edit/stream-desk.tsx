@@ -205,6 +205,10 @@ export function StreamDesk() {
 
         <p className="text-xs text-faint">
           Fan notes, not a Jagex or Twitch handbook.{" "}
+          <Link to="/x-live" className="text-parchment">
+            X live
+          </Link>
+          {" · "}
           <Link to="/streamers" className="text-parchment">
             Streamers
           </Link>
