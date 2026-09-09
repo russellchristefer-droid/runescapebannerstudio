@@ -105,7 +105,7 @@ export const CHANNELS: Channel[] = [
   { id: "molgoatkirby", name: "molgoatkirby", game: "rs3", twitch: "molgoatkirby", era: "current" },
   { id: "wazzy", name: "Wazzy", game: "rs3", twitch: "wazzy", era: "current" },
   { id: "sr_bigboaby", name: "SR_BigBoaby", game: "rs3", twitch: "sr_bigboaby", era: "current" },
-  { id: "willmissit", name: "WillMissIt", game: "rs3", twitch: "rswillmissit", era: "current" },
+  { id: "willmissit", name: "RSWillMissIt", game: "rs3", twitch: "rswillmissit", era: "current" },
   { id: "couchy", name: "couchy", game: "rs3", twitch: "couchy", era: "current" },
   { id: "rageface", name: "Rageface", game: "rs3", twitch: "rageface", era: "current" },
   { id: "heirloom", name: "Heirloom", game: "rs3", twitch: "heirloom", era: "current" },

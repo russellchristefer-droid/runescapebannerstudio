@@ -58,7 +58,7 @@ export const YOUTUBERS: Youtuber[] = [
   { id: "basetank", name: "Base Tank", game: "rs3", youtube: "BaseTank", era: "current" },
   { id: "carguyrs", name: "CarguyRS", game: "rs3", youtube: "CarguyRS", era: "current" },
   { id: "mukluk", name: "Mukluk", game: "rs3", youtube: "Mukluk", era: "current" },
-  { id: "willmissit", name: "WillMissIt", game: "rs3", youtube: "rswillmissit", era: "current" },
+  { id: "willmissit", name: "RSWillMissIt", game: "rs3", youtube: "rswillmissit", era: "current" },
   { id: "b0aty", name: "B0aty", game: "osrs", youtube: "B0aty", era: "current" },
   { id: "settled", name: "Settled", game: "osrs", youtube: "Settled", era: "current" },
   { id: "framed", name: "Framed", game: "osrs", youtube: "FramedYT", era: "foundation" },

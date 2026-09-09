@@ -192,6 +192,12 @@ function HistoryPage() {
               the ditch told as a joke that still knows the skull rule. The name is a banner.
               The work is the VOD.
             </li>
+            <li>
+              <span className="text-parchment">RSWillMissIt</span> — Will Miss It. RS3 comedy
+              when that client still filled the room: Stuff Players Say, Golden Gnomes, then
+              the long history films the street actually watches — Falador Massacre, EoC, the
+              cartel. The plaque is the VOD, not a private Discord.
+            </li>
           </ul>
           <p className="mt-4 text-[11px] text-faint">
             If a name is not on a public board, a public VOD, or the wiki, it does not belong
