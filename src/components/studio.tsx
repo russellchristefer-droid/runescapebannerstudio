@@ -2226,6 +2226,7 @@ export function Studio() {
             Caps
           </button>
         </div>
+        <Suspense fallback={null}>
         <HiscoresLookup
           bare
           name={streamer}
