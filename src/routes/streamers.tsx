@@ -42,7 +42,9 @@ function Row({
         {row.name}
         {row.official ? <span className="ml-2 text-[10px] text-faint">Official</span> : null}
         {badge === "live" ? (
-          <span className="ml-2 text-[10px] text-faint">{row.game === "rs3" ? "RuneScape" : "Old School"}</span>
+          <span className="ml-2 text-[10px] text-faint">
+            {row.game === "rs3" ? "RuneScape" : row.game === "dw" ? "Dragonwilds" : "Old School"}
+          </span>
         ) : null}
         {badge === "live" ? (
           <span className="ml-2 rounded-sm bg-[#9b1b1b] px-1.5 py-0.5 text-[10px] tracking-[0.08em] text-[#efe4c8] uppercase">
@@ -122,7 +124,11 @@ function StreamersPage() {
             if (known) {
               if (seen.has(known.id)) continue;
               seen.add(known.id);
-              next.push(known);
+              next.push(
+                row.game === "dw" || row.game === "rs3" || row.game === "osrs"
+                  ? { ...known, game: row.game }
+                  : known,
+              );
               continue;
             }
             const id = `live-${handle}`;
@@ -131,7 +137,7 @@ function StreamersPage() {
             next.push({
               id,
               name: String(row.displayName || handle),
-              game: row.game === "rs3" ? "rs3" : "osrs",
+              game: row.game === "rs3" ? "rs3" : row.game === "dw" ? "dw" : "osrs",
               twitch: handle,
             });
           }
@@ -188,12 +194,12 @@ function StreamersPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Twitch Streamers</h1>
         <p className="mt-2 text-center text-sm text-muted">
-          Who is live on Old School and RuneScape right now. The hall stays underneath. YouTube stays on YouTube Streamers.
+          Who is live on Old School, RuneScape, or Dragonwilds right now. Other games stay off the Live row. The hall stays underneath. YouTube stays on YouTube.
         </p>
         <p className="mt-1 text-center text-[11px] text-faint">
           {probe === "off" || probe === "down"
             ? "Live check is off."
-            : `${liveNow.filter((row) => row.game !== "rs3").length} live Old School · ${liveNow.filter((row) => row.game === "rs3").length} live RuneScape. Refresh every 45s while this tab is open.`}
+            : `${liveNow.filter((row) => row.game === "osrs").length} live Old School · ${liveNow.filter((row) => row.game === "rs3").length} live RuneScape · ${liveNow.filter((row) => row.game === "dw").length} live Dragonwilds. Refresh every 45s while this tab is open.`}
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <label className="mx-auto mt-3 block max-w-sm text-[10px] text-muted">
@@ -238,7 +244,7 @@ function StreamersPage() {
         <p className="text-sm text-parchment">
           <Link to="/">Desk</Link>
           {" · "}
-          <Link to="/youtubers">YouTube Streamers</Link>
+          <Link to="/youtubers">YouTube</Link>
           {" · "}
           <Link to="/x-live">X live</Link>
           {" · "}

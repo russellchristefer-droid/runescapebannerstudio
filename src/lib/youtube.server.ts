@@ -5,7 +5,7 @@ export type TubeBoardRow = {
   handle: string;
   live: boolean;
   displayName?: string;
-  game?: "osrs" | "rs3";
+  game?: "osrs" | "rs3" | "dw";
   viewers?: number;
   title?: string;
   latest?: string;
@@ -17,7 +17,8 @@ const BOARD_TTL = 20_000;
 const LIVE_PARAMS = "EgJAAQ==";
 const SKIP =
   /\b(rsps|private server|ikov|elorin|soulsplit|alora|dreamscape|pkscape)\b/i;
-const GAME_WORD = /\b(osrs|old school|runescape|rs3|gielinor|tob|toa|inferno|nex)\b/i;
+const GAME_WORD =
+  /\b(osrs|old school|oldschool|runescape|rs3|gielinor|dragonwilds|ashenfall|tob|toa|inferno|nex)\b/i;
 let boardMemo: { at: number; payload: TubeBoard } | null = null;
 const idCache = new Map<string, string>();
 
@@ -96,7 +97,7 @@ function walkVideos(node: unknown, out: VideoRenderer[]) {
   for (const value of Object.values(rec)) walkVideos(value, out);
 }
 
-async function innertubeLive(query: string, game: "osrs" | "rs3") {
+async function innertubeLive(query: string, game: "osrs" | "rs3" | "dw") {
   const res = await fetch("https://www.youtube.com/youtubei/v1/search?prettyPrint=false", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -122,15 +123,15 @@ async function innertubeLive(query: string, game: "osrs" | "rs3") {
     if (!handle || seen.has(handle)) continue;
     const blob = `${title} ${display} ${handle}`;
     if (SKIP.test(blob)) continue;
+    if (!GAME_WORD.test(title)) continue;
     const known = hallForHandle(handle);
-    if (!known && !GAME_WORD.test(blob)) continue;
     seen.add(handle);
     const viewers = parseWatching(video.viewCountText) || parseWatching(video.shortViewCountText);
     rows.push({
       id: known?.id ?? `live-${handle}`,
       handle,
       displayName: known?.name ?? (display || handle),
-      game: known?.game === "rs3" ? "rs3" : known?.game === "osrs" ? "osrs" : game,
+      game,
       live: true,
       viewers,
       title,
@@ -214,6 +215,7 @@ export async function fetchYoutubeBoard(): Promise<TubeBoard> {
   const directory = await Promise.all([
     innertubeLive("Old School RuneScape", "osrs").catch(() => []),
     innertubeLive("RuneScape 3", "rs3").catch(() => []),
+    innertubeLive("RuneScape Dragonwilds", "dw").catch(() => []),
   ]);
   const rows = mergeLive(directory);
 
@@ -226,12 +228,13 @@ export async function fetchYoutubeBoard(): Promise<TubeBoard> {
         if (!channelId) continue;
         const pulse = await channelPulse(key, channelId);
         if (!pulse.live) continue;
+        if (pulse.title && !GAME_WORD.test(pulse.title) && row.era !== "official") continue;
         const handle = cleanHandle(row.youtube);
         rows.push({
           id: row.id,
           handle,
           displayName: row.name,
-          game: row.game === "rs3" ? "rs3" : "osrs",
+          game: row.id === "dw-off" || row.game === "dw" ? "dw" : row.game === "rs3" ? "rs3" : "osrs",
           live: true,
           title: pulse.title,
         });

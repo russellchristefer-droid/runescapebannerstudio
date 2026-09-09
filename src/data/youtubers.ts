@@ -1,4 +1,4 @@
-export type TubeGame = "osrs" | "rs3" | "both";
+export type TubeGame = "osrs" | "rs3" | "both" | "dw";
 export type TubeEra = "official" | "foundation" | "current";
 
 export type Youtuber = {

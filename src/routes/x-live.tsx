@@ -200,7 +200,7 @@ function XLivePage() {
         <BackLink />
         <h1 className="page-h1 mt-1">X live</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          Who is on X for Old School, RuneScape, and Dragonwilds. Live first if the probe is on. How to go live stays underneath. This page never takes a stream key.
+          Who is on X for Old School, RuneScape, and Dragonwilds. Live first if the probe is on — only when the Space title is one of those games. How to go live stays underneath. This page never takes a stream key.
         </p>
         <p className="mt-1 text-center text-[11px] text-faint">
           {probe === "off" || probe === "down"
@@ -235,7 +235,7 @@ function XLivePage() {
           </ul>
         </section>
         <p className="text-sm text-muted">
-          Live check looks for Spaces when a bearer token exists. Media Studio broadcasts stay on X. Twitch stays on Twitch Streamers. YouTube stays on YouTube Streamers.
+          Live check looks for Spaces when a bearer token exists. Media Studio broadcasts stay on X. Twitch stays on Twitch Streamers. YouTube stays on YouTube.
         </p>
 
         <p className="text-sm leading-relaxed text-muted">
@@ -429,7 +429,7 @@ function XLivePage() {
           {" · "}
           <Link to="/streamers">Twitch Streamers</Link>
           {" · "}
-          <Link to="/youtubers">YouTube Streamers</Link>
+          <Link to="/youtubers">YouTube</Link>
           {" · "}
           <Link to="/discord">Discord</Link>
           {" · "}

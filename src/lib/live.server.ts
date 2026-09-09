@@ -8,6 +8,7 @@ const BOARD_TTL = 20_000;
 const STICKY_TTL = 90_000;
 const GAME_OSRS = "459931";
 const GAME_RS3 = "2083";
+const GAME_DW = "2124871354";
 /** Public Client-ID from twitch.tv's own directory page. Used only when Helix keys are empty. */
 const TWITCH_WEB_CLIENT = "kimne78kx3ncx6brgo4mv6wki5h1ko";
 let boardMemo: { at: number; payload: TwitchBoard } | null = null;
@@ -18,7 +19,7 @@ export type TwitchBoardRow = {
   handle: string;
   live: boolean | "unknown";
   displayName?: string;
-  game?: "osrs" | "rs3";
+  game?: "osrs" | "rs3" | "dw";
   viewers?: number;
   title?: string;
   gameName?: string;
@@ -39,14 +40,16 @@ function liveDisabled() {
   return flag === "false" || flag === "0";
 }
 
-function gameForHandle(handle: string): "osrs" | "rs3" | null {
+function gameForHandle(handle: string): "osrs" | "rs3" | "dw" | null {
   const row = CHANNELS.find((item) => cleanLogin(item.twitch ?? "") === handle);
   return row?.game ?? null;
 }
 
-function categoryGame(name: string): "osrs" | "rs3" | null {
-  if (name === "Old School RuneScape") return "osrs";
-  if (name === "RuneScape") return "rs3";
+function categoryGame(name: string): "osrs" | "rs3" | "dw" | null {
+  const n = name.trim().toLowerCase();
+  if (n === "old school runescape") return "osrs";
+  if (n === "runescape") return "rs3";
+  if (n === "runescape: dragonwilds" || n === "runescape dragonwilds") return "dw";
   return null;
 }
 
@@ -107,18 +110,19 @@ function parseHelixStreams(
     title?: string;
     game_name?: string;
   }[],
-  fallbackGame?: "osrs" | "rs3",
+  fallbackGame?: "osrs" | "rs3" | "dw",
 ) {
   const rows: TwitchBoardRow[] = [];
   for (const stream of data) {
     const handle = cleanLogin(stream.user_login ?? "");
     if (!handle) continue;
     const gameName = String(stream.game_name ?? "");
-    const cat = categoryGame(gameName);
+    const cat = categoryGame(gameName) ?? (gameName ? null : fallbackGame);
+    if (!cat) continue;
     rows.push({
       handle,
       displayName: String(stream.user_name ?? handle).slice(0, 32),
-      game: cat ?? gameForHandle(handle) ?? fallbackGame ?? "osrs",
+      game: cat,
       live: true,
       viewers: Number(stream.viewer_count) || 0,
       title: String(stream.title ?? "").slice(0, 80),
@@ -151,7 +155,7 @@ async function helixByLogins(clientId: string, token: string, logins: string[]) 
   return rows;
 }
 
-async function helixCategory(clientId: string, token: string, gameId: string, game: "osrs" | "rs3") {
+async function helixCategory(clientId: string, token: string, gameId: string, game: "osrs" | "rs3" | "dw") {
   if (!gameId) return [];
   const rows: TwitchBoardRow[] = [];
   let cursor = "";
@@ -198,7 +202,7 @@ const GQL_STREAMS = `query Board($name: String!, $first: Int!, $after: Cursor) {
   }
 }`;
 
-async function gqlCategory(name: string, game: "osrs" | "rs3") {
+async function gqlCategory(name: string, game: "osrs" | "rs3" | "dw") {
   const rows: TwitchBoardRow[] = [];
   let after: string | null = null;
   for (let page = 0; page < 3; page++) {
@@ -344,12 +348,13 @@ export async function fetchTwitchLiveBoard(logins: string[]): Promise<TwitchBoar
   const token = await helixToken().catch(() => "");
   if (id && token) {
     try {
-      const [byLogin, osrsLive, rs3Live] = await Promise.all([
+      const [byLogin, osrsLive, rs3Live, dwLive] = await Promise.all([
         helixByLogins(id, token, pool),
         helixCategory(id, token, GAME_OSRS, "osrs"),
         helixCategory(id, token, GAME_RS3, "rs3"),
+        helixCategory(id, token, GAME_DW, "dw"),
       ]);
-      const rows = mergeLive([byLogin, osrsLive, rs3Live]);
+      const rows = mergeLive([byLogin, osrsLive, rs3Live, dwLive]);
       const payload: TwitchBoard = { ok: true, rows };
       boardMemo = { at: Date.now(), payload };
       return payload;
@@ -361,11 +366,12 @@ export async function fetchTwitchLiveBoard(logins: string[]): Promise<TwitchBoar
   }
 
   try {
-    const [osrsLive, rs3Live] = await Promise.all([
+    const [osrsLive, rs3Live, dwLive] = await Promise.all([
       gqlCategory("Old School RuneScape", "osrs"),
       gqlCategory("RuneScape", "rs3"),
+      gqlCategory("RuneScape: Dragonwilds", "dw"),
     ]);
-    const rows = mergeLive([osrsLive, rs3Live]);
+    const rows = mergeLive([osrsLive, rs3Live, dwLive]);
     if (rows.length) {
       const payload: TwitchBoard = { ok: true, rows };
       boardMemo = { at: Date.now(), payload };
@@ -376,10 +382,9 @@ export async function fetchTwitchLiveBoard(logins: string[]): Promise<TwitchBoar
   }
 
   try {
-    const rows = await decapiBoard(pool);
-    const payload: TwitchBoard = { ok: true, rows };
-    boardMemo = { at: Date.now(), payload };
-    return payload;
+    // Uptime-only helpers cannot see the category. Do not badge Just Chatting as live.
+    await decapiBoard(pool);
+    return { ok: true, rows: [] };
   } catch {
     return { ok: false, rows: [] };
   }
