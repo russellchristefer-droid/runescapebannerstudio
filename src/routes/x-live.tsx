@@ -235,7 +235,7 @@ function XLivePage() {
           </ul>
         </section>
         <p className="text-sm text-muted">
-          Live check looks for Spaces when a bearer token exists. Media Studio broadcasts stay on X. Twitch stays on Streamers. YouTube stays on Youtubers.
+          Live check looks for Spaces when a bearer token exists. Media Studio broadcasts stay on X. Twitch stays on Twitch Streamers. YouTube stays on YouTube Streamers.
         </p>
 
         <p className="text-sm leading-relaxed text-muted">
@@ -427,9 +427,9 @@ function XLivePage() {
         <p className="text-sm text-parchment">
           <Link to="/stream">Stream</Link>
           {" · "}
-          <Link to="/streamers">Streamers</Link>
+          <Link to="/streamers">Twitch Streamers</Link>
           {" · "}
-          <Link to="/youtubers">Youtubers</Link>
+          <Link to="/youtubers">YouTube Streamers</Link>
           {" · "}
           <Link to="/edit">Clips</Link>
           {" · "}

@@ -6,7 +6,7 @@ import { OfficialSites } from "@/components/official-sites";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/youtubers")({
-  head: () => pageMeta("Youtubers", "Independent YouTube directory for Old School RuneScape and RuneScape."),
+  head: () => pageMeta("YouTube Streamers", "Independent YouTube directory for Old School RuneScape and RuneScape."),
   component: YoutubersPage,
 });
 
@@ -190,9 +190,9 @@ function YoutubersPage() {
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
-        <h1 className="page-h1 mt-1">Youtubers</h1>
+        <h1 className="page-h1 mt-1">YouTube Streamers</h1>
         <p className="mt-2 text-center text-sm text-muted">
-          Who is live on Old School and RuneScape right now. The hall stays underneath. Twitch stays on Streamers.
+          Who is live on Old School and RuneScape right now. The hall stays underneath. Twitch stays on Twitch Streamers.
         </p>
         <p className="mt-1 text-center text-[11px] text-faint">
           {probe === "off" || probe === "down"
@@ -250,7 +250,9 @@ function YoutubersPage() {
         <p className="text-sm text-parchment">
           <Link to="/">Desk</Link>
           {" · "}
-          <Link to="/streamers">Streamers</Link>
+          <Link to="/streamers">Twitch Streamers</Link>
+          {" · "}
+          <Link to="/x-live">X live</Link>
         </p>
       </main>
     </div>

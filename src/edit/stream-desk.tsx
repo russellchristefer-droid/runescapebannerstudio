@@ -210,11 +210,11 @@ export function StreamDesk() {
           </Link>
           {" · "}
           <Link to="/streamers" className="text-parchment">
-            Streamers
+            Twitch Streamers
           </Link>
           {" · "}
           <Link to="/youtubers" className="text-parchment">
-            Youtubers
+            YouTube Streamers
           </Link>
         </p>
       </div>

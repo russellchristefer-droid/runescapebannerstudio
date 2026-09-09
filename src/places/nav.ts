@@ -14,8 +14,8 @@ export const STUDIO_NAV = [
   ["/brief", "Brief"],
   ["/history", "History"],
   ["/chronicle", "Chronicle"],
-  ["/streamers", "Streamers"],
-  ["/youtubers", "Youtubers"],
+  ["/streamers", "Twitch Streamers"],
+  ["/youtubers", "YouTube Streamers"],
   ["/x-live", "X live"],
   ["/legal", "Legal"],
 ] as const;
