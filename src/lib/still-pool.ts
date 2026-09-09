@@ -125,7 +125,7 @@ export const HERO_STILLS: HeroStill[] = [
     view: "a",
   },
   {
-    src: "/Falador.png",
+    src: "/locations/osrs-falador-a.jpg",
     era: "osrs",
     kind: "place",
     name: "Falador",

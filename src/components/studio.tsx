@@ -83,7 +83,7 @@ export function Studio() {
     if (saved.stillSrc) return saved.stillSrc;
     const id = boot.locationId ?? saved.locationId ?? "falador";
     const loc = LOCATIONS.find((row) => row.id === id);
-    return townPlateSrc(id) ?? loc?.viewA ?? "/Falador.png";
+    return townPlateSrc(id) ?? loc?.viewA ?? (loc?.edition === "OSRS" ? "/locations/osrs-falador-a.jpg" : "/locations/rs3-falador-a.jpg");
   });
   const [sceneReady, setSceneReady] = useState(true);
   const [skillPack, setSkillPack] = useState<"OSRS" | "RS3">(boot.edition ?? saved.skillPack ?? "RS3");
@@ -882,7 +882,7 @@ export function Studio() {
     const tries = [
       customSrc,
       deskStillSrc,
-      "/Falador.png",
+      location.edition === "OSRS" ? "/locations/osrs-falador-a.jpg" : "/locations/rs3-falador-a.jpg",
       sceneSrc,
       location.viewA,
       ...(location.stills ?? []),
@@ -1278,7 +1278,7 @@ export function Studio() {
           <img
             id="still"
             alt=""
-            src={sceneSrc || "/Falador.png"}
+            src={sceneSrc || (edition === "OSRS" ? "/locations/osrs-falador-a.jpg" : "/locations/rs3-falador-a.jpg")}
             className="pointer-events-none absolute inset-0 h-full w-full object-cover"
             style={{
               transform: `translate(${(stillPan.x / Math.max(1, size.width)) * 100}%, ${(stillPan.y / Math.max(1, size.height)) * 100}%) scale(${stillZoom})`,

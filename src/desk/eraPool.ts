@@ -59,7 +59,8 @@ export function captionForSrc(src: string) {
   const path = src.replace(/^https?:\/\/[^/]+/i, "").split("?")[0];
   const hit = allEraSrcs().find((row) => row.src === path || path.endsWith(row.src));
   if (hit) return eraCaption(hit);
-  if (path.endsWith("/Falador.png") || path.endsWith("/era/osrs/falador.png")) return "OSRS · Falador";
+  if (path.endsWith("/Falador.png") || path.endsWith("/era/osrs/falador.png") || path.includes("osrs-falador-a")) return "OSRS · Falador";
+  if (path.includes("rs3-falador-a") || path.endsWith("/locations/falador.jpg")) return "RuneScape · Falador";
   return "";
 }
 

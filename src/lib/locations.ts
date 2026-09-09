@@ -59,19 +59,24 @@ function asset(path: string) {
 }
 
 export function stillAllowed(path: string, edition: Edition) {
-  const p = path.toLowerCase();
+  const p = path.toLowerCase().split("?")[0];
   if (edition === "OSRS") {
     if (p.includes("/rs3") || p.includes("rs3-") || p.includes("/rsc/") || p.includes("rsc-")) return false;
+    if (p.includes("/era/rs3/")) return false;
+    if (p.endsWith("/locations/falador.jpg") || p.includes("/locations/falador-nightstone")) return false;
   }
   if (edition === "RS3") {
     if (p.includes("/osrs") || p.includes("osrs-") || p.includes("/rsc/") || p.includes("rsc-")) return false;
+    if (p.includes("/era/osrs/") || p.includes("/era/classic/")) return false;
+    if (p.endsWith("/falador.png")) return false;
   }
   return true;
 }
 
 /** Sharpest same-canon in-world plate. Root PNG only when that file is this client. */
 const SHARP_TOWN: Record<string, string> = {
-  osrsfalador: "/Falador.png",
+  falador: "/locations/rs3-falador-a.jpg",
+  osrsfalador: "/locations/osrs-falador-a.jpg",
   canifis: "/Canifis.png",
   catherby: "/Catherby.png",
   daemonheim: "/Daemonheim.png",
@@ -194,7 +199,11 @@ function loc(
         : undefined;
   const safeA = stillAllowed(viewA, edition) ? viewA : viewA;
   const extras = (extra.stills ?? []).filter((src) => stillAllowed(src, edition));
-  const stills = [safeA, viewB, ...extras].filter((src, i, arr): src is string => Boolean(src) && arr.indexOf(src) === i);
+  const stillKey = (src: string) => src.split("?")[0];
+  const stills = [safeA, viewB, ...extras].filter((src, i, arr): src is string => {
+    if (!src) return false;
+    return arr.findIndex((row) => row && stillKey(row) === stillKey(src)) === i;
+  });
   return {
     id,
     name,
@@ -222,6 +231,7 @@ export const LOCATIONS: Location[] = [
   loc("falador", "Falador", "Asgarnia", "Saradomin", "RS3", "town", {
     source: "studio-capture",
     filePage: "https://runescape.wiki/w/File:Falador.png",
+    stills: ["/locations/falador.jpg"],
   }),
   loc("varrock", "Varrock", "Misthalin", "Saradomin", "RS3", "town", {
     source: "studio-capture",
@@ -272,6 +282,7 @@ export const LOCATIONS: Location[] = [
   loc("osrsfalador", "Falador", "Asgarnia · OSRS", "Saradomin", "OSRS", "town", {
     source: "studio-capture",
     filePage: "https://oldschool.runescape.wiki/w/File:Falador.png",
+    viewB: "/locations/osrs-falador-a.jpg",
   }),
   loc("osrsvarrock", "Varrock", "Misthalin · OSRS", "Saradomin", "OSRS", "town", {
     source: "studio-capture",
