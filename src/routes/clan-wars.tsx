@@ -223,7 +223,7 @@ function ClanWarsPage() {
         </p>
         <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
           The minigame. Not a login. Two chats walk through a purple portal and agree the
-          terms. The ditch came first. The flag game is a different map.
+          terms. The ditch came first. The flag game is a different map. Wiki keeps the hour.
         </p>
         <p className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-sm">
           <a className="text-parchment" href="https://oldschool.runescape.wiki/w/Clan_Wars" target="_blank" rel="noopener noreferrer">
@@ -255,9 +255,10 @@ function ClanWarsPage() {
         <section>
           <h2 className="section-h2">What it is</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Two Friends Chat / chat-channel sides fight under rules the captains picked.
-            It is PvP with a ceiling. Most wars are safe: you keep the bag. That is why
-            clans practice here and why F2P masses still fill a world. The Wilderness is
+            Two sides fight under rules the captains picked. On Old School those sides are
+            chat-channels — not the clan tab, not a citadel. On RuneScape they are Friends
+            Chats. It is PvP with a ceiling. Most wars are safe: you keep the bag. That is
+            why clans practice here and why F2P masses still fill a world. The Wilderness is
             a different tax. Before August 2001 there was not even a ditch — Player Killer
             mode meant most of the map. Do not mix those sheets.
           </p>
@@ -436,10 +437,66 @@ function ClanWarsPage() {
             pocket in Wilderness 13–16. Bank. Pool of Refreshment. Clan Wars and Last
             Man Standing moved here from Giants’ Plateau. White portal to practice.
             Purple for the war. Ring of dueling, minigame teleport, or a waka canoe.
-            Teleblocked players stay outside. 23 May 2024 added Classic F2P magic —
-            Bind as the only freeze if that box is ticked. The current doors sit below.
+            Teleblocked players stay outside. A Castle Wars portal sits on the east of
+            the LMS house — that is the flag game, not this minigame. The Old Nite is a
+            pub in this enclave, named for an early hiscores board; the plaque is on
+            History. Bounty Hunter’s door is here too, and it leads to Daimon’s Crater,
+            not the purple wall. Do not mix those three rooms.
           </p>
           <StillGrid items={CURRENT_DOORS} />
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">23 May 2024 — Classic F2P magic</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Official Old School patch: a Magic dropdown option so Bind is the only freeze
+            if that box is ticked. Captains who want 2007 F2P grammar use that switch.
+            Food, overheads, specs, and the team cap are still the other boxes. Read them.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 November 2024 — blighted in the pocket</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Blighted supplies may be eaten inside Ferox. The pocket is still a pocket.
+            The ditch outside is still the tax.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">2025 — Bounty Hunter is a crater</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            On the live Old School wiki, Bounty Hunter is Daimon’s Crater, not Clan Wars.
+            You walk from a Ferox portal, put coins in a coffer, and take a target. The
+            PvP-world rota is a rota — worlds move; the wiki prints this week’s list.
+            Official news dated 7 September 2026 named Period A for that week. Do not
+            tattoo a world number on this page.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">28 January 2026 — Oddskull still a mode</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Official Old School patch: the opposing team can pick up a dropped Oddskull
+            again. Last team standing, first to X kills, king of the hill, most kills,
+            and Oddskull are still the purple-portal scores. Twelve maps. Classic arena
+            is one of them. The 29 June 2026 RuneScape patch that cleared bleeds after
+            death is the same proof on the other client: the Grotto is still live.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">27 May 2026 — thirty seconds</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Old School Wilderness: if you die without another player in combat for the
+            last thirty seconds, that death is PvM, not PvP — even if someone tagged you
+            earlier. 8 July 2026 added a warning when you walk in with untradeables that
+            need a Trouver parchment. File those on the wiki. They are ditch law, not
+            Ferox terms.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The current hour</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Old School Clan Wars still lives in Ferox. Official FFA world is printed on
+            the wiki. LMS Competitive is a different building in the same enclave.
+            Fight Pit is still a TzHaar bowl. Castle Wars is still west of Yanille, with
+            a portal from Ferox if you want the flag without the walk. RuneScape Clan
+            Wars still lives in Gamers’ Grotto. Rated Clan Wars, when it is on, is Clan
+            Camp — confirm the lobby on the RuneScape wiki. Vala in Edgeville is still
+            the opt-in for that client’s wild. Official news dated 7 September 2026
+            pointed Pete Kayer’s PvP Challenges at Ferox from 7 October. That is a
+            posted hour, not a live room until the post says it is.
+          </p>
 
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">How the piles actually worked</h3>
           <p className="text-sm leading-relaxed text-muted">
@@ -476,8 +533,9 @@ function ClanWarsPage() {
             Lives in Ferox Enclave — a safe pocket of the Wilderness. Ring of dueling,
             minigame teleport, or a waka canoe. Edgeville is the last ordinary town on
             the walk north. Yanille is west-country; the Castle Wars door sits past it,
-            not inside Ferox. Giants’ Plateau was the first Old School house. It is not
-            the house anymore.
+            and a portal from Ferox will take you there. Giants’ Plateau was the first
+            Old School house. It is not the house anymore. LMS is the next building.
+            Bounty Hunter is the crater through its own door. The Old Nite is the pub.
           </p>
           <ShotStrip items={STRIP_OSRS} />
         </section>
@@ -486,9 +544,13 @@ function ClanWarsPage() {
           <h2 className="section-h2">RuneScape</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             Lives in Gamers’ Grotto, a cave north of Falador. Same idea: captain to
-            captain. The field after the purple portal is the war. Falador east bank
-            was the merch lawn — people stood there to trade, not to pile. Burthorpe
-            is the next hill, not the Grotto.
+            captain, Friends Chat, up to a hundred a side. The field after the purple
+            portal is the war. White is the safe FFA. Red is the dangerous FFA — items
+            drop, Protect Item is the keep. Falador east bank was the merch lawn —
+            people stood there to trade, not to pile. Burthorpe is the next hill, not
+            the Grotto. Rated Clan Wars, if the lobby is up, is Clan Camp. A June 2026
+            bleed patch is why this desk still calls the Grotto live. Clan citadels are
+            a different skill. Do not mix them.
           </p>
           <ShotStrip items={STRIP_RS3} />
         </section>
@@ -498,8 +560,8 @@ function ClanWarsPage() {
           <p className="mt-2 text-sm leading-relaxed text-muted">
             TzHaar built a bowl. You walk in with a crowd. You walk out alone or you
             sit the orb. There is no captain and no two-minute wall. The jingle is
-            called Last Man Standing. That name later went to a different minigame.
-            Do not mix the two sheets.
+            called Last Man Standing. That name later went to a different minigame
+            in Ferox. Do not mix the two sheets.
           </p>
           <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Old School — Mor Ul Rek</h3>
           <p className="text-sm leading-relaxed text-muted">
