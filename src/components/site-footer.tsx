@@ -20,6 +20,13 @@ export function SiteFooter() {
         >
           Fan Content Policy
         </a>
+        <a
+          href="https://dragonwilds.runescape.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          RuneScape: Dragonwilds
+        </a>
       </nav>
     </footer>
   );
