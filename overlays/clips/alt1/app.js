@@ -1,19 +1,31 @@
 /**
  * Clip bench for Alt1 Toolkit.
  *
- * Add the app with overlays/clips/alt1/appconfig.json.
- * No pixel permission. Upload a clip you own, mark In / Out, Save WebM.
- * index.html ships the same logic inline for GitHub raw.
+ * Upload a clip you own. Pick a crop. Download that size as WebM.
+ * Crops: 1920×1080, 1280×720, 1080×1920, 1080×1080, 1200×480, native.
  */
 (function () {
   const video = document.getElementById("vid");
+  const stage = document.getElementById("stage");
+  const ctx = stage.getContext("2d");
   const status = document.getElementById("status");
   const span = document.getElementById("span");
   const fileEl = document.getElementById("file");
 
+  const CROP = {
+    "16:9-1080": { w: 1920, h: 1080 },
+    "16:9-720": { w: 1280, h: 720 },
+    "9:16": { w: 1080, h: 1920 },
+    "1:1": { w: 1080, h: 1080 },
+    banner: { w: 1200, h: 480 },
+    native: { w: 0, h: 0 },
+  };
+
   let objectUrl = "";
   let inPoint = 0;
   let outPoint = 0;
+  let cropId = "16:9-720";
+  let busy = false;
 
   function say(line) {
     status.textContent = line;
@@ -23,20 +35,42 @@
     span.textContent = "In " + inPoint.toFixed(2) + " · Out " + outPoint.toFixed(2);
   }
 
+  function sizeFor(id) {
+    if (id === "native") {
+      return { w: video.videoWidth || 1280, h: video.videoHeight || 720 };
+    }
+    return CROP[id] || CROP["16:9-720"];
+  }
+
+  function coverDraw(w, h) {
+    stage.width = w;
+    stage.height = h;
+    ctx.fillStyle = "#120e0a";
+    ctx.fillRect(0, 0, w, h);
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    if (!vw || !vh) return;
+    const scale = Math.max(w / vw, h / vh);
+    const dw = vw * scale;
+    const dh = vh * scale;
+    ctx.drawImage(video, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  }
+
   function take(file) {
-    if (!file) {
+    if (!file) return;
+    const ok = (file.type && file.type.indexOf("video") === 0) || /\.(mp4|webm|mov|m4v)$/i.test(file.name);
+    if (!ok) {
+      say("Could not read that file.");
       return;
     }
-    if (objectUrl) {
-      URL.revokeObjectURL(objectUrl);
-    }
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = URL.createObjectURL(file);
     video.src = objectUrl;
     video.onloadedmetadata = function () {
       inPoint = 0;
       outPoint = video.duration || 0;
       showSpan();
-      say(file.name + " · " + (video.duration || 0).toFixed(2) + "s");
+      say(file.name + " · " + (video.duration || 0).toFixed(2) + "s · " + video.videoWidth + "×" + video.videoHeight);
     };
     video.onerror = function () {
       say("Could not read that file.");
@@ -67,64 +101,97 @@
   };
   document.getElementById("markIn").onclick = function () {
     inPoint = video.currentTime || 0;
-    if (inPoint > outPoint) {
-      outPoint = video.duration || inPoint;
-    }
+    if (inPoint > outPoint) outPoint = video.duration || inPoint;
     showSpan();
   };
   document.getElementById("markOut").onclick = function () {
     outPoint = video.currentTime || 0;
-    if (outPoint < inPoint) {
-      inPoint = 0;
-    }
+    if (outPoint < inPoint) inPoint = 0;
     showSpan();
   };
 
-  document.getElementById("save").onclick = async function () {
+  document.querySelectorAll("[data-crop]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      cropId = btn.getAttribute("data-crop") || "16:9-720";
+      document.querySelectorAll("[data-crop]").forEach(function (el) {
+        el.classList.toggle("on", el === btn);
+      });
+      const box = sizeFor(cropId);
+      say(cropId + " · " + box.w + "×" + box.h);
+    });
+  });
+
+  function pickMime() {
+    if (typeof MediaRecorder === "undefined") return "";
+    if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")) return "video/webm;codecs=vp8,opus";
+    if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8")) return "video/webm;codecs=vp8";
+    if (MediaRecorder.isTypeSupported("video/webm")) return "video/webm";
+    return "";
+  }
+
+  async function saveCrop(id) {
+    if (busy) return;
     if (!video.src || !video.duration) {
-      say("No clip.");
+      say("Upload a clip first.");
       return;
     }
-    if (typeof MediaRecorder === "undefined") {
+    const mime = pickMime();
+    if (!mime) {
       say("This window cannot record.");
       return;
     }
-    const stream = video.captureStream
-      ? video.captureStream()
-      : video.mozCaptureStream && video.mozCaptureStream();
-    if (!stream) {
+    const box = sizeFor(id);
+    const w = box.w;
+    const h = box.h;
+    busy = true;
+    say("Making " + w + "×" + h + "…");
+    coverDraw(w, h);
+    const stream = stage.captureStream(30);
+    let rec;
+    try {
+      rec = new MediaRecorder(stream, { mimeType: mime });
+    } catch (err) {
+      busy = false;
       say("This window cannot record.");
       return;
     }
-    const mime = MediaRecorder.isTypeSupported("video/webm;codecs=vp8")
-      ? "video/webm;codecs=vp8"
-      : "video/webm";
-    const recorder = new MediaRecorder(stream, { mimeType: mime });
     const chunks = [];
-    recorder.ondataavailable = function (event) {
-      if (event.data && event.data.size) {
-        chunks.push(event.data);
-      }
+    rec.ondataavailable = function (event) {
+      if (event.data && event.data.size) chunks.push(event.data);
     };
-    recorder.onstop = function () {
-      const blob = new Blob(chunks, { type: recorder.mimeType || "video/webm" });
+    rec.onstop = function () {
+      busy = false;
+      const blob = new Blob(chunks, { type: rec.mimeType || "video/webm" });
+      if (blob.size < 64) {
+        say("Export wrote an empty file.");
+        return;
+      }
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "clip-" + Math.round(inPoint) + "-" + Math.round(outPoint) + ".webm";
+      link.download = "clip-" + w + "x" + h + "-" + Math.round(inPoint) + "-" + Math.round(outPoint) + ".webm";
       link.click();
       URL.revokeObjectURL(link.href);
-      say("In the bag.");
+      say("In the bag · " + w + "×" + h);
     };
     video.currentTime = inPoint;
     await video.play().catch(function () {});
-    recorder.start();
+    rec.start();
     function tick() {
+      coverDraw(w, h);
       if (video.currentTime >= outPoint || video.ended) {
         video.pause();
-        recorder.stop();
+        rec.stop();
         video.removeEventListener("timeupdate", tick);
       }
     }
     video.addEventListener("timeupdate", tick);
-  };
+  }
+
+  document.querySelectorAll("[data-dl]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const id = btn.getAttribute("data-dl") || "16:9-720";
+      cropId = id;
+      void saveCrop(id);
+    });
+  });
 })();

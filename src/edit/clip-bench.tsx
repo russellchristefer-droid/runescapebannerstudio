@@ -771,7 +771,7 @@ export function ClipBench() {
     }
   }
 
-  async function exportClip(pair = false) {
+  async function exportClip(pair = false, box?: { w: number; h: number }) {
     const video = videoRef.current;
     if (!hasClip && !video?.src) {
       setStatus("Upload a clip first.");
@@ -785,7 +785,7 @@ export function ClipBench() {
     setExportPct(0);
     setStatus("Making clip…");
     try {
-      const first = pair ? CLIP_ASPECTS["16x9-720"] : size;
+      const first = pair ? CLIP_ASPECTS["16x9-720"] : box ?? size;
       const one = await recordOnce(first.w, first.h);
       await downloadBlob(one.blob, first.w, first.h, one.mime);
       if (pair) {
@@ -802,6 +802,11 @@ export function ClipBench() {
       setBusy(false);
       setExportPct(0);
     }
+  }
+
+  async function exportSize(id: ClipAspect) {
+    setAspect(id);
+    await exportClip(false, CLIP_ASPECTS[id]);
   }
 
   function cancelExport() {
@@ -1124,10 +1129,11 @@ export function ClipBench() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {(["16x9-1080", "16x9-720", "9x16", "1x1"] as ClipAspect[]).map((id) => (
+          {(Object.keys(CLIP_ASPECTS) as ClipAspect[]).map((id) => (
             <button
               key={id}
               type="button"
+              data-crop={id}
               className={aspect === id ? CHIP_ON : CHIP}
               onClick={() => {
                 setAspect(id);
@@ -1145,6 +1151,19 @@ export function ClipBench() {
           <button type="button" className={CHIP} onClick={() => setMoreOpen((v) => !v)}>
             {moreOpen ? "Hide more" : "More"}
           </button>
+        </div>
+        <div className="flex flex-wrap gap-1">
+          {(Object.keys(CLIP_ASPECTS) as ClipAspect[]).map((id) => (
+            <button
+              key={`dl-${id}`}
+              type="button"
+              disabled={!hasClip || busy}
+              className={CHIP}
+              onClick={() => void exportSize(id)}
+            >
+              Download {CLIP_ASPECTS[id].w}×{CLIP_ASPECTS[id].h}
+            </button>
+          ))}
         </div>
         <p className="text-[11px] text-muted" aria-live="polite">
           {busy ? `Making clip… ${Math.round(exportPct)}%` : status}
