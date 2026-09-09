@@ -9,17 +9,11 @@ export type GnomePlaque = {
 
 const YT = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
-/** Names already on the kettle above this list — do not repeat. */
+/** Names already on the Legends' Guild kettle — do not repeat here. */
 export const GNOME_SILL = new Set([
   "zezima",
   "lynx titan",
   "woox",
-  "b0aty",
-  "settled",
-  "torvesta",
-  "odablock",
-  "will miss it",
-  "rswillmissit",
 ]);
 
 export const GOLDEN_GNOMES: GnomePlaque[] = [
@@ -84,6 +78,7 @@ export const GOLDEN_GNOMES: GnomePlaque[] = [
   { name: "Dojo Buster", years: "2016 · artistic creation", href: YT("mIvlyePWLBE") },
   { name: "Le me", years: "2016 · RS3 hall of fame", href: YT("mIvlyePWLBE") },
   { name: "SpecialEffect", years: "2016 · lifetime achievement", href: YT("mIvlyePWLBE") },
+  { name: "B0aty", years: "stream, community, and lifetime gnomes", href: YT("mIvlyePWLBE") },
   { name: "Sir Pugger", years: "2017 · Pretending To Be A Girl in RuneScape", href: YT("YyidECvEWik") },
   { name: "C Engineer", years: "2017 · best new video maker", href: GNOME_WIKI },
   { name: "FatNooblet", years: "2017 · best RuneScape video maker", href: GNOME_WIKI },
@@ -106,9 +101,12 @@ export const GOLDEN_GNOMES: GnomePlaque[] = [
   { name: "Leki", years: "2018 · most creative cosplay", href: GNOME_WIKI },
   { name: "Golden Light", years: "2018–19 · best cosplay", href: GNOME_WIKI },
   { name: "Tracy Roshur", years: "2018 · community champion", href: GNOME_WIKI },
+  { name: "Torvesta", years: "2018 · best Old School Video Maker", href: "https://www.youtube.com/@torvestars" },
+  { name: "RSWillMissIt", years: "2018–2019 · Video of the Year", href: YT("2cORFYpwyic") },
   { name: "DarkWorldOrder", years: "2019 · best new RuneScape video maker", href: GNOME_WIKI },
   { name: "J1mmy", years: "2019 new video · 2020 video creator + music · 2023 twenty-year film · 2025 Endless Sea", href: YT("lWrOreM8es4") },
   { name: "LilSmokey", years: "2019 Swampletics EXPOSED · 2020 artistic creation", href: YT("esADYQzBKrc") },
+  { name: "Settled", years: "Swampletics: The Movie · video creator and gamer of the year", href: YT("fijvm6uv0w8") },
   { name: "7th Sleeper", years: "2019 new artist · 2020 Old School artist", href: GNOME_WIKI },
   { name: "Remidiy", years: "2019 new RuneScape artist / artistic creation", href: GNOME_WIKI },
   { name: "Dagna", years: "2019 · best artist", href: GNOME_WIKI },
@@ -117,6 +115,7 @@ export const GOLDEN_GNOMES: GnomePlaque[] = [
   { name: "Roidie", years: "2019 · best new Old School streamer", href: GNOME_WIKI },
   { name: "TheRSGuy", years: "2018–21 / 2025 · best RuneScape streamer / video creator", href: YT("m7vi9B3jsBw") },
   { name: "Sparc Mac", years: "2019 · best Old School streamer", href: GNOME_WIKI },
+  { name: "Odablock", years: "best streamer gnome, more than once", href: YT("lx7zaaZ3LJk") },
   { name: "Hanannie", years: "2020 new RS video · 2021 new OSRS video · 2023 OSRS community champion", href: GNOME_WIKI },
   { name: "9Rain", years: "2020 · best new Old School video creator", href: GNOME_WIKI },
   { name: "Protoxx", years: "2020 best RuneScape video · 2021 / 2023 video creator", href: GNOME_WIKI },

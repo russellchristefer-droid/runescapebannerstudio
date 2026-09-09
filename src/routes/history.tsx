@@ -210,8 +210,7 @@ function HistoryPage() {
           <p className="mt-2 text-sm leading-relaxed text-muted">
             North of East Ardougne. First small house on the left as you come in from the
             courtyard — not the totem hall, not the quest scroll. Someone left a kettle.
-            These names sat on the public boards long enough that the street still uses them
-            as tenses. Not a rank. Not a private Discord dump.
+            Hiscores and firsts the street still uses as tenses. Not a video shelf. Not a rank.
           </p>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
             <li>
@@ -230,6 +229,10 @@ function HistoryPage() {
               plaque is the room and the hiscores.
             </li>
             <li>
+              <span className="text-parchment">Lilyuffie88</span> — on those same early boards.
+              Rank one was a three-name argument. The plaque is the hiscores, not a film.
+            </li>
+            <li>
               <span className="text-parchment">I Mahatma I</span> — an early public max on the
               main client when that word still meant a year of looking. The plaque is the
               account, not a rumour about the person.
@@ -245,36 +248,8 @@ function HistoryPage() {
               <a href="https://www.youtube.com/watch?v=mIvlyePWLBE" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Woox
               </a>{" "}
-              — first Inferno cape the street could watch. Hall of Fame and lifetime gnomes.
-              The room learned the Zuk set from that walk, not from a paste.
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=mIvlyePWLBE" target="_blank" rel="noopener noreferrer" className="text-parchment">
-                B0aty
-              </a>{" "}
-              — made the weekly grind a room other people could sit in. Stream, community,
-              and lifetime gnomes. Public VOD is the source.
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=fijvm6uv0w8" target="_blank" rel="noopener noreferrer" className="text-parchment">
-                Settled
-              </a>{" "}
-              — a limited tile and a UIM bag. Swampletics: The Movie took the gnome. Video
-              creator and gamer of the year after that.
-            </li>
-            <li>
-              <a href="https://www.youtube.com/@torvestars" target="_blank" rel="noopener noreferrer" className="text-parchment">
-                Torvesta
-              </a>{" "}
-              — the ditch in public, so the skull rule was not a private theory. Best Old
-              School Video Maker, 2018.
-            </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=lx7zaaZ3LJk" target="_blank" rel="noopener noreferrer" className="text-parchment">
-                Odablock
-              </a>{" "}
-              — Old School as a broadcast craft. Best streamer gnome, more than once. Raids
-              and the weekly hour, on camera.
+              — first Inferno cape the street could watch. The room learned the Zuk set from
+              that walk, not from a paste.
             </li>
             <li>
               <a href="https://www.youtube.com/c/25buttholes" target="_blank" rel="noopener noreferrer" className="text-parchment">
@@ -284,16 +259,9 @@ function HistoryPage() {
               told as a joke that still knows the skull. The name is a banner. The work is
               the VOD.
             </li>
-            <li>
-              <a href="https://www.youtube.com/watch?v=2cORFYpwyic" target="_blank" rel="noopener noreferrer" className="text-parchment">
-                RSWillMissIt
-              </a>{" "}
-              — Will Miss It. Stuff Players Say, Completionist Heist, Historical Timeline,
-              then Falador Massacre and EoC. The other client’s long memory, on film.
-            </li>
           </ul>
           <p className="mt-4 text-[11px] text-faint">
-            Legends’ Quest stays on the wiki. This room is only the kettle. The gnomes sit
+            Legends’ Quest stays on the wiki. This room is only the kettle. Golden Gnomes sit
             in the Myths' Guild above — Library of Knowledge, after Dragon Slayer II.
           </p>
         </aside>
