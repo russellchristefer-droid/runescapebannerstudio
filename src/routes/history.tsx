@@ -212,11 +212,22 @@ function HistoryPage() {
               and EoC. The plaque is the film.
             </li>
           </ul>
-          <h3 className="mt-8 text-sm font-semibold text-parchment">Golden Gnomes</h3>
+          <p className="mt-4 text-[11px] text-faint">
+            The Guild quest stays on the wiki. This room is only the kettle. The gnomes sit
+            in the Myths' Guild below.
+          </p>
+        </aside>
+
+        <aside
+          id="myths-guild"
+          className="mt-8 rounded-md border border-[#4a7ec8]/50 bg-[#101b2e] px-4 py-5 shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]"
+        >
+          <p className="text-[10px] uppercase tracking-[0.18em] text-faint">Feldip Hills · Myths' Guild</p>
+          <h2 className="mt-1 font-display text-lg text-parchment">Library of Knowledge</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            The rest of the public winners, 2010–2025. A name on the kettle is not repeated
-            here. If they took a gnome, the name opens that film — the winning upload, or
-            the ceremony when that is the record.
+            South-west Feldip, after Dragon Slayer II. Fountain of Uhld downstairs. Chromatic
+            dragons in the basement — green, blue, red, black. The Library keeps the public
+            Golden Gnome winners. A name on the kettle is not repeated here.
           </p>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
             {GOLDEN_GNOMES.filter((row) => !GNOME_SILL.has(row.name.toLowerCase())).map((row) => (
@@ -233,7 +244,11 @@ function HistoryPage() {
             <a href={GNOME_WIKI} target="_blank" rel="noopener noreferrer" className="text-parchment">
               Golden Gnome Awards
             </a>
-            . If a 2010 film died, the wiki is the record. This room is only the kettle.
+            . Guild:{" "}
+            <a href="https://oldschool.runescape.wiki/w/Myths%27_Guild" target="_blank" rel="noopener noreferrer" className="text-parchment">
+              Myths' Guild
+            </a>
+            . Name opens the winning film, or the ceremony when that is the record.
           </p>
         </aside>
         <p className="mt-8 flex flex-wrap gap-x-3 gap-y-1 text-sm text-parchment">
