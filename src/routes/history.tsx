@@ -233,9 +233,11 @@ function HistoryPage() {
               Rank one was a three-name argument. The plaque is the hiscores, not a film.
             </li>
             <li>
-              <span className="text-parchment">I Mahatma I</span> — an early public max on the
-              main client when that word still meant a year of looking. The plaque is the
-              account, not a rumour about the person.
+              <a href="https://www.youtube.com/watch?v=9Q8BbGi2VWg" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                I Mahatma I
+              </a>{" "}
+              — PK Video 1. Castle, when the wild still meant it. “How was the def pot?”
+              Early public max on the main client. The name opens his film, not a rumour.
             </li>
             <li>
               <a href={GNOME_WIKI} target="_blank" rel="noopener noreferrer" className="text-parchment">
