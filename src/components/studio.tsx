@@ -2179,8 +2179,13 @@ export function Studio() {
             )}
             <button
               type="button"
+              aria-pressed={bannerCaps}
               onClick={() => setBannerCaps((on) => !on)}
-              className={`mt-1 h-7 rounded-md border px-2 text-[10px] ${bannerCaps ? "border-parchment bg-[#241e16]" : "border-line"}`}
+              className={`mt-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 text-[10px] tracking-wide ${
+                bannerCaps
+                  ? "border-parchment bg-[#241e16] text-parchment"
+                  : "border-[#c6a45a]/55 bg-[#1a1610] text-muted"
+              }`}
             >
               Caps
             </button>

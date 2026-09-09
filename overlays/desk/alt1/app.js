@@ -21,6 +21,7 @@
 
   let still = null;
   let cropId = "1200x480";
+  let capsOn = false;
 
   function say(line) {
     status.textContent = line;
@@ -47,7 +48,8 @@
       const dh = sh * scale;
       ctx.drawImage(still, (w - dw) / 2, (h - dh) / 2, dw, dh);
     }
-    const name = (nameEl.value || "").trim().slice(0, 12);
+    const raw = (nameEl.value || "").trim().slice(0, 12);
+    const name = capsOn ? raw.toUpperCase() : raw;
     if (!name) return;
     const size = w >= 1920 ? 36 : 28;
     ctx.font = size + "px sans-serif";
@@ -96,7 +98,20 @@
     if (file) loadBlob(file);
   });
 
-  nameEl.addEventListener("input", paint);
+  nameEl.addEventListener("input", function () {
+    const n = (nameEl.value || "").length;
+    const letters = document.getElementById("letters");
+    if (letters) letters.textContent = n + " / 12 · Twelve letters, as in game.";
+    paint();
+  });
+
+  const capsBtn = document.getElementById("caps");
+  capsBtn.addEventListener("click", function () {
+    capsOn = !capsOn;
+    capsBtn.classList.toggle("on", capsOn);
+    capsBtn.setAttribute("aria-pressed", capsOn ? "true" : "false");
+    paint();
+  });
 
   document.querySelectorAll("[data-crop]").forEach(function (btn) {
     btn.addEventListener("click", function () {
