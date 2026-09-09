@@ -10,7 +10,7 @@ import { nitro } from "nitro/vite";
 import { grokPwaPlugin } from "./scripts/grok-pwa-plugin.mjs";
 // @ts-expect-error JS plugin alongside the TS vite config
 import { appEnvPlugin } from "./scripts/app-env-plugin.mjs";
-import { isMigrationFile } from "./scripts/migration-plan.mjs";
+import { applySecurityHeaders } from "./src/lib/headers";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -248,13 +248,7 @@ function stillsCachePlugin(): Plugin {
         ) {
           res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
         }
-        res.setHeader("X-Content-Type-Options", "nosniff");
-        res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-        res.setHeader("X-Frame-Options", "DENY");
-        res.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
-        res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
-        res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
-        res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+        applySecurityHeaders(res, path);
         next();
       });
     },

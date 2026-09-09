@@ -12,7 +12,7 @@ const unit = spawnSync(
     "--test",
     "src/lib/filename.test.ts",
     "src/lib/rsText.test.ts",
-    "src/lib/today-methods.test.ts",
+    "src/lib/headers.test.ts",
   ],
   { encoding: "utf8" },
 );

@@ -16,19 +16,19 @@ export function CombatMeta({ note }: { note: BossNote }) {
         The wiki page is the sheet for this hour ({hour}).
       </p>
       <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
-        <a href={links.page} target="_blank" rel="noreferrer" className="text-parchment">
+        <a href={links.page} target="_blank" rel="noopener noreferrer" className="text-parchment">
           Official wiki
         </a>
         <a
           href={links.strategies}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="text-parchment"
         >
           Strategies
         </a>
         {note.edition === "RS3" ? (
-          <a href={links.pvme} target="_blank" rel="noreferrer" className="text-parchment">
+          <a href={links.pvme} target="_blank" rel="noopener noreferrer" className="text-parchment">
             Community PvM Encyclopedia — not Jagex
           </a>
         ) : null}

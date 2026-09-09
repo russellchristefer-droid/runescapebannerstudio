@@ -20,19 +20,19 @@ function JmodsPage() {
         <p className="mt-2 max-w-2xl text-sm text-muted">
           This page is a directory, not Jagex. Public handles only. Staff
           leave and titles change. Prefer{" "}
-          <a href="https://www.jagex.com/" className="text-parchment" target="_blank" rel="noreferrer">
+          <a href="https://www.jagex.com/" className="text-parchment" target="_blank" rel="noopener noreferrer">
             jagex.com
           </a>
           ,{" "}
-          <a href="https://www.runescape.com/" className="text-parchment" target="_blank" rel="noreferrer">
+          <a href="https://www.runescape.com/" className="text-parchment" target="_blank" rel="noopener noreferrer">
             runescape.com
           </a>
           , and{" "}
-          <a href="https://oldschool.runescape.com/" className="text-parchment" target="_blank" rel="noreferrer">
+          <a href="https://oldschool.runescape.com/" className="text-parchment" target="_blank" rel="noopener noreferrer">
             oldschool.runescape.com
           </a>
           , and{" "}
-          <a href="https://dragonwilds.runescape.com/" className="text-parchment" target="_blank" rel="noreferrer">
+          <a href="https://dragonwilds.runescape.com/" className="text-parchment" target="_blank" rel="noopener noreferrer">
             dragonwilds.runescape.com
           </a>
           .
@@ -63,7 +63,7 @@ function JmodsPage() {
             href="https://x.com/OldSchoolRS"
             className="text-parchment"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             @OldSchoolRS
           </a>
@@ -82,7 +82,7 @@ function List({ rows }: { rows: JagexX[] }) {
           <a
             href={`https://x.com/${row.handle}`}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="flex items-center justify-between rounded-md border border-line bg-raised px-3 py-3"
           >
             <span>
@@ -105,7 +105,7 @@ function LinkList({ rows }: { rows: JagexLink[] }) {
           <a
             href={row.href}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="flex items-center justify-between rounded-md border border-line bg-raised px-3 py-3"
           >
             <span>

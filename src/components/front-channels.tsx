@@ -70,7 +70,7 @@ export function FrontChannels() {
               <a
                 href={twitchHref(person.twitch)}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="block rounded-md border border-line bg-raised px-3 py-2 text-center text-sm"
               >
                 <span className="font-medium text-fg">{person.name}</span>
@@ -95,7 +95,7 @@ export function FrontChannels() {
             key={item.href}
             href={item.href}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="text-parchment"
           >
             {item.name}

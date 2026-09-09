@@ -95,7 +95,7 @@ export function TodayDesk() {
                 href="https://runescape.wiki/w/Voice_of_Seren"
                 className="text-parchment"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 Wiki
               </a>

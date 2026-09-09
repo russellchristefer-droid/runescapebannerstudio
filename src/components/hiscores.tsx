@@ -199,7 +199,7 @@ export function HiscoresLookup({
         <a
           href={official}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="mt-2 inline-block text-xs text-parchment"
         >
           Official hiscores for {officialName}
@@ -209,7 +209,7 @@ export function HiscoresLookup({
         <a
           href={wom}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="mt-1 inline-block text-xs text-parchment"
         >
           Wise Old Man for {officialName}

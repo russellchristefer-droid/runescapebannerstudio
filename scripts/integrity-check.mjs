@@ -38,14 +38,22 @@ const vite = readFileSync(new URL("../vite.config.ts", import.meta.url), "utf8")
 if (!/sourcemap:\s*false/.test(vite)) fail.push("prod sourcemap");
 
 const vercel = readFileSync(new URL("../vercel.json", import.meta.url), "utf8");
+const headers = readFileSync(new URL("../src/lib/headers.ts", import.meta.url), "utf8");
+const pwa = readFileSync(new URL("../server/middleware/grok-pwa.ts", import.meta.url), "utf8");
+const root = readFileSync(new URL("../src/routes/__root.tsx", import.meta.url), "utf8");
 for (const header of [
   "X-Content-Type-Options",
   "Referrer-Policy",
   "frame-ancestors",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
   "Permissions-Policy",
 ]) {
-  if (!vercel.includes(header)) fail.push(`missing ${header}`);
+  if (!vercel.includes(header) || !headers.includes(header)) fail.push(`missing ${header}`);
 }
+if (!pwa.includes("stampResponse")) fail.push("nitro missing stampResponse");
+if (!/charSet:\s*"utf-8"/.test(root) || !/lang="en"/.test(root)) fail.push("html charset/lang");
 
 if (fail.length) {
   console.error(fail.join("\n"));

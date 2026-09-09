@@ -1,4 +1,5 @@
 import { fetchTwitchLive } from "../../src/lib/live.server";
+import { apiHeaders } from "../../src/lib/headers";
 import { clientKey, limited, tooMany } from "./_limit";
 
 export default async function handler(event: {
@@ -17,15 +18,12 @@ export default async function handler(event: {
     const live = await fetchTwitchLive(logins);
     return new Response(JSON.stringify(live), {
       status: 200,
-      headers: {
-        "content-type": "application/json; charset=utf-8",
-        "cache-control": "no-store",
-      },
+      headers: apiHeaders({ "content-type": "application/json; charset=utf-8" }),
     });
   } catch {
     return new Response("{}", {
       status: 200,
-      headers: { "content-type": "application/json; charset=utf-8" },
+      headers: apiHeaders({ "content-type": "application/json; charset=utf-8" }),
     });
   }
 }

@@ -1,4 +1,5 @@
 import { fetchYoutubeBoard } from "../../src/lib/youtube.server";
+import { apiHeaders } from "../../src/lib/headers";
 import { clientKey, limited, tooMany } from "./_limit";
 
 export default async function handler(event: { node?: { req?: { headers?: unknown } } }) {
@@ -7,16 +8,12 @@ export default async function handler(event: { node?: { req?: { headers?: unknow
     const board = await fetchYoutubeBoard();
     return new Response(JSON.stringify(board), {
       status: 200,
-      headers: {
-        "content-type": "application/json; charset=utf-8",
-        "cache-control": "public, max-age=180",
-        "x-robots-tag": "noindex",
-      },
+      headers: apiHeaders({ "content-type": "application/json; charset=utf-8" }),
     });
   } catch {
     return new Response(JSON.stringify({ ok: false, rows: [] }), {
       status: 200,
-      headers: { "content-type": "application/json; charset=utf-8" },
+      headers: apiHeaders({ "content-type": "application/json; charset=utf-8" }),
     });
   }
 }

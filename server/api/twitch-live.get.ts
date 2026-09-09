@@ -1,5 +1,6 @@
 import { CHANNELS } from "../../src/data/channels";
 import { fetchTwitchLiveBoard } from "../../src/lib/live.server";
+import { apiHeaders } from "../../src/lib/headers";
 import { clientKey, limited, tooMany } from "./_limit";
 
 export default async function handler(event: {
@@ -20,16 +21,14 @@ export default async function handler(event: {
     const board = await fetchTwitchLiveBoard(logins);
     return new Response(JSON.stringify(board), {
       status: 200,
-      headers: {
+      headers: apiHeaders({
         "content-type": "application/json; charset=utf-8",
-        "cache-control": "no-store",
-        "x-robots-tag": "noindex",
-      },
+      }),
     });
   } catch {
     return new Response(JSON.stringify({ ok: false, rows: [] }), {
       status: 200,
-      headers: { "content-type": "application/json; charset=utf-8" },
+      headers: apiHeaders({ "content-type": "application/json; charset=utf-8" }),
     });
   }
 }

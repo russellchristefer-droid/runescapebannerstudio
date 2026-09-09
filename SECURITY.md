@@ -22,7 +22,7 @@ A security mail and a rights-holder take-down use the same address. Do not send 
 - Private backup: [russellchristefer-droid/runescapebannerstudio-private](https://github.com/russellchristefer-droid/runescapebannerstudio-private)
 - Live: [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
 
-This origin cannot stop a volumetric flood. That is the host. What we do: no tokens in git, Hiscores allowlisted, `/api` slows down if one address hammers it, frames stay off the plate.
+This origin cannot stop a volumetric flood. That is the host. What we do: no tokens in git, Hiscores allowlisted, `/api` slows down if one address hammers it, frames stay off the plate, plugins (`object-src`) stay off, HTML documents send `nosniff` and `utf-8`.
 
 Defensive check only (not Kali): `node scripts/integrity-check.mjs`
 

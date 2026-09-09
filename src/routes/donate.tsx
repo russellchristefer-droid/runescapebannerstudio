@@ -25,7 +25,7 @@ function DonatePage() {
         <a
           href="https://cash.app/$takemymoneypleaseok"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="rounded-md bg-parchment px-4 py-3 text-center font-medium text-ink"
         >
           $takemymoneypleaseok

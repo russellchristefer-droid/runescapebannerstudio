@@ -1,4 +1,4 @@
-/** Cheap per-process cap. Not a CDN. Stops a single tab from melting Hiscores. */
+import { applySecurityHeaders } from "../../src/lib/headers";
 
 const hits = new Map<string, number[]>();
 
@@ -31,12 +31,14 @@ export function tooMany(key: string, max = 40, windowMs = 60_000) {
 }
 
 export function limited() {
+  const headers = new Headers({
+    "content-type": "text/plain; charset=utf-8",
+    "retry-after": "30",
+    "cache-control": "no-store",
+  });
+  applySecurityHeaders(headers, "/api/");
   return new Response("slow down", {
     status: 429,
-    headers: {
-      "content-type": "text/plain; charset=utf-8",
-      "retry-after": "30",
-      "cache-control": "no-store",
-    },
+    headers,
   });
 }
