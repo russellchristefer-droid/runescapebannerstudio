@@ -171,8 +171,7 @@ function liveProxyPlugin(): Plugin {
           const logins = (params.get("logins") ?? "")
             .split(",")
             .map((s) => s.trim())
-            .filter(Boolean)
-            .slice(0, 60);
+            .filter(Boolean);
           if (pathOnly === "/api/youtube-live") {
             const tube = (await server.ssrLoadModule("/src/lib/youtube.server.ts")) as {
               fetchYoutubeBoard: () => Promise<{ off?: boolean; ok: boolean; rows: unknown[] }>;
@@ -193,7 +192,7 @@ function liveProxyPlugin(): Plugin {
             const board = await mod.fetchTwitchLiveBoard(logins);
             res.statusCode = 200;
             res.setHeader("content-type", "application/json; charset=utf-8");
-            res.setHeader("cache-control", "public, max-age=120");
+            res.setHeader("cache-control", "no-store");
             res.end(JSON.stringify(board));
             return;
           }

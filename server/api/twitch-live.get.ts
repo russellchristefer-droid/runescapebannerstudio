@@ -22,7 +22,7 @@ export default async function handler(event: {
       status: 200,
       headers: {
         "content-type": "application/json; charset=utf-8",
-        "cache-control": "public, max-age=120",
+        "cache-control": "no-store",
         "x-robots-tag": "noindex",
       },
     });

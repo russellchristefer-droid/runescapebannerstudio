@@ -23,6 +23,8 @@ export function liveWatchList(urls: (string | undefined)[], now = Date.now()) {
     "thersguy",
     "wazzy",
     "puprs",
+    "verf",
+    "sparcmac",
   ];
   const rest = all.filter((login) => !pin.includes(login));
   const start = rest.length ? Math.floor(now / 60_000) % rest.length : 0;

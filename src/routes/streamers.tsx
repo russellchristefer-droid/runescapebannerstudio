@@ -77,17 +77,12 @@ function StreamersPage() {
       ctrl?.abort();
       ctrl = new AbortController();
       const mine = ctrl;
-      const timer = window.setTimeout(() => mine.abort(), 20000);
-      const logins = CHANNELS.map((row) => row.twitch ?? "")
-        .filter(Boolean)
-        .slice(0, 200)
-        .join(",");
-      fetch(`/api/twitch-live?logins=${encodeURIComponent(logins)}`, { cache: "no-store", signal: mine.signal })
+      const timer = window.setTimeout(() => mine.abort(), 25000);
+      fetch("/api/twitch-live", { cache: "no-store", signal: mine.signal })
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (!data) {
-            setProbe("down");
-            setLivePeople([]);
+            setProbe((was) => (was === "ok" ? "ok" : "down"));
             return;
           }
           if (data.off) {
@@ -96,8 +91,7 @@ function StreamersPage() {
             return;
           }
           if (data.ok === false) {
-            setProbe("down");
-            setLivePeople([]);
+            setProbe((was) => (was === "ok" ? "ok" : "down"));
             return;
           }
           const list = Array.isArray(data) ? data : Array.isArray(data.rows) ? data.rows : [];
@@ -144,13 +138,12 @@ function StreamersPage() {
           setProbe("ok");
         })
         .catch(() => {
-          setProbe("down");
-          setLivePeople([]);
+          setProbe((was) => (was === "ok" ? "ok" : "down"));
         })
         .finally(() => window.clearTimeout(timer));
     };
     poll();
-    const id = window.setInterval(poll, 60_000);
+    const id = window.setInterval(poll, 45_000);
     const onVis = () => {
       if (document.visibilityState === "visible") poll();
     };
@@ -197,7 +190,7 @@ function StreamersPage() {
         <p className="mt-1 text-center text-[11px] text-faint">
           {probe === "off" || probe === "down"
             ? "Live check is off."
-            : "Live first. Helix when keys exist; otherwise a public uptime check. A missing badge is not a verdict."}
+            : "Live first. Helix every 45s while this tab is open. A missing badge is not a verdict."}
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <label className="mx-auto mt-3 block max-w-sm text-[10px] text-muted">
