@@ -19,6 +19,21 @@ const secrets = spawnSync(
 );
 if (secrets.status === 0 && secrets.stdout.trim()) fail.push("secret-shaped string in git");
 
+const bots = spawnSync(
+  "git",
+  [
+    "grep",
+    "-nE",
+    "MenuEntry|invokeMenu|sendClick|java\\.awt\\.Robot|pyautogui|win32api|PacketBuffer",
+    "--",
+    "overlays",
+    "sidecars",
+    ":!scripts/integrity-check.mjs",
+  ],
+  { encoding: "utf8" },
+);
+if (bots.status === 0 && bots.stdout.trim()) fail.push("client-click or packet API in sidecar");
+
 const vite = readFileSync(new URL("../vite.config.ts", import.meta.url), "utf8");
 if (!/sourcemap:\s*false/.test(vite)) fail.push("prod sourcemap");
 
