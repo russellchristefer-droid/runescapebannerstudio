@@ -51,11 +51,11 @@ export function TodayDesk() {
         <article>
           <h3 className="mb-2 text-sm font-semibold">Old School RuneScape</h3>
           <ul className="space-y-1.5 text-xs text-muted">
-            <li>
+            <li suppressHydrationWarning>
               Daily reset in {reset} (00:00 UTC). Herb runs, birdhouses, battlestaves,
               and shop caps flip then. Worlds hitch for a few minutes after.
             </li>
-            <li>
+            <li suppressHydrationWarning>
               This hour · {methods.osrs}
             </li>
             <li>
@@ -81,14 +81,14 @@ export function TodayDesk() {
         <article>
           <h3 className="mb-2 text-sm font-semibold">RuneScape</h3>
           <ul className="space-y-1.5 text-xs text-muted">
-            <li>
+            <li suppressHydrationWarning>
               Daily reset in {reset} (00:00 UTC). Challenges, ports, cache, Fort
               contracts, and travelling merchant stock flip then.
             </li>
-            <li>
+            <li suppressHydrationWarning>
               This hour · {methods.rs3}
             </li>
-            <li>
+            <li suppressHydrationWarning>
               Voice of Seren flips on the hour. Next in {hour} (UTC hour). Desk
               estimate — not a clan table.{" "}
               <a
