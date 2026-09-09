@@ -169,13 +169,13 @@ function HistoryPage() {
               — 200 million as weather. Hall of Fame gnome, 2015.
             </li>
             <li>
-              <a href="https://www.youtube.com/@Woox" target="_blank" rel="noopener noreferrer" className="text-parchment">
+              <a href="https://www.youtube.com/watch?v=mIvlyePWLBE" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Woox
               </a>{" "}
               — first Inferno cape the street could watch. Hall of Fame and lifetime gnomes.
             </li>
             <li>
-              <a href="https://www.youtube.com/B0aty" target="_blank" rel="noopener noreferrer" className="text-parchment">
+              <a href="https://www.youtube.com/watch?v=mIvlyePWLBE" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 B0aty
               </a>{" "}
               — the weekly grind as a room. Stream, community, and lifetime gnomes.
@@ -193,7 +193,7 @@ function HistoryPage() {
               — the ditch in public. Best Old School Video Maker, 2018.
             </li>
             <li>
-              <a href="https://www.youtube.com/@Odablock" target="_blank" rel="noopener noreferrer" className="text-parchment">
+              <a href="https://www.youtube.com/watch?v=lx7zaaZ3LJk" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Odablock
               </a>{" "}
               — Old School as a broadcast. Best streamer gnome, more than once.
@@ -215,7 +215,8 @@ function HistoryPage() {
           <h3 className="mt-8 text-sm font-semibold text-parchment">Golden Gnomes</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             The rest of the public winners, 2010–2025. A name on the kettle is not repeated
-            here. Winning films open on YouTube. Everything else opens the ceremony wiki.
+            here. If they took a gnome, the name opens that film — the winning upload, or
+            the ceremony when that is the record.
           </p>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
             {GOLDEN_GNOMES.filter((row) => !GNOME_SILL.has(row.name.toLowerCase())).map((row) => (
