@@ -226,7 +226,10 @@ function ChroniclePage() {
             stream is the cheap seat. Tickets and the hour live on the official event account.
           </p>
           <p className="mt-2">
-            Dragonwilds is a co-op survival title in the same house. It is not Old School. It
+            <a href="https://dragonwilds.runescape.com/" className="text-parchment" target="_blank" rel="noopener noreferrer">
+              RuneScape: Dragonwilds
+            </a>{" "}
+            is a co-op survival title in the same house. It is not Old School. It
             is not the main RuneScape client. Do not put its stills on this desk’s two wells.
           </p>
           <p className="mt-2">

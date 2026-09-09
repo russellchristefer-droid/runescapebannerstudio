@@ -18,7 +18,10 @@ export const JAGEX_SOCIAL: JagexLink[] = [
   { name: "RuneScape Facebook", href: "https://www.facebook.com/RuneScape", label: "Facebook", note: "Official RuneScape" },
   { name: "r/2007scape", href: "https://www.reddit.com/r/2007scape/", label: "Reddit", note: "Player board. Jagex posts here." },
   { name: "r/runescape", href: "https://www.reddit.com/r/runescape/", label: "Reddit", note: "Player board. Jagex posts here." },
-  { name: "Support", href: "https://support.runescape.com/hc/en-gb", label: "Support", note: "Account help. Not a J-Mod mention." },
+  { name: "RuneScape: Dragonwilds", href: "https://dragonwilds.runescape.com/", label: "Site", note: "Official Dragonwilds. Not the MMO client." },
+  { name: "Dragonwilds Twitch", href: "https://www.twitch.tv/rsdragonwilds", label: "Twitch", note: "Official Dragonwilds live" },
+  { name: "Dragonwilds YouTube", href: "https://www.youtube.com/@RSDragonwilds", label: "YouTube", note: "Official Dragonwilds channel" },
+  { name: "Dragonwilds Discord", href: "https://discord.com/invite/RSDragonwilds", label: "Discord", note: "Official Dragonwilds server" },
 ];
 
 export type JagexX = {

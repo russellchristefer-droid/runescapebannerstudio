@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { YOUTUBERS, tubeUrl, type Youtuber } from "@/data/youtubers";
+import { OfficialSites } from "@/components/official-sites";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/youtubers")({
@@ -149,6 +150,7 @@ function YoutubersPage() {
         </label>
       </header>
       <main id="content" className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
+        <OfficialSites />
         {needle && !official.length && !pillars.length && !liveNow.length && !rest.length ? (
           <p className="text-sm text-muted">No names match.</p>
         ) : null}

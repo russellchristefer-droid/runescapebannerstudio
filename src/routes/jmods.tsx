@@ -31,6 +31,10 @@ function JmodsPage() {
           <a href="https://oldschool.runescape.com/" className="text-parchment" target="_blank" rel="noreferrer">
             oldschool.runescape.com
           </a>
+          , and{" "}
+          <a href="https://dragonwilds.runescape.com/" className="text-parchment" target="_blank" rel="noreferrer">
+            dragonwilds.runescape.com
+          </a>
           .
         </p>
       </header>

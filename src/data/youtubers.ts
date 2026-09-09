@@ -22,6 +22,7 @@ export function tubeUrl(handle: string) {
 export const YOUTUBERS: Youtuber[] = [
   { id: "osrs-off", name: "Old School RuneScape", game: "osrs", youtube: "channel/UC0j1MpbiTFHYrUjOTwifW_w", era: "official", official: true },
   { id: "rs-off", name: "RuneScape", game: "rs3", youtube: "RuneScape", era: "official", official: true },
+  { id: "dw-off", name: "RuneScape: Dragonwilds", game: "both", youtube: "RSDragonwilds", era: "official", official: true },
   { id: "afriend", name: "A Friend", game: "both", youtube: "AFriend", era: "foundation" },
   { id: "sparcmac", name: "Sparc Mac", game: "osrs", youtube: "SparcMac", era: "foundation" },
   { id: "slayermusiq1", name: "Slayermusiq1", game: "osrs", youtube: "slayermusiq1", era: "foundation" },

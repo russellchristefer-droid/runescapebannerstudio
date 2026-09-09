@@ -3,7 +3,7 @@ export const OFFICIAL_SITES = [
   ["Jagex Launcher", "https://www.jagex.com/launcher"],
   ["Old School RuneScape", "https://oldschool.runescape.com/"],
   ["RuneScape", "https://www.runescape.com/"],
-  ["Dragonwilds", "https://dragonwilds.runescape.com/"],
+  ["RuneScape: Dragonwilds", "https://dragonwilds.runescape.com/"],
   ["Support", "https://support.runescape.com/"],
   ["Help", "https://help.jagex.com/hc/en-gb"],
   ["Legal", "https://legal.jagex.com/"],

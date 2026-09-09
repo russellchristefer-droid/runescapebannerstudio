@@ -29,6 +29,13 @@ export const KNOWLEDGE_SITES: KnowledgeSite[] = [
     use: "The official door for Old School and RuneScape on one machine.",
   },
   {
+    name: "RuneScape: Dragonwilds",
+    href: "https://dragonwilds.runescape.com/",
+    group: "client",
+    edition: "Both",
+    use: "Official survival game in the same house. Not the Old School or RuneScape client.",
+  },
+  {
     name: "Desk sidecars on GitHub",
     href: "https://github.com/russellchristefer-droid/runescapebannerstudio#for-runescape-players--alt1-and-runelite",
     group: "client",
