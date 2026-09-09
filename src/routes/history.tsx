@@ -1,7 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { pageMeta } from "@/lib/page-title";
 import { BackLink } from "@/components/back-link";
-import { GOLDEN_GNOMES, GNOME_WIKI } from "@/data/golden-gnomes";
+import { GOLDEN_GNOMES, GNOME_WIKI, GNOME_SILL } from "@/data/golden-gnomes";
 
 export const Route = createFileRoute("/history")({
   head: () => pageMeta("History", "A fan story of public RuneScape memory. Two games. Named work. Not a rank."),
@@ -141,99 +141,84 @@ function HistoryPage() {
           <p className="text-[10px] uppercase tracking-[0.18em] text-faint">Ardougne · Legends' Guild</p>
           <h2 className="mt-1 font-display text-lg text-parchment">First room on the left</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            In both grammars the Guild sits north of East Ardougne. The first small house on
-            the left as you come in from the courtyard is not the hall of totems. It is a desk
-            someone left a kettle on. This page keeps a few public names on that sill — work
-            the street already watched. Not a rank. Not a private Discord dump.
+            First small house on the left as you come in from the courtyard. A kettle, not
+            the hall of totems. Public names only. Not a rank.
           </p>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
             <li>
-              <a href="https://runescape.wiki/w/Golden_Gnome_Awards" target="_blank" rel="noopener noreferrer" className="text-parchment">
+              <a href={GNOME_WIKI} target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Zezima
               </a>{" "}
-              — first through the old 99s in a way the boards could see. The name became a
-              tense. Golden Gnome, lifetime achievement, 2013.
+              — first through the old 99s. Lifetime gnome, 2013.
             </li>
             <li>
-              <span className="text-parchment">The Old Nite</span> — on the early boards with
-              Zezima and Lilyuffie88 when rank one was still a street argument. Played from
-              2002. The account stayed on friends lists after 2006. Old School put a pub under
-              that name in Ferox Enclave in July 2020. The plaque is the room and the
-              hiscores, not a eulogy this desk will invent.
+              <a href="https://oldschool.runescape.wiki/w/The_Old_Nite" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                The Old Nite
+              </a>{" "}
+              — on the early boards with Zezima and Lilyuffie88. Old School put a pub under
+              that name in Ferox Enclave.
             </li>
             <li>
               <span className="text-parchment">I Mahatma I</span> — an early public max on the
-              main client when that word still meant a year of looking. The plaque is the
-              account, not a rumour about the person.
+              main client. The plaque is the account, not a rumour.
             </li>
             <li>
-              <a href="https://runescape.wiki/w/Golden_Gnome_Awards" target="_blank" rel="noopener noreferrer" className="text-parchment">
+              <a href={GNOME_WIKI} target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Lynx Titan
               </a>{" "}
-              — 200 million as weather. Hall of Fame gnome, 2015. The boards still say the
-              name when they mean a ceiling.
+              — 200 million as weather. Hall of Fame gnome, 2015.
             </li>
             <li>
               <a href="https://www.youtube.com/@Woox" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Woox
               </a>{" "}
-              — first Inferno cape the street could watch. Hall of Fame 2016, lifetime gnome
-              2017. The room learned the zuk set from that walk, not from a paste.
+              — first Inferno cape the street could watch. Hall of Fame and lifetime gnomes.
             </li>
             <li>
-              <a href="https://www.youtube.com/@B0aty" target="_blank" rel="noopener noreferrer" className="text-parchment">
+              <a href="https://www.youtube.com/B0aty" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 B0aty
               </a>{" "}
-              — made the weekly grind a room other people could sit in. Stream series, Old
-              School streamer, community champion, lifetime. Public VOD is the source.
+              — the weekly grind as a room. Stream, community, and lifetime gnomes.
             </li>
             <li>
               <a href="https://www.youtube.com/watch?v=fijvm6uv0w8" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Settled
               </a>{" "}
-              — a limited tile and a UIM bag turned into stories the wiki could footnote.
-              Golden Gnome film: Swampletics: The Movie. Video creator and gamer of the year
-              after that.
+              — Swampletics: The Movie. Then video creator and gamer of the year.
             </li>
             <li>
               <a href="https://www.youtube.com/@torvestars" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Torvesta
               </a>{" "}
-              — the ditch in public, so the skull rule was not a private theory. Golden
-              Gnome, Best Old School Video Maker, 2018.
+              — the ditch in public. Best Old School Video Maker, 2018.
             </li>
             <li>
               <a href="https://www.youtube.com/@Odablock" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 Odablock
               </a>{" "}
-              — Old School as a broadcast craft. Best Old School streamer gnome, more than
-              once. Raids and the weekly hour, on camera.
+              — Old School as a broadcast. Best streamer gnome, more than once.
             </li>
             <li>
-              <span className="text-parchment">25 Buttholes</span> — Old School on camera as
-              sketches and as a pair of eyes in the wild. Chin hunters, gold-farmer walks,
-              the ditch told as a joke that still knows the skull rule. The name is a banner.
-              The work is the VOD.
+              <a href="https://www.youtube.com/c/25buttholes" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                25 Buttholes
+              </a>{" "}
+              — sketches and the wild, on camera. The name is a banner. The work is the VOD.
             </li>
             <li>
               <a href="https://www.youtube.com/watch?v=2cORFYpwyic" target="_blank" rel="noopener noreferrer" className="text-parchment">
                 RSWillMissIt
               </a>{" "}
-              — Will Miss It. RS3 comedy when that client still filled the room: Stuff Players
-              Say, then the films that took the gnome — Completionist Heist, Historical
-              Timeline 1998–2018 — then Falador Massacre, EoC, the cartel. The plaque is the
-              VOD, not a private Discord.
+              — Will Miss It. Completionist Heist, Historical Timeline, then Falador Massacre
+              and EoC. The plaque is the film.
             </li>
           </ul>
           <h3 className="mt-8 text-sm font-semibold text-parchment">Golden Gnomes</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Every public name Jagex handed a Golden Gnome, 2010 through 2025, as the wiki
-            lists them. Video winners open the winning film when that upload is still up.
-            Art, cosplay, and community gnomes open the ceremony page. The kettle above keeps
-            the street names. This list is the gnomes.
+            The rest of the public winners, 2010–2025. A name on the kettle is not repeated
+            here. Winning films open on YouTube. Everything else opens the ceremony wiki.
           </p>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
-            {GOLDEN_GNOMES.map((row) => (
+            {GOLDEN_GNOMES.filter((row) => !GNOME_SILL.has(row.name.toLowerCase())).map((row) => (
               <li key={row.name}>
                 <a href={row.href} target="_blank" rel="noopener noreferrer" className="text-parchment">
                   {row.name}
@@ -243,12 +228,11 @@ function HistoryPage() {
             ))}
           </ul>
           <p className="mt-4 text-[11px] text-faint">
-            If a name is not on a public board, a public VOD, or the wiki, it does not belong
-            on this sill. Source:{" "}
+            Source:{" "}
             <a href={GNOME_WIKI} target="_blank" rel="noopener noreferrer" className="text-parchment">
               Golden Gnome Awards
             </a>
-            . The Guild quest stays on the wiki. This room is only the kettle.
+            . If a 2010 film died, the wiki is the record. This room is only the kettle.
           </p>
         </aside>
         <p className="mt-8 flex flex-wrap gap-x-3 gap-y-1 text-sm text-parchment">
