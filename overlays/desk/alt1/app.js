@@ -1,7 +1,7 @@
 /**
  * Still compositor for Alt1 Toolkit.
  *
- * Upload a still. Pick a crop. Download that JPEG.
+ * Upload a still you own. Pick a crop. Download that JPEG.
  * Crops: 1200×480, 1280×720, 1920×1080, 1920×480, native.
  */
 (function () {
@@ -22,6 +22,7 @@
   let still = null;
   let cropId = "1200x480";
   let capsOn = false;
+  let objectUrl = "";
 
   function say(line) {
     status.textContent = line;
@@ -65,12 +66,42 @@
     paintAt(box.w, box.h);
   }
 
+  function downloadBlob(blob, fileName) {
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = href;
+    link.download = fileName;
+    link.rel = "noopener";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    window.setTimeout(function () {
+      link.remove();
+      URL.revokeObjectURL(href);
+    }, 2500);
+  }
+
+  function plateBlob(done) {
+    if (typeof plate.toBlob === "function") {
+      plate.toBlob(done, "image/jpeg", 0.92);
+      return;
+    }
+    const data = plate.toDataURL("image/jpeg", 0.92);
+    const bin = atob(data.split(",")[1] || "");
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    done(new Blob([arr], { type: "image/jpeg" }));
+  }
+
   function loadBlob(blob) {
-    if (!blob || !(blob.type && blob.type.indexOf("image") === 0)) {
+    if (!blob) return;
+    const named = blob.name || "";
+    const ok = (blob.type && blob.type.indexOf("image") === 0) || /\.(jpe?g|png|webp|gif)$/i.test(named);
+    if (!ok) {
       say("Could not read that still.");
       return;
     }
-    const url = URL.createObjectURL(blob);
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
     const img = new Image();
     img.onload = function () {
       still = img;
@@ -80,9 +111,21 @@
     img.onerror = function () {
       say("Could not read that still.");
     };
-    img.src = url;
+    try {
+      objectUrl = URL.createObjectURL(blob);
+      img.src = objectUrl;
+    } catch (err) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(blob);
+    }
   }
 
+  document.getElementById("upload").onclick = function () {
+    fileEl.click();
+  };
   fileEl.addEventListener("change", function () {
     const file = fileEl.files && fileEl.files[0];
     fileEl.value = "";
@@ -133,22 +176,14 @@
     cropId = id;
     const box = sizeFor(id);
     paintAt(box.w, box.h);
-    plate.toBlob(
-      function (blob) {
-        if (!blob) {
-          say("Nothing to save.");
-          return;
-        }
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "banner-" + box.w + "x" + box.h + ".jpg";
-        link.click();
-        URL.revokeObjectURL(link.href);
-        say("In the bag · " + box.w + "×" + box.h);
-      },
-      "image/jpeg",
-      0.92,
-    );
+    plateBlob(function (blob) {
+      if (!blob || blob.size < 32) {
+        say("Nothing to save.");
+        return;
+      }
+      downloadBlob(blob, "banner-" + box.w + "x" + box.h + ".jpg");
+      say("In the bag · " + box.w + "×" + box.h);
+    });
   }
 
   document.querySelectorAll("[data-dl]").forEach(function (btn) {

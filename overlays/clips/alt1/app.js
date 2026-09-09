@@ -56,9 +56,24 @@
     ctx.drawImage(video, (w - dw) / 2, (h - dh) / 2, dw, dh);
   }
 
+  function downloadBlob(blob, fileName) {
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = href;
+    link.download = fileName;
+    link.rel = "noopener";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    window.setTimeout(function () {
+      link.remove();
+      URL.revokeObjectURL(href);
+    }, 2500);
+  }
+
   function take(file) {
     if (!file) return;
-    const ok = (file.type && file.type.indexOf("video") === 0) || /\.(mp4|webm|mov|m4v)$/i.test(file.name);
+    const ok = (file.type && file.type.indexOf("video") === 0) || /\.(mp4|webm|mov|m4v)$/i.test(file.name || "");
     if (!ok) {
       say("Could not read that file.");
       return;
@@ -66,6 +81,7 @@
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = URL.createObjectURL(file);
     video.src = objectUrl;
+    video.load();
     video.onloadedmetadata = function () {
       inPoint = 0;
       outPoint = video.duration || 0;
@@ -77,6 +93,9 @@
     };
   }
 
+  document.getElementById("upload").onclick = function () {
+    fileEl.click();
+  };
   fileEl.addEventListener("change", function () {
     const file = fileEl.files && fileEl.files[0];
     fileEl.value = "";
@@ -146,7 +165,13 @@
     busy = true;
     say("Making " + w + "×" + h + "…");
     coverDraw(w, h);
-    const stream = stage.captureStream(30);
+    const capture = stage.captureStream || stage.mozCaptureStream;
+    if (!capture) {
+      busy = false;
+      say("This window cannot record.");
+      return;
+    }
+    const stream = capture.call(stage, 30);
     let rec;
     try {
       rec = new MediaRecorder(stream, { mimeType: mime });
@@ -166,22 +191,22 @@
         say("Export wrote an empty file.");
         return;
       }
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "clip-" + w + "x" + h + "-" + Math.round(inPoint) + "-" + Math.round(outPoint) + ".webm";
-      link.click();
-      URL.revokeObjectURL(link.href);
+      downloadBlob(blob, "clip-" + w + "x" + h + "-" + Math.round(inPoint) + "-" + Math.round(outPoint) + ".webm");
       say("In the bag · " + w + "×" + h);
     };
     video.currentTime = inPoint;
     await video.play().catch(function () {});
-    rec.start();
+    rec.start(200);
+    const guard = window.setTimeout(function () {
+      if (rec.state !== "inactive") rec.stop();
+    }, Math.min(120000, Math.max(800, (outPoint - inPoint) * 1000 + 2000)));
     function tick() {
       coverDraw(w, h);
       if (video.currentTime >= outPoint || video.ended) {
         video.pause();
-        rec.stop();
+        if (rec.state !== "inactive") rec.stop();
         video.removeEventListener("timeupdate", tick);
+        window.clearTimeout(guard);
       }
     }
     video.addEventListener("timeupdate", tick);

@@ -4,7 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Clip bench · Alt1</title>
-    <link rel="stylesheet" href="./app.css" />
+    <script>
+      (function () {
+        var href = document.location.href;
+        var base = "./";
+        if (/githubusercontent/.test(href)) {
+          base = "https://cdn.jsdelivr.net/gh/russellchristefer-droid/runescapebannerstudio@main/overlays/clips/alt1/";
+        }
+        var css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = base + "app.css";
+        document.head.appendChild(css);
+        window.__alt1AssetBase = base;
+      })();
+    </script>
   </head>
   <body>
     <header>
@@ -14,8 +27,9 @@
     <p id="status">Drop a clip you own, or upload one.</p>
     <video id="vid" playsinline controls></video>
     <canvas id="stage" width="1280" height="720" hidden></canvas>
+    <input id="file" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov,video/*" hidden />
     <div class="row">
-      <label class="chip">Upload clip<input id="file" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov,video/*" hidden /></label>
+      <button type="button" class="chip" id="upload">Upload clip</button>
       <button type="button" class="chip" id="play">Play</button>
       <button type="button" class="chip" id="pause">Pause</button>
       <button type="button" class="chip" id="markIn">In</button>
@@ -45,6 +59,12 @@
       Add app:
       <a href="alt1://addapp/https://raw.githubusercontent.com/russellchristefer-droid/runescapebannerstudio/main/overlays/clips/alt1/appconfig.json">alt1://addapp</a>
     </p>
-    <script src="./app.js"></script>
+    <script>
+      (function () {
+        var s = document.createElement("script");
+        s.src = (window.__alt1AssetBase || "./") + "app.js";
+        document.body.appendChild(s);
+      })();
+    </script>
   </body>
 </html>

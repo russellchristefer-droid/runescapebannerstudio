@@ -855,12 +855,13 @@ export function ClipBench() {
           {!hasClip ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
               <p className="text-sm text-muted">{ready === "loading" ? "Reading clip…" : "No clip"}</p>
-              <label
-                htmlFor="clip-file"
+              <button
+                type="button"
                 className="pointer-events-auto inline-flex min-h-11 cursor-pointer items-center rounded-md border border-[#c6a45a] bg-[#241e16] px-4 text-sm text-parchment"
+                onClick={openClipPicker}
               >
                 Upload video
-              </label>
+              </button>
             </div>
           ) : null}
           <canvas ref={canvasRef} className="block h-full w-full object-contain" />
@@ -1034,13 +1035,13 @@ export function ClipBench() {
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {hasClip ? (
-            <label htmlFor="clip-file" className={`${CHIP} pointer-events-auto cursor-pointer`}>
+            <button type="button" className={`${CHIP} pointer-events-auto cursor-pointer`} onClick={openClipPicker}>
               Replace clip
-            </label>
+            </button>
           ) : (
-            <label htmlFor="clip-file" className={`${CHIP} pointer-events-auto cursor-pointer`}>
+            <button type="button" className={`${CHIP} pointer-events-auto cursor-pointer`} onClick={openClipPicker}>
               Upload video
-            </label>
+            </button>
           )}
           {busy ? (
             <button type="button" className={CHIP} onClick={cancelExport}>

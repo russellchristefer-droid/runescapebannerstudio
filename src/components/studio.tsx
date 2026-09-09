@@ -1023,8 +1023,13 @@ export function Studio() {
         a.href = href;
         a.download = `banner-${edition.toLowerCase()}-${(who || "desk").replace(/\s+/g, "-")}${worldTag}-${location.id}-${w}x${h}.jpg`;
         a.rel = "noopener";
+        a.style.display = "none";
+        document.body.appendChild(a);
         a.click();
-        window.setTimeout(() => URL.revokeObjectURL(href), 2500);
+        window.setTimeout(() => {
+          a.remove();
+          URL.revokeObjectURL(href);
+        }, 2500);
         setSaveNote(`Saved ${w}×${h}.`);
       },
       "image/jpeg",
@@ -1818,33 +1823,37 @@ export function Studio() {
           >
             −
           </button>
-          <label className="inline-flex h-8 min-h-11 cursor-pointer items-center rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]">
+          <button
+            type="button"
+            className="inline-flex h-8 min-h-11 cursor-pointer items-center rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"
+            onClick={() => fileRef.current?.click()}
+          >
             Upload still
-            <input
-              ref={fileRef}
-              id="desk-still"
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              className="sr-only"
-              tabIndex={0}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                e.target.value = "";
-                if (!file) return;
-                if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp)$/i.test(file.name)) {
-                  setSaveNote("That file is not a still.");
-                  return;
-                }
-                if (customSrc?.startsWith("blob:")) URL.revokeObjectURL(customSrc);
-                customFileRef.current = file;
-                setCustomSrc(URL.createObjectURL(file));
-                setDeskStillSrc(null);
-                setSceneReady(true);
-                setPlateCaption(file.name.slice(0, 48));
-                setSaveNote("Still on the plate. Pick a crop, then Download.");
-              }}
-            />
-          </label>
+          </button>
+          <input
+            ref={fileRef}
+            id="desk-still"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="sr-only"
+            tabIndex={-1}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = "";
+              if (!file) return;
+              if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp)$/i.test(file.name)) {
+                setSaveNote("That file is not a still.");
+                return;
+              }
+              if (customSrc?.startsWith("blob:")) URL.revokeObjectURL(customSrc);
+              customFileRef.current = file;
+              setCustomSrc(URL.createObjectURL(file));
+              setDeskStillSrc(null);
+              setSceneReady(true);
+              setPlateCaption(file.name.slice(0, 48));
+              setSaveNote("Still on the plate. Pick a crop, then Download.");
+            }}
+          />
           <button
             type="button"
             className="h-8 min-h-11 rounded-md border border-line px-2 text-[10px] [touch-action:manipulation]"

@@ -17,21 +17,26 @@ for (const [rel, name, page] of [
   const cfg = readCfg(rel);
   if (cfg.appName !== name) fail.push(`${rel} appName`);
   if (!String(cfg.appUrl).includes(page)) fail.push(`${rel} appUrl`);
-  if (!String(cfg.configUrl).startsWith("https://raw.githubusercontent.com/")) fail.push(`${rel} host`);
+  const host = String(cfg.configUrl);
+  if (!host.includes("raw.githubusercontent.com/") && !host.includes("cdn.jsdelivr.net/")) fail.push(`${rel} host`);
+  if (!String(cfg.appUrl).includes("cdn.jsdelivr.net/") && !String(cfg.appUrl).includes("raw.githubusercontent.com/")) {
+    fail.push(`${rel} appUrl host`);
+  }
 }
 
 const desk = readFileSync(join(root, "desk/alt1/app.js"), "utf8");
-for (const needle of ["toBlob", "captureHold", "getElementById(\"plate\")", "data-dl", "1920", "1280", "1200", "capsOn"]) {
+for (const needle of ["toBlob", "captureHold", "getElementById(\"plate\")", "data-dl", "1920", "1280", "1200", "capsOn", "downloadBlob", "fileEl.click"]) {
   if (!desk.includes(needle)) fail.push(`desk app.js ${needle}`);
 }
 
 const clips = readFileSync(join(root, "clips/alt1/app.js"), "utf8");
-for (const needle of ["MediaRecorder", "markIn", "getElementById(\"vid\")", "1920", "1280", "1200", "data-dl"]) {
+for (const needle of ["MediaRecorder", "markIn", "getElementById(\"vid\")", "1920", "1280", "1200", "data-dl", "downloadBlob", "fileEl.click"]) {
   if (!clips.includes(needle)) fail.push(`clips app.js ${needle}`);
 }
 
 const deskHtml = readFileSync(join(root, "desk/alt1/index.html"), "utf8");
-if (!deskHtml.includes("src=\"./app.js\"")) fail.push("desk html script");
+if (!deskHtml.includes("app.js")) fail.push("desk html script");
+if (!deskHtml.includes('id="upload"')) fail.push("desk html upload");
 if (!deskHtml.includes("data-dl=")) fail.push("desk html downloads");
 if (!deskHtml.includes("id=\"caps\"")) fail.push("desk html caps");
 for (const size of ["1200x480", "1280x720", "1920x1080", "1920x480", "native"]) {
@@ -39,7 +44,8 @@ for (const size of ["1200x480", "1280x720", "1920x1080", "1920x480", "native"]) 
 }
 
 const clipsHtml = readFileSync(join(root, "clips/alt1/index.html"), "utf8");
-if (!clipsHtml.includes("src=\"./app.js\"")) fail.push("clips html script");
+if (!clipsHtml.includes("app.js")) fail.push("clips html script");
+if (!clipsHtml.includes('id="upload"')) fail.push("clips html upload");
 if (!clipsHtml.includes("data-dl=")) fail.push("clips html downloads");
 for (const size of ["16:9-720", "16:9-1080", "9:16", "1:1", "banner", "native"]) {
   if (!clipsHtml.includes(`data-dl="${size}"`)) fail.push(`clips html ${size}`);
