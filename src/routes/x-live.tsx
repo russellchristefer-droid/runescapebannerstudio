@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { readDesk } from "@/desk/store";
 import { sanitizeDisplayName, sanitizeWorld } from "@/lib/rsText";
 import { pageMeta } from "@/lib/page-title";
+import { OfficialSites } from "@/components/official-sites";
+import { X_HALL, xGameLabel, xProfile, type XGame, type XVoice } from "@/data/x-hall";
 
 export const Route = createFileRoute("/x-live")({
   head: () =>
     pageMeta(
       "X live",
-      "Go live on X with Old School RuneScape or RuneScape. One client, one title. This desk never takes a stream key.",
+      "Go live on X with Old School RuneScape, RuneScape, or Dragonwilds. Hall of public handles. This desk never takes a stream key.",
     ),
   component: XLivePage,
 });
+
+type Badge = "live" | null;
 
 function titleLine() {
   const saved = readDesk();
@@ -22,20 +26,218 @@ function titleLine() {
   return [name || "Display name", world ? `World ${world}` : "", category].filter(Boolean).join(" · ");
 }
 
+function Row({
+  row,
+  live,
+  viewers,
+  titles,
+}: {
+  row: XVoice;
+  live: Record<string, Badge>;
+  viewers?: Record<string, number>;
+  titles?: Record<string, string>;
+}) {
+  const href = xProfile(row.handle);
+  if (!href) return null;
+  const key = row.handle.replace(/^@/, "").trim();
+  const badge = live[key.toLowerCase()] ?? live[row.id] ?? null;
+  const count = viewers?.[key.toLowerCase()] ?? viewers?.[row.id];
+  const title = titles?.[key.toLowerCase()] ?? titles?.[row.id];
+  return (
+    <li className="flex flex-col gap-1 px-1 py-2 sm:flex-row sm:items-start sm:justify-between">
+      <span className="text-sm">
+        <a href={href} target="_blank" rel="noopener noreferrer" className="text-parchment">
+          {row.name}
+        </a>
+        {row.official ? <span className="ml-2 text-[10px] text-faint">Official</span> : null}
+        {badge === "live" ? <span className="ml-2 text-[10px] text-faint">{xGameLabel(row.game)}</span> : null}
+        {badge === "live" ? (
+          <span className="ml-2 rounded-sm bg-[#9b1b1b] px-1.5 py-0.5 text-[10px] tracking-[0.08em] text-[#efe4c8] uppercase">
+            Live{typeof count === "number" ? ` · ${count.toLocaleString("en-GB")}` : ""}
+          </span>
+        ) : null}
+        {badge === "live" && title ? <span className="mt-1 block text-[12px] text-muted">{title}</span> : null}
+      </span>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${row.name} on X`}
+        className="min-h-11 text-sm text-parchment [touch-action:manipulation]"
+      >
+        @{key}
+      </a>
+    </li>
+  );
+}
+
 function XLivePage() {
   const [note, setNote] = useState("");
+  const [livePeople, setLivePeople] = useState<XVoice[]>([]);
+  const [viewers, setViewers] = useState<Record<string, number>>({});
+  const [titles, setTitles] = useState<Record<string, string>>({});
+  const [probe, setProbe] = useState<"off" | "ok" | "down">("down");
+  const [q, setQ] = useState("");
   const title = titleLine();
+
+  useEffect(() => {
+    if (import.meta.env.VITE_X_LIVE === "false") {
+      setProbe("off");
+      return;
+    }
+    let ctrl: AbortController | undefined;
+    const poll = () => {
+      if (document.visibilityState !== "visible") return;
+      ctrl?.abort();
+      ctrl = new AbortController();
+      const mine = ctrl;
+      const timer = window.setTimeout(() => mine.abort(), 25000);
+      fetch("/api/x-live", { cache: "no-store", signal: mine.signal })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data) {
+            setProbe((was) => (was === "ok" ? "ok" : "down"));
+            return;
+          }
+          if (data.off) {
+            setProbe("off");
+            setLivePeople([]);
+            return;
+          }
+          if (data.ok === false) {
+            setProbe((was) => (was === "ok" ? "ok" : "down"));
+            return;
+          }
+          const list = Array.isArray(data) ? data : Array.isArray(data.rows) ? data.rows : [];
+          const next: XVoice[] = [];
+          const seen = new Set<string>();
+          const counts: Record<string, number> = {};
+          const nextTitles: Record<string, string> = {};
+          for (const raw of list) {
+            if (!raw || typeof raw !== "object") continue;
+            const row = raw as {
+              id?: string;
+              handle?: string;
+              live?: unknown;
+              game?: string;
+              viewers?: number;
+              displayName?: string;
+              title?: string;
+            };
+            const handle = String(row.handle ?? "").toLowerCase().replace(/^@/, "");
+            if (!handle || row.live !== true) continue;
+            const watch = Number(row.viewers);
+            if (Number.isFinite(watch) && watch > 0) counts[handle] = watch;
+            const heading = String(row.title ?? "").trim();
+            if (heading) nextTitles[handle] = heading.slice(0, 80);
+            const known = X_HALL.find((item) => item.id === row.id || item.handle.replace(/^@/, "").toLowerCase() === handle);
+            if (known) {
+              if (seen.has(known.id)) continue;
+              seen.add(known.id);
+              next.push(known);
+              continue;
+            }
+            const id = `live-${handle}`;
+            if (seen.has(id)) continue;
+            seen.add(id);
+            const game: XGame = row.game === "rs3" ? "rs3" : row.game === "dw" ? "dw" : "osrs";
+            next.push({
+              id,
+              name: String(row.displayName || handle),
+              handle,
+              game,
+            });
+          }
+          setLivePeople(next);
+          setViewers(counts);
+          setTitles(nextTitles);
+          setProbe("ok");
+        })
+        .catch(() => {
+          setProbe((was) => (was === "ok" ? "ok" : "down"));
+        })
+        .finally(() => window.clearTimeout(timer));
+    };
+    poll();
+    const id = window.setInterval(poll, 45_000);
+    const onVis = () => {
+      if (document.visibilityState === "visible") poll();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener("visibilitychange", onVis);
+      ctrl?.abort();
+    };
+  }, []);
+
+  const needle = q.trim().toLowerCase();
+  const match = (row: XVoice) =>
+    !needle || row.name.toLowerCase().includes(needle) || row.handle.toLowerCase().includes(needle);
+  const liveKeys = new Set(livePeople.flatMap((row) => [row.id, row.handle.replace(/^@/, "").toLowerCase()]));
+  const liveBadges: Record<string, Badge> = {};
+  for (const key of liveKeys) liveBadges[key] = "live";
+  const liveNow = livePeople
+    .filter((row) => match(row))
+    .sort((a, b) => {
+      const av = viewers[a.handle.replace(/^@/, "").toLowerCase()] ?? 0;
+      const bv = viewers[b.handle.replace(/^@/, "").toLowerCase()] ?? 0;
+      return bv - av || a.name.localeCompare(b.name);
+    });
+  const rest = X_HALL.filter(
+    (row) => match(row) && !liveKeys.has(row.id) && !liveKeys.has(row.handle.replace(/^@/, "").toLowerCase()),
+  ).sort(
+    (a, b) => Number(Boolean(b.official)) - Number(Boolean(a.official)) || a.name.localeCompare(b.name),
+  );
+  const hall = [...liveNow, ...rest.filter((row) => !liveNow.some((live) => live.id === row.id))];
+  const liveOsrs = liveNow.filter((row) => row.game === "osrs").length;
+  const liveRs3 = liveNow.filter((row) => row.game === "rs3").length;
+  const liveDw = liveNow.filter((row) => row.game === "dw").length;
+
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <h1 className="page-h1 mt-1">X live</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          Old School RuneScape or RuneScape — one client, one title, then Live Studio. X does not have a Twitch directory. You write the game name yourself. This page never takes a stream key.
+          Who is on X for Old School, RuneScape, and Dragonwilds. Live first if the probe is on. How to go live stays underneath. This page never takes a stream key.
+        </p>
+        <p className="mt-1 text-center text-[11px] text-faint">
+          {probe === "off" || probe === "down"
+            ? "Live check is off."
+            : `${liveOsrs} live Old School · ${liveRs3} live RuneScape · ${liveDw} live Dragonwilds. Refresh every 45s while this tab is open.`}
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <label className="mx-auto mt-3 block max-w-sm text-[10px] text-muted">
+          Search
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            className="mt-1 min-h-11 w-full rounded-md border border-line bg-raised px-3 text-base text-fg"
+            placeholder="Name"
+            spellCheck={false}
+            autoComplete="off"
+          />
+        </label>
       </header>
       <main id="content" className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
+        <OfficialSites />
+        {needle && !hall.length ? <p className="text-sm text-muted">No names match.</p> : null}
+        {probe === "ok" && !liveNow.length ? (
+          <p className="text-sm text-muted">No listed X Space is live.</p>
+        ) : null}
+        <section>
+          <h2 className="mb-3 text-sm font-semibold text-parchment">Hall</h2>
+          <ul className="flex flex-col gap-2">
+            {hall.map((row) => (
+              <Row key={row.id} row={row} live={liveBadges} viewers={viewers} titles={titles} />
+            ))}
+          </ul>
+        </section>
+        <p className="text-sm text-muted">
+          Live check looks for Spaces when a bearer token exists. Media Studio broadcasts stay on X. Twitch stays on Streamers. YouTube stays on Youtubers.
+        </p>
+
         <p className="text-sm leading-relaxed text-muted">
           Pick the grammar you are actually logged into. Do not put both clients on one canvas. Dragonwilds is a third name — not these two. Phone is for talking. The raid door is OBS capturing that Jagex window, then X Live Studio.
         </p>
@@ -224,6 +426,10 @@ function XLivePage() {
         </p>
         <p className="text-sm text-parchment">
           <Link to="/stream">Stream</Link>
+          {" · "}
+          <Link to="/streamers">Streamers</Link>
+          {" · "}
+          <Link to="/youtubers">Youtubers</Link>
           {" · "}
           <Link to="/edit">Clips</Link>
           {" · "}
