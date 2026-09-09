@@ -15,7 +15,7 @@ function StreamPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Stream</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          Go-live notes. This desk does not log in or encode your stream.
+          Go-live notes. Encode in OBS. Cut on the clip bench. This desk does not log in or take a stream key.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>

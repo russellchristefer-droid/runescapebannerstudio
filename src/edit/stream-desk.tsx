@@ -27,9 +27,9 @@ export function StreamDesk() {
       <div className="px-4 py-3">
         <h2 className="page-h1 m-0 text-left">Stream desk</h2>
         <p className="mt-2 max-w-3xl text-sm text-muted">
-          This page does not go live for you. Encode in OBS or the official studio app. Capture the Jagex
-          client window, not the desktop. Category is Old School RuneScape or RuneScape.
-          Cut a kill on the clip bench above, then use the notes below to title, size, and start the stream.
+          This page does not go live for you. Encode in OBS. Capture the Jagex client window, not the desktop.
+          Category is Old School RuneScape or RuneScape — Dragonwilds is a third name.
+          Cut a kill on the clip bench above (1080p, 720p, 9:16, 1:1, or Banner), then title and start from the notes below.
         </p>
       </div>
       <div className="h-px bg-[#c6a45a]/80" aria-hidden="true" />
@@ -39,10 +39,10 @@ export function StreamDesk() {
           <h3 className="mb-2 text-sm font-semibold text-parchment">How a session runs</h3>
           <ol className="list-decimal space-y-1.5 pl-5 text-sm text-muted">
             <li>Open the official client from the Jagex Launcher. World and PIN stay off the capture.</li>
-            <li>In OBS, Game Capture or Window Capture the client only. Add the banner JPEG as a top or lower-third overlay if you want one.</li>
-            <li>Set the category to one game. Copy a title from the table. Check bitrate for your canvas.</li>
-            <li>Go live from the official dashboard. After a kill, drop the VOD on the clip bench, set In and Out, Save clip.</li>
-            <li>Upload that file to YouTube, TikTok, or Discord yourself. This desk never takes a stream key.</li>
+            <li>In OBS, Window Capture or Game Capture the client only. 1080p60, CBR 6000, keyframe 2 unless Twitch Enhanced Broadcasting sets the ladder.</li>
+            <li>Set one category. Copy a title from the table. Banner JPEG from the still desk if you want a top or lower-third.</li>
+            <li>Go live from the official dashboard. After a kill, drop the VOD on the clip bench, mark In and Out, pick a crop, Save clip.</li>
+            <li>Upload that file yourself. This desk never takes a stream key.</li>
           </ol>
         </section>
 

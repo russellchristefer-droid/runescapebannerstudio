@@ -23,8 +23,8 @@ function EditPage() {
         </div>
         <ol className="mt-4 list-decimal space-y-1 pl-5 text-sm text-muted">
           <li>Upload a clip you own.</li>
-          <li>Set In and Out on the timeline.</li>
-          <li>Pick a size, or Download that crop. The file stays on this device.</li>
+          <li>Set In and Out on the timeline. Mute, gain, and fades land in the file.</li>
+          <li>Pick 1080p 16:9, 720p, 9:16, 1:1, or Banner — then Download that crop. The file stays on this device.</li>
           <li>Don't export a Bank PIN.</li>
         </ol>
         <StreamDesk />
