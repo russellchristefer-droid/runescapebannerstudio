@@ -44,6 +44,7 @@ header p,
 }
 .chip,
 .save {
+  box-sizing: border-box;
   min-height: 44px;
   border: 1px solid var(--gold);
   background: #1a1610;
@@ -54,6 +55,10 @@ header p,
 .save {
   width: calc(100% - 24px);
   background: #241e16;
+}
+label {
+  display: block;
+  max-width: calc(100% - 24px);
 }
 #name {
   display: block;
@@ -72,7 +77,31 @@ label.chip {
 .chip.on {
   border-color: #efe4c8;
 }
+.name-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 12px 10px;
+  overflow: visible;
+}
+.name-meta .fine {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.35;
+  word-break: break-word;
+}
 .chip.pill {
-  border-radius: 999px;
+  width: 44px;
+  height: 44px;
   min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  line-height: 1;
 }

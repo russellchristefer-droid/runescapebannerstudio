@@ -2181,23 +2181,6 @@ export function Studio() {
               autoComplete="off"
               className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
             />
-            {looksLikeStaffName(streamer) ? (
-              <span className="block text-[10px] text-muted">Do not impersonate Jagex staff on a banner.</span>
-            ) : (
-              <span className="block text-[10px] text-faint">{streamer.length} / 12 · Twelve letters, as in game.</span>
-            )}
-            <button
-              type="button"
-              aria-pressed={bannerCaps}
-              onClick={() => setBannerCaps((on) => !on)}
-              className={`mt-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 text-[10px] tracking-wide ${
-                bannerCaps
-                  ? "border-parchment bg-[#241e16] text-parchment"
-                  : "border-[#c6a45a]/55 bg-[#1a1610] text-muted"
-              }`}
-            >
-              Caps
-            </button>
           </label>
           <label className="text-[10px] text-muted">
             Clan
@@ -2224,7 +2207,25 @@ export function Studio() {
             <input value={world} onChange={(e) => setWorld(sanitizeWorld(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
           </label>
         </div>
-        <Suspense fallback={null}>
+        <div className="flex items-center gap-3 overflow-visible px-1 pb-1">
+          <p className="min-w-0 flex-1 break-words text-[10px] leading-snug text-faint">
+            {looksLikeStaffName(streamer)
+              ? "Do not impersonate Jagex staff on a banner."
+              : `${streamer.length} / 12 · Twelve letters, as in game.`}
+          </p>
+          <button
+            type="button"
+            aria-pressed={bannerCaps}
+            onClick={() => setBannerCaps((on) => !on)}
+            className={`box-border size-11 shrink-0 rounded-full border p-0 text-[10px] leading-none ${
+              bannerCaps
+                ? "border-parchment bg-[#241e16] text-parchment"
+                : "border-[#c6a45a]/55 bg-[#1a1610] text-muted"
+            }`}
+          >
+            Caps
+          </button>
+        </div>
         <HiscoresLookup
           bare
           name={streamer}
