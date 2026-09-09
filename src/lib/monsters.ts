@@ -33,6 +33,14 @@ export function monsterWash(row: Pick<Monster, "slug" | "name">) {
   if (key.includes("blue dragon")) return "#101b2e";
   if (key.includes("green dragon")) return "#1b2814";
   if (key.includes("black dragon") || key.includes("king black")) return "#141311";
+  if (key.includes("bronze dragon")) return "#2a2016";
+  if (key.includes("steel dragon")) return "#282c30";
+  if (key.includes("mithril dragon")) return "#182832";
+  if (key.includes("lava dragon")) return "#301610";
+  if (key.includes("orikalkum")) return "#301e10";
+  if (key.includes("dragonstone")) return "#24182a";
+  if (key.includes("onyx dragon")) return "#18141c";
+  if (key.includes("hydrix")) return "#2a1018";
   if (key.includes("iron dragon") || key.includes("adamant dragon") || key.includes("rune dragon") || key.includes("metal"))
     return "#1a2228";
   if (key.includes("frost") || key.includes("ice ") || key.includes("glacor") || key.includes("skeletal wyvern") || key.includes("living wyvern"))
@@ -104,6 +112,22 @@ const MONSTER_LINE: Record<string, string> = {
   "osrs-bluedragon": "Taverley lane. Antifire.",
   "osrs-blackdragon": "The task. KBD is on Bosses.",
   "osrs-reddragon": "Brimhaven and the isle. Antifire.",
+  "osrs-babygreendragon": "The small green. Bones, not hide.",
+  "osrs-babybluedragon": "Taverley cubs. Antifire still.",
+  "osrs-babyreddragon": "Brimhaven cubs. The adults are next.",
+  "osrs-babyblackdragon": "The small black. KBD stays on Bosses.",
+  "osrs-bronzedragon": "First metal. Antifire. Brimhaven or Catacombs.",
+  "osrs-irondragon": "Metal. Antifire. Brimhaven floor.",
+  "osrs-steeldragon": "Heavier metal. Antifire. Same floors as iron.",
+  "osrs-mithrildragon": "Ancient Cavern. Helm is the rumour. Antifire.",
+  "osrs-adamantdragon": "Lithkren after Dragon Slayer II. Antifire.",
+  "osrs-runedragon": "Lithkren late metal. QBD stays on Bosses.",
+  "osrs-lavadragon": "Wilderness isle. Bones there are the hour. Protect item.",
+  "osrs-brutalgreendragon": "Ancient Cavern. Not a green-dragon task.",
+  "osrs-brutalbluedragon": "Catacombs. Heavier blue. Antifire.",
+  "osrs-brutalreddragon": "Catacombs. Heavier red. Antifire.",
+  "osrs-brutalblackdragon": "Catacombs top. The late brutal. KBD stays on Bosses.",
+  "osrs-frostdragon": "Sailing isle. Icy fire. Not the RS3 resource dungeon.",
   "osrs-cavekraken": "The cove task. The boss is on Bosses.",
   "osrs-smokedevil": "The cave is not the Thermonuclear room.",
   "osrs-spiritualwarrior": "Kill count. Not Graardor.",
@@ -147,6 +171,16 @@ const MONSTER_LINE: Record<string, string> = {
   "rs3-scutarius": "The shield of the order.",
   "rs3-adamantdragon": "Metal. Antifire. Heavier than iron.",
   "rs3-runedragon": "Late metal dragon. QBD stays on Bosses.",
+  "rs3-bronzedragon": "First metal. Antifire. Brimhaven floor.",
+  "rs3-steeldragon": "Heavier metal. Antifire. Same floors as iron.",
+  "rs3-mithrildragon": "Ancient Cavern. Antifire. Play the bar.",
+  "rs3-babygreendragon": "The small green. Bones, not hide.",
+  "rs3-babybluedragon": "Taverley cubs. Antifire still.",
+  "rs3-babyreddragon": "Brimhaven cubs. The adults are next.",
+  "rs3-babyblackdragon": "The small black. KBD stays on Bosses.",
+  "rs3-dragonstonedragon": "Gemstone cavern. Slayer 95. Not QBD.",
+  "rs3-onyxdragon": "Gemstone cavern. Heavier stone. Antifire.",
+  "rs3-hydrixdragon": "Gemstone cavern. The late gem. Slayer 101.",
   "rs3-livingrock": "Living Rock Caverns. Remains are the hour.",
   "rs3-desertstryke": "Stomp the mound. Not the wildy cousin.",
   "rs3-junglestryke": "Jungle mound. Confirm the staff.",
@@ -272,6 +306,22 @@ export const MONSTERS: Monster[] = [
   { id: "osrs-bluedragon", slug: "blue-dragon", name: "Blue dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "Antifire. Protect Magic if you idle. Taverley is the old room. Baby blues are a different assignment.", wiki: osrsWiki("Blue_dragon"), still: "", placeId: "osrstav" },
   { id: "osrs-blackdragon", slug: "black-dragon", name: "Black dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "Heavier dragon. Antifire. KBD stays on Bosses. This sheet is the task.", wiki: osrsWiki("Black_dragon"), still: "", placeId: "osrstav" },
   { id: "osrs-reddragon", slug: "red-dragon", name: "Red dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Brimhaven dungeon, Myths' Guild", hunt: "Antifire. Protect Magic if you idle. Brimhaven is the old room. The isle is a trip. KBD stays on Bosses.", wiki: osrsWiki("Red_dragon"), still: "" },
+  { id: "osrs-babygreendragon", slug: "baby-green-dragon", name: "Baby green dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Myths' Guild, Corsair Cove", hunt: "The small green. Baby bones, not hide. Antifire is still the lesson. Adults are a different assignment.", wiki: osrsWiki("Baby_green_dragon"), still: "" },
+  { id: "osrs-babybluedragon", slug: "baby-blue-dragon", name: "Baby blue dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "Taverley cubs. Antifire. Adults are the next room. Protect Magic if you idle.", wiki: osrsWiki("Baby_blue_dragon"), still: "", placeId: "osrstav" },
+  { id: "osrs-babyreddragon", slug: "baby-red-dragon", name: "Baby red dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Brimhaven dungeon, Myths' Guild", hunt: "Brimhaven cubs. Antifire. The adults are next. KBD stays on Bosses.", wiki: osrsWiki("Baby_red_dragon"), still: "" },
+  { id: "osrs-babyblackdragon", slug: "baby-black-dragon", name: "Baby black dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Taverley dungeon, Myths' Guild", hunt: "The small black. Antifire. KBD stays on Bosses. This sheet is the cub.", wiki: osrsWiki("Baby_black_dragon"), still: "", placeId: "osrstav" },
+  { id: "osrs-bronzedragon", slug: "bronze-dragon", name: "Bronze dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Brimhaven dungeon, Catacombs of Kourend", hunt: "First metal. Antifire. Long-range fire. Brimhaven or Catacombs. They are never alone.", wiki: osrsWiki("Bronze_dragon"), still: "" },
+  { id: "osrs-irondragon", slug: "iron-dragon", name: "Iron dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Brimhaven dungeon, Catacombs of Kourend", hunt: "Metal. Antifire. Brimhaven floor or Catacombs. Visage is a rumour, not a plan.", wiki: osrsWiki("Iron_dragon"), still: "" },
+  { id: "osrs-steeldragon", slug: "steel-dragon", name: "Steel dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Brimhaven dungeon, Catacombs of Kourend", hunt: "Heavier metal. Antifire. Same floors as iron. Defence is the difference.", wiki: osrsWiki("Steel_dragon"), still: "" },
+  { id: "osrs-mithrildragon", slug: "mithril-dragon", name: "Mithril dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Ancient Cavern", hunt: "Ancient Cavern after barbarian training. Magic, range, and fire. Dragon full helm is the rumour. Antifire.", wiki: osrsWiki("Mithril_dragon"), still: "" },
+  { id: "osrs-adamantdragon", slug: "adamant-dragon", name: "Adamant dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Lithkren Vault", hunt: "After Dragon Slayer II. Lithkren. Slash, range, mage, fire. Antifire. QBD stays on Bosses.", wiki: osrsWiki("Adamant_dragon"), still: "" },
+  { id: "osrs-runedragon", slug: "rune-dragon", name: "Rune dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Lithkren Vault", hunt: "The late metal. Lithkren after Dragon Slayer II. Antifire and prayer. Confirm the floor.", wiki: osrsWiki("Rune_dragon"), still: "" },
+  { id: "osrs-lavadragon", slug: "lava-dragon", name: "Lava dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Lava Dragon Isle", hunt: "Wilderness 36–42. Protect item. Antifire. Bones buried on the isle are the hour. Not a black-dragon task.", wiki: osrsWiki("Lava_dragon"), still: "" },
+  { id: "osrs-brutalgreendragon", slug: "brutal-green-dragon", name: "Brutal green dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Ancient Cavern", hunt: "Ancient Cavern. Not a green-dragon task — they sit outside the wild. Antifire. Barbarian training is the door.", wiki: osrsWiki("Brutal_green_dragon"), still: "" },
+  { id: "osrs-brutalbluedragon", slug: "brutal-blue-dragon", name: "Brutal blue dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Catacombs of Kourend", hunt: "Catacombs. Heavier blue. Antifire. Protect as the page says. Adults in Taverley are a different file.", wiki: osrsWiki("Brutal_blue_dragon"), still: "" },
+  { id: "osrs-brutalreddragon", slug: "brutal-red-dragon", name: "Brutal red dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Catacombs of Kourend", hunt: "Catacombs. Heavier red. Antifire. Brimhaven adults are a different file.", wiki: osrsWiki("Brutal_red_dragon"), still: "" },
+  { id: "osrs-brutalblackdragon", slug: "brutal-black-dragon", name: "Brutal black dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Catacombs of Kourend", hunt: "Catacombs top. The late brutal. Antifire. KBD stays on Bosses.", wiki: osrsWiki("Brutal_black_dragon"), still: "" },
+  { id: "osrs-frostdragon", slug: "frost-dragon", name: "Frost dragon", edition: "OSRS", kind: "monster", slayer: true, where: "Grimstone, Sailing", hunt: "Old School frost. Sailing door, not the RS3 resource dungeon. Icy fire. Bones are the camp. Confirm the live cavern.", wiki: osrsWiki("Frost_dragon"), still: "" },
   { id: "osrs-cavekraken", slug: "cave-kraken", name: "Cave kraken", edition: "OSRS", kind: "monster", slayer: true, where: "Kraken Cove", gate: "Slayer", hunt: "The task tentacles. The boss Kraken is on Bosses. Do not mix the two rooms.", wiki: osrsWiki("Cave_kraken"), still: "" },
   { id: "osrs-giantbat", slug: "giant-bat", name: "Giant bat", edition: "OSRS", kind: "monster", where: "Legends' Guild dungeon", hunt: "First room under the guild. Melee. Cape of legends is the door. Learn the click, then the scorpions.", wiki: osrsWiki("Giant_bat"), still: "" },
   { id: "osrs-pitscorpion", slug: "pit-scorpion", name: "Pit scorpion", edition: "OSRS", kind: "monster", where: "Legends' Guild dungeon", hunt: "Poison in the basement. Antipoison before the first hit. Not a slayer assignment.", wiki: osrsWiki("Pit_Scorpion"), still: "" },
@@ -334,6 +384,16 @@ export const MONSTERS: Monster[] = [
   { id: "rs3-scutarius", slug: "scutarius", name: "Scutarius", edition: "RS3", kind: "monster", slayer: true, where: "Monastery of Ascension", gate: "Slayer", hunt: "The shield of the order. Play the bar. Confirm weakness on the wiki.", wiki: rs3Wiki("Scutarius"), still: "" },
   { id: "rs3-adamantdragon", slug: "adamant-dragon", name: "Adamant dragon", edition: "RS3", kind: "monster", slayer: true, where: "Brimhaven Dungeon resource dungeon", hunt: "Metal dragon. Antifire. Heavier than iron. QBD stays on Bosses.", wiki: rs3Wiki("Adamant_dragon"), still: "" },
   { id: "rs3-runedragon", slug: "rune-dragon", name: "Rune dragon", edition: "RS3", kind: "monster", slayer: true, where: "Brimhaven Dungeon resource dungeon", hunt: "The late metal dragon. Antifire and prayer. Confirm the floor.", wiki: rs3Wiki("Rune_dragon"), still: "" },
+  { id: "rs3-bronzedragon", slug: "bronze-dragon", name: "Bronze dragon", edition: "RS3", kind: "monster", slayer: true, where: "Brimhaven Dungeon", hunt: "First metal. Antifire. Play the bar. They are never alone.", wiki: rs3Wiki("Bronze_dragon"), still: "" },
+  { id: "rs3-steeldragon", slug: "steel-dragon", name: "Steel dragon", edition: "RS3", kind: "monster", slayer: true, where: "Brimhaven Dungeon", hunt: "Heavier metal. Antifire. Same floors as iron. Defence is the difference.", wiki: rs3Wiki("Steel_dragon"), still: "" },
+  { id: "rs3-mithrildragon", slug: "mithril-dragon", name: "Mithril dragon", edition: "RS3", kind: "monster", slayer: true, where: "Ancient Cavern", hunt: "Ancient Cavern. Magic, range, and fire. Antifire. Play the bar.", wiki: rs3Wiki("Mithril_dragon"), still: "" },
+  { id: "rs3-babygreendragon", slug: "baby-green-dragon", name: "Baby green dragon", edition: "RS3", kind: "monster", slayer: true, where: "Red Dragon Isle, Brimhaven", hunt: "The small green. Baby bones, not hide. Antifire is still the lesson.", wiki: rs3Wiki("Baby_green_dragon"), still: "" },
+  { id: "rs3-babybluedragon", slug: "baby-blue-dragon", name: "Baby blue dragon", edition: "RS3", kind: "monster", slayer: true, where: "Taverley dungeon", hunt: "Taverley cubs. Antifire. Adults are the next room.", wiki: rs3Wiki("Baby_blue_dragon"), still: "", placeId: "taverley" },
+  { id: "rs3-babyreddragon", slug: "baby-red-dragon", name: "Baby red dragon", edition: "RS3", kind: "monster", slayer: true, where: "Brimhaven Dungeon", hunt: "Brimhaven cubs. Antifire. The adults are next. KBD stays on Bosses.", wiki: rs3Wiki("Baby_red_dragon"), still: "" },
+  { id: "rs3-babyblackdragon", slug: "baby-black-dragon", name: "Baby black dragon", edition: "RS3", kind: "monster", slayer: true, where: "Taverley dungeon", hunt: "The small black. Antifire. KBD stays on Bosses.", wiki: rs3Wiki("Baby_black_dragon"), still: "", placeId: "taverley" },
+  { id: "rs3-dragonstonedragon", slug: "dragonstone-dragon", name: "Dragonstone dragon", edition: "RS3", kind: "monster", slayer: true, where: "Gemstone cavern", hunt: "Slayer 95. Antifire. The special eats your potion timer. QBD stays on Bosses.", wiki: rs3Wiki("Dragonstone_dragon"), still: "" },
+  { id: "rs3-onyxdragon", slug: "onyx-dragon", name: "Onyx dragon", edition: "RS3", kind: "monster", slayer: true, where: "Gemstone cavern", hunt: "Heavier gem. Antifire. Wilderness cousins sit south-east of Red Dragon Isle. Confirm the live page.", wiki: rs3Wiki("Onyx_dragon"), still: "" },
+  { id: "rs3-hydrixdragon", slug: "hydrix-dragon", name: "Hydrix dragon", edition: "RS3", kind: "monster", slayer: true, where: "Gemstone cavern", hunt: "Slayer 101. The late gem. Stay in melee or the spikes dump adrenaline. Black stone dragon is on Bosses.", wiki: rs3Wiki("Hydrix_dragon"), still: "" },
   { id: "rs3-livingrock", slug: "living-rock-patriarch", name: "Living rock patriarch", edition: "RS3", kind: "monster", slayer: true, where: "Living Rock Caverns", hunt: "The cavern task. Living rock remains are the reason people sit. Confirm the spawn.", wiki: rs3Wiki("Living_rock_patriarch"), still: "" },
   { id: "rs3-desertstryke", slug: "desert-strykewyrm", name: "Desert strykewyrm", edition: "RS3", kind: "monster", slayer: true, where: "Al Kharid desert", gate: "Slayer", hunt: "Stomp the mound. Protect as the page says. Lava wyrms are the wildy cousin.", wiki: rs3Wiki("Desert_strykewyrm"), still: "", placeId: "alkharid" },
   { id: "rs3-junglestryke", slug: "jungle-strykewyrm", name: "Jungle strykewyrm", edition: "RS3", kind: "monster", slayer: true, where: "South of Shilo", gate: "Slayer", hunt: "Stomp the mound. The jungle is the room. Confirm the staff on the wiki.", wiki: rs3Wiki("Jungle_strykewyrm"), still: "" },
