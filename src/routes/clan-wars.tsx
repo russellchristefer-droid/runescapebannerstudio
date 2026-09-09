@@ -352,8 +352,7 @@ function ClanWarsPage() {
             TzHaar Fight Pit. Last player standing under Karamja. Not a clan room. Not
             the Cave. Not the Kiln. Tokkul for the champion. Safe PvP on both live
             clients unless a bug made the waiting room hot — 13 May 2008 on the main
-            client, fixed the same day. File that hour as history, not as the current
-            rule.
+            client, fixed the same day. The live sheet sits under Fight Pits below.
           </p>
 
           <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">18 April 2007 — the ditch you have to confirm</h3>
@@ -558,26 +557,70 @@ function ClanWarsPage() {
         <section>
           <h2 className="section-h2">Fight Pits</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            TzHaar built a bowl. You walk in with a crowd. You walk out alone or you
-            sit the orb. There is no captain and no two-minute wall. The jingle is
-            called Last Man Standing. That name later went to a different minigame
-            in Ferox. Do not mix the two sheets.
+            TzHaar-Xil built a bowl for sport. 19 September 2005. You walk in with a
+            crowd. You walk out alone or you sit the orb. There is no captain and no
+            two-minute wall. The jingle is called Last Man Standing. That name later
+            went to a different minigame in Ferox. The Cave is Jad. The Kiln is a later
+            vow. This page is people. Do not mix those sheets.
           </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            Safe on both live clients. The bag stays. Hardcore group iron may stand
+            here. Anything goes — the armour you wore in is the armour you fight in.
+            A kill puts them back in the waiting room. Last one standing is champion.
+            Tokkul is the combined combat of the people you beat, not a bank dump.
+            Leave early and you do not count.
+          </p>
+
           <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Old School — Mor Ul Rek</h3>
           <p className="text-sm leading-relaxed text-muted">
-            West of the inner city, under the volcano. Minigame teleport: TzHaar Fight
-            Pit. Fairy ring BLP, then north and west. Safe. Last one standing is
-            champion. Tokkul scales with who you beat. Hard Karamja diary wants that
-            crown. The Cave next door is Jad. The Pit is people.
+            West of the inner city, under the volcano. Members. Minigame teleport:
+            TzHaar Fight Pit. Fairy ring BLP, then north and west. Official world is
+            printed on the wiki — do not tattoo a number here. The waiting room is a
+            small enclosure. The pillar is the orb. TzHaar-Mej-Kah outside toggles
+            combat experience (25 March 2026). The red skull on the champion lasts an
+            hour unless you teleport, swap kit, pray overhead, hop, log, or eat a
+            monster hit. Hard Karamja diary wants that crown.
           </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            The bowl will not wait forever. Official Old School hour, 4 February 2026:
+            the Cave’s roster walks in as the clock runs. Tz-Kih at ninety seconds.
+            Tz-Kek at three and a half minutes. Tok-Xil at five and a half. Ket-Zek at
+            seven and a half. Jad at nine and a half. At eleven and a half the gas
+            fills and you take a hit every tick until one name is left. 8 July 2026
+            fixed aggro range. Hide in a corner, pile with a chat, or stall — the
+            volcano does not care which. File the live wave table on the wiki if this
+            desk drifts.
+          </p>
+
           <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">RuneScape — TzHaar City</h3>
           <p className="text-sm leading-relaxed text-muted">
             Same bowl, later grammar. TokKul-Zo is the fast door. Official world is
-            printed on the wiki when the city is quiet. 21 June 2011 tried a global
-            instance so any world could fill a pit. 14 February 2012 took that search
-            off. If the lobby is empty this month, the wiki is the verdict. Waves of
-            TzHaar can rush a stall — that is this client’s finish, not Old School’s.
+            printed on the wiki when the city is quiet. The waiting room still has the
+            pillar. Next fight starts when a champion is named or two people are
+            waiting. Waves of TzHaar can rush a stall — Tz-Kih, Tz-Kek, Tok-Xil — then
+            the floor starts taking life until one is left. That finish is this
+            client’s. Champion Tokkul still scales with who you beat. A hybrid robe
+            can drop. Confirm the current table on the RuneScape wiki.
           </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            13 May 2008 was not safe. The waiting room went hot the day TokTz-Ket-Dill
+            shipped. People died for the bag. Jagex closed it the same day and banned
+            the ones who farmed it. Street name: TzHaar massacre. File it as history,
+            not as the current rule. 21 June 2011 tried a global instance so any world
+            could fill a pit. 14 February 2012 took that search off. It is not coming
+            back on the live page. If the lobby is empty this month, the wiki is the
+            verdict. Elder Kiln, Brink of Extinction, Fight Cauldron, and Zuk are other
+            doors under the same mountain. They are not this minigame.
+          </p>
+
+          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">How the pit is won</h3>
+          <ol className="mt-3 space-y-2 text-sm text-muted">
+            <li>1. Stand in the waiting room. Two names or the last champion ends the last round.</li>
+            <li>2. The orb is for watching. Walking in is for fighting.</li>
+            <li>3. A kill is an eject, not a loot pile. The bag stays.</li>
+            <li>4. Do not treat the gas / TzHaar waves as optional. The clock is a third team.</li>
+            <li>5. The jingle is the pit. LMS in Ferox is a different building. The Cave is Jad. Leave them on their own pages.</li>
+          </ol>
           <StillGrid items={PIT_STILLS} />
         </section>
 
