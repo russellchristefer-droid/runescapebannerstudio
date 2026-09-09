@@ -264,7 +264,77 @@ function HistoryPage() {
           </ul>
           <p className="mt-4 text-[11px] text-faint">
             Legends’ Quest stays on the wiki. This room is only the kettle. Golden Gnomes sit
-            in the Myths' Guild above — Library of Knowledge, after Dragon Slayer II.
+            in the Myths' Guild above — Library of Knowledge, after Dragon Slayer II. The
+            people who wrote the first client sit in the Wizards' Guild below.
+          </p>
+        </aside>
+
+        <aside
+          id="wizards-guild"
+          className="mt-8 rounded-md border border-[#6b5cb8]/50 bg-[#16102a] px-4 py-5 shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]"
+        >
+          <p className="text-[10px] uppercase tracking-[0.18em] text-faint">Yanille · Wizards' Guild</p>
+          <h2 className="mt-1 font-display text-lg text-parchment">Sixty-six Magic</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            South of Ardougne, in Yanille. Sixty-six Magic at the door — mind bomb if you
+            are three short. Mystic downstairs, portals to the towers. This kettle is not
+            a hiscores board and not a gnome shelf. It is the people who wrote the first
+            client. DeviousMUD in 1999. RuneScape Classic on 4 January 2001, from a house
+            in Nottingham. Jagex is Java Gaming Experts. The later company is a different
+            sentence.
+          </p>
+          <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
+            <li>
+              <a href="https://runescape.wiki/w/Andrew_Gower" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Andrew Gower
+              </a>{" "}
+              — the engine and RuneScript. Cambridge computer science. He turned a MUD
+              into a picture and launched the beta the street still dates from. Principal
+              architect until 2011. The map is still his grammar even when the credits
+              moved.
+            </li>
+            <li>
+              <a href="https://runescape.wiki/w/Paul_Gower" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Paul Gower
+              </a>{" "}
+              — quests, skills, the map editor. Full-time with Andrew when the staff was
+              two. The First Four Years blog is his ledger: 4 January 2001, members 27
+              February 2002. The world got a theme because he lived tabletop.
+            </li>
+            <li>
+              <a href="https://runescape.wiki/w/Ian_Gower" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Ian Gower
+              </a>{" "}
+              — graphics and the name. People read the logo as RunEscape; they fixed the
+              letters. DeviousMUD models. Goblin Diplomacy and Fight Arena conversions.
+              Later Hunter and Old School engine work. Left for Fen Research in 2016 with
+              his brother. The tiles you still walk were his job first.
+            </li>
+            <li>
+              <a href="https://en.wikipedia.org/wiki/Jagex" target="_blank" rel="noopener noreferrer" className="text-parchment">
+                Constant Tedder
+              </a>{" "}
+              — first CEO of Jagex Ltd, 1 December 2001. Not the engine. Advertising had
+              died with the bubble; he helped turn a house server into a company that could
+              sell members. The game was already live. This plaque is the office, not the
+              map.
+            </li>
+          </ul>
+          <p className="mt-4 text-[11px] text-faint">
+            Source:{" "}
+            <a
+              href="https://runescape.wiki/w/Update:Blog_-_History_of_RuneScape:_The_First_Four_Years"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-parchment"
+            >
+              The First Four Years
+            </a>
+            {" · "}
+            <a href="https://oldschool.runescape.wiki/w/Wizards%27_Guild" target="_blank" rel="noopener noreferrer" className="text-parchment">
+              Wizards' Guild
+            </a>
+            . Public work. Not a staff list and not a private house.
           </p>
         </aside>
         <p className="mt-8 flex flex-wrap gap-x-3 gap-y-1 text-sm text-parchment">

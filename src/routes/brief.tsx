@@ -65,7 +65,8 @@ function BriefPage() {
               <In to="/history">History</In> — one fan story of public memory. Myths' Guild
               (Feldip) keeps Golden Gnome winners; the name opens the film. Legends' Guild
               (Ardougne, first room on the left) keeps the kettle: Zezima, The Old Nite, 25
-              Buttholes, and the hiscores firsts. <In to="/chronicle">Chronicle</In> — ages and
+              Buttholes, and the hiscores firsts. Wizards' Guild (Yanille) keeps the Gowers
+              who wrote the first client. <In to="/chronicle">Chronicle</In> — ages and
               doors, still two canons.
             </li>
             <li>
