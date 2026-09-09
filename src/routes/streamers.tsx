@@ -42,6 +42,9 @@ function Row({
         {row.name}
         {row.official ? <span className="ml-2 text-[10px] text-faint">Official</span> : null}
         {badge === "live" ? (
+          <span className="ml-2 text-[10px] text-faint">{row.game === "rs3" ? "RuneScape" : "Old School"}</span>
+        ) : null}
+        {badge === "live" ? (
           <span className="ml-2 rounded-sm bg-[#9b1b1b] px-1.5 py-0.5 text-[10px] tracking-[0.08em] text-[#efe4c8] uppercase">
             Live{typeof count === "number" ? ` · ${count.toLocaleString("en-GB")}` : ""}
           </span>
@@ -185,12 +188,12 @@ function StreamersPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Streamers</h1>
         <p className="mt-2 text-center text-sm text-muted">
-          Independent hall of public RuneScape Twitch names. Not every world. YouTube stays on Youtubers.
+          Who is live on Old School and RuneScape right now. The hall stays underneath. YouTube stays on Youtubers.
         </p>
         <p className="mt-1 text-center text-[11px] text-faint">
           {probe === "off" || probe === "down"
             ? "Live check is off."
-            : "Live first. Helix every 45s while this tab is open. A missing badge is not a verdict."}
+            : `${liveNow.filter((row) => row.game !== "rs3").length} live Old School · ${liveNow.filter((row) => row.game === "rs3").length} live RuneScape. Refresh every 45s while this tab is open.`}
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <label className="mx-auto mt-3 block max-w-sm text-[10px] text-muted">

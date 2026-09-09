@@ -4,11 +4,14 @@ import { CHANNELS } from "@/data/channels";
 const cache = new Map<string, { at: number; up: string | null }>();
 const sticky = new Map<string, { at: number; row: TwitchBoardRow }>();
 const TTL = 45_000;
-const BOARD_TTL = 15_000;
+const BOARD_TTL = 20_000;
 const STICKY_TTL = 90_000;
+const GAME_OSRS = "459931";
+const GAME_RS3 = "2083";
+/** Public Client-ID from twitch.tv's own directory page. Used only when Helix keys are empty. */
+const TWITCH_WEB_CLIENT = "kimne78kx3ncx6brgo4mv6wki5h1ko";
 let boardMemo: { at: number; payload: TwitchBoard } | null = null;
 let appToken: { value: string; at: number } | null = null;
-let gameIds: { at: number; osrs: string; rs3: string } | null = null;
 let decapiCursor = 0;
 
 export type TwitchBoardRow = {
@@ -148,46 +151,106 @@ async function helixByLogins(clientId: string, token: string, logins: string[]) 
   return rows;
 }
 
-async function helixGameIds(clientId: string, token: string) {
-  if (gameIds && Date.now() - gameIds.at < 12 * 60 * 60 * 1000) return gameIds;
-  const url = new URL("https://api.twitch.tv/helix/games");
-  url.searchParams.append("name", "Old School RuneScape");
-  url.searchParams.append("name", "RuneScape");
-  const res = await fetch(url, {
-    headers: { "Client-ID": clientId, Authorization: `Bearer ${token}` },
-    signal: AbortSignal.timeout(4_000),
-  });
-  if (!res.ok) return gameIds;
-  const body = (await res.json()) as { data?: { id?: string; name?: string }[] };
-  let osrs = gameIds?.osrs ?? "";
-  let rs3 = gameIds?.rs3 ?? "";
-  for (const game of body.data ?? []) {
-    if (game.name === "Old School RuneScape" && game.id) osrs = game.id;
-    if (game.name === "RuneScape" && game.id) rs3 = game.id;
-  }
-  if (!osrs && !rs3) return gameIds;
-  gameIds = { at: Date.now(), osrs, rs3 };
-  return gameIds;
-}
-
 async function helixCategory(clientId: string, token: string, gameId: string, game: "osrs" | "rs3") {
   if (!gameId) return [];
-  const url = new URL("https://api.twitch.tv/helix/streams");
-  url.searchParams.set("game_id", gameId);
-  url.searchParams.set("first", "100");
-  url.searchParams.set("type", "live");
-  const res = await fetch(url, {
-    headers: { "Client-ID": clientId, Authorization: `Bearer ${token}` },
-    signal: AbortSignal.timeout(8_000),
-  });
-  if (res.status === 401 || res.status === 403) {
-    const err = new Error("auth");
-    err.name = "TwitchAuth";
-    throw err;
+  const rows: TwitchBoardRow[] = [];
+  let cursor = "";
+  for (let page = 0; page < 3; page++) {
+    const url = new URL("https://api.twitch.tv/helix/streams");
+    url.searchParams.set("game_id", gameId);
+    url.searchParams.set("first", "100");
+    url.searchParams.set("type", "live");
+    if (cursor) url.searchParams.set("after", cursor);
+    const res = await fetch(url, {
+      headers: { "Client-ID": clientId, Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(8_000),
+    });
+    if (res.status === 401 || res.status === 403) {
+      const err = new Error("auth");
+      err.name = "TwitchAuth";
+      throw err;
+    }
+    if (!res.ok) break;
+    const body = (await res.json()) as {
+      data?: Parameters<typeof parseHelixStreams>[0];
+      pagination?: { cursor?: string };
+    };
+    rows.push(...parseHelixStreams(body.data ?? [], game));
+    cursor = body.pagination?.cursor ?? "";
+    if (!cursor || !(body.data ?? []).length) break;
   }
-  if (!res.ok) return [];
-  const body = (await res.json()) as { data?: Parameters<typeof parseHelixStreams>[0] };
-  return parseHelixStreams(body.data ?? [], game);
+  return rows;
+}
+
+const GQL_STREAMS = `query Board($name: String!, $first: Int!, $after: Cursor) {
+  game(name: $name) {
+    streams(first: $first, after: $after) {
+      edges {
+        cursor
+        node {
+          title
+          viewersCount
+          broadcaster { login displayName }
+        }
+      }
+      pageInfo { hasNextPage }
+    }
+  }
+}`;
+
+async function gqlCategory(name: string, game: "osrs" | "rs3") {
+  const rows: TwitchBoardRow[] = [];
+  let after: string | null = null;
+  for (let page = 0; page < 3; page++) {
+    const variables: { name: string; first: number; after?: string } = { name, first: 100 };
+    if (after) variables.after = after;
+    const res = await fetch("https://gql.twitch.tv/gql", {
+      method: "POST",
+      headers: {
+        "Client-ID": TWITCH_WEB_CLIENT,
+        "content-type": "application/json",
+        Origin: "https://www.twitch.tv",
+        Referer: "https://www.twitch.tv/",
+      },
+      body: JSON.stringify({ query: GQL_STREAMS, variables }),
+      signal: AbortSignal.timeout(8_000),
+    });
+    if (!res.ok) break;
+    const body = (await res.json()) as {
+      data?: {
+        game?: {
+          streams?: {
+            edges?: {
+              cursor?: string;
+              node?: {
+                title?: string;
+                viewersCount?: number;
+                broadcaster?: { login?: string; displayName?: string };
+              };
+            }[];
+            pageInfo?: { hasNextPage?: boolean };
+          };
+        };
+      };
+    };
+    const edges = body.data?.game?.streams?.edges ?? [];
+    for (const edge of edges) {
+      const handle = cleanLogin(edge.node?.broadcaster?.login ?? "");
+      if (!handle) continue;
+      rows.push({
+        handle,
+        displayName: String(edge.node?.broadcaster?.displayName ?? handle).slice(0, 32),
+        game,
+        live: true,
+        viewers: Number(edge.node?.viewersCount) || 0,
+        title: String(edge.node?.title ?? "").slice(0, 80),
+        gameName: name,
+      });
+      if (edge.cursor) after = edge.cursor;
+    }
+    if (!body.data?.game?.streams?.pageInfo?.hasNextPage || !edges.length) break;
+  }
+  return rows;
 }
 
 export async function fetchTwitchUptime(loginRaw: string) {
@@ -281,23 +344,35 @@ export async function fetchTwitchLiveBoard(logins: string[]): Promise<TwitchBoar
   const token = await helixToken().catch(() => "");
   if (id && token) {
     try {
-      const ids = await helixGameIds(id, token);
       const [byLogin, osrsLive, rs3Live] = await Promise.all([
         helixByLogins(id, token, pool),
-        ids?.osrs ? helixCategory(id, token, ids.osrs, "osrs") : Promise.resolve([]),
-        ids?.rs3 ? helixCategory(id, token, ids.rs3, "rs3") : Promise.resolve([]),
+        helixCategory(id, token, GAME_OSRS, "osrs"),
+        helixCategory(id, token, GAME_RS3, "rs3"),
       ]);
       const rows = mergeLive([byLogin, osrsLive, rs3Live]);
       const payload: TwitchBoard = { ok: true, rows };
       boardMemo = { at: Date.now(), payload };
       return payload;
     } catch (err) {
-      if (err instanceof Error && err.name === "TwitchAuth") {
-        /* fall through to public uptime */
-      } else {
-        return { ok: false, rows: [] };
+      if (!(err instanceof Error && err.name === "TwitchAuth")) {
+        /* still try the public directory */
       }
     }
+  }
+
+  try {
+    const [osrsLive, rs3Live] = await Promise.all([
+      gqlCategory("Old School RuneScape", "osrs"),
+      gqlCategory("RuneScape", "rs3"),
+    ]);
+    const rows = mergeLive([osrsLive, rs3Live]);
+    if (rows.length) {
+      const payload: TwitchBoard = { ok: true, rows };
+      boardMemo = { at: Date.now(), payload };
+      return payload;
+    }
+  } catch {
+    /* fall through */
   }
 
   try {
