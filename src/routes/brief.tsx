@@ -62,7 +62,11 @@ function BriefPage() {
               <In to="/classic">Classic</In> — RuneScape Classic archive. Places and play shots. Official Classic worlds are not on this desk.
             </li>
             <li>
-              <In to="/history">History</In> — one fan story of public memory. <In to="/chronicle">Chronicle</In> — ages and doors, still two canons.
+              <In to="/history">History</In> — one fan story of public memory. Myths' Guild
+              (Feldip) keeps Golden Gnome winners; the name opens the film. Legends' Guild
+              (Ardougne, first room on the left) keeps the kettle: Zezima, The Old Nite, 25
+              Buttholes, and the hiscores firsts. <In to="/chronicle">Chronicle</In> — ages and
+              doors, still two canons.
             </li>
             <li>
               <In to="/knowledge">Sites</In> — official Jagex first, then Jagex Launcher, RuneLite, Alt1, wikis. <In to="/jmods">Jagex directory</In> — official pages, not a staff login.

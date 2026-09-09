@@ -109,8 +109,10 @@ export function LegalPage() {
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Names on History</h2>
           <p>
-            The Legends' Guild sill uses public names and public work. It is a fan plaque, not a
-            paid endorsement and not a private Discord dump.
+            History has two fan rooms. Myths' Guild lists public Golden Gnome winners from the
+            wiki; a name opens that film or the ceremony. Legends' Guild is the kettle — hiscores
+            and firsts (Zezima, The Old Nite, 25 Buttholes, and that sill). Public work only. Not
+            a paid endorsement, not a rank, and not a private Discord dump.
           </p>
         </section>
         <section>

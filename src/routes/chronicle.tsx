@@ -152,7 +152,13 @@ function ChroniclePage() {
           <h3 className="mt-4 mb-1 text-fg">Names in the culture</h3>
           <p>
             Early hiscores myth taught grind as theatre. Guide-voices and iron serials taught
-            constraint as content. This page lists no private scandal and confers no rank.
+            constraint as content. This page lists no private scandal and confers no rank. The
+            plaques sit on History: Myths' Guild for Golden Gnomes, Legends' Guild for the kettle.
+          </p>
+          <p className="mt-2">
+            <Link to="/history" className="text-parchment">
+              History
+            </Link>
           </p>
         </section>
 
@@ -248,7 +254,7 @@ function ChroniclePage() {
           <p>
             Two clocks. Two wikis. One midnight UTC when shops restock. Twelve glyphs make a
             name. A JPEG is not a coronation. Stand in the right town for the right game, then
-            examine it.
+            examine it. The library is Myths' Guild. The kettle is first room on the left.
           </p>
         </section>
 
