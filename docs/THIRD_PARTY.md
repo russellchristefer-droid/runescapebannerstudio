@@ -7,6 +7,7 @@
 - Twitch Interactive, Inc. — Twitch®. Hall is a directory. Live probe fail-soft.
 - Google LLC — YouTube®. Hall is a directory. Live probe fail-soft.
 - X Corp — X. Hall is a directory. Spaces probe fail-soft without a bearer.
+- Discord Inc. — Discord®. Invites on `/discord` go outbound. This origin does not host Discord.
 - Google Fonts — Cinzel, Fondamento, Source Sans 3, Source Serif 4 if still loaded from fonts.googleapis.com.
 - Cloudflare / Vercel / grok.me — host and edge. We do not own grok.me.
 - DecAPI — live Twitch helper if the stream page still calls it. Fail-soft. Never show 0 as a death.

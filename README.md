@@ -19,7 +19,7 @@ Towns, gods, bosses, and the bestiary keep two canons. Gods sit on their prayer-
 
 `/pvp` has both canons on one page, separate sheets. `/skills` lists Old School and RuneScape skills with early / mid / late, what to wear, and the live wiki. `/edit` is a local clip bench: upload a video, mark In / Out, mute, gain, fades, Save as WebM. Stills stay on the desk.
 
-Streamer and YouTuber halls list names even when live check is off. History has three rooms: Myths' Guild (Golden Gnome winners; the name opens the film), Legends' Guild (first room on the left — Zezima, The Old Nite, 25 Buttholes, and the hiscores firsts), and Wizards' Guild (Yanille — Andrew, Paul, and Ian Gower, who wrote the first client). Public names only. Not a rank.
+Streamer, YouTuber, and X halls list names even when live check is off. `/discord` is official Jagex servers first, then wiki and tool invites. History has three rooms: Myths' Guild (Golden Gnome winners; the name opens the film), Legends' Guild (first room on the left — Zezima, The Old Nite, 25 Buttholes, and the hiscores firsts), and Wizards' Guild (Yanille — Andrew, Paul, and Ian Gower, who wrote the first client). Public names only. Not a rank.
 
 ## How the code is split
 

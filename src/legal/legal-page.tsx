@@ -89,7 +89,9 @@ export function LegalPage() {
           </p>
           <p className="mt-3">
             Twitch® is a trademark of Twitch Interactive, Inc. YouTube® is a trademark of Google LLC.
-            X is a trademark of X Corp. This desk does not own those marks. Halls are directories.
+            X is a trademark of X Corp. Discord® is a trademark of Discord Inc. This desk does not own
+            those marks. Halls are directories. Discord invites on this origin go outbound. This origin
+            does not host Discord, does not take a Discord login, and is not Jagex Support.
           </p>
         </section>
         <section>

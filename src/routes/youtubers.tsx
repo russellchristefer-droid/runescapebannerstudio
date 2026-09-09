@@ -253,6 +253,8 @@ function YoutubersPage() {
           <Link to="/streamers">Twitch Streamers</Link>
           {" · "}
           <Link to="/x-live">X live</Link>
+          {" · "}
+          <Link to="/discord">Discord</Link>
         </p>
       </main>
     </div>

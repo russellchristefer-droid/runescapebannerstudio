@@ -431,6 +431,8 @@ function XLivePage() {
           {" · "}
           <Link to="/youtubers">YouTube Streamers</Link>
           {" · "}
+          <Link to="/discord">Discord</Link>
+          {" · "}
           <Link to="/edit">Clips</Link>
           {" · "}
           <Link to="/">Desk</Link>

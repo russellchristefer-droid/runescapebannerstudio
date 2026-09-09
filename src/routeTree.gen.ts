@@ -14,6 +14,7 @@ import { Route as BriefRouteImport } from './routes/brief'
 import { Route as ChronicleRouteImport } from './routes/chronicle'
 import { Route as ClanWarsRouteImport } from './routes/clan-wars'
 import { Route as ClassicRouteImport } from './routes/classic'
+import { Route as DiscordRouteImport } from './routes/discord'
 import { Route as DonateRouteImport } from './routes/donate'
 import { Route as EditRouteImport } from './routes/edit'
 import { Route as EggRouteImport } from './routes/egg'
@@ -68,6 +69,11 @@ const ClanWarsRoute = ClanWarsRouteImport.update({
 const ClassicRoute = ClassicRouteImport.update({
   id: '/classic',
   path: '/classic',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscordRoute = DiscordRouteImport.update({
+  id: '/discord',
+  path: '/discord',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DonateRoute = DonateRouteImport.update({
@@ -227,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/chronicle': typeof ChronicleRoute
   '/clan-wars': typeof ClanWarsRoute
   '/classic': typeof ClassicRoute
+  '/discord': typeof DiscordRoute
   '/donate': typeof DonateRoute
   '/edit': typeof EditRoute
   '/egg': typeof EggRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/chronicle': typeof ChronicleRoute
   '/clan-wars': typeof ClanWarsRoute
   '/classic': typeof ClassicRoute
+  '/discord': typeof DiscordRoute
   '/donate': typeof DonateRoute
   '/edit': typeof EditRoute
   '/egg': typeof EggRoute
@@ -302,6 +310,7 @@ export interface FileRoutesById {
   '/chronicle': typeof ChronicleRoute
   '/clan-wars': typeof ClanWarsRoute
   '/classic': typeof ClassicRoute
+  '/discord': typeof DiscordRoute
   '/donate': typeof DonateRoute
   '/edit': typeof EditRoute
   '/egg': typeof EggRoute
@@ -341,6 +350,7 @@ export interface FileRouteTypes {
     | '/chronicle'
     | '/clan-wars'
     | '/classic'
+    | '/discord'
     | '/donate'
     | '/edit'
     | '/egg'
@@ -378,6 +388,7 @@ export interface FileRouteTypes {
     | '/chronicle'
     | '/clan-wars'
     | '/classic'
+    | '/discord'
     | '/donate'
     | '/edit'
     | '/egg'
@@ -415,6 +426,7 @@ export interface FileRouteTypes {
     | '/chronicle'
     | '/clan-wars'
     | '/classic'
+    | '/discord'
     | '/donate'
     | '/edit'
     | '/egg'
@@ -453,6 +465,7 @@ export interface RootRouteChildren {
   ChronicleRoute: typeof ChronicleRoute
   ClanWarsRoute: typeof ClanWarsRoute
   ClassicRoute: typeof ClassicRoute
+  DiscordRoute: typeof DiscordRoute
   DonateRoute: typeof DonateRoute
   EditRoute: typeof EditRoute
   EggRoute: typeof EggRoute
@@ -520,6 +533,13 @@ declare module '@tanstack/react-router' {
       path: '/classic'
       fullPath: '/classic'
       preLoaderRoute: typeof ClassicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discord': {
+      id: '/discord'
+      path: '/discord'
+      fullPath: '/discord'
+      preLoaderRoute: typeof DiscordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/donate': {
@@ -741,6 +761,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChronicleRoute: ChronicleRoute,
   ClanWarsRoute: ClanWarsRoute,
   ClassicRoute: ClassicRoute,
+  DiscordRoute: DiscordRoute,
   DonateRoute: DonateRoute,
   EditRoute: EditRoute,
   EggRoute: EggRoute,

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { OfficialSites } from "@/components/official-sites";
 import { KNOWLEDGE_SITES, type KnowledgeSite } from "@/lib/knowledge-sites";
@@ -38,6 +38,13 @@ function KnowledgePage() {
         </section>
         <section>
           <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">Community</h2>
+          <p className="mb-3 text-xs text-muted">
+            Discord invites sit on{" "}
+            <Link to="/discord" className="text-parchment">
+              Discord
+            </Link>
+            . Official first. Not a clan dump.
+          </p>
           <List sites={boards} />
         </section>
       </main>

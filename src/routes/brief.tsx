@@ -73,7 +73,7 @@ function BriefPage() {
               <In to="/knowledge">Sites</In> — official Jagex first, then Jagex Launcher, RuneLite, Alt1, wikis. <In to="/jmods">Jagex directory</In> — official pages, not a staff login.
             </li>
             <li>
-              <In to="/stream">Stream</In> — go-live notes. <In to="/x-live">X live</In> — hall of public X handles (Old School, RuneScape, Dragonwilds) plus Live Studio steps. No stream key on this origin. <In to="/streamers">Twitch Streamers</In> — one Twitch hall. <In to="/youtubers">YouTube Streamers</In> — YouTube hall only.
+              <In to="/stream">Stream</In> — go-live notes. <In to="/x-live">X live</In> — hall of public X handles (Old School, RuneScape, Dragonwilds) plus Live Studio steps. No stream key on this origin. <In to="/streamers">Twitch Streamers</In> — one Twitch hall. <In to="/youtubers">YouTube Streamers</In> — YouTube hall only. <In to="/discord">Discord</In> — official Jagex servers first, then wiki and tools. Not a clan dump.
             </li>
             <li>
               <In to="/edit">Clips</In> — local video bench. Upload, In / Out, mute, gain, fades, Save a WebM. The clip stays on this device. It does not go live.
