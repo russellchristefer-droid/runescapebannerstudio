@@ -1,6 +1,6 @@
 # Client sidecars (not the website)
 
-RuneScape® and Old School RuneScape® are registered trademarks of Jagex Limited. These are downloadable apps. The website is separate.
+RuneScape®, Old School RuneScape®, and Jagex® are registered trademarks of Jagex Limited. These are downloadable apps. The website is separate.
 
 ## Still compositor
 

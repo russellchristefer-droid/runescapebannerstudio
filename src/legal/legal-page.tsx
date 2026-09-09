@@ -55,9 +55,9 @@ export function LegalPage() {
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Jagex property</h2>
           <p>
-            RuneScape®, Old School RuneScape®, RuneScape Classic, Jagex®, Gielinor, skill icons, marks,
-            partyhats, and in-game stills belong to Jagex Limited or its licensors. Shown here for
-            identification under Jagex's Fan Content Policy.
+            RuneScape®, Old School RuneScape®, RuneScape Classic, RuneScape: Dragonwilds™, Jagex®,
+            Gielinor, skill icons, marks, partyhats, and in-game stills belong to Jagex Limited or
+            its licensors. Shown here for identification under Jagex's Fan Content Policy.
           </p>
           <p className="mt-3">
             Created using intellectual property belonging to Jagex Limited under the terms of
@@ -82,10 +82,14 @@ export function LegalPage() {
         <section>
           <h2 className="mb-2 font-semibold text-parchment">Other software</h2>
           <p>
-            RuneLite is a third-party Old School client (BSD-2-Clause). Alt1 Toolkit is skillbert /
-            runeapps.org. This studio does not ship those programs. Sidecar plugins on GitHub are
-            fan add-ons: they do not click, they are not on Plugin Hub, and they are not official
-            Jagex, RuneLite, or Alt1 products.
+            RuneLite is a third-party Old School RuneScape® client (BSD-2-Clause). Alt1 Toolkit is
+            skillbert / runeapps.org. This studio does not ship those programs. Sidecar plugins on
+            GitHub are fan add-ons: they do not click, they are not on Plugin Hub, and they are not
+            official Jagex®, RuneLite, or Alt1 products.
+          </p>
+          <p className="mt-3">
+            Twitch® is a trademark of Twitch Interactive, Inc. YouTube® is a trademark of Google LLC.
+            X is a trademark of X Corp. This desk does not own those marks. Halls are directories.
           </p>
         </section>
         <section>
@@ -102,8 +106,8 @@ export function LegalPage() {
             not Jagex. Wiki links go to the wiki projects — their licence and talk pages, not ours.
           </p>
           <p className="mt-3">
-            Live: Twitch or YouTube only if a key is configured. Otherwise the hall is a directory.
-            Those platforms keep their own terms. A missing key is not a fake Live badge.
+            Live: Twitch®, YouTube®, or X only if a key is configured. Otherwise the hall is a
+            directory. Those platforms keep their own terms. A missing key is not a fake Live badge.
           </p>
         </section>
         <section>

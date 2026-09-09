@@ -28,7 +28,7 @@ function BriefPage() {
         <section>
           <h2 className="section-h2">What it is</h2>
           <p>
-            RuneScape Banner Studio is an independent fan desk in the browser. It is not Jagex, not a game client, and not an official overlay. Old School RuneScape® and RuneScape® stay two games — two canons, two inventories, two streets. Twitch categories are Old School RuneScape and RuneScape. Wiki keeps the hour. This desk keeps the plate.
+            RuneScape Banner Studio is an independent fan desk in the browser. It is not Jagex®, not a game client, and not an official overlay. Old School RuneScape® and RuneScape® stay two games — two canons, two inventories, two streets. RuneScape: Dragonwilds™ is a third title in the same house, not a still well on this desk. Twitch® categories are Old School RuneScape and RuneScape. Wiki keeps the hour. This desk keeps the plate.
           </p>
         </section>
         <section>
@@ -96,7 +96,10 @@ function BriefPage() {
           <h2 className="section-h2">Truth</h2>
           <p>If this desk and official news disagree, official news wins. If this desk and the wiki disagree, the wiki keeps the hour.</p>
         </section>
-        <p className="text-sm text-muted">Independent studio · not a Jagex product</p>
+        <p className="text-sm text-muted">Independent studio · not a Jagex® product</p>
+        <p className="text-xs text-faint">
+          RuneScape®, Old School RuneScape®, RuneScape: Dragonwilds™, and Jagex® are trademarks of Jagex Limited. Twitch®, YouTube®, and X belong to their owners. Fan Content Policy on Legal.
+        </p>
         <p className="text-parchment">
           <Link to="/">Home</Link>
           {" · "}

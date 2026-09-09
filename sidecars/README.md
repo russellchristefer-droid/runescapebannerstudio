@@ -22,3 +22,6 @@ node sidecars/node/clip-bench.mjs clip.mp4 --in 2 --out 8
 ```
 
 Node and PowerShell call the Python benches so the file on disk is the same. They do not scan hosts.
+
+RuneScape®, Old School RuneScape®, and Jagex® are trademarks of Jagex Limited. These files are not Jagex products.
+

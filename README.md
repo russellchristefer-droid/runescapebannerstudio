@@ -1,6 +1,6 @@
 # RuneScape Banner Studio
 
-A fan site for streamers who need a banner that looks like it belongs next to a RuneScape client. It is not Jagex, not a game client, and not an official overlay.
+A fan site for streamers who need a banner that looks like it belongs next to an Old School RuneScape® or RuneScape® client. It is not Jagex®, not a game client, and not an official overlay.
 
 Live site: [runescapebannerstudio.grok.me](https://runescapebannerstudio.grok.me/)
 
@@ -140,7 +140,7 @@ Index: [sidecars/README.md](https://github.com/russellchristefer-droid/runescape
 
 ## Legal
 
-Stills are identification. RuneScape® and Old School RuneScape® are registered trademarks of Jagex Limited. Jagex® owns the game art. The Fan Content Policy is permission, not a sale — [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
+Stills are identification. RuneScape®, Old School RuneScape®, RuneScape: Dragonwilds™, and Jagex® are trademarks of Jagex Limited. Jagex owns the game art. Twitch®, YouTube®, and X belong to their owners. The Fan Content Policy is permission, not a sale — [Legal](https://runescapebannerstudio.grok.me/legal), [NOTICE](NOTICE), [CONTRIBUTING.md](CONTRIBUTING.md), [Jagex Fan Content Policy](https://legal.jagex.com/docs/policies/fan-content-policy).
 
 This README is not a licence to print official marks. [LICENSE](LICENSE) covers original studio code and prose only. Operator: Christefer Lee Russell-Barnett.
 

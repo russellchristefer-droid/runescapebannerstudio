@@ -22,4 +22,4 @@ sidecars/kali/clip-bench.sh public/media/poh.mp4 --in 0 --out 3 --mute
 Pillow: `python3-pil` from apt. Do not `pip install` as root unless you know why.
 ffmpeg must be on `PATH` for the clip bench.
 
-RuneScape® and Old School RuneScape® are Jagex Limited trademarks.
+RuneScape®, Old School RuneScape®, and Jagex® are trademarks of Jagex Limited.

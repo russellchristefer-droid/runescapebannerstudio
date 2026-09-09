@@ -25,7 +25,7 @@ export function SiteFooter() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          RuneScape: Dragonwilds
+          RuneScape: Dragonwilds™
         </a>
       </nav>
     </footer>

@@ -6,7 +6,7 @@ export const Route = createFileRoute("/chronicle")({
   head: () =>
     pageMeta(
       "Chronicle",
-      "A fan ledger of Old School RuneScape and RuneScape public memory. Two games. Not Jagex.",
+      "A fan ledger of Old School RuneScape® and RuneScape® public memory. Two games. Not Jagex®.",
     ),
   component: ChroniclePage,
 });
@@ -42,14 +42,14 @@ function ChroniclePage() {
         <section>
           <h2 className="mb-2 text-sm font-semibold text-parchment">How to read this</h2>
           <p>
-            <strong className="font-normal text-fg">Old School RuneScape</strong> is the 2007-era
+            <strong className="font-normal text-fg">Old School RuneScape®</strong> is the 2007-era
             client voted back in 2013. No Sixth Age landfall. No Edicts as current weather. No
             Battle of Lumbridge crater as the town you stand in.
           </p>
           <p className="mt-2">
-            <strong className="font-normal text-fg">RuneScape</strong> is the later
+            <strong className="font-normal text-fg">RuneScape®</strong> is the later
             main client. World events, hour-cities, Invention, Necromancy,
-            War’s Retreat. Twitch category is <em>RuneScape</em>.
+            War’s Retreat. Twitch® category is <em>RuneScape</em>.
           </p>
         </section>
 
@@ -233,7 +233,7 @@ function ChroniclePage() {
           </p>
           <p className="mt-2">
             <a href="https://dragonwilds.runescape.com/" className="text-parchment" target="_blank" rel="noopener noreferrer">
-              RuneScape: Dragonwilds
+              RuneScape: Dragonwilds™
             </a>{" "}
             is a co-op survival title in the same house. It is not Old School. It
             is not the main RuneScape client. Do not put its stills on this desk’s two wells.
@@ -267,7 +267,9 @@ function ChroniclePage() {
           {" · "}
           <Link to="/legal">Legal</Link>
         </p>
-        <p className="text-xs text-faint">Independent studio · not a Jagex product</p>
+        <p className="text-xs text-faint">
+          Independent studio · not a Jagex® product. RuneScape®, Old School RuneScape®, RuneScape: Dragonwilds™, and Jagex® are trademarks of Jagex Limited.
+        </p>
       </main>
     </div>
   );
