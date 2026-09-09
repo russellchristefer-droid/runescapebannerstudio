@@ -37,7 +37,7 @@ function XLivePage() {
       </header>
       <main id="content" className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
         <p className="text-sm leading-relaxed text-muted">
-          If you are on the sofa with the X app, use Phone. If you want people to watch the Jagex client — raids, a 99, a wildy walk — use Jagex client. Same title either way. One game name. Say what you are actually doing.
+          If you are on the sofa with the X app, use Phone. If you want people to watch the Jagex client — raids, a 99, a wildy walk — use Jagex client. Same title either way. One game name. Say what you are actually doing. Read the list once, then do it in order. You do not need a second tab until a link says so.
         </p>
 
         <div className="overflow-hidden rounded-md border border-[#c6a45a] bg-[#1a1610] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
@@ -49,18 +49,33 @@ function XLivePage() {
           </div>
           <div className="h-px bg-[#c6a45a]/80" aria-hidden="true" />
           <ol className="list-decimal space-y-2.5 px-4 py-4 pl-9 text-sm leading-relaxed text-muted">
-            <li>Open the X app and make sure you are on the account you want people to find. A locked account will not reach a public hall.</li>
-            <li>Tap the composer (the plus / post button). Along the bottom you should see Live. If you do not, the app is old — update it, or try the same steps on x.com from a phone browser.</li>
+            <li>Sit down somewhere quiet. Charge the phone or leave it on a lead. Headphones with a mic beat the room mic if people are talking behind you.</li>
+            <li>Open the X app. Look at the avatar in the corner. That is the account that will go live. Switch now if it is the wrong one — you cannot swap mid-stream.</li>
             <li>
-              Write one honest line: activity, then the game. Example: <span className="font-mono text-xs text-fg">{title}</span>. Skip a wall of hashtags. People tap a sentence they can read.
+              Make sure the account is public. Settings → Privacy → Audience. A locked account will not reach a public hall. Followers-only is a choice; just know who can find you.
             </li>
-            <li>Give the camera a second to settle, then tap Go live. You are on. Talk like you would in a clan call. Wave once so the first three viewers know you are there.</li>
+            <li>Tap the composer — the plus, the feather, or the post button, depending on the app version. You want a new post, not a reply.</li>
             <li>
-              When you are done, tap Stop and confirm. Do not flip the camera onto a Bank PIN, mail, or recovery. Cut a nice moment later on{" "}
+              Along the bottom of that composer you should see Live. Tap it. If it is missing, update the app from the store and try again. Still missing: open{" "}
+              <a className="text-parchment" href="https://x.com/" target="_blank" rel="noopener noreferrer">
+                x.com
+              </a>{" "}
+              in the phone browser and look for Live there. X help is the rule if the button moved.
+            </li>
+            <li>The first time, the phone will ask for camera and microphone. Allow both. If you denied them last month, open the phone’s Settings for X and turn them on, then come back.</li>
+            <li>
+              Write one honest line: activity, then the game. Example:{" "}
+              <span className="font-mono text-xs text-fg">{title}</span>. Skip a wall of hashtags. People tap a sentence they can read.
+            </li>
+            <li>Look at the preview. Front camera is you talking. Rear camera is the room. Flip until it is the picture you meant. Hold the phone landscape if you want a wide picture; portrait is fine for a chat.</li>
+            <li>Give the camera a second to settle. Check you are not pointing at a bank PIN, mail, or a recovery screen. Then tap Go live. You are on. The post appears in your followers’ timelines and on your profile.</li>
+            <li>Talk like a clan call. Say hello once so the first three people know you are there. Read names if they show up. You do not need a bit. You need to be in the room.</li>
+            <li>
+              When you are done, tap Stop (usually top left) and confirm. Wait for it to close. Do not force-quit the app mid-goodbye. Cut a nice moment later on{" "}
               <Link to="/edit" className="text-parchment">
                 Clips
-              </Link>
-              .
+              </Link>{" "}
+              if you saved a recording to the phone.
             </li>
           </ol>
         </div>
@@ -69,40 +84,73 @@ function XLivePage() {
           <div className="px-4 py-3">
             <h2 className="page-h1 m-0 text-left">Jagex client</h2>
             <p className="mt-2 text-sm text-muted">
-              This is the raid door. You encode in OBS (free). X receives that picture through Live Studio. Desktop RTMP needs X Premium — confirm the current tier on X help, because they move the gate. Capture the game window, not your whole desktop. Your friends do not need to see the bank pin scene.
+              This is the raid door. You encode in OBS (free). X receives that picture through Live Studio. Desktop RTMP needs X Premium — confirm the current tier on X help, because they move the gate. Capture the game window, not your whole desktop.
             </p>
           </div>
           <div className="h-px bg-[#c6a45a]/80" aria-hidden="true" />
           <ol className="list-decimal space-y-2.5 px-4 py-4 pl-9 text-sm leading-relaxed text-muted">
+            <li>Plug into wired ethernet if you can. Wifi will drop a freeze. Close downloads and other streams. You want a quiet line.</li>
+            <li>
+              Open the{" "}
+              <a className="text-parchment" href="https://www.jagex.com/launcher" target="_blank" rel="noopener noreferrer">
+                Jagex Launcher
+              </a>
+              . Start Old School or RuneScape — one client. Log in. Park on a safe square: house, GE, or a bank that is not about to show a PIN.
+            </li>
             <li>
               Install{" "}
               <a className="text-parchment" href="https://obsproject.com/" target="_blank" rel="noopener noreferrer">
                 OBS Studio
               </a>{" "}
-              if you do not have it. Open the Jagex client from the official launcher and get to a safe square — house, GE, or a BRB still.
+              if you do not have it. Open OBS. You want a blank scene called LIVE. Do not capture the whole desktop.
             </li>
             <li>
-              On a computer, open{" "}
+              In that scene, click + under Sources → Window Capture (or Game Capture). Pick the Jagex client window by name. If the box is black, pick the other capture type. Crop extra chrome later; first get the game on the canvas.
+            </li>
+            <li>
+              Add Audio Input Capture for your mic. In the mixer, game audio on one slider, mic on another. Speak a sentence. The mic bar should move. Game should sit under your voice, not over it.
+            </li>
+            <li>
+              OBS Settings → Video: canvas 1920×1080 (or 1280×720 if the GPU is busy). FPS 60, or 30 if NXT is hot. Settings → Output → Streaming: encoder NVENC or x264, rate control CBR, bitrate 6000, keyframe 3 seconds, audio AAC 128. Apply. Close settings.
+            </li>
+            <li>
+              Make a second scene called PIN. Cam only, or a still from this desk. Bind that scene to a hotkey now — before you need it. When you bank, you hit that key. The street does not need the pad.
+            </li>
+            <li>
+              On the same computer, open{" "}
               <a className="text-parchment" href="https://x.com/i/live-studio" target="_blank" rel="noopener noreferrer">
                 Live Studio
               </a>
-              . Click New livestream. Paste the title from the button below. That string is what the post will say.
+              . Sign in on the account you want public. If you cannot open it, you likely need X Premium. Confirm the current tier on{" "}
+              <a className="text-parchment" href="https://help.x.com/en/using-x/live-studio" target="_blank" rel="noopener noreferrer">
+                X help
+              </a>
+              . This sheet will not invent the price.
             </li>
             <li>
-              Make a Source if you do not have one yet: type RTMP, name it something you will recognise next week, pick the region closest to you. Live Studio then shows an RTMP URL and a stream key. Copy those into OBS only — Settings → Stream → Service: Custom. Server is the URL. Stream key is the secret. Never paste that key into this site, Discord, or a screenshot.
+              Click New livestream. Paste the title from the button below. That string is what the post will say. Public unless you have a reason to test privately first.
             </li>
             <li>
-              In OBS, add Window Capture or Game Capture and click the Jagex client. Add your mic. 1080p60 is the comfortable default; 720p60 is cleaner if the GPU is busy in NXT. Video: H.264, CBR 6000 kbps (X will take up to about 9000). Audio: AAC at 128. Keyframe interval 3 seconds at 60fps. That is what X asks for.
+              Sources: create one if this is the first time. Type RTMP. Name it something you will recognise next week — “home” is enough. Region closest to you. Create. Live Studio now shows an RTMP URL and a stream key.
             </li>
             <li>
-              Hit Start Streaming in OBS first. Live Studio should show a preview of your client. If the preview is black, the capture picked the wrong window — pick again. When it looks like the game, click Go Live. Pin that post so late arrivals can find you.
+              Back in OBS: Settings → Stream → Service: Custom. Server = the RTMP URL. Stream key = the secret. Apply. Never paste that key into this site, Discord, or a screenshot. Treat it like a password. You can reuse the same source next session.
             </li>
             <li>
-              Bind a PIN / login scene to a hotkey before you need it. If you bank, hit that scene. After a kc, drop the file on{" "}
+              Hit Start Streaming in OBS. Do not go live on X yet. Look at Live Studio. You should see a preview of the Jagex client. Black preview: wrong window — go back to step 4 and pick again. Audio meters should move when you talk.
+            </li>
+            <li>
+              When the preview looks like the game, click Go Live in Live Studio. The post goes out. Pin it so late arrivals can find you. Say hello. You are in the room.
+            </li>
+            <li>
+              Play. If you bank, hit the PIN scene. If the picture melts, drop to 720p60 in OBS Video settings before you raise bitrate. A clean 720 beats a melted 1080.
+            </li>
+            <li>
+              To finish: Stop Streaming in OBS first, then End in Live Studio. Both, in that order, so the replay closes cleanly. After a kc, drop the file on{" "}
               <Link to="/edit" className="text-parchment">
                 Clips
               </Link>{" "}
-              and cut In / Out. You are done when you stop OBS and end the livestream in Live Studio — both, in that order, so the VOD closes cleanly.
+              , mark In and Out, download the crop you want.
             </li>
           </ol>
         </div>
@@ -131,7 +179,7 @@ function XLivePage() {
             <Link to="/" className="text-parchment">
               still desk
             </Link>{" "}
-            with the X header crop, then download. It is a still, not the live picture.
+            with the X header crop, then download. It is a still, not the live picture. Do it before you go live so you are not painting during a raid.
           </p>
         </section>
 
@@ -148,10 +196,12 @@ function XLivePage() {
           <div className="rounded-md border border-line bg-raised px-3 py-3">
             <h3 className="mb-2 text-sm font-semibold text-parchment">If something sulks</h3>
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted">
-              <li>No Live button: update the app, or check the account is public.</li>
+              <li>No Live button: update the app, confirm the account is public, then try x.com in a browser.</li>
+              <li>Camera or mic greyed out: phone Settings → X → allow camera and microphone, then reopen Live.</li>
               <li>No Live Studio: you likely need Premium. X help is the rule, not this sheet.</li>
-              <li>Black preview: wrong window in OBS. Pick the Jagex client again.</li>
-              <li>Choppy: drop to 720p60 before you raise bitrate. A clean 720 beats a melted 1080.</li>
+              <li>Black preview: wrong window in OBS. Pick the Jagex client again. Try Game Capture if Window Capture is empty.</li>
+              <li>OBS says failed to connect: the key or URL is stale. Make a new RTMP source in Live Studio and paste again — still only into OBS.</li>
+              <li>Choppy: drop to 720p60 before you raise bitrate. Close other uploads.</li>
               <li>Ended early: stop OBS, then end in Live Studio, so the replay saves.</li>
             </ul>
           </div>
