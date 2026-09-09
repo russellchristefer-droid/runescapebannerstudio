@@ -9,7 +9,7 @@ export const Route = createFileRoute("/x-live")({
   head: () =>
     pageMeta(
       "X live",
-      "A plain walk-through for going live on X. Phone tap, or OBS into Live Studio. This desk never takes a stream key.",
+      "Go live on X with Old School RuneScape or RuneScape. One client, one title. This desk never takes a stream key.",
     ),
   component: XLivePage,
 });
@@ -31,134 +31,119 @@ function XLivePage() {
         <BackLink />
         <h1 className="page-h1 mt-1">X live</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          You can be live in a few minutes. Pick the door that matches what you have in your hands. This page is a walk-through, not a login. We never ask for a stream key.
+          Old School RuneScape or RuneScape — one client, one title, then Live Studio. X does not have a Twitch directory. You write the game name yourself. This page never takes a stream key.
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main id="content" className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
         <p className="text-sm leading-relaxed text-muted">
-          If you are on the sofa with the X app, use Phone. If you want people to watch the Jagex client — raids, a 99, a wildy walk — use Jagex client. Same title either way. One game name. Say what you are actually doing. Read the list once, then do it in order. You do not need a second tab until a link says so.
+          Pick the grammar you are actually logged into. Do not put both clients on one canvas. Dragonwilds is a third name — not these two. Phone is for talking. The raid door is OBS capturing that Jagex window, then X Live Studio.
         </p>
+
+        <section className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-md border border-line bg-raised px-3 py-3">
+            <h2 className="mb-2 text-sm font-semibold text-parchment">Old School RuneScape</h2>
+            <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted">
+              <li>
+                Open the{" "}
+                <a className="text-parchment" href="https://www.jagex.com/launcher" target="_blank" rel="noopener noreferrer">
+                  Jagex Launcher
+                </a>
+                . Play Old School RuneScape. Official client window is usually named Old School RuneScape. If you use RuneLite, capture the RuneLite window instead — still one game.
+              </li>
+              <li>Log in. Park somewhere safe before you go live: Lumbridge, a POH, a bank that is not about to show a PIN. Write the world number down. It goes in the title.</li>
+              <li>
+                Title on X must say <span className="font-mono text-xs text-fg">Old School RuneScape</span> in full once. Then the activity: ToB learners, Inferno attempts, 99 RC, wildy roam. Example:{" "}
+                <span className="font-mono text-xs text-fg">OSRS ToB learners · W418</span>. One hashtag at most: #OSRS.
+              </li>
+              <li>OBS Window Capture or Game Capture that one window. Not the launcher. Not Discord. Not the second client.</li>
+              <li>House, GE, raids: 0–2s delay so callouts stay tight. Slayer: about 3s. Wilderness or a PvP world: 6–8s, and do not call exact tiles. You are allowed to enjoy the fight.</li>
+            </ol>
+          </div>
+          <div className="rounded-md border border-line bg-raised px-3 py-3">
+            <h2 className="mb-2 text-sm font-semibold text-parchment">RuneScape</h2>
+            <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted">
+              <li>
+                Same{" "}
+                <a className="text-parchment" href="https://www.jagex.com/launcher" target="_blank" rel="noopener noreferrer">
+                  Jagex Launcher
+                </a>
+                . Play RuneScape — the NXT client, not Old School. Window name is usually RuneScape. Alt1 is an overlay; capture the game window, not a tiny Alt1 panel.
+              </li>
+              <li>Log in. Park at a bank, Prif, or War’s Retreat before you go live. World 84 is the public PvM hall if that is the session — put the world in the title if it matters.</li>
+              <li>
+                Title on X must say <span className="font-mono text-xs text-fg">RuneScape</span> once. Then the boss or skill: Telos streak, Rasial log, first Solak. Example:{" "}
+                <span className="font-mono text-xs text-fg">Telos streak · maxed · W84</span>. One hashtag at most: #RuneScape. Do not write Old School in that post.
+              </li>
+              <li>OBS Window Capture that RuneScape window. NXT eats a GPU. 1080p60 is fine if the machine is calm; 720p60 is the honest default when the kill is busy.</li>
+              <li>Raids and boss rooms: short delay. Overworld: a couple of seconds. Do not show the PIN pad, the GE offer you would rather keep, or a second account’s login.</li>
+            </ol>
+          </div>
+        </section>
 
         <div className="overflow-hidden rounded-md border border-[#c6a45a] bg-[#1a1610] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
           <div className="px-4 py-3">
-            <h2 className="page-h1 m-0 text-left">Phone</h2>
+            <h2 className="page-h1 m-0 text-left">Put that window on X</h2>
             <p className="mt-2 text-sm text-muted">
-              This is the kind door. No OBS, no cables, no stream key. Your account needs to be public. Sit somewhere the mic will not eat the room.
+              Same steps for both games. You already have one client open. OBS encodes it. Live Studio is the door. Desktop RTMP needs X Premium — confirm the current tier on X help.
             </p>
           </div>
           <div className="h-px bg-[#c6a45a]/80" aria-hidden="true" />
           <ol className="list-decimal space-y-2.5 px-4 py-4 pl-9 text-sm leading-relaxed text-muted">
-            <li>Sit down somewhere quiet. Charge the phone or leave it on a lead. Headphones with a mic beat the room mic if people are talking behind you.</li>
-            <li>Open the X app. Look at the avatar in the corner. That is the account that will go live. Switch now if it is the wrong one — you cannot swap mid-stream.</li>
+            <li>Plug into wired ethernet if you can. Wifi will drop an ice barrage. Close other uploads.</li>
             <li>
-              Make sure the account is public. Settings → Privacy → Audience. A locked account will not reach a public hall. Followers-only is a choice; just know who can find you.
-            </li>
-            <li>Tap the composer — the plus, the feather, or the post button, depending on the app version. You want a new post, not a reply.</li>
-            <li>
-              Along the bottom of that composer you should see Live. Tap it. If it is missing, update the app from the store and try again. Still missing: open{" "}
-              <a className="text-parchment" href="https://x.com/" target="_blank" rel="noopener noreferrer">
-                x.com
+              Install{" "}
+              <a className="text-parchment" href="https://obsproject.com/" target="_blank" rel="noopener noreferrer">
+                OBS Studio
               </a>{" "}
-              in the phone browser and look for Live there. X help is the rule if the button moved.
+              if you do not have it. New scene: LIVE. + Sources → Window Capture. Pick Old School RuneScape, RuneLite, or RuneScape — the window you just logged into. If it is black, try Game Capture on that same window.
             </li>
-            <li>The first time, the phone will ask for camera and microphone. Allow both. If you denied them last month, open the phone’s Settings for X and turn them on, then come back.</li>
+            <li>Audio Input Capture for the mic. Game audio on its own slider. Speak. Mic bar moves. Game sits under your voice. Old School sound is quiet; do not bury the prayer flick.</li>
+            <li>Settings → Video: 1920×1080, or 1280×720 for NXT. 60fps, or 30 on a bank stand. Output → Streaming: H.264, CBR 6000, keyframe 3 seconds, AAC 128. Apply.</li>
+            <li>Second scene: PIN. Cam or a still from this desk. Hotkey it now. Bank, login, and Jagex account mail never sit on LIVE.</li>
             <li>
-              Write one honest line: activity, then the game. Example:{" "}
-              <span className="font-mono text-xs text-fg">{title}</span>. Skip a wall of hashtags. People tap a sentence they can read.
+              Open{" "}
+              <a className="text-parchment" href="https://x.com/i/live-studio" target="_blank" rel="noopener noreferrer">
+                Live Studio
+              </a>
+              . New livestream. Paste the title below — it already has Old School RuneScape or RuneScape from your desk. Public unless you are testing.
             </li>
-            <li>Look at the preview. Front camera is you talking. Rear camera is the room. Flip until it is the picture you meant. Hold the phone landscape if you want a wide picture; portrait is fine for a chat.</li>
-            <li>Give the camera a second to settle. Check you are not pointing at a bank PIN, mail, or a recovery screen. Then tap Go live. You are on. The post appears in your followers’ timelines and on your profile.</li>
-            <li>Talk like a clan call. Say hello once so the first three people know you are there. Read names if they show up. You do not need a bit. You need to be in the room.</li>
+            <li>Create an RTMP source if you do not have one. Region closest to you. Copy the RTMP URL and stream key into OBS only: Settings → Stream → Custom. Never into this site, Discord, or a screenshot.</li>
+            <li>Start Streaming in OBS. Watch Live Studio. You should see Gielinor, not a desktop. Wrong window: pick again. Then Go Live. Pin the post.</li>
+            <li>Play that one game. If you hop to the other client, end this stream and start a new post with the other name. Do not leave both in the title.</li>
             <li>
-              When you are done, tap Stop (usually top left) and confirm. Wait for it to close. Do not force-quit the app mid-goodbye. Cut a nice moment later on{" "}
+              Stop Streaming in OBS, then End in Live Studio. After a kc, cut on{" "}
               <Link to="/edit" className="text-parchment">
                 Clips
-              </Link>{" "}
-              if you saved a recording to the phone.
+              </Link>
+              .
             </li>
           </ol>
         </div>
 
         <div className="overflow-hidden rounded-md border border-[#c6a45a] bg-[#1a1610] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
           <div className="px-4 py-3">
-            <h2 className="page-h1 m-0 text-left">Jagex client</h2>
+            <h2 className="page-h1 m-0 text-left">Phone</h2>
             <p className="mt-2 text-sm text-muted">
-              This is the raid door. You encode in OBS (free). X receives that picture through Live Studio. Desktop RTMP needs X Premium — confirm the current tier on X help, because they move the gate. Capture the game window, not your whole desktop.
+              Talking about the game, not encoding the client. Say which grammar. Public account. No stream key.
             </p>
           </div>
           <div className="h-px bg-[#c6a45a]/80" aria-hidden="true" />
           <ol className="list-decimal space-y-2.5 px-4 py-4 pl-9 text-sm leading-relaxed text-muted">
-            <li>Plug into wired ethernet if you can. Wifi will drop a freeze. Close downloads and other streams. You want a quiet line.</li>
+            <li>Open the X app on the account people already follow for RuneScape. Public, not locked.</li>
+            <li>Composer → Live. Allow camera and mic if the phone asks.</li>
             <li>
-              Open the{" "}
-              <a className="text-parchment" href="https://www.jagex.com/launcher" target="_blank" rel="noopener noreferrer">
-                Jagex Launcher
-              </a>
-              . Start Old School or RuneScape — one client. Log in. Park on a safe square: house, GE, or a bank that is not about to show a PIN.
+              Title still names one game: Old School RuneScape or RuneScape, then the activity. Same line as the desk. Do not point the camera at a Bank PIN, mail, or a mobile login.
             </li>
-            <li>
-              Install{" "}
-              <a className="text-parchment" href="https://obsproject.com/" target="_blank" rel="noopener noreferrer">
-                OBS Studio
-              </a>{" "}
-              if you do not have it. Open OBS. You want a blank scene called LIVE. Do not capture the whole desktop.
-            </li>
-            <li>
-              In that scene, click + under Sources → Window Capture (or Game Capture). Pick the Jagex client window by name. If the box is black, pick the other capture type. Crop extra chrome later; first get the game on the canvas.
-            </li>
-            <li>
-              Add Audio Input Capture for your mic. In the mixer, game audio on one slider, mic on another. Speak a sentence. The mic bar should move. Game should sit under your voice, not over it.
-            </li>
-            <li>
-              OBS Settings → Video: canvas 1920×1080 (or 1280×720 if the GPU is busy). FPS 60, or 30 if NXT is hot. Settings → Output → Streaming: encoder NVENC or x264, rate control CBR, bitrate 6000, keyframe 3 seconds, audio AAC 128. Apply. Close settings.
-            </li>
-            <li>
-              Make a second scene called PIN. Cam only, or a still from this desk. Bind that scene to a hotkey now — before you need it. When you bank, you hit that key. The street does not need the pad.
-            </li>
-            <li>
-              On the same computer, open{" "}
-              <a className="text-parchment" href="https://x.com/i/live-studio" target="_blank" rel="noopener noreferrer">
-                Live Studio
-              </a>
-              . Sign in on the account you want public. If you cannot open it, you likely need X Premium. Confirm the current tier on{" "}
-              <a className="text-parchment" href="https://help.x.com/en/using-x/live-studio" target="_blank" rel="noopener noreferrer">
-                X help
-              </a>
-              . This sheet will not invent the price.
-            </li>
-            <li>
-              Click New livestream. Paste the title from the button below. That string is what the post will say. Public unless you have a reason to test privately first.
-            </li>
-            <li>
-              Sources: create one if this is the first time. Type RTMP. Name it something you will recognise next week — “home” is enough. Region closest to you. Create. Live Studio now shows an RTMP URL and a stream key.
-            </li>
-            <li>
-              Back in OBS: Settings → Stream → Service: Custom. Server = the RTMP URL. Stream key = the secret. Apply. Never paste that key into this site, Discord, or a screenshot. Treat it like a password. You can reuse the same source next session.
-            </li>
-            <li>
-              Hit Start Streaming in OBS. Do not go live on X yet. Look at Live Studio. You should see a preview of the Jagex client. Black preview: wrong window — go back to step 4 and pick again. Audio meters should move when you talk.
-            </li>
-            <li>
-              When the preview looks like the game, click Go Live in Live Studio. The post goes out. Pin it so late arrivals can find you. Say hello. You are in the room.
-            </li>
-            <li>
-              Play. If you bank, hit the PIN scene. If the picture melts, drop to 720p60 in OBS Video settings before you raise bitrate. A clean 720 beats a melted 1080.
-            </li>
-            <li>
-              To finish: Stop Streaming in OBS first, then End in Live Studio. Both, in that order, so the replay closes cleanly. After a kc, drop the file on{" "}
-              <Link to="/edit" className="text-parchment">
-                Clips
-              </Link>{" "}
-              , mark In and Out, download the crop you want.
-            </li>
+            <li>Go live. Talk like a clan call. If you hold the phone at a laptop, the laptop should already be on that one client — not your desktop full of tabs.</li>
+            <li>Stop and confirm when you are done. A clip of the client itself still wants the OBS door above.</li>
           </ol>
         </div>
 
         <section>
           <h2 className="mb-2 text-sm font-semibold text-parchment">Title</h2>
           <p className="mb-3 text-sm leading-relaxed text-muted">
-            This is pulled from the name and world on your still desk. Change those there if you want a different line. Copy it so the X post and the OBS title match.
+            Pulled from the name, world, and edition on your still desk. Change those there if you swapped from Old School to RuneScape. Copy so the X post matches the window you captured.
           </p>
           <p className="mb-3 flex flex-wrap items-center gap-2 text-sm">
             <button
@@ -175,11 +160,11 @@ function XLivePage() {
             {note ? <span className="text-[10px] text-faint">{note}</span> : null}
           </p>
           <p className="text-sm leading-relaxed text-muted">
-            Profile header on X likes 1500×500. Make that on the{" "}
+            Header still is 1500×500 on the{" "}
             <Link to="/" className="text-parchment">
               still desk
-            </Link>{" "}
-            with the X header crop, then download. It is a still, not the live picture. Do it before you go live so you are not painting during a raid.
+            </Link>
+            , X header crop. Make it before the hour, not during a freeze.
           </p>
         </section>
 
@@ -187,22 +172,19 @@ function XLivePage() {
           <div className="rounded-md border border-line bg-raised px-3 py-3">
             <h3 className="mb-2 text-sm font-semibold text-parchment">OBS, in one glance</h3>
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted">
-              <li>Service: Custom. Server = the RTMP URL. Key stays in OBS.</li>
-              <li>Canvas 1920×1080 or 1280×720. 60fps if the machine is calm; 30 is fine for a bank stand.</li>
-              <li>H.264, CBR 6000, keyframe 3s, AAC 128. Wired ethernet if you can. Wifi will drop a freeze.</li>
-              <li>Client window only. A second platform at the same time only if the upload still has headroom.</li>
+              <li>Capture Old School RuneScape, RuneLite, or RuneScape — one window.</li>
+              <li>Custom RTMP. Key stays in OBS. 1080p60 CBR 6000, or 720p60 if NXT is hot. Keyframe 3s. AAC 128.</li>
+              <li>PIN scene on a hotkey. Wildy: 6–8s delay, no tile calls.</li>
             </ul>
           </div>
           <div className="rounded-md border border-line bg-raised px-3 py-3">
             <h3 className="mb-2 text-sm font-semibold text-parchment">If something sulks</h3>
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted">
-              <li>No Live button: update the app, confirm the account is public, then try x.com in a browser.</li>
-              <li>Camera or mic greyed out: phone Settings → X → allow camera and microphone, then reopen Live.</li>
-              <li>No Live Studio: you likely need Premium. X help is the rule, not this sheet.</li>
-              <li>Black preview: wrong window in OBS. Pick the Jagex client again. Try Game Capture if Window Capture is empty.</li>
-              <li>OBS says failed to connect: the key or URL is stale. Make a new RTMP source in Live Studio and paste again — still only into OBS.</li>
-              <li>Choppy: drop to 720p60 before you raise bitrate. Close other uploads.</li>
-              <li>Ended early: stop OBS, then end in Live Studio, so the replay saves.</li>
+              <li>Black preview: you captured the launcher or Discord. Pick the game window.</li>
+              <li>Two clients visible: end the stream. One grammar per post.</li>
+              <li>NXT choppy: 720p60 before you raise bitrate.</li>
+              <li>No Live Studio: Premium. X help is the rule.</li>
+              <li>Failed to connect: new RTMP source, paste into OBS only.</li>
             </ul>
           </div>
         </section>
@@ -210,15 +192,23 @@ function XLivePage() {
         <section className="rounded-md border border-line bg-raised px-3 py-3">
           <h3 className="mb-2 text-sm font-semibold text-parchment">Kind rules</h3>
           <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted">
-            <li>Do not paste a stream key into this origin, chat, or a screenshot. Treat it like a password.</li>
-            <li>Do not capture the desktop, mail, or PIN pad. The street does not need that picture.</li>
-            <li>Do not promise Drops you do not control. Official campaigns live on Jagex and X, not this desk.</li>
-            <li>In the wild, add a few seconds of delay and skip calling exact tiles. You are allowed to enjoy the fight.</li>
+            <li>One game name. Old School RuneScape or RuneScape. Not both. Dragonwilds is its own post.</li>
+            <li>Do not paste a stream key here. Do not show a PIN, mail, or recovery.</li>
+            <li>Do not promise Drops you do not control.</li>
+            <li>Do not call wildy tiles on 0 delay.</li>
           </ul>
         </section>
 
         <p className="text-sm leading-relaxed text-muted">
-          Official notes, if a button moved:{" "}
+          Official notes:{" "}
+          <a className="text-parchment" href="https://oldschool.runescape.com/" target="_blank" rel="noopener noreferrer">
+            Old School
+          </a>
+          {" · "}
+          <a className="text-parchment" href="https://www.runescape.com/" target="_blank" rel="noopener noreferrer">
+            RuneScape
+          </a>
+          {" · "}
           <a className="text-parchment" href="https://help.x.com/en/using-x/x-live" target="_blank" rel="noopener noreferrer">
             Go live on X
           </a>
@@ -230,7 +220,7 @@ function XLivePage() {
           <a className="text-parchment" href="https://x.com/i/live-studio" target="_blank" rel="noopener noreferrer">
             Open Live Studio
           </a>
-          . This is a fan sheet. X keeps the rules. You keep the key.
+          . Fan sheet. Jagex and X keep the rules. You keep the key.
         </p>
         <p className="text-sm text-parchment">
           <Link to="/stream">Stream</Link>
