@@ -985,12 +985,14 @@ export function Studio() {
     return () => el.removeEventListener("wheel", stop);
   }, [pickedSkill, pickedText, overIcon]);
 
-  function downloadJpeg() {
+  function downloadJpeg(box?: { width: number; height: number }) {
     const still = stillCacheRef.current;
     const overlay = canvasRef.current;
+    const w = box?.width ?? size.width;
+    const h = box?.height ?? size.height;
     const out = document.createElement("canvas");
-    out.width = size.width;
-    out.height = size.height;
+    out.width = w;
+    out.height = h;
     const ctx = out.getContext("2d", { alpha: false });
     if (!ctx) {
       setSaveNote("Could not save. Try 1200×480.");
@@ -999,7 +1001,7 @@ export function Studio() {
     ctx.fillStyle = "#1a1610";
     ctx.fillRect(0, 0, out.width, out.height);
     if (still && (still as HTMLCanvasElement).width) {
-      paintOnto(ctx, still, out.width, out.height);
+      paintOnto(ctx, still, out.width, out.height, size.width, size.height);
     } else if (overlay) {
       const plate = document.getElementById("still") as HTMLImageElement | null;
       if (plate && plate.naturalWidth) coverStill(ctx, plate, out.width, out.height);
@@ -1019,11 +1021,11 @@ export function Studio() {
         const href = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = href;
-        a.download = `banner-${edition.toLowerCase()}-${(who || "desk").replace(/\s+/g, "-")}${worldTag}-${location.id}-${size.width}x${size.height}.jpg`;
+        a.download = `banner-${edition.toLowerCase()}-${(who || "desk").replace(/\s+/g, "-")}${worldTag}-${location.id}-${w}x${h}.jpg`;
         a.rel = "noopener";
         a.click();
         window.setTimeout(() => URL.revokeObjectURL(href), 2500);
-        setSaveNote(`Saved ${size.width}×${size.height}.`);
+        setSaveNote(`Saved ${w}×${h}.`);
       },
       "image/jpeg",
       0.96,
@@ -1035,9 +1037,11 @@ export function Studio() {
     still: CanvasImageSource,
     w: number,
     h: number,
+    layoutW = size.width,
+    layoutH = size.height,
   ) {
-    const sx = w / size.width;
-    const sy = h / size.height;
+    const sx = w / layoutW;
+    const sy = h / layoutH;
     const catalog = [...SKILLS, ...MARKS, ...customMarks.map((mark) => ({
     id: mark.id,
     name: mark.name,
@@ -2277,15 +2281,25 @@ export function Studio() {
             {postieLineAt(peteNow)}
           </p>
           <p className="max-w-md text-center text-xs text-muted">
-            One JPEG. Size is the chip you already picked.
+            One JPEG per crop. Size is the chip you pick, or the download under it.
           </p>
-          <button
-            type="button"
-            onClick={downloadJpeg}
-            className="min-h-11 rounded-md border border-parchment px-3 text-sm text-parchment"
-          >
-            Download
-          </button>
+          <div className="flex flex-wrap justify-center gap-1">
+            {BANNER_SIZES.map((box) => (
+              <button
+                key={`dl-${box.id}`}
+                type="button"
+                className="min-h-11 rounded-md border border-parchment px-3 text-sm text-parchment"
+                onClick={() => {
+                  setSizeId(box.id);
+                  requestPaint();
+                  fitPackToPlate(box.width, box.height, packFit, false);
+                  downloadJpeg(box);
+                }}
+              >
+                Download {box.name}
+              </button>
+            ))}
+          </div>
           <p className="sr-only" aria-live="polite">
             {saveNote}
           </p>

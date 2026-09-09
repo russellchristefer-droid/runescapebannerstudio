@@ -69,3 +69,6 @@ label.chip {
   display: inline-flex;
   align-items: center;
 }
+.chip.on {
+  border-color: #efe4c8;
+}

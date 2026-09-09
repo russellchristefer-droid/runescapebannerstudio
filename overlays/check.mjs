@@ -21,7 +21,7 @@ for (const [rel, name, page] of [
 }
 
 const desk = readFileSync(join(root, "desk/alt1/app.js"), "utf8");
-for (const needle of ["toBlob", "captureHold", "getElementById(\"plate\")"]) {
+for (const needle of ["toBlob", "captureHold", "getElementById(\"plate\")", "data-dl", "1920"]) {
   if (!desk.includes(needle)) fail.push(`desk app.js ${needle}`);
 }
 
@@ -32,6 +32,7 @@ for (const needle of ["MediaRecorder", "markIn", "getElementById(\"vid\")", "192
 
 const deskHtml = readFileSync(join(root, "desk/alt1/index.html"), "utf8");
 if (!deskHtml.includes("src=\"./app.js\"")) fail.push("desk html script");
+if (!deskHtml.includes("data-dl=")) fail.push("desk html downloads");
 const clipsHtml = readFileSync(join(root, "clips/alt1/index.html"), "utf8");
 if (!clipsHtml.includes("src=\"./app.js\"")) fail.push("clips html script");
 if (!clipsHtml.includes("data-dl=")) fail.push("clips html downloads");

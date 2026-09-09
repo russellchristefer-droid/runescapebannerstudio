@@ -1,10 +1,8 @@
 /**
  * Still compositor for Alt1 Toolkit.
  *
- * Add the app with overlays/desk/alt1/appconfig.json.
- * Pixel permission is only for an optional client grab.
- * This file is the readable copy. index.html ships the same logic inline
- * so GitHub raw does not have to serve JS as a module.
+ * Upload a still. Pick a crop. Download that JPEG.
+ * Crops: 1200×480, 1280×720, 1920×1080, 1920×480, native.
  */
 (function () {
   const plate = document.getElementById("plate");
@@ -13,44 +11,68 @@
   const nameEl = document.getElementById("name");
   const fileEl = document.getElementById("file");
 
+  const CROP = {
+    "1200x480": { w: 1200, h: 480 },
+    "1280x720": { w: 1280, h: 720 },
+    "1920x1080": { w: 1920, h: 1080 },
+    "1920x480": { w: 1920, h: 480 },
+    native: { w: 0, h: 0 },
+  };
+
   let still = null;
-  let box = { w: 1200, h: 480 };
+  let cropId = "1200x480";
 
   function say(line) {
     status.textContent = line;
   }
 
-  function paint() {
-    plate.width = box.w;
-    plate.height = box.h;
+  function sizeFor(id) {
+    if (id === "native") {
+      if (still) return { w: still.naturalWidth || still.width, h: still.naturalHeight || still.height };
+      return { w: 1200, h: 480 };
+    }
+    return CROP[id] || CROP["1200x480"];
+  }
+
+  function paintAt(w, h) {
+    plate.width = w;
+    plate.height = h;
     ctx.fillStyle = "#120e0a";
-    ctx.fillRect(0, 0, box.w, box.h);
-
+    ctx.fillRect(0, 0, w, h);
     if (still) {
-      const scale = Math.max(box.w / still.width, box.h / still.height);
-      const dw = still.width * scale;
-      const dh = still.height * scale;
-      ctx.drawImage(still, (box.w - dw) / 2, (box.h - dh) / 2, dw, dh);
+      const sw = still.naturalWidth || still.width;
+      const sh = still.naturalHeight || still.height;
+      const scale = Math.max(w / sw, h / sh);
+      const dw = sw * scale;
+      const dh = sh * scale;
+      ctx.drawImage(still, (w - dw) / 2, (h - dh) / 2, dw, dh);
     }
-
     const name = (nameEl.value || "").trim().slice(0, 12);
-    if (!name) {
-      return;
-    }
-    ctx.font = "28px sans-serif";
-    ctx.lineWidth = 4;
+    if (!name) return;
+    const size = w >= 1920 ? 36 : 28;
+    ctx.font = size + "px sans-serif";
+    ctx.lineWidth = Math.max(3, size * 0.12);
     ctx.strokeStyle = "#000";
     ctx.fillStyle = "#ffff00";
     ctx.strokeText(name, 36, 40);
     ctx.fillText(name, 36, 40);
   }
 
+  function paint() {
+    const box = sizeFor(cropId);
+    paintAt(box.w, box.h);
+  }
+
   function loadBlob(blob) {
+    if (!blob || !(blob.type && blob.type.indexOf("image") === 0)) {
+      say("Could not read that still.");
+      return;
+    }
     const url = URL.createObjectURL(blob);
     const img = new Image();
     img.onload = function () {
       still = img;
-      say("Still on the plate.");
+      say("Still on the plate · " + img.naturalWidth + "×" + img.naturalHeight);
       paint();
     };
     img.onerror = function () {
@@ -62,9 +84,7 @@
   fileEl.addEventListener("change", function () {
     const file = fileEl.files && fileEl.files[0];
     fileEl.value = "";
-    if (file) {
-      loadBlob(file);
-    }
+    if (file) loadBlob(file);
   });
 
   document.body.addEventListener("dragover", function (event) {
@@ -73,22 +93,31 @@
   document.body.addEventListener("drop", function (event) {
     event.preventDefault();
     const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
-    if (file) {
-      loadBlob(file);
-    }
+    if (file) loadBlob(file);
   });
 
-  document.getElementById("twitch").onclick = function () {
-    box = { w: 1200, h: 480 };
-    paint();
-  };
-  document.getElementById("yt").onclick = function () {
-    box = { w: 1280, h: 720 };
-    paint();
-  };
   nameEl.addEventListener("input", paint);
 
-  document.getElementById("save").onclick = function () {
+  document.querySelectorAll("[data-crop]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      cropId = btn.getAttribute("data-crop") || "1200x480";
+      document.querySelectorAll("[data-crop]").forEach(function (el) {
+        el.classList.toggle("on", el === btn);
+      });
+      paint();
+      const box = sizeFor(cropId);
+      say(cropId + " · " + box.w + "×" + box.h);
+    });
+  });
+
+  function saveCrop(id) {
+    if (!still) {
+      say("Upload a still first.");
+      return;
+    }
+    cropId = id;
+    const box = sizeFor(id);
+    paintAt(box.w, box.h);
     plate.toBlob(
       function (blob) {
         if (!blob) {
@@ -100,12 +129,18 @@
         link.download = "banner-" + box.w + "x" + box.h + ".jpg";
         link.click();
         URL.revokeObjectURL(link.href);
-        say("In the bag.");
+        say("In the bag · " + box.w + "×" + box.h);
       },
       "image/jpeg",
       0.92,
     );
-  };
+  }
+
+  document.querySelectorAll("[data-dl]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      saveCrop(btn.getAttribute("data-dl") || "1200x480");
+    });
+  });
 
   document.getElementById("capture").onclick = function () {
     const alt1 = window.alt1;
