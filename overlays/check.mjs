@@ -21,7 +21,7 @@ for (const [rel, name, page] of [
 }
 
 const desk = readFileSync(join(root, "desk/alt1/app.js"), "utf8");
-for (const needle of ["toBlob", "captureHold", "getElementById(\"plate\")", "data-dl", "1920"]) {
+for (const needle of ["toBlob", "captureHold", "getElementById(\"plate\")", "data-dl", "1920", "1280", "1200"]) {
   if (!desk.includes(needle)) fail.push(`desk app.js ${needle}`);
 }
 
@@ -33,9 +33,16 @@ for (const needle of ["MediaRecorder", "markIn", "getElementById(\"vid\")", "192
 const deskHtml = readFileSync(join(root, "desk/alt1/index.html"), "utf8");
 if (!deskHtml.includes("src=\"./app.js\"")) fail.push("desk html script");
 if (!deskHtml.includes("data-dl=")) fail.push("desk html downloads");
+for (const size of ["1200x480", "1280x720", "1920x1080", "1920x480", "native"]) {
+  if (!deskHtml.includes(`data-dl="${size}"`)) fail.push(`desk html ${size}`);
+}
+
 const clipsHtml = readFileSync(join(root, "clips/alt1/index.html"), "utf8");
 if (!clipsHtml.includes("src=\"./app.js\"")) fail.push("clips html script");
 if (!clipsHtml.includes("data-dl=")) fail.push("clips html downloads");
+for (const size of ["16:9-720", "16:9-1080", "9:16", "1:1", "banner", "native"]) {
+  if (!clipsHtml.includes(`data-dl="${size}"`)) fail.push(`clips html ${size}`);
+}
 
 const props = readFileSync(join(root, "runelite/runelite-plugin.properties"), "utf8");
 if (!props.includes("com.bannerstudio.BannerStudioPlugin")) fail.push("desk plugin id");

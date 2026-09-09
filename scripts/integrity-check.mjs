@@ -14,7 +14,7 @@ if ((trackedEnv.stdout || "").split("\n").some((line) => /(^|\/)\.env(\.|$)/.tes
 
 const secrets = spawnSync(
   "git",
-  ["grep", "-nE", "sk_live|BEGIN PRIVATE|AKIA[0-9A-Z]{16}"],
+  ["grep", "-nE", "sk_live|BEGIN PRIVATE|AKIA[0-9A-Z]{16}", "--", ":!scripts/integrity-check.mjs"],
   { encoding: "utf8" },
 );
 if (secrets.status === 0 && secrets.stdout.trim()) fail.push("secret-shaped string in git");

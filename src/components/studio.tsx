@@ -2292,7 +2292,6 @@ export function Studio() {
                 onClick={() => {
                   setSizeId(box.id);
                   requestPaint();
-                  fitPackToPlate(box.width, box.height, packFit, false);
                   downloadJpeg(box);
                 }}
               >
