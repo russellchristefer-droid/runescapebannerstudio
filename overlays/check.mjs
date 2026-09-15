@@ -60,6 +60,15 @@ for (const needle of ["@PluginDescriptor", "@Provides", ".panel(panel)"]) {
   if (!clipPlugin.includes(needle)) fail.push(`clip plugin ${needle}`);
 }
 
+const pyStill = readFileSync(join(root, "../sidecars/still_desk.py"), "utf8");
+for (const needle of ["1200x480", "1280x720", "1920x1080", "1920x480", "native", "Pillow"]) {
+  if (!pyStill.includes(needle)) fail.push(`still_desk.py ${needle}`);
+}
+const pyClip = readFileSync(join(root, "../sidecars/clip_bench.py"), "utf8");
+for (const needle of ["16:9-720", "16:9-1080", "9:16", "1:1", "banner", "native", "libvpx-vp9"]) {
+  if (!pyClip.includes(needle)) fail.push(`clip_bench.py ${needle}`);
+}
+
 if (fail.length) {
   console.error(fail.join("\n"));
   process.exit(1);

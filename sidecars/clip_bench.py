@@ -3,8 +3,8 @@
 
 Not the website editor. The live bench stays in the browser.
 
-  python3 clip_bench.py trim clip.mp4 --in 2 --out 8 --size 1280x720
-  python3 clip_bench.py trim clip.mp4 --mute --fade-in 0.5 --fade-out 0.5
+  python3 clip_bench.py public/media/poh.mp4 --in 0 --out 3 --write clip.webm
+  python3 clip_bench.py clip.mp4 --size 16:9-720 --mute --fade-in 0.5 --fade-out 0.5
 
 Needs ffmpeg on PATH. This file does not ship a codec.
 """
@@ -20,15 +20,50 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SIZES = {
     "1920x1080": (1920, 1080),
+    "16:9-1080": (1920, 1080),
     "1280x720": (1280, 720),
+    "16:9-720": (1280, 720),
     "1080x1920": (1080, 1920),
+    "9:16": (1080, 1920),
     "1080x1080": (1080, 1080),
+    "1:1": (1080, 1080),
     "1200x480": (1200, 480),
+    "banner": (1200, 480),
+    "native": None,
 }
 
 
 def ffmpeg_bin() -> str | None:
     return shutil.which("ffmpeg")
+
+
+def probe_size(bin_: str, src: Path) -> tuple[int, int]:
+    probe = shutil.which("ffprobe")
+    if not probe:
+        return 1280, 720
+    run = subprocess.run(
+        [
+            probe,
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=width,height",
+            "-of",
+            "csv=p=0",
+            str(src),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if run.returncode != 0 or not run.stdout.strip():
+        return 1280, 720
+    try:
+        w, h = run.stdout.strip().split(",")[:2]
+        return max(2, int(w)), max(2, int(h))
+    except ValueError:
+        return 1280, 720
 
 
 def trim(
@@ -49,7 +84,10 @@ def trim(
     if not src.is_file():
         print(f"No clip at {src}", file=sys.stderr)
         return 1
-    w, h = SIZES.get(size_id, SIZES["1280x720"])
+    if size_id == "native":
+        w, h = probe_size(bin_, src)
+    else:
+        w, h = SIZES.get(size_id) or SIZES["1280x720"]
     span = max(0.05, out_t - in_t)
     vf = [f"scale={w}:{h}:force_original_aspect_ratio=increase", f"crop={w}:{h}"]
     if fade_in > 0:

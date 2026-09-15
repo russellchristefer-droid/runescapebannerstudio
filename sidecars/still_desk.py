@@ -3,8 +3,8 @@
 
 Not the website desk. The live compositor stays in the browser.
 
-  python3 still_desk.py compose --still public/Falador.png --name Christefer
-  python3 still_desk.py compose --size 1280x720 --still public/Falador.png --out banner.jpg
+  python3 still_desk.py --still public/Falador.png --name Christefer
+  python3 still_desk.py --size 1280x720 --still public/Falador.png --out banner.jpg
 
 Needs Pillow:  python3 -m pip install pillow
 """
@@ -22,6 +22,7 @@ SIZES = {
     "1280x720": (1280, 720),
     "1920x1080": (1920, 1080),
     "1920x480": (1920, 480),
+    "native": None,
 }
 
 
@@ -101,9 +102,13 @@ def compose(still: Path, name: str, out: Path, size_id: str, skills: list[str]) 
     if not still.is_file():
         print(f"No still at {still}", file=sys.stderr)
         return 1
-    width, height = SIZES.get(size_id, SIZES["1200x480"])
     src = Image.open(still).convert("RGB")
-    plate = cover(src, width, height)
+    if size_id == "native":
+        width, height = src.size
+        plate = src.copy()
+    else:
+        width, height = SIZES.get(size_id) or SIZES["1200x480"]
+        plate = cover(src, width, height)
     pack = None
     if skills:
         pack = stamp_icons(plate, skills, width, height)

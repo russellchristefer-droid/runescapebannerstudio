@@ -16,12 +16,15 @@ These files are extra downloads GitHub will highlight as real languages. They ar
 
 ```bash
 python3 sidecars/still_desk.py --still public/Falador.png --name Christefer
-node sidecars/node/still-desk.mjs --still public/Falador.png --name Christefer
-python3 sidecars/clip_bench.py clip.mp4 --in 2 --out 8
-node sidecars/node/clip-bench.mjs clip.mp4 --in 2 --out 8
+python3 sidecars/still_desk.py --still public/Falador.png --size native --out banner.jpg
+node sidecars/node/still-desk.mjs --still public/Falador.png --name Christefer --size 1280x720
+python3 sidecars/clip_bench.py clip.mp4 --in 2 --out 8 --size 16:9-720
+node sidecars/node/clip-bench.mjs clip.mp4 --in 2 --out 8 --size banner --mute
 ```
+
+Still crops: `1200x480` `1280x720` `1920x1080` `1920x480` `native`.
+Clip crops: `16:9-1080` `16:9-720` `9:16` `1:1` `banner` `native` (pixel sizes still work).
 
 Node and PowerShell call the Python benches so the file on disk is the same. They do not scan hosts.
 
 RuneScape®, Old School RuneScape®, and Jagex® are trademarks of Jagex Limited. These files are not Jagex products.
-
