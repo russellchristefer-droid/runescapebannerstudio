@@ -162,7 +162,7 @@ function liveProxyPlugin(): Plugin {
       server.middlewares.use(async (req, res, next) => {
         const rawUrl = req.url ?? "";
         const [pathOnly, query = ""] = rawUrl.split("?");
-        if (pathOnly !== "/api/live" && pathOnly !== "/api/twitch-live" && pathOnly !== "/api/youtube-live") {
+        if (pathOnly !== "/api/live" && pathOnly !== "/api/twitch-live" && pathOnly !== "/api/youtube-live" && pathOnly !== "/api/x-live") {
           next();
           return;
         }
@@ -180,6 +180,17 @@ function liveProxyPlugin(): Plugin {
             res.statusCode = 200;
             res.setHeader("content-type", "application/json; charset=utf-8");
             res.setHeader("cache-control", "public, max-age=180");
+            res.end(JSON.stringify(board));
+            return;
+          }
+          if (pathOnly === "/api/x-live") {
+            const xmod = (await server.ssrLoadModule("/src/lib/x-live.server.ts")) as {
+              fetchXLiveBoard: () => Promise<{ off?: boolean; ok: boolean; rows: unknown[] }>;
+            };
+            const board = await xmod.fetchXLiveBoard();
+            res.statusCode = 200;
+            res.setHeader("content-type", "application/json; charset=utf-8");
+            res.setHeader("cache-control", "no-store");
             res.end(JSON.stringify(board));
             return;
           }
@@ -206,7 +217,7 @@ function liveProxyPlugin(): Plugin {
         } catch {
           res.statusCode = 200;
           res.setHeader("content-type", "application/json; charset=utf-8");
-          res.end("{}");
+          res.end(JSON.stringify({ ok: false, rows: [] }));
         }
       });
     },
@@ -241,14 +252,17 @@ function stillsCachePlugin(): Plugin {
         const path = (req.url ?? "").split("?")[0];
         if (path.endsWith(".html") || path === "/" || path === "") {
           res.setHeader("Cache-Control", "no-store");
-        } else if (
+        } else if (path === "/legal" || path.startsWith("/legal/")) {
+          res.setHeader("Cache-Control", "no-store");
+        }
+        applySecurityHeaders(res, path);
+        if (
           path.startsWith("/locations/") ||
           path.startsWith("/skills/") ||
           path.startsWith("/brand/")
         ) {
           res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
         }
-        applySecurityHeaders(res, path);
         next();
       });
     },

@@ -34,4 +34,25 @@ describe("security headers", () => {
     assert.equal(headers.get("cache-control"), "no-store");
     assert.equal(headers.get("x-content-type-options"), "nosniff");
   });
+
+  it("does not let Legal stills sit for a week", () => {
+    const page = new Map<string, string>();
+    applySecurityHeaders(page, "/legal");
+    assert.equal(page.get("Cache-Control"), "no-store");
+    const still = new Map<string, string>();
+    applySecurityHeaders(still, "/legal/truth-social-2025-06-05.png");
+    assert.equal(still.get("Cache-Control"), "no-store");
+  });
+
+  it("keeps town stills warm and hashed assets immutable", () => {
+    const town = new Map<string, string>();
+    applySecurityHeaders(town, "/Falador.png");
+    assert.equal(
+      town.get("Cache-Control"),
+      "public, max-age=604800, stale-while-revalidate=86400",
+    );
+    const hashed = new Map<string, string>();
+    applySecurityHeaders(hashed, "/assets/styles-BKXo7-YO.css");
+    assert.equal(hashed.get("Cache-Control"), "public, max-age=31536000, immutable");
+  });
 });

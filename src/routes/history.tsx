@@ -176,7 +176,9 @@ function HistoryPage() {
             door opens after Dragon Slayer II. Fountain of Uhld downstairs. Chromatic dragons
             in the basement — green, blue, red, black — same wash this desk already uses.
             The Library of Knowledge keeps the public Golden Gnome winners. A name on the
-            kettle is not repeated here. If they took a gnome, the name opens that film.
+            kettle is not repeated here. If they took a gnome, the name opens that film
+            when the street still has it. Video makers without a named film open their
+            public channel. Artists and cosplay without a film stay on the awards page.
           </p>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
             {GOLDEN_GNOMES.filter((row) => !GNOME_SILL.has(row.name.toLowerCase())).map((row) => (
@@ -197,7 +199,7 @@ function HistoryPage() {
             <a href="https://oldschool.runescape.wiki/w/Myths%27_Guild" target="_blank" rel="noopener noreferrer" className="text-parchment">
               Myths' Guild
             </a>
-            . Name opens the winning film, or the ceremony when that is the record.
+            . Name opens the winning film when we have it, or their public channel. Artists without a film stay on the awards page.
           </p>
         </aside>
 

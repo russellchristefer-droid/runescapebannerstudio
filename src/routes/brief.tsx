@@ -76,7 +76,7 @@ function BriefPage() {
               <In to="/stream">Stream</In> — go-live notes. <In to="/x-live">X live</In> — hall of public X handles (Old School, RuneScape, Dragonwilds) plus Live Studio steps. No stream key on this origin. <In to="/streamers">Twitch Streamers</In> — one Twitch hall. <In to="/youtubers">YouTube Streamers</In> — YouTube hall only. <In to="/discord">Discord</In> — official Jagex servers first, then wiki and tools. Not a clan dump.
             </li>
             <li>
-              <In to="/edit">Clips</In> — local video bench. Upload, In / Out, mute, gain, fades, Save a WebM. The clip stays on this device. It does not go live.
+              <In to="/edit">Clips</In> — local video bench. Upload, In / Out, mute, gain, fades, Save an MP4. The clip stays on this device. It does not go live.
             </li>
             <li>
               Alt1 and RuneLite sidecars live on GitHub only. Still compositor and clip bench are separate add-app / sideload plugins. They do not click. They are not Plugin Hub. Marks stay Jagex's.

@@ -16,7 +16,6 @@
  */
 import installPageTemplate from "../../scripts/install-page.html?raw";
 import { grokOgIdentity } from "virtual:grok-og-identity";
-import { stampResponse } from "../../src/lib/headers";
 import {
   acceptsHtml,
   createHeadInjector,
@@ -35,16 +34,6 @@ function requestHost(event: GrokPwaEvent): string {
   return (
     event.req.headers.get("x-forwarded-host") ?? event.req.headers.get("host") ?? event.url.host
   );
-}
-
-function isHttps(event: GrokPwaEvent) {
-  return (
-    event.req.headers.get("x-forwarded-proto") === "https" || event.url.protocol === "https:"
-  );
-}
-
-function defend(response: Response, event: GrokPwaEvent) {
-  return stampResponse(response, event.url.pathname, isHttps(event));
 }
 
 function injectHeadStreaming(response: Response, host: string): Response {
@@ -76,24 +65,18 @@ export default async function grokPwaMiddleware(
   next: () => unknown | Promise<unknown>,
 ): Promise<unknown> {
   const method = (event.req.method ?? "GET").toUpperCase();
-  if (method !== "GET") {
-    const result = await next();
-    return result instanceof Response ? defend(result, event) : result;
-  }
+  if (method !== "GET") return next();
 
   const path = event.url.pathname;
   const urlWithQuery = path + event.url.search;
 
   if (path === "/__grok/manifest.webmanifest" || path === "/__grok/manifest.json") {
-    return defend(
-      new Response(renderWebManifest(requestHost(event)), {
-        headers: {
-          "content-type": "application/manifest+json; charset=utf-8",
-          "cache-control": "no-cache",
-        },
-      }),
-      event,
-    );
+    return new Response(renderWebManifest(requestHost(event)), {
+      headers: {
+        "content-type": "application/manifest+json; charset=utf-8",
+        "cache-control": "no-cache",
+      },
+    });
   }
 
   if (
@@ -105,26 +88,24 @@ export default async function grokPwaMiddleware(
       host: requestHost(event),
       url: urlWithQuery,
     });
-    return defend(
-      new Response(html, {
-        headers: {
-          "content-type": "text/html; charset=utf-8",
-          "cache-control": "no-cache",
-        },
-      }),
-      event,
-    );
+    return new Response(html, {
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-cache",
+      },
+    });
   }
 
+  if (!isDocumentPath(path)) return next();
+
   const result = await next();
-  if (!(result instanceof Response)) return result;
   if (
-    isDocumentPath(path) &&
+    result instanceof Response &&
     result.body &&
     String(result.headers.get("content-type") ?? "").includes("text/html") &&
     !result.headers.get("content-encoding")
   ) {
-    return defend(injectHeadStreaming(result, requestHost(event)), event);
+    return injectHeadStreaming(result, requestHost(event));
   }
-  return defend(result, event);
+  return result;
 }

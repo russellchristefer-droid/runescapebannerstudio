@@ -5,11 +5,11 @@
       "width": 1280,
       "height": 800,
       "status": 200,
-      "title": "RuneScape Twitch Banner Maker",
+      "title": "RuneScape Banner Studio",
       "hasCanvas": true,
-      "bodyTextLen": 885,
-      "bodyTextHash": "4dac2c94e18198bb255b190d5407843a985061e5fbf9147d307cbbefb39f6b3c",
-      "bodyTextPrefix": "TWITCH CHANNEL KIT RuneScape Twitch Banner Maker Twitch-ready pr",
+      "bodyTextLen": 3968,
+      "bodyTextHash": "74511c2c8552b9622bd8b430bc44cefa3823b0ddb4683ee5831364ef41b0aff8",
+      "bodyTextPrefix": "Skip to desk INDEPENDENT STUDIO · NOT A JAGEX PRODUCT RuneScape ",
       "horizontalOverflow": false,
       "consoleErrors": [],
       "pageErrors": [],
@@ -19,21 +19,20 @@
       "width": 390,
       "height": 844,
       "status": 200,
-      "title": "RuneScape Twitch Banner Maker",
+      "title": "RuneScape Banner Studio",
       "hasCanvas": true,
-      "bodyTextLen": 885,
-      "bodyTextHash": "4dac2c94e18198bb255b190d5407843a985061e5fbf9147d307cbbefb39f6b3c",
-      "bodyTextPrefix": "TWITCH CHANNEL KIT RuneScape Twitch Banner Maker Twitch-ready pr",
+      "bodyTextLen": 3767,
+      "bodyTextHash": "9c7cd2a6ff55710c673c729b926001579edbbf7775cbb122fb7ae3c85c5d2ad6",
+      "bodyTextPrefix": "Skip to desk INDEPENDENT STUDIO · NOT A JAGEX PRODUCT RuneScape ",
       "horizontalOverflow": false,
       "consoleErrors": [],
-      "pageErrors": [],
+      "pageErrors": [
+        "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <SafeFragment>\n      <SafeFragment fallback={null}>\n        <CatchBoundary getResetKey={function getResetKey} errorComponent={function AppErrorComponent} ...>\n          <SafeFragment fallback={function fallback}>\n            <MatchInnerImpl match={{id:\"//\",ssr:true, ...}}>\n              <Lazy>\n                <Home>\n                  <Suspense fallback={<main>}>\n                    <Studio>\n                      <div className=\"min-h-dvh ...\">\n                        <EggToast>\n                        <SiteHeader>\n                        <TownHero>\n                        <OracleLine>\n                        <TodayDesk>\n                          <section className=\"page-band ...\">\n                            <h2>\n                            <p className=\"mb-3 text-...\">\n+                             01\n-                             00\n                              ...\n                            ...\n                        ...\n"
+      ],
       "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
     }
   },
-  "brandWarnings": [
-    "BRAND WARNING: this looks like a game/canvas app but src/lib/og/site.json is missing \"type\": \"x:game\". X uses og:type=x:game to present the unfurl as a game card — set it in /workspace/src/lib/og/site.json per /workspace/.grok/skills/og/SKILL.md. Do not invent x:type or overload twitter:card as the game signal.",
-    "BRAND WARNING: this looks like a game/canvas app but /workspace/public/x-banner.jpg is missing. Games need a 50:11 X feed card (1200×264 JPEG) at public/x-banner.jpg — open /workspace/.grok/skills/og/SKILL.md and finish the brand-asset pass."
-  ],
+  "brandWarnings": [],
   "authWarnings": [],
   "verdictFile": "/workspace/screenshots/app-builder-preview.json"
 }

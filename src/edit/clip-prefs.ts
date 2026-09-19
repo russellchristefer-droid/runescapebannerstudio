@@ -1,6 +1,18 @@
 import { slugPart } from "@/lib/filename";
 import { sanitizeDisplayName } from "@/lib/rsText";
 
+export {
+  clampRange,
+  clipSnapFps,
+  frameStep,
+  nextMarkerTime,
+  normalizeGainPct,
+  orderInOut,
+  prevMarkerTime,
+  snapTime,
+  timecode,
+} from "./clip-math";
+
 export type ClipAspect = "16x9-1080" | "16x9-720" | "9x16" | "1x1" | "banner";
 
 export const CLIP_ASPECTS: Record<ClipAspect, { w: number; h: number; label: string }> = {
@@ -40,31 +52,23 @@ export const CLIP_CAPTIONS = [
 export function clipMime() {
   if (typeof MediaRecorder === "undefined") return "";
   const types = [
-    "video/webm;codecs=vp9,opus",
-    "video/webm;codecs=vp8,opus",
-    "video/webm",
+    "video/mp4;codecs=avc1.640028,mp4a.40.2",
+    "video/mp4;codecs=avc1.4D0028,mp4a.40.2",
     "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+    "video/mp4;codecs=h264,mp4a.40.2",
+    "video/mp4;codecs=avc1.42E01E",
     "video/mp4",
   ];
   return types.find((type) => MediaRecorder.isTypeSupported(type)) ?? "";
 }
 
-export function clipExt(mime: string) {
-  return mime.includes("mp4") ? "mp4" : "webm";
+export function clipExt(_mime?: string) {
+  return "mp4";
 }
 
-export function clipFileName(edition: "OSRS" | "RS3", name: string, w: number, h: number, mime = "video/webm") {
+export function clipFileName(edition: "OSRS" | "RS3", name: string, w: number, h: number, _mime = "video/mp4") {
   const game = edition === "OSRS" ? "osrs" : "rs3";
-  return `clip-${slugPart(sanitizeDisplayName(name) || "clip")}-${w}x${h}.${clipExt(mime)}`;
-}
-
-export function frameStep(fps: number) {
-  return fps > 1 ? 1 / fps : 1 / 30;
-}
-
-export function snapTime(t: number, fps: number) {
-  const step = frameStep(fps);
-  return Math.round(Math.max(0, t) / step) * step;
+  return `clip-${game}-${slugPart(sanitizeDisplayName(name) || "clip")}-${w}x${h}.mp4`;
 }
 
 export function snapToPoints(t: number, points: number[], windowSec: number) {
@@ -78,17 +82,6 @@ export function snapToPoints(t: number, points: number[], windowSec: number) {
     }
   }
   return best;
-}
-
-export function orderInOut(a: number, b: number) {
-  return a <= b ? [a, b] : [b, a];
-}
-
-export function timecode(seconds: number) {
-  const safe = Math.max(0, seconds);
-  const m = Math.floor(safe / 60);
-  const s = safe % 60;
-  return `${String(m).padStart(2, "0")}:${s.toFixed(2).padStart(5, "0")}`;
 }
 
 export function coverRect(srcW: number, srcH: number, dstW: number, dstH: number) {

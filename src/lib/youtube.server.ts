@@ -1,4 +1,5 @@
 import { YOUTUBERS } from "@/data/youtubers";
+import { CHANNELS } from "@/data/channels";
 
 export type TubeBoardRow = {
   id: string;
@@ -13,14 +14,40 @@ export type TubeBoardRow = {
 
 export type TubeBoard = { off?: boolean; ok: boolean; rows: TubeBoardRow[] };
 
-const BOARD_TTL = 20_000;
+const BOARD_TTL = 45_000;
 const LIVE_PARAMS = "EgJAAQ==";
 const SKIP =
   /\b(rsps|private server|ikov|elorin|soulsplit|alora|dreamscape|pkscape)\b/i;
 const GAME_WORD =
-  /\b(osrs|old school|oldschool|runescape|rs3|gielinor|dragonwilds|ashenfall|tob|toa|inferno|nex)\b/i;
-let boardMemo: { at: number; payload: TubeBoard } | null = null;
+  /\b(osrs|old school|oldschool|runescape|rs3|gielinor|dragonwilds|ashenfall|jagex|tob|toa|inferno|nex|cox|olm|raids?|slayer|nightmare|vorkath|zulrah|sailing|hcim|ironman|pvm|wildy|wilderness|right-?click examine|rce)\b/i;
+/** Hall names we knock on by name so a live title that does not say "OSRS" still counts. */
+const ID_ALIAS: Record<string, string> = {
+  sick_nerd: "sicknerd",
+  mr_mammal: "mrmammal",
+  dino_xx: "dino",
+  rice: "ricecup",
+  fliposrs: "flippingosrs",
+  sr_bigboaby: "srbigboaby",
+  "official-osrs": "osrs-off",
+  "official-rs": "rs-off",
+  omid: "runescapeomid",
+  heyjase: "heyjase",
+};
+const EXTRA_WATCH = [
+  "kingcondor",
+  "theoatrix",
+  "sirpugger",
+  "slayermusiq1",
+  "nightmarerh",
+  "thecompletor",
+  "soup",
+  "verf",
+  "25buttholes",
+  "edimmuz",
+  "autumnlive",
+];
 const idCache = new Map<string, string>();
+let boardMemo: { at: number; payload: TubeBoard } | null = null;
 
 function apiKey() {
   return (
@@ -37,8 +64,13 @@ function liveDisabled() {
 }
 
 function cleanHandle(raw: string) {
-  return String(raw ?? "")
-    .trim()
+  let value = String(raw ?? "").trim();
+  try {
+    value = decodeURIComponent(value);
+  } catch {
+    /* keep raw */
+  }
+  return value
     .replace(/^https?:\/\/(www\.)?youtube\.com\//i, "")
     .replace(/^\/+/, "")
     .replace(/^@/, "")
@@ -46,9 +78,44 @@ function cleanHandle(raw: string) {
     .toLowerCase();
 }
 
-function hallForHandle(handle: string) {
+function fold(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+function nameKey(value: string) {
+  return fold(String(value ?? "").replace(/\b(the|live|osrs|rs3|runescape|hd|tv|yt|official|gaming)\b/gi, " "));
+}
+
+function hallFor(handle: string, display?: string) {
   const key = cleanHandle(handle);
-  return YOUTUBERS.find((row) => cleanHandle(row.youtube) === key || row.id === key);
+  const folded = fold(key);
+  const byHandle = YOUTUBERS.find((row) => {
+    const yt = cleanHandle(row.youtube);
+    return yt === key || fold(yt) === folded || row.id === key || fold(row.id) === folded;
+  });
+  if (byHandle) return byHandle;
+  const name = String(display ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!name) return undefined;
+  const exact = YOUTUBERS.find((row) => row.name.toLowerCase() === name);
+  if (exact) return exact;
+  const nk = nameKey(name);
+  if (nk.length < 5) return undefined;
+  return YOUTUBERS.find((row) => nameKey(row.name) === nk);
+}
+
+function asGame(row: ReturnType<typeof hallFor>, fallback: "osrs" | "rs3" | "dw"): "osrs" | "rs3" | "dw" {
+  if (!row) return fallback;
+  if (row.game === "rs3") return "rs3";
+  if (row.game === "dw") return "dw";
+  return fallback === "dw" ? "dw" : row.game === "both" ? fallback : "osrs";
+}
+
+function rsTitle(title: string, known: boolean) {
+  if (known) return true;
+  return GAME_WORD.test(title);
 }
 
 function parseWatching(raw: unknown) {
@@ -97,12 +164,64 @@ function walkVideos(node: unknown, out: VideoRenderer[]) {
   for (const value of Object.values(rec)) walkVideos(value, out);
 }
 
+function watchIds() {
+  const ids = new Set<string>([...EXTRA_WATCH, ...CHANNELS.map((row) => row.id)]);
+  for (const [from, to] of Object.entries(ID_ALIAS)) {
+    if (ids.has(from)) ids.add(to);
+    if (ids.has(to)) ids.add(from);
+  }
+  for (const tube of YOUTUBERS) {
+    if (channelForTube(tube)?.twitch) ids.add(tube.id);
+  }
+  return ids;
+}
+
+function channelForTube(row: (typeof YOUTUBERS)[number]) {
+  const yt = cleanHandle(row.youtube);
+  const nk = nameKey(row.name);
+  return CHANNELS.find((item) => {
+    if (item.id === row.id) return true;
+    if (ID_ALIAS[item.id] === row.id) return true;
+    if (ID_ALIAS[row.id] === item.id) return true;
+    if (item.youtube && cleanHandle(item.youtube) === yt) return true;
+    return nk.length >= 4 && nameKey(item.name) === nk;
+  });
+}
+
+function watchQueries() {
+  const ids = watchIds();
+  const prefer = new Set(EXTRA_WATCH);
+  const dual = new Set(
+    YOUTUBERS.filter((row) => Boolean(channelForTube(row)?.twitch)).map((row) => row.id),
+  );
+  const rows = YOUTUBERS.filter((row) => ids.has(row.id) && !row.youtube.startsWith("channel/")).sort(
+    (a, b) =>
+      Number(prefer.has(b.id) || dual.has(b.id)) - Number(prefer.has(a.id) || dual.has(a.id)) ||
+      a.name.localeCompare(b.name),
+  );
+  const out: { q: string; game: "osrs" | "rs3" | "dw" }[] = [];
+  const seen = new Set<string>();
+  for (const row of rows) {
+    const name = row.name.trim();
+    if (!name || seen.has(name.toLowerCase())) continue;
+    seen.add(name.toLowerCase());
+    const game: "osrs" | "rs3" | "dw" = row.game === "rs3" ? "rs3" : row.game === "dw" ? "dw" : "osrs";
+    out.push({ q: name, game });
+    if (out.length >= 40) break;
+  }
+  return out;
+}
+
 async function innertubeLive(query: string, game: "osrs" | "rs3" | "dw") {
   const res = await fetch("https://www.youtube.com/youtubei/v1/search?prettyPrint=false", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      "user-agent": "Mozilla/5.0",
+      "accept-language": "en",
+    },
     body: JSON.stringify({
-      context: { client: { clientName: "WEB", clientVersion: "2.20260901.00.00", hl: "en" } },
+      context: { client: { clientName: "WEB", clientVersion: "2.20260901.00.00", hl: "en", gl: "US" } },
       query,
       params: LIVE_PARAMS,
     }),
@@ -123,15 +242,15 @@ async function innertubeLive(query: string, game: "osrs" | "rs3" | "dw") {
     if (!handle || seen.has(handle)) continue;
     const blob = `${title} ${display} ${handle}`;
     if (SKIP.test(blob)) continue;
-    if (!GAME_WORD.test(title)) continue;
-    const known = hallForHandle(handle);
+    const known = hallFor(handle, display);
+    if (!rsTitle(title, Boolean(known))) continue;
     seen.add(handle);
     const viewers = parseWatching(video.viewCountText) || parseWatching(video.shortViewCountText);
     rows.push({
       id: known?.id ?? `live-${handle}`,
-      handle,
+      handle: known ? cleanHandle(known.youtube) : handle,
       displayName: known?.name ?? (display || handle),
-      game,
+      game: asGame(known, game),
       live: true,
       viewers,
       title,
@@ -212,40 +331,45 @@ export async function fetchYoutubeBoard(): Promise<TubeBoard> {
   if (liveDisabled()) return { off: true, ok: false, rows: [] };
   if (boardMemo && Date.now() - boardMemo.at < BOARD_TTL) return boardMemo.payload;
 
-  const directory = await Promise.all([
-    innertubeLive("Old School RuneScape", "osrs").catch(() => []),
-    innertubeLive("RuneScape 3", "rs3").catch(() => []),
-    innertubeLive("RuneScape Dragonwilds", "dw").catch(() => []),
-  ]);
-  const rows = mergeLive(directory);
+  try {
+    const directory = await Promise.all([
+      innertubeLive("Old School RuneScape", "osrs").catch(() => []),
+      innertubeLive("RuneScape 3", "rs3").catch(() => []),
+      innertubeLive("RuneScape Dragonwilds", "dw").catch(() => []),
+      ...watchQueries().map((item) => innertubeLive(item.q, item.game).catch(() => [])),
+    ]);
+    const rows = mergeLive(directory);
 
-  const key = apiKey();
-  if (key) {
-    const pool = YOUTUBERS.filter((row) => row.era === "official").slice(0, 6);
-    for (const row of pool) {
-      try {
-        const channelId = await resolveChannelId(key, row.youtube);
-        if (!channelId) continue;
-        const pulse = await channelPulse(key, channelId);
-        if (!pulse.live) continue;
-        if (pulse.title && !GAME_WORD.test(pulse.title) && row.era !== "official") continue;
-        const handle = cleanHandle(row.youtube);
-        rows.push({
-          id: row.id,
-          handle,
-          displayName: row.name,
-          game: row.id === "dw-off" || row.game === "dw" ? "dw" : row.game === "rs3" ? "rs3" : "osrs",
-          live: true,
-          title: pulse.title,
-        });
-      } catch {
-        /* fail-soft */
+    const key = apiKey();
+    if (key) {
+      const pool = YOUTUBERS.filter((row) => row.era === "official").slice(0, 6);
+      for (const row of pool) {
+        try {
+          const channelId = await resolveChannelId(key, row.youtube);
+          if (!channelId) continue;
+          const pulse = await channelPulse(key, channelId);
+          if (!pulse.live) continue;
+          if (pulse.title && !GAME_WORD.test(pulse.title) && row.era !== "official") continue;
+          const handle = cleanHandle(row.youtube);
+          rows.push({
+            id: row.id,
+            handle,
+            displayName: row.name,
+            game: row.id === "dw-off" || row.game === "dw" ? "dw" : row.game === "rs3" ? "rs3" : "osrs",
+            live: true,
+            title: pulse.title,
+          });
+        } catch {
+          /* fail-soft */
+        }
       }
     }
-  }
 
-  const merged = mergeLive([rows]);
-  const payload: TubeBoard = { ok: true, rows: merged };
-  boardMemo = { at: Date.now(), payload };
-  return payload;
+    const merged = mergeLive([rows]);
+    const payload: TubeBoard = { ok: true, rows: merged };
+    boardMemo = { at: Date.now(), payload };
+    return payload;
+  } catch {
+    return { ok: false, rows: [] };
+  }
 }

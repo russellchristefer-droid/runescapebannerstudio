@@ -214,7 +214,7 @@ export function StreamDesk() {
           </Link>
           {" · "}
           <Link to="/youtubers" className="text-parchment">
-            YouTube Streamers
+            YouTube
           </Link>
         </p>
       </div>

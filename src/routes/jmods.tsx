@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
-import { JAGEX_SOCIAL, JAGEX_X_MODS, JAGEX_X_OFFICIAL, type JagexLink, type JagexX } from "@/lib/jagex-x";
+import { JAGEX_SOCIAL, JAGEX_X_OFFICIAL, jagexMods, type JagexLink, type JagexX } from "@/lib/jagex-x";
 
 import { pageTitle } from "@/lib/page-title";
 
@@ -53,12 +53,25 @@ function JmodsPage() {
         </section>
         <section>
           <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">
-            J-MOD HANDLES
+            OLD SCHOOL J-MODS
           </h2>
-          <List rows={JAGEX_X_MODS} />
+          <List rows={jagexMods("osrs")} />
+        </section>
+        <section>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">
+            RUNESCAPE J-MODS
+          </h2>
+          <List rows={jagexMods("rs3")} />
+        </section>
+        <section>
+          <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">
+            STUDIO
+          </h2>
+          <List rows={jagexMods("studio")} />
         </section>
         <p className="text-xs text-faint">
-          Old School also keeps a live list from{" "}
+          Public Jagex-branded X handles only. Not every employee has one. Staff
+          leave and titles change. Prefer{" "}
           <a
             href="https://x.com/OldSchoolRS"
             className="text-parchment"
@@ -66,6 +79,15 @@ function JmodsPage() {
             rel="noopener noreferrer"
           >
             @OldSchoolRS
+          </a>
+          {" "}and{" "}
+          <a
+            href="https://x.com/RuneScape"
+            className="text-parchment"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @RuneScape
           </a>
           . Views on personal J-Mod posts are their own.
         </p>

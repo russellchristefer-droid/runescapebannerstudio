@@ -41,8 +41,16 @@ export function applySecurityHeaders(
   } else if (path.startsWith("/api/")) {
     put(headers, "Cache-Control", "no-store");
     put(headers, "X-Robots-Tag", "noindex");
-  } else if (path.endsWith(".html") || path === "/" || path === "") {
+  } else if (
+    path.endsWith(".html") ||
+    path === "/" ||
+    path === "" ||
+    path === "/legal" ||
+    path.startsWith("/legal/")
+  ) {
     put(headers, "Cache-Control", "no-store");
+  } else if (/\.(?:jpe?g|png|webp|avif|gif|svg|ico)$/i.test(path)) {
+    put(headers, "Cache-Control", "public, max-age=604800, stale-while-revalidate=86400");
   }
 }
 

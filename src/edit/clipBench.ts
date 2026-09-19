@@ -50,6 +50,8 @@ const CROP: Record<ClipCrop, { w: number; h: number }> = {
 
 function pickMime() {
   if (typeof MediaRecorder === "undefined") return "";
+  if (MediaRecorder.isTypeSupported("video/mp4;codecs=avc1.42E01E,mp4a.40.2")) return "video/mp4;codecs=avc1.42E01E,mp4a.40.2";
+  if (MediaRecorder.isTypeSupported("video/mp4")) return "video/mp4";
   if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")) return "video/webm;codecs=vp9,opus";
   if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")) return "video/webm;codecs=vp8,opus";
   if (MediaRecorder.isTypeSupported("video/webm")) return "video/webm";
@@ -257,7 +259,7 @@ export function bindClipBench(opts: {
       const blob = new Blob(chunks, { type: rec?.mimeType || mime });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `clip-${Math.round(clip.inT)}-${Math.round(clip.outT)}.webm`;
+      a.download = `clip-${Math.round(clip.inT)}-${Math.round(clip.outT)}.${(rec?.mimeType || mime).includes("mp4") ? "mp4" : "webm"}`;
       a.click();
       URL.revokeObjectURL(a.href);
       say("Saved.");

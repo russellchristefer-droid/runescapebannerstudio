@@ -24,10 +24,13 @@ export const JAGEX_SOCIAL: JagexLink[] = [
   { name: "Dragonwilds Discord", href: "https://discord.com/invite/RSDragonwilds", label: "Discord", note: "Official Dragonwilds server" },
 ];
 
+export type JagexGame = "osrs" | "rs3" | "studio";
+
 export type JagexX = {
   name: string;
   handle: string;
   role: string;
+  game?: JagexGame;
 };
 
 export const JAGEX_X_OFFICIAL: JagexX[] = [
@@ -40,21 +43,37 @@ export const JAGEX_X_OFFICIAL: JagexX[] = [
   { name: "Jagex Careers", handle: "JagexCareers", role: "Jobs. Not account recovery." },
 ];
 
+/** Public Jagex-branded X only. Wiki + live handle. Not a staff roster. */
 export const JAGEX_X_MODS: JagexX[] = [
-  { name: "Mod Ash", handle: "JagexAsh", role: "Old School senior product" },
-  { name: "Mod Kieren", handle: "JagexKieren", role: "Old School creative director" },
-  { name: "Mod Ayiza", handle: "JagexAyiza", role: "Old School community" },
-  { name: "Mod Light", handle: "JagexLight", role: "Old School community" },
-  { name: "Mod Blossom", handle: "JagexBlossom", role: "Old School community" },
-  { name: "Mod Ed", handle: "JagexEd", role: "Old School narrative" },
-  { name: "Mod Arcane", handle: "JagexArcane", role: "Old School systems" },
-  { name: "Mod Sova", handle: "JagexSova", role: "Old School content" },
-  { name: "Mod West", handle: "JagexWest", role: "Old School art" },
-  { name: "Mod Boko", handle: "JagexBoko", role: "Old School engineering" },
-  { name: "Mod Curse", handle: "JagexCurse", role: "Old School QA" },
-  { name: "Mod Nox", handle: "JagexNox", role: "Old School QA" },
-  { name: "Mod Bruno", handle: "JagexBruno", role: "Old School QA" },
-  { name: "Mod Archie", handle: "JagexArchie", role: "Video" },
-  { name: "Mod Ramen", handle: "JagexRamen", role: "RuneScape principal design" },
-  { name: "Mod Ryan", handle: "JagexRyan", role: "RuneScape creative" },
+  { name: "Mod Ash", handle: "JagexAsh", role: "Old School senior product", game: "osrs" },
+  { name: "Mod Kieren", handle: "JagexKieren", role: "Old School creative director", game: "osrs" },
+  { name: "Mod Ayiza", handle: "JagexAyiza", role: "Old School community", game: "osrs" },
+  { name: "Mod Light", handle: "JagexLight", role: "Old School community", game: "osrs" },
+  { name: "Mod Blossom", handle: "JagexBlossom", role: "Old School community", game: "osrs" },
+  { name: "Mod Rach", handle: "JagexRach", role: "Old School community", game: "osrs" },
+  { name: "Mod Ed", handle: "JagexEd", role: "Old School narrative", game: "osrs" },
+  { name: "Mod Arcane", handle: "JagexArcane", role: "Old School systems", game: "osrs" },
+  { name: "Mod Sova", handle: "JagexSova", role: "Old School content", game: "osrs" },
+  { name: "Mod Tide", handle: "JagexTide", role: "Old School content", game: "osrs" },
+  { name: "Mod Husky", handle: "JagexHusky", role: "Old School design", game: "osrs" },
+  { name: "Mod West", handle: "JagexWest", role: "Old School art", game: "osrs" },
+  { name: "Mod Ry", handle: "JagexRy", role: "Old School art", game: "osrs" },
+  { name: "Mod Boko", handle: "JagexBoko", role: "Old School engineering", game: "osrs" },
+  { name: "Mod Curse", handle: "JagexCurse", role: "Old School QA", game: "osrs" },
+  { name: "Mod Nox", handle: "JagexNox", role: "Old School QA", game: "osrs" },
+  { name: "Mod Bruno", handle: "JagexBruno", role: "Old School QA", game: "osrs" },
+  { name: "Mod Archie", handle: "JagexArchie", role: "Video", game: "osrs" },
+  { name: "Mod Ramen", handle: "JagexRamen", role: "RuneScape principal design", game: "rs3" },
+  { name: "Mod Ryan", handle: "JagexRyan", role: "RuneScape creative", game: "rs3" },
+  { name: "Mod Jack", handle: "JagexJack", role: "RuneScape lead design", game: "rs3" },
+  { name: "Mod Rowley", handle: "JagexRowley", role: "RuneScape narrative", game: "rs3" },
+  { name: "Mod Sponge", handle: "JagexSponge", role: "RuneScape design", game: "rs3" },
+  { name: "Mod Breezy", handle: "JagexBreezy", role: "RuneScape design", game: "rs3" },
+  { name: "Mod Camel", handle: "JagexCamel", role: "RuneScape QA", game: "rs3" },
+  { name: "Mod Sean", handle: "JagexSean", role: "RuneScape external development", game: "rs3" },
+  { name: "Mod Hooli", handle: "JagexHooli", role: "Director of community", game: "studio" },
 ];
+
+export function jagexMods(game: JagexGame) {
+  return JAGEX_X_MODS.filter((row) => row.game === game);
+}

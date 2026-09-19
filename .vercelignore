@@ -1,0 +1,13 @@
+artifacts
+screenshots
+attachments
+.grok
+.git
+.vercel
+sidecars
+/*.png
+node_modules
+.output
+.vinxi
+.tanstack
+*.log
