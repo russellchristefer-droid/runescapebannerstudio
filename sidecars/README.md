@@ -24,6 +24,7 @@ node sidecars/node/clip-bench.mjs clip.mp4 --in 2 --out 8 --size banner --mute
 
 Still crops: `1200x480` `1280x720` `1920x1080` `1920x480` `native`.
 Clip crops: `16:9-1080` `16:9-720` `9:16` `1:1` `banner` `native` (pixel sizes still work).
+Clip files are **MP4** (H.264 + AAC).
 
 Node and PowerShell call the Python benches so the file on disk is the same. They do not scan hosts.
 

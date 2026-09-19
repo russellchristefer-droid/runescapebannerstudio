@@ -1,7 +1,8 @@
 /**
  * Clip bench for Alt1 Toolkit.
  *
- * Upload a clip you own. Pick a crop. Download that size as WebM.
+ * Upload a clip you own. Pick a crop. Download that size as MP4
+ * (H.264 + AAC) for TikTok, Twitch, and X.
  * Crops: 1920×1080, 1280×720, 1080×1920, 1080×1080, 1200×480, native.
  */
 (function () {
@@ -142,9 +143,16 @@
 
   function pickMime() {
     if (typeof MediaRecorder === "undefined") return "";
-    if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")) return "video/webm;codecs=vp8,opus";
-    if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8")) return "video/webm;codecs=vp8";
-    if (MediaRecorder.isTypeSupported("video/webm")) return "video/webm";
+    const types = [
+      "video/mp4;codecs=avc1.640028,mp4a.40.2",
+      "video/mp4;codecs=avc1.4D0028,mp4a.40.2",
+      "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+      "video/mp4;codecs=h264,mp4a.40.2",
+      "video/mp4",
+    ];
+    for (let i = 0; i < types.length; i++) {
+      if (MediaRecorder.isTypeSupported(types[i])) return types[i];
+    }
     return "";
   }
 
@@ -156,28 +164,28 @@
     }
     const mime = pickMime();
     if (!mime) {
-      say("This window cannot record.");
+      say("This window cannot write an MP4.");
       return;
     }
     const box = sizeFor(id);
-    const w = box.w;
-    const h = box.h;
+    const w = box.w & ~1;
+    const h = box.h & ~1;
     busy = true;
     say("Making " + w + "×" + h + "…");
     coverDraw(w, h);
     const capture = stage.captureStream || stage.mozCaptureStream;
     if (!capture) {
       busy = false;
-      say("This window cannot record.");
+      say("This window cannot write an MP4.");
       return;
     }
     const stream = capture.call(stage, 30);
     let rec;
     try {
-      rec = new MediaRecorder(stream, { mimeType: mime });
+      rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 7500000, audioBitsPerSecond: 128000 });
     } catch (err) {
       busy = false;
-      say("This window cannot record.");
+      say("This window cannot write an MP4.");
       return;
     }
     const chunks = [];
@@ -186,13 +194,13 @@
     };
     rec.onstop = function () {
       busy = false;
-      const blob = new Blob(chunks, { type: rec.mimeType || "video/webm" });
+      const blob = new Blob(chunks, { type: "video/mp4" });
       if (blob.size < 64) {
         say("Export wrote an empty file.");
         return;
       }
-      downloadBlob(blob, "clip-" + w + "x" + h + "-" + Math.round(inPoint) + "-" + Math.round(outPoint) + ".webm");
-      say("In the bag · " + w + "×" + h);
+      downloadBlob(blob, "clip-" + w + "x" + h + "-" + Math.round(inPoint) + "-" + Math.round(outPoint) + ".mp4");
+      say("In the bag · " + w + "×" + h + " MP4");
     };
     video.currentTime = inPoint;
     await video.play().catch(function () {});
@@ -210,6 +218,13 @@
       }
     }
     video.addEventListener("timeupdate", tick);
+  }
+
+  const saveBtn = document.getElementById("save");
+  if (saveBtn) {
+    saveBtn.onclick = function () {
+      void saveCrop(cropId);
+    };
   }
 
   document.querySelectorAll("[data-dl]").forEach(function (btn) {

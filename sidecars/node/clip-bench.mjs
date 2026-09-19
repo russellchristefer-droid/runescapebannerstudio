@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Node sidecar for the clip bench.
- * Calls sidecars/clip_bench.py so the WebM matches the Python bench.
+ * Calls sidecars/clip_bench.py so the MP4 matches the Python bench.
  */
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";

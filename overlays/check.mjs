@@ -30,7 +30,7 @@ for (const needle of ["toBlob", "captureHold", "getElementById(\"plate\")", "dat
 }
 
 const clips = readFileSync(join(root, "clips/alt1/app.js"), "utf8");
-for (const needle of ["MediaRecorder", "markIn", "getElementById(\"vid\")", "1920", "1280", "1200", "data-dl", "downloadBlob", "fileEl.click"]) {
+for (const needle of ["MediaRecorder", "markIn", "getElementById(\"vid\")", "1920", "1280", "1200", "data-dl", "downloadBlob", "fileEl.click", "video/mp4"]) {
   if (!clips.includes(needle)) fail.push(`clips app.js ${needle}`);
 }
 
@@ -65,7 +65,7 @@ for (const needle of ["1200x480", "1280x720", "1920x1080", "1920x480", "native",
   if (!pyStill.includes(needle)) fail.push(`still_desk.py ${needle}`);
 }
 const pyClip = readFileSync(join(root, "../sidecars/clip_bench.py"), "utf8");
-for (const needle of ["16:9-720", "16:9-1080", "9:16", "1:1", "banner", "native", "libvpx-vp9"]) {
+for (const needle of ["16:9-720", "16:9-1080", "9:16", "1:1", "banner", "native", "libx264", "aac", "+faststart"]) {
   if (!pyClip.includes(needle)) fail.push(`clip_bench.py ${needle}`);
 }
 

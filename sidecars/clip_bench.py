@@ -3,10 +3,10 @@
 
 Not the website editor. The live bench stays in the browser.
 
-  python3 clip_bench.py public/media/poh.mp4 --in 0 --out 3 --write clip.webm
+  python3 clip_bench.py public/media/poh.mp4 --in 0 --out 3 --write clip.mp4
   python3 clip_bench.py clip.mp4 --size 16:9-720 --mute --fade-in 0.5 --fade-out 0.5
 
-Needs ffmpeg on PATH. This file does not ship a codec.
+Writes H.264 + AAC MP4 (TikTok / Twitch / X). Needs ffmpeg on PATH.
 """
 
 from __future__ import annotations
@@ -37,7 +37,22 @@ def ffmpeg_bin() -> str | None:
     return shutil.which("ffmpeg")
 
 
-def probe_size(bin_: str, src: Path) -> tuple[int, int]:
+def even(n: int) -> int:
+    return max(16, int(n) & ~1)
+
+
+def bitrate_for(w: int, h: int) -> str:
+    pixels = w * h
+    if pixels >= 1920 * 1080:
+        return "12M"
+    if pixels >= 1080 * 1080:
+        return "8M"
+    if pixels >= 1280 * 720:
+        return "7.5M"
+    return "5M"
+
+
+def probe_size(src: Path) -> tuple[int, int]:
     probe = shutil.which("ffprobe")
     if not probe:
         return 1280, 720
@@ -61,7 +76,7 @@ def probe_size(bin_: str, src: Path) -> tuple[int, int]:
         return 1280, 720
     try:
         w, h = run.stdout.strip().split(",")[:2]
-        return max(2, int(w)), max(2, int(h))
+        return even(int(w)), even(int(h))
     except ValueError:
         return 1280, 720
 
@@ -85,11 +100,19 @@ def trim(
         print(f"No clip at {src}", file=sys.stderr)
         return 1
     if size_id == "native":
-        w, h = probe_size(bin_, src)
+        w, h = probe_size(src)
     else:
-        w, h = SIZES.get(size_id) or SIZES["1280x720"]
+        pair = SIZES.get(size_id) or SIZES["1280x720"]
+        w, h = even(pair[0]), even(pair[1])
     span = max(0.05, out_t - in_t)
-    vf = [f"scale={w}:{h}:force_original_aspect_ratio=increase", f"crop={w}:{h}"]
+    if out.suffix.lower() not in {".mp4", ".m4v"}:
+        out = out.with_suffix(".mp4")
+    vf = [
+        f"scale={w}:{h}:force_original_aspect_ratio=increase",
+        f"crop={w}:{h}",
+        "format=yuv420p",
+        "fps=30",
+    ]
     if fade_in > 0:
         vf.append(f"fade=t=in:st=0:d={fade_in}")
     if fade_out > 0:
@@ -104,16 +127,28 @@ def trim(
         str(max(in_t + 0.05, out_t)),
         "-i",
         str(src),
+    ]
+    if mute:
+        cmd += ["-f", "lavfi", "-t", f"{span:.3f}", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000"]
+    cmd += [
         "-vf",
         ",".join(vf),
         "-c:v",
-        "libvpx-vp9",
+        "libx264",
+        "-profile:v",
+        "high",
+        "-level",
+        "4.0",
+        "-pix_fmt",
+        "yuv420p",
+        "-r",
+        "30",
+        "-g",
+        "60",
         "-b:v",
-        "2M",
+        bitrate_for(w, h),
     ]
-    if mute:
-        cmd += ["-an"]
-    else:
+    if not mute:
         af = []
         if gain != 1:
             af.append(f"volume={max(0.0, min(2.0, gain))}")
@@ -124,8 +159,24 @@ def trim(
             af.append(f"afade=t=out:st={start}:d={fade_out}")
         if af:
             cmd += ["-af", ",".join(af)]
-        cmd += ["-c:a", "libopus"]
-    cmd.append(str(out))
+    cmd += [
+        "-c:a",
+        "aac",
+        "-profile:a",
+        "aac_low",
+        "-ar",
+        "48000",
+        "-ac",
+        "2",
+        "-b:a",
+        "128k",
+        "-shortest",
+        "-movflags",
+        "+faststart",
+        "-f",
+        "mp4",
+        str(out),
+    ]
     out.parent.mkdir(parents=True, exist_ok=True)
     run = subprocess.run(cmd, capture_output=True, text=True)
     if run.returncode != 0:
@@ -136,12 +187,12 @@ def trim(
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(description="Python clip bench sidecar.")
+    p = argparse.ArgumentParser(description="Python clip bench sidecar. Writes MP4.")
     p.add_argument("clip", type=Path, help="Source video you own")
     p.add_argument("--in", dest="in_t", type=float, default=0.0)
     p.add_argument("--out", dest="out_t", type=float, default=6.0)
     p.add_argument("--size", default="1280x720", choices=list(SIZES))
-    p.add_argument("--write", type=Path, default=ROOT / "clip-out.webm")
+    p.add_argument("--write", type=Path, default=ROOT / "clip-out.mp4")
     p.add_argument("--mute", action="store_true")
     p.add_argument("--fade-in", type=float, default=0.0)
     p.add_argument("--fade-out", type=float, default=0.0)
