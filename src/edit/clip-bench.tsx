@@ -247,27 +247,34 @@ export function ClipBench() {
     window.addEventListener(CLIP_BANNER_EVENT, onPin);
     window.addEventListener("storage", onStore);
     document.addEventListener("visibilitychange", onVis);
+    const dropUrls = () => {
+      releaseVideo(videoRef.current, objectUrl.current);
+      objectUrl.current = null;
+      if (bannerUrl.current) URL.revokeObjectURL(bannerUrl.current);
+      bannerUrl.current = null;
+      if (stillUrl.current) URL.revokeObjectURL(stillUrl.current);
+      stillUrl.current = null;
+      const prev = bannerImg.current;
+      if (prev && "close" in prev && typeof (prev as ImageBitmap).close === "function") {
+        (prev as ImageBitmap).close();
+      }
+      bannerImg.current = null;
+      const still = stillImg.current;
+      if (still && "close" in still && typeof (still as ImageBitmap).close === "function") {
+        (still as ImageBitmap).close();
+      }
+      stillImg.current = null;
+      detachSound();
+    };
+    window.addEventListener("pagehide", dropUrls);
     return () => {
       stop = true;
       window.removeEventListener(CLIP_BANNER_EVENT, onPin);
       window.removeEventListener("storage", onStore);
       document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("pagehide", dropUrls);
       bus?.close();
-      releaseVideo(videoRef.current, objectUrl.current);
-      objectUrl.current = null;
-      if (bannerUrl.current) URL.revokeObjectURL(bannerUrl.current);
-      bannerUrl.current = null;
-      const prev = bannerImg.current;
-      if (prev && "close" in prev && typeof (prev as ImageBitmap).close === "function") {
-        (prev as ImageBitmap).close();
-      }
-      if (stillUrl.current) URL.revokeObjectURL(stillUrl.current);
-      stillUrl.current = null;
-      const still = stillImg.current;
-      if (still && "close" in still && typeof (still as ImageBitmap).close === "function") {
-        (still as ImageBitmap).close();
-      }
-      detachSound();
+      dropUrls();
     };
   }, []);
 

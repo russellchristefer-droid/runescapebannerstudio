@@ -59,7 +59,7 @@ export function SiteHeader({
       {skip ? (
         <a
           href={skip.href}
-          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-20 focus:bg-raised focus:px-3 focus:py-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-20 focus:inline-flex focus:min-h-11 focus:items-center focus:bg-raised focus:px-3 focus:py-2"
         >
           {skip.label}
         </a>

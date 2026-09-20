@@ -9,6 +9,10 @@ describe("security headers", () => {
     assert.match(SECURITY_HEADERS["Content-Security-Policy"], /object-src 'none'/);
     assert.match(SECURITY_HEADERS["Content-Security-Policy"], /base-uri 'self'/);
     assert.equal(SECURITY_HEADERS["X-Frame-Options"], "DENY");
+    assert.match(SECURITY_HEADERS["Permissions-Policy"], /camera=\(\)/);
+    assert.match(SECURITY_HEADERS["Permissions-Policy"], /microphone=\(\)/);
+    assert.match(SECURITY_HEADERS["Permissions-Policy"], /geolocation=\(\)/);
+    assert.equal(SECURITY_HEADERS["Referrer-Policy"], "strict-origin-when-cross-origin");
   });
 
   it("keeps share stills fetchable for cards and locks the rest", () => {

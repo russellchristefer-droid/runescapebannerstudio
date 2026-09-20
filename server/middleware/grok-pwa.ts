@@ -24,10 +24,20 @@ import {
   renderInstallPageHtml,
   renderWebManifest,
 } from "../../scripts/grok-pwa-shared.mjs";
+import { stampResponse } from "../../src/lib/headers";
 
 interface GrokPwaEvent {
   url: URL;
   req: { method: string; headers: Headers };
+}
+
+function isHttps(event: GrokPwaEvent) {
+  const xf = event.req.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  return xf === "https" || event.url.protocol === "https:";
+}
+
+function stamp(response: Response, path: string, event: GrokPwaEvent) {
+  return stampResponse(response, path, isHttps(event));
 }
 
 function requestHost(event: GrokPwaEvent): string {
@@ -71,12 +81,16 @@ export default async function grokPwaMiddleware(
   const urlWithQuery = path + event.url.search;
 
   if (path === "/__grok/manifest.webmanifest" || path === "/__grok/manifest.json") {
-    return new Response(renderWebManifest(requestHost(event)), {
-      headers: {
-        "content-type": "application/manifest+json; charset=utf-8",
-        "cache-control": "no-cache",
-      },
-    });
+    return stamp(
+      new Response(renderWebManifest(requestHost(event)), {
+        headers: {
+          "content-type": "application/manifest+json; charset=utf-8",
+          "cache-control": "no-cache",
+        },
+      }),
+      path,
+      event,
+    );
   }
 
   if (
@@ -88,15 +102,22 @@ export default async function grokPwaMiddleware(
       host: requestHost(event),
       url: urlWithQuery,
     });
-    return new Response(html, {
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-        "cache-control": "no-cache",
-      },
-    });
+    return stamp(
+      new Response(html, {
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "no-cache",
+        },
+      }),
+      path,
+      event,
+    );
   }
 
-  if (!isDocumentPath(path)) return next();
+  if (!isDocumentPath(path)) {
+    const skip = await next();
+    return skip instanceof Response ? stamp(skip, path, event) : skip;
+  }
 
   const result = await next();
   if (
@@ -105,7 +126,7 @@ export default async function grokPwaMiddleware(
     String(result.headers.get("content-type") ?? "").includes("text/html") &&
     !result.headers.get("content-encoding")
   ) {
-    return injectHeadStreaming(result, requestHost(event));
+    return stamp(injectHeadStreaming(result, requestHost(event)), path, event);
   }
-  return result;
+  return result instanceof Response ? stamp(result, path, event) : result;
 }

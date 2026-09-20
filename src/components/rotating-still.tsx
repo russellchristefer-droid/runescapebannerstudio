@@ -126,6 +126,7 @@ export function RotatingStill({
           height={480}
           alt={heroCaption(display)}
           fetchPriority="high"
+          loading="eager"
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
         />
