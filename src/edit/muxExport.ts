@@ -1,5 +1,7 @@
 import { Muxer, ArrayBufferTarget } from "mp4-muxer";
 import { pickEncoder } from "./hwEncode";
+import { captureSmooth } from "./captureSmooth";
+import { seekTo } from "./seekSafe";
 
 export type MuxQ = { w: number; h: number; fps: number; bitrate: number };
 
@@ -25,40 +27,6 @@ function waitQueue(encoder: VideoEncoder, max = 8) {
       encoder.removeEventListener("dequeue", onDeq);
       resolve();
     }, 250);
-  });
-}
-
-function seekTo(video: HTMLVideoElement, t: number) {
-  const target = Math.max(0, t);
-  return new Promise<void>((resolve, reject) => {
-    if (Math.abs((video.currentTime || 0) - target) < 0.012 && video.readyState >= 2) {
-      resolve();
-      return;
-    }
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      video.removeEventListener("seeked", finish);
-      video.removeEventListener("error", fail);
-      resolve();
-    };
-    const fail = () => {
-      if (done) return;
-      done = true;
-      video.removeEventListener("seeked", finish);
-      video.removeEventListener("error", fail);
-      reject(new Error("seek"));
-    };
-    video.addEventListener("seeked", finish);
-    video.addEventListener("error", fail);
-    try {
-      video.currentTime = target;
-    } catch {
-      fail();
-      return;
-    }
-    window.setTimeout(finish, 160);
   });
 }
 
@@ -125,8 +93,7 @@ async function muxAacFromVideo(
 }
 
 /**
- * WebCodecs H.264 + mp4-muxer. Raw EncodedVideoChunk blobs do not play in VLC.
- * Short clips seek frame-by-frame. Longer spans play once and mux the same way.
+ * Play In→Out once. requestVideoFrameCallback + mediaTime. No per-frame seek.
  */
 export async function exportMp4(opts: {
   canvas: HTMLCanvasElement;
@@ -197,62 +164,34 @@ export async function exportMp4(opts: {
   const fps = Math.max(1, q.fps);
   const durationUs = Math.round(1_000_000 / fps);
   const span = Math.max(1 / fps, outT - inT);
+  const expected = Math.max(1, Math.round(span * fps));
   let n = 0;
+  let lastPts = -1;
   video.pause();
+  video.playbackRate = 1;
+  await seekTo(video, inT);
 
-  const push = async (key = false) => {
+  await captureSmooth(video, inT, outT, fps, async (_v, meta) => {
     if (videoError || encoder.state !== "configured") return;
+    const pts = meta.mediaTime;
+    if (pts === lastPts) return;
+    lastPts = pts;
     await waitQueue(encoder);
     if (encoder.state !== "configured") return;
     draw();
     const frame = new VideoFrame(canvas, {
-      timestamp: n * durationUs,
+      timestamp: Math.round(pts * 1e6),
       duration: durationUs,
       alpha: "discard",
     });
     try {
-      encoder.encode(frame, { keyFrame: key || n === 0 || n % (fps * 2) === 0 });
+      encoder.encode(frame, { keyFrame: n === 0 || n % (fps * 2) === 0 });
       n += 1;
-      opts.onPct?.(Math.min(95, Math.max(0, (n / Math.max(1, Math.round(span * fps))) * 95)));
+      opts.onPct?.(Math.min(95, Math.max(0, (n / expected) * 95)));
     } finally {
       frame.close();
     }
-  };
-
-  if (span <= 90) {
-    let t = inT;
-    const dt = 1 / fps;
-    while (t < outT - 0.001) {
-      await seekTo(video, t).catch(() => undefined);
-      await push(n % (fps * 2) === 0);
-      t += dt;
-    }
-  } else {
-    await seekTo(video, inT).catch(() => undefined);
-    await video.play().catch(() => undefined);
-    await new Promise<void>((resolve) => {
-      let settled = false;
-      const finish = () => {
-        if (settled) return;
-        settled = true;
-        video.pause();
-        resolve();
-      };
-      const tick = () => {
-        if (settled) return;
-        const media = video.currentTime;
-        if (media + 0.5 / fps >= outT || video.ended) {
-          void push(true).then(finish);
-          return;
-        }
-        const expected = inT + n / fps;
-        if (media >= expected - 0.25 / fps) void push();
-        window.requestAnimationFrame(tick);
-      };
-      window.requestAnimationFrame(tick);
-      window.setTimeout(finish, Math.min(45 * 60 * 1000, span * 4000 + 8000));
-    });
-  }
+  });
 
   if (videoError) throw videoError;
   opts.onPct?.(97);

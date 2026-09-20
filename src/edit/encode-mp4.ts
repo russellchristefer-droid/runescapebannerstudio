@@ -1,5 +1,7 @@
 import { Muxer, ArrayBufferTarget } from "mp4-muxer";
 import { clipVideoBitrate, qualityForSize } from "./quality";
+import { captureSmooth } from "./captureSmooth";
+import { seekTo } from "./seekSafe";
 
 export { clipVideoBitrate } from "./quality";
 
@@ -186,30 +188,6 @@ function waitQueue(encoder: VideoEncoder, max = 8) {
   });
 }
 
-function seekTo(video: HTMLVideoElement, t: number) {
-  const target = Math.max(0, t);
-  return new Promise<void>((resolve) => {
-    if (Math.abs((video.currentTime || 0) - target) < 0.02 && video.readyState >= 2) {
-      resolve();
-      return;
-    }
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      video.removeEventListener("seeked", finish);
-      resolve();
-    };
-    video.addEventListener("seeked", finish);
-    try {
-      video.currentTime = target;
-    } catch {
-      finish();
-    }
-    window.setTimeout(finish, 120);
-  });
-}
-
 export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mime: string } | null> {
   if (!canEncodeMp4()) return null;
   const width = opts.w & ~1;
@@ -253,72 +231,37 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
     width,
     height,
     framerate: fps,
+    latencyMode: "quality",
     avc: { format: "avc" },
   });
 
   const durationUs = Math.round(1_000_000 / fps);
   const span = Math.max(1 / fps, outT - inT);
+  const expected = Math.max(1, Math.round(span * fps));
   let frames = 0;
   let lastTs = -1;
-  let encodeChain = Promise.resolve();
-
-  const pushFrame = (key = false) => {
-    const forceKey = key;
-    encodeChain = encodeChain.then(async () => {
-      if (videoError || encoder.state !== "configured") return;
-      const ts = frames * durationUs;
-      if (ts <= lastTs) return;
-      lastTs = ts;
-      await waitQueue(encoder);
-      if (encoder.state !== "configured") return;
-      paint();
-      const flush = opts.canvas.getContext("2d");
-      try {
-        flush?.getImageData(0, 0, 1, 1);
-      } catch {
-        /* ignore */
-      }
-      const frame = new VideoFrame(opts.canvas, { timestamp: ts, duration: durationUs, alpha: "discard" });
-      try {
-        encoder.encode(frame, { keyFrame: forceKey || frames === 0 || frames % (fps * 2) === 0 });
-        frames += 1;
-      } finally {
-        frame.close();
-      }
-      opts.onPct(Math.min(95, Math.max(0, (frames / Math.max(1, Math.round(span * fps))) * 95)));
-    });
-  };
 
   await seekTo(video, inT);
   video.playbackRate = 1;
-  await video.play().catch(() => undefined);
 
-  await new Promise<void>((resolve) => {
-    let settled = false;
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      video.pause();
-      resolve();
-    };
-    const tick = () => {
-      if (settled) return;
-      const media = video.currentTime;
-      if (media + 0.5 / fps >= outT || video.ended) {
-        pushFrame(true);
-        finish();
-        return;
-      }
-      const expected = inT + frames / fps;
-      if (media >= expected - 0.25 / fps) pushFrame();
-      window.requestAnimationFrame(tick);
-    };
-    window.requestAnimationFrame(tick);
-    window.setTimeout(finish, Math.min(45 * 60 * 1000, span * 4000 + 8000));
+  await captureSmooth(video, inT, outT, fps, async (_v, meta) => {
+    if (videoError || encoder.state !== "configured") return;
+    const ts = Math.round(meta.mediaTime * 1e6);
+    if (ts === lastTs) return;
+    lastTs = ts;
+    await waitQueue(encoder);
+    if (encoder.state !== "configured") return;
+    paint();
+    const frame = new VideoFrame(opts.canvas, { timestamp: ts, duration: durationUs, alpha: "discard" });
+    try {
+      encoder.encode(frame, { keyFrame: frames === 0 || frames % (fps * 2) === 0 });
+      frames += 1;
+    } finally {
+      frame.close();
+    }
+    opts.onPct(Math.min(95, Math.max(0, (frames / expected) * 95)));
   });
-
   opts.onPct(97);
-  await encodeChain.catch(() => undefined);
   await Promise.race([encoder.flush().catch(() => undefined), sleep(5000)]);
   try {
     encoder.close();

@@ -9,8 +9,8 @@ import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTra
 import { canEncodeMp4 } from "./encode-mp4";
 import { canWebCodecs, encodeClip } from "./webcodecsExport";
 import { exportMp4 } from "./muxExport";
-import { hwNote } from "./hwEncode";
 import { drawHi, pickRecorderMime, qualityForSize } from "./quality";
+import { seekTo, SeekError } from "./seekSafe";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
 import {
   CLIP_ASPECTS,
@@ -48,6 +48,7 @@ import {
 } from "./clip-prefs";
 
 type OverlayPos = "off" | "top" | "lower";
+type BenchState = "empty" | "loading" | "ready" | "encoding" | "error";
 
 const CHIP =
   "inline-flex min-h-11 items-center justify-center rounded-md border border-line/40 bg-surface px-3 text-[11px] text-parchment disabled:opacity-40";
@@ -103,7 +104,7 @@ export function ClipBench() {
     jumpMarker: (_dir: 1 | -1) => {},
   });
 
-  const [status, setStatus] = useState("Drop a clip you own, or upload one.");
+  const [status, setStatus] = useState("No clip. Upload a file you own.");
   const [fileLabel, setFileLabel] = useState("");
   const [native, setNative] = useState("");
   const [duration, setDuration] = useState(0);
@@ -148,7 +149,8 @@ export function ClipBench() {
   const [stillShape, setStillShape] = useState<StillShape>("native");
   const stillShapeRef = useRef<StillShape>("native");
   stillShapeRef.current = stillShape;
-  const [ready, setReady] = useState<"empty" | "loading" | "ready" | "bad">("empty");
+  const [ready, setReady] = useState<BenchState>("empty");
+  const loadWatch = useRef(0);
   const [hasAudio, setHasAudio] = useState(false);
   const undoRef = useRef<{ inPoint: number; outPoint: number; aspect: ClipAspect; overlay: OverlayPos; muted: boolean }[]>([]);
   const redoRef = useRef<typeof undoRef.current>([]);
@@ -206,6 +208,11 @@ export function ClipBench() {
     setAspect(next.aspect);
     setOverlay(next.overlay);
     setMuted(next.muted);
+  }
+
+  function setBench(s: BenchState, msg: string) {
+    setReady(s);
+    setStatus(msg);
   }
 
   useEffect(() => {
@@ -906,11 +913,11 @@ export function ClipBench() {
     }
     const looksVideo = file.type.startsWith("video/") || /\.(mp4|webm|mov|m4v|mkv)$/i.test(file.name);
     if (!looksVideo) {
-      setStatus("Could not read that file.");
+      setBench("error", "Could not read that file.");
       return;
     }
     if (file.size > CLIP_MAX_BYTES) {
-      setStatus("That file is over 2 GB. Cut it smaller first.");
+      setBench("error", "That file is over 2 GB. Cut it smaller first.");
       return;
     }
     let video = videoRef.current;
@@ -925,7 +932,8 @@ export function ClipBench() {
     releaseVideo(video, objectUrl.current);
     const url = URL.createObjectURL(file);
     objectUrl.current = url;
-    setReady("loading");
+    window.clearTimeout(loadWatch.current);
+    setBench("loading", "Reading clip…");
     setHasClip(false);
     setFileBytes(file.size);
     setPeak(0);
@@ -942,15 +950,21 @@ export function ClipBench() {
     video.onended = () => setPlaying(false);
     setFileLabel(file.name);
     video.onerror = () => {
-      setReady("bad");
+      window.clearTimeout(loadWatch.current);
       setHasClip(false);
-      setStatus("Could not read that file.");
+      setBench("error", "Could not read that file.");
     };
+    loadWatch.current = window.setTimeout(() => {
+      if ((videoRef.current?.readyState ?? 0) < 1) {
+        setHasClip(false);
+        setBench("error", "Could not read that file.");
+      }
+    }, 8000);
     video.onloadedmetadata = () => {
+      window.clearTimeout(loadWatch.current);
       const dur = video.duration || 0;
       if (!Number.isFinite(dur) || dur <= 0) {
-        setReady("bad");
-        setStatus("Could not read that file.");
+        setBench("error", "Could not read that file.");
         return;
       }
       setDuration(dur);
@@ -1002,10 +1016,9 @@ export function ClipBench() {
         }
         video.pause();
       })();
-      setStatus(
-        dur > CLIP_WARN_SECONDS
-          ? `${file.name} · ${timecode(dur)} · long file. Play it through, then mark In / Out for the cut.`
-          : `${file.name} · ${timecode(dur)} · ${video.videoWidth}×${video.videoHeight} · ${formatBytes(file.size)}`,
+      setBench(
+        "ready",
+        `Ready · ${video.videoWidth}×${video.videoHeight} · ${Math.round(dur)}s`,
       );
     };
   }
@@ -1024,8 +1037,15 @@ export function ClipBench() {
     if (!video) return;
     const max = duration || video.duration || 0;
     const t = Math.max(0, Math.min(max, snapValue(next)));
-    video.currentTime = t;
-    setNow(t);
+    void (async () => {
+      try {
+        await seekTo(video, t);
+        setNow(video.currentTime);
+      } catch (e) {
+        video.pause();
+        setBench("error", e instanceof SeekError ? e.message : "Could not seek that file.");
+      }
+    })();
   }
 
   function timeFromClientX(clientX: number) {
@@ -1086,11 +1106,9 @@ export function ClipBench() {
     if (!video || !hasClip || exportingRef.current) return;
     if (video.paused || video.ended) {
       if (video.ended || video.currentTime < inPoint || video.currentTime >= outPoint - 0.04) {
-        try {
-          video.currentTime = inPoint;
-        } catch {
-          /* ignore */
-        }
+        void seekTo(video, inPoint).catch((e) => {
+          setBench("error", e instanceof SeekError ? e.message : "Could not seek that file.");
+        });
       }
       attachSound(video);
       void video.play().catch(() => undefined);
@@ -1290,11 +1308,7 @@ export function ClipBench() {
       video.playbackRate = Math.max(0.25, s.speed || 1);
       video.muted = muted;
       video.volume = volume;
-      try {
-        video.currentTime = Math.max(0, s.inPoint);
-      } catch {
-        /* ignore */
-      }
+      void seekTo(video, Math.max(0, s.inPoint)).catch(() => undefined);
     }
     setPlaying(false);
     setNow(s.inPoint);
@@ -1368,19 +1382,16 @@ export function ClipBench() {
     video.muted = false;
     video.volume = 1;
     video.playbackRate = 1;
-    video.currentTime = inT;
+    try {
+      setBench("loading", "Seeking…");
+      await seekTo(video, inT);
+    } catch (e) {
+      throw e instanceof SeekError ? e : new SeekError("Could not seek that file.");
+    }
     setMute(muted);
     setGain(Math.max(0, Math.min(2, gainPct / 100)));
     setFade(fadeIn > 0 ? 0.5 : 0, fadeOut > 0 ? 0.5 : 0);
     armFades(video, inT, outT);
-    await new Promise<void>((resolve) => {
-      const ready = () => {
-        video.removeEventListener("seeked", ready);
-        resolve();
-      };
-      video.addEventListener("seeked", ready);
-      window.setTimeout(resolve, 500);
-    });
     ctxTick();
     const processed = soundTracks();
     try {
@@ -1391,7 +1402,12 @@ export function ClipBench() {
         outT,
         q: { w: q.w, h: q.h, fps: q.fps, bitrate: q.videoBps },
         draw: ctxTick,
-        onPct: setExportPct,
+        onPct: (n) => {
+          setExportPct(n);
+          const total = Math.max(1, Math.round((outT - inT) * q.fps));
+          const done = Math.round((n / 100) * total);
+          setBench("encoding", `Encoding ${done}/${total} · do not leave`);
+        },
       });
       if (muxed && muxed.size >= 64) {
         return { blob: muxed, audioOk: Boolean(processed.length && !muted), mime: "video/mp4" };
@@ -1408,7 +1424,12 @@ export function ClipBench() {
           outT,
           q: { w: q.w, h: q.h, fps: q.fps, bitrate: q.videoBps },
           draw: ctxTick,
-          onPct: setExportPct,
+          onPct: (n) => {
+            setExportPct(n);
+            const total = Math.max(1, Math.round((outT - inT) * q.fps));
+            const done = Math.round((n / 100) * total);
+            setBench("encoding", `Encoding ${done}/${total} · do not leave`);
+          },
           audioTracks: muted ? [] : processed,
         });
         if (blob && blob.size >= 64) {
@@ -1420,15 +1441,7 @@ export function ClipBench() {
     }
     video.pause();
     video.playbackRate = 1;
-    video.currentTime = inT;
-    await new Promise<void>((resolve) => {
-      const ready = () => {
-        video.removeEventListener("seeked", ready);
-        resolve();
-      };
-      video.addEventListener("seeked", ready);
-      window.setTimeout(resolve, 400);
-    });
+    await seekTo(video, inT);
     if (!canEncodeMp4() && !mime) {
       throw new Error("mime");
     }
@@ -1568,7 +1581,8 @@ export function ClipBench() {
     const qNote = qualityForSize(first.w, first.h);
     setBusy(true);
     setExportPct(0);
-    setStatus(`Making clip… ${await hwNote({ w: qNote.w, h: qNote.h, fps: qNote.fps, bitrate: qNote.videoBps })}`);
+    const total = Math.max(1, Math.round((outPoint - inPoint) * qNote.fps));
+    setBench("encoding", `Encoding 0/${total} · do not leave`);
     try {
       const one = await recordOnce(first.w, first.h);
       await downloadBlob(one.blob, qualityForSize(first.w, first.h).w, qualityForSize(first.w, first.h).h, one.mime);
@@ -1576,12 +1590,14 @@ export function ClipBench() {
         const two = await recordOnce(1080, 1920);
         await downloadBlob(two.blob, 1080, 1920, two.mime);
       }
-      setStatus(`In the bag. ${await hwNote({ w: qNote.w, h: qNote.h, fps: qNote.fps, bitrate: qNote.videoBps })}`);
+      const box = CLIP_ASPECTS[aspect];
+      setBench("ready", `Ready · ${box.w}×${box.h} · ${Math.round(Math.max(0, outPoint - inPoint))}s`);
     } catch (err) {
       const why = err instanceof Error ? err.message : "";
-      if (why === "mime") setStatus("This browser cannot export a clip.");
-      else if (why === "empty-blob") setStatus("Export wrote an empty file. Try Chrome or Edge.");
-      else setStatus("Export stopped.");
+      if (err instanceof SeekError) setBench("error", err.message);
+      else if (why === "mime") setBench("error", "This browser cannot export a clip.");
+      else if (why === "empty-blob") setBench("error", "Export wrote an empty file. Try Chrome or Edge.");
+      else setBench("error", "Export stopped.");
     } finally {
       setBusy(false);
       setExportPct(0);
@@ -1602,7 +1618,7 @@ export function ClipBench() {
     restoreAfterExport();
     setBusy(false);
     setExportPct(0);
-    setStatus("Export cancelled.");
+    setBench("ready", "Export cancelled.");
   }
 
   const span = Math.max(0.001, (viewEnd || duration) - viewStart);
@@ -1651,10 +1667,17 @@ export function ClipBench() {
             <div
               className="relative mx-auto w-full overflow-hidden bg-[#120f0c]"
               style={{ aspectRatio: `${size.w} / ${size.h}` }}
+              data-state={ready}
             >
-              {!hasClip ? (
+              {ready === "empty" || ready === "loading" || ready === "error" ? (
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
-                  <p className="text-sm text-muted">{ready === "loading" ? "Reading clip…" : "No clip"}</p>
+                  <p className="text-sm text-muted">
+                    {ready === "empty"
+                      ? "No clip. Upload a file you own."
+                      : ready === "loading"
+                        ? "Reading clip…"
+                        : status}
+                  </p>
                   <button
                     type="button"
                     className="pointer-events-auto inline-flex min-h-11 cursor-pointer items-center rounded-md border border-line bg-raised px-4 text-sm text-parchment"
@@ -2020,14 +2043,14 @@ export function ClipBench() {
               Loop
             </button>
             <p className="ml-auto font-mono text-[11px] tabular-nums text-faint">
-              {ready === "ready" ? "READY" : ready === "loading" ? "LOAD" : ready === "bad" ? "BAD FILE" : "IDLE"}
+              {ready === "ready" ? "READY" : ready === "loading" ? "LOAD" : ready === "encoding" ? "ENC" : ready === "error" ? "BAD FILE" : "IDLE"}
               {` · ${size.w}×${size.h}`}
             </p>
           </div>
         </div>
 
-        <p className="px-3 py-2 text-[11px] text-muted" aria-live="polite">
-          {busy ? `Making clip… ${Math.round(exportPct)}%` : status}
+        <p id="clip-status" className="px-3 py-2 text-[11px] text-muted" aria-live="polite">
+          {busy ? `Encoding ${Math.round(exportPct)}% · do not leave` : status}
           {fileLabel && !busy ? ` · ${fileLabel}` : ""}
         </p>
         {busy ? (
