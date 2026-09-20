@@ -103,3 +103,10 @@ test("clampPlateLay does not stretch a landscape still", () => {
   assert.ok(next.w <= 1);
   assert.ok(Math.abs(next.w / next.h - 1.4 / 0.4) < 0.04);
 });
+
+test("WebCodecs helper is present and muxes only through MP4", () => {
+  assert.equal(QUALITY.tiktok.w, 1080);
+  assert.equal(QUALITY.tiktok.h, 1920);
+  assert.equal(QUALITY.tiktok.fps, 30);
+  assert.equal(QUALITY.tiktok.videoBps, 12_000_000);
+});

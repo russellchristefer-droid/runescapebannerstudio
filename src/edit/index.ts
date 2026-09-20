@@ -6,3 +6,4 @@ export {
   clipFileName,
   type ClipAspect,
 } from "./clip-prefs";
+export { canWebCodecs, encodeClip, pickCodec } from "./webcodecsExport";

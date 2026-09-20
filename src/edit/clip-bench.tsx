@@ -6,7 +6,8 @@ import { sanitizeClan, sanitizeDisplayName, sanitizeWorld, worldLabel } from "@/
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
 import { paintRSYellow } from "@/lib/draw-banner";
 import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTracks, setLiveMul, sound } from "./clipSound";
-import { canEncodeMp4, encodeClipMp4 } from "./encode-mp4";
+import { canEncodeMp4 } from "./encode-mp4";
+import { canWebCodecs, encodeClip } from "./webcodecsExport";
 import { drawHi, pickRecorderMime, qualityForSize } from "./quality";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
 import {
@@ -1366,22 +1367,23 @@ export function ClipBench() {
     ctxTick();
     const processed = soundTracks();
     try {
-      const mp4 = await encodeClipMp4({
-        canvas,
-        paint: ctxTick,
-        video,
-        inT,
-        outT,
-        w: q.w,
-        h: q.h,
-        audioTracks: muted ? [] : processed,
-        onPct: setExportPct,
-      });
-      if (mp4) {
-        return { blob: mp4.blob, audioOk: Boolean(processed.length && !muted), mime: mp4.mime };
+      if (canWebCodecs()) {
+        const blob = await encodeClip({
+          canvas,
+          video,
+          inT,
+          outT,
+          q: { w: q.w, h: q.h, fps: q.fps, bitrate: q.videoBps },
+          draw: ctxTick,
+          onPct: setExportPct,
+          audioTracks: muted ? [] : processed,
+        });
+        if (blob && blob.size >= 64) {
+          return { blob, audioOk: Boolean(processed.length && !muted), mime: "video/mp4" };
+        }
       }
     } catch {
-      /* MediaRecorder fallback */
+      /* WebCodecs or muxer missing — MediaRecorder still saves */
     }
     video.pause();
     video.playbackRate = 1;
