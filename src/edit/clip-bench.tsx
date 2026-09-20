@@ -43,12 +43,17 @@ export function ClipBench() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const stillFileRef = useRef<HTMLInputElement | null>(null);
   const objectUrl = useRef<string | null>(null);
   const bannerUrl = useRef<string | null>(null);
   const bannerImg = useRef<CanvasImageSource | null>(null);
   const bannerNat = useRef({ w: 1200, h: 480 });
   const bannerLay = useRef<BannerLayout | null>(null);
-  const bannerDrag = useRef<{ id: number; ox: number; oy: number; x: number; y: number } | null>(null);
+  const bannerDrag = useRef<{ id: number; ox: number; oy: number; x: number; y: number; kind: "banner" | "still" } | null>(null);
+  const stillUrl = useRef<string | null>(null);
+  const stillImg = useRef<CanvasImageSource | null>(null);
+  const stillNat = useRef({ w: 1200, h: 720 });
+  const stillLay = useRef<BannerLayout | null>(null);
   const markCache = useRef<Record<string, HTMLImageElement>>({});
   const recorderRef = useRef<MediaRecorder | null>(null);
   const hidden = useRef(false);
@@ -115,6 +120,7 @@ export function ClipBench() {
   const [hold, setHold] = useState(0);
   const [exportPct, setExportPct] = useState(0);
   const [fileBytes, setFileBytes] = useState(0);
+  const [hasStill, setHasStill] = useState(false);
   const [ready, setReady] = useState<"empty" | "loading" | "ready" | "bad">("empty");
   const [hasAudio, setHasAudio] = useState(false);
   const undoRef = useRef<{ inPoint: number; outPoint: number; aspect: ClipAspect; overlay: OverlayPos; muted: boolean }[]>([]);
@@ -228,6 +234,12 @@ export function ClipBench() {
       if (prev && "close" in prev && typeof (prev as ImageBitmap).close === "function") {
         (prev as ImageBitmap).close();
       }
+      if (stillUrl.current) URL.revokeObjectURL(stillUrl.current);
+      stillUrl.current = null;
+      const still = stillImg.current;
+      if (still && "close" in still && typeof (still as ImageBitmap).close === "function") {
+        (still as ImageBitmap).close();
+      }
       detachSound();
     };
   }, []);
@@ -310,6 +322,19 @@ export function ClipBench() {
     if (fade < 1) {
       ctx.fillStyle = `rgba(0,0,0,${1 - fade})`;
       ctx.fillRect(0, 0, w, h);
+    }
+    if (stillImg.current && stillLay.current) {
+      const lay = stillLay.current;
+      const dx = lay.x * w;
+      const dy = lay.y * h;
+      const dw = Math.max(2, lay.w * w);
+      const dh = Math.max(2, lay.h * h);
+      const box = coverRect(stillNat.current.w || 1, stillNat.current.h || 1, dw, dh);
+      ctx.save();
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(stillImg.current, box.sx, box.sy, box.sw, box.sh, dx, dy, dw, dh);
+      ctx.restore();
     }
     if (s.overlay !== "off" && bannerImg.current) {
       const nat = bannerNat.current;
@@ -403,30 +428,34 @@ export function ClipBench() {
     if (!canvas) return;
     const preview = previewSize(size.w, size.h);
     paint(canvas, video, true, preview.w, preview.h);
-  }, [aspect, size.w, size.h]);
+  }, [aspect, size.w, size.h, overlay, hasStill, hasClip]);
 
   useEffect(() => {
     const el = canvasRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
-      if (overlay === "off" || !bannerLay.current) return;
+      const still = stillLay.current && stillImg.current;
+      const banner = overlay !== "off" && bannerLay.current;
+      if (!still && !banner) return;
       e.preventDefault();
-      const lay = bannerLay.current;
       const factor = e.deltaY < 0 ? 1.08 : 1 / 1.08;
+      const lay = still ? stillLay.current! : bannerLay.current!;
       const cx = lay.x + lay.w / 2;
       const cy = lay.y + lay.h / 2;
       const nw = lay.w * factor;
       const nh = lay.h * factor;
-      bannerLay.current = clampBannerLayout({
+      const next = clampBannerLayout({
         w: nw,
         h: nh,
         x: cx - nw / 2,
         y: cy - nh / 2,
       });
+      if (still) stillLay.current = next;
+      else bannerLay.current = next;
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, [overlay, hasClip]);
+  }, [overlay, hasClip, hasStill]);
 
   function snapBanner(pos: "top" | "lower") {
     const box = CLIP_ASPECTS[paintArgs.current.aspect];
@@ -447,31 +476,63 @@ export function ClipBench() {
     };
   }
 
-  function onBannerPointerDown(e: PtrEvent<HTMLCanvasElement>) {
-    if (overlay === "off" || !bannerImg.current) return;
-    const p = canvasPoint(e);
-    if (!p) return;
-    const lay =
-      bannerLay.current ??
-      layoutFromStrip(p.cw, p.ch, bannerNat.current.w, bannerNat.current.h, overlay === "top" ? "top" : "lower");
-    bannerLay.current = lay;
+  function layHit(lay: BannerLayout | null, p: { x: number; y: number; cw: number; ch: number }) {
+    if (!lay) return false;
     const x = lay.x * p.cw;
     const y = lay.y * p.ch;
     const w = lay.w * p.cw;
     const h = lay.h * p.ch;
-    if (p.x < x || p.x > x + w || p.y < y || p.y > y + h) return;
+    return p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h;
+  }
+
+  function onBannerPointerDown(e: PtrEvent<HTMLCanvasElement>) {
+    const p = canvasPoint(e);
+    if (!p) return;
+    const stillOn = Boolean(stillImg.current && stillLay.current);
+    const bannerOn = overlay !== "off" && Boolean(bannerImg.current);
+    if (stillOn && stillLay.current && layHit(stillLay.current, p)) {
+      const lay = stillLay.current;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      bannerDrag.current = {
+        id: e.pointerId,
+        ox: p.x - lay.x * p.cw,
+        oy: p.y - lay.y * p.ch,
+        x: lay.x * p.cw,
+        y: lay.y * p.ch,
+        kind: "still",
+      };
+      return;
+    }
+    if (!bannerOn || !bannerImg.current) return;
+    const lay =
+      bannerLay.current ??
+      layoutFromStrip(p.cw, p.ch, bannerNat.current.w, bannerNat.current.h, overlay === "top" ? "top" : "lower");
+    bannerLay.current = lay;
+    if (!layHit(lay, p)) return;
     e.currentTarget.setPointerCapture(e.pointerId);
-    bannerDrag.current = { id: e.pointerId, ox: p.x - x, oy: p.y - y, x, y };
+    bannerDrag.current = {
+      id: e.pointerId,
+      ox: p.x - lay.x * p.cw,
+      oy: p.y - lay.y * p.ch,
+      x: lay.x * p.cw,
+      y: lay.y * p.ch,
+      kind: "banner",
+    };
   }
 
   function onBannerPointerMove(e: PtrEvent<HTMLCanvasElement>) {
     const drag = bannerDrag.current;
     if (!drag || drag.id !== e.pointerId) return;
     const p = canvasPoint(e);
-    if (!p || !bannerLay.current) return;
+    if (!p) return;
     e.preventDefault();
     const nx = (p.x - drag.ox) / p.cw;
     const ny = (p.y - drag.oy) / p.ch;
+    if (drag.kind === "still" && stillLay.current) {
+      stillLay.current = clampBannerLayout({ ...stillLay.current, x: nx, y: ny });
+      return;
+    }
+    if (!bannerLay.current) return;
     bannerLay.current = clampBannerLayout({ ...bannerLay.current, x: nx, y: ny });
   }
 
@@ -509,6 +570,81 @@ export function ClipBench() {
 
   async function placeDeskBanner(pos: "top" | "lower") {
     await loadDeskBanner(pos);
+  }
+
+  function closeBitmap(img: CanvasImageSource | null) {
+    if (img && "close" in img && typeof (img as ImageBitmap).close === "function") {
+      try {
+        (img as ImageBitmap).close();
+      } catch {
+        /* already */
+      }
+    }
+  }
+
+  function clearDeskBanner() {
+    setOverlay("off");
+    closeBitmap(bannerImg.current);
+    bannerImg.current = null;
+    bannerLay.current = null;
+    if (bannerUrl.current) {
+      URL.revokeObjectURL(bannerUrl.current);
+      bannerUrl.current = null;
+    }
+    setStatus("Desk banner off.");
+  }
+
+  function clearStill() {
+    closeBitmap(stillImg.current);
+    stillImg.current = null;
+    stillLay.current = null;
+    if (stillUrl.current) {
+      URL.revokeObjectURL(stillUrl.current);
+      stillUrl.current = null;
+    }
+    setHasStill(false);
+    setStatus("Still off.");
+  }
+
+  function scaleStill(factor: number) {
+    const lay = stillLay.current;
+    if (!lay) return;
+    const cx = lay.x + lay.w / 2;
+    const cy = lay.y + lay.h / 2;
+    const nw = lay.w * factor;
+    const nh = lay.h * factor;
+    stillLay.current = clampBannerLayout({ w: nw, h: nh, x: cx - nw / 2, y: cy - nh / 2 });
+    setStatus("Still scaled.");
+  }
+
+  async function takeStillFile(file: File) {
+    const ok = (file.type && file.type.indexOf("image/") === 0) || /\.(png|jpe?g|webp)$/i.test(file.name || "");
+    if (!ok) {
+      setStatus("That file is not a still.");
+      return false;
+    }
+    const href = URL.createObjectURL(file);
+    try {
+      const img = new Image();
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error("still"));
+        img.src = href;
+      });
+      closeBitmap(stillImg.current);
+      if (stillUrl.current) URL.revokeObjectURL(stillUrl.current);
+      stillUrl.current = href;
+      stillImg.current = img;
+      stillNat.current = { w: img.naturalWidth || 1200, h: img.naturalHeight || 720 };
+      stillLay.current = { x: 0, y: 0, w: 1, h: 1 };
+      setHasStill(true);
+      setStatus("Still on the clip. Drag or wheel to scale.");
+      return true;
+    } catch {
+      URL.revokeObjectURL(href);
+      setStatus("That still did not load.");
+      return false;
+    }
   }
 
   async function takeBannerFile(file: File) {
@@ -1202,6 +1338,18 @@ export function ClipBench() {
           if (file) takeVideo(file);
         }}
       />
+      <input
+        id="clip-still"
+        ref={stillFileRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="sr-only"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = "";
+          if (file) void takeStillFile(file);
+        }}
+      />
       <div
         className="bg-[#1a1610]"
         onDragOver={(e) => {
@@ -1465,6 +1613,26 @@ export function ClipBench() {
           </button>
           <button
             type="button"
+            className={CHIP}
+            disabled={overlay === "off"}
+            onClick={() => clearDeskBanner()}
+          >
+            Remove banner
+          </button>
+          <button type="button" className={hasStill ? CHIP_ON : CHIP} onClick={() => stillFileRef.current?.click()}>
+            Upload still
+          </button>
+          <button type="button" className={CHIP} disabled={!hasStill} onClick={() => scaleStill(1.08)}>
+            Still +
+          </button>
+          <button type="button" className={CHIP} disabled={!hasStill} onClick={() => scaleStill(1 / 1.08)}>
+            Still −
+          </button>
+          <button type="button" className={CHIP} disabled={!hasStill} onClick={() => clearStill()}>
+            Remove still
+          </button>
+          <button
+            type="button"
             className={ltOn ? CHIP_ON : CHIP}
             onClick={() => {
               setLtOn((on) => !on);
@@ -1502,7 +1670,7 @@ export function ClipBench() {
             </button>
           ))}
         </div>
-        <p className="text-[11px] text-muted">Upload. Drag the desk banner. Pick a size. Save clip.</p>
+        <p className="text-[11px] text-muted">Upload. Desk banner or a still. Drag or wheel to scale. Save clip.</p>
         <p className="text-[11px] text-muted" aria-live="polite">
           {busy ? `Making clip… ${Math.round(exportPct)}%` : status}
           {fileLabel && !busy ? ` · ${fileLabel}` : ""}

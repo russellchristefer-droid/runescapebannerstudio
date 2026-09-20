@@ -19,7 +19,7 @@ export function levelFor(w: number, h = 480) {
   return plateMetrics(w, h).level;
 }
 
-/** Scale factor against a pack that already fits the plate. 1 = fill. */
+/** Pack stamps into the plate. Tight strip under the name — never fills the still. */
 export function layoutPack<T extends Stamp>(
   stamps: T[],
   exportW: number,
@@ -30,26 +30,43 @@ export function layoutPack<T extends Stamp>(
   const m = plateMetrics(exportW, exportH);
   const inset = cropInset(exportW, exportH);
   const n = stamps.length;
-  const cols = n >= 24 ? 9 : n >= 16 ? 8 : Math.min(8, Math.max(4, n));
+  const short = exportH <= 520;
+  const cols = short
+    ? n >= 24
+      ? 8
+      : n >= 18
+        ? 7
+        : n >= 12
+          ? 6
+          : Math.min(6, Math.max(4, n))
+    : n >= 24
+      ? 8
+      : n >= 16
+        ? 7
+        : Math.min(7, Math.max(4, n));
   const rows = Math.max(1, Math.ceil(n / cols));
-  const namePad = Math.max(inset.top, m.top + m.name + 8);
-  const availW = Math.max(80, exportW - inset.left - inset.right);
-  const availH = Math.max(48, exportH - namePad - inset.bottom);
-  const levelRatio = (m.level * 2.1) / Math.max(1, m.icon);
-  const gapRatio = 0.22;
-  const unitX = 1 + levelRatio + gapRatio;
-  const maxIconW = availW / (cols * unitX - gapRatio);
-  const maxIconH = availH / (rows * (1 + gapRatio) - gapRatio);
-  const fitIcon = Math.max(14, Math.floor(Math.min(maxIconW, maxIconH)));
+  const namePad = m.top + m.name + 10;
+  const availW = Math.max(64, exportW - inset.left - inset.right);
+  const availH = Math.max(40, exportH - namePad - inset.bottom);
   const factor = Math.min(1, Math.max(0.45, packScale));
-  const cell = Math.max(14, Math.floor(fitIcon * factor));
-  const levelW = Math.max(12, Math.round(cell * levelRatio));
-  const gap = Math.max(4, Math.round(cell * gapRatio));
+  const cap = short ? 40 : exportH >= 1000 ? 52 : 44;
+  const levelW = Math.max(26, Math.round(m.level * 1.7));
+  let cell = Math.max(16, Math.min(cap, Math.floor(m.icon * factor)));
+  let gap = Math.max(4, Math.round(cell * 0.16));
+  const fits = (c: number, g: number) => {
+    const stride = c + levelW + g;
+    return cols * stride - g <= availW && rows * (c + g) - g <= availH;
+  };
+  while (!fits(cell, gap) && cell > 16) {
+    cell -= 1;
+    gap = Math.max(4, Math.round(cell * 0.16));
+  }
   const stride = cell + levelW + gap;
   const gridW = cols * stride - gap;
-  const gridH = rows * (cell + gap) - gap;
   const originX = Math.round(inset.left + Math.max(0, (availW - gridW) / 2));
-  const originY = Math.round(namePad + Math.max(0, (availH - gridH) / 2));
+  const originY = namePad;
+  const maxX = exportW - inset.right - cell - levelW;
+  const maxY = exportH - inset.bottom - cell;
   return stamps.map((s, i) => {
     const col = i % cols;
     const row = Math.floor(i / cols);
@@ -62,8 +79,8 @@ export function layoutPack<T extends Stamp>(
       ...s,
       size: cell,
       scale: 1,
-      x: Math.max(0, Math.min(exportW - cell, x)),
-      y: Math.max(0, Math.min(exportH - cell, y)),
+      x: Math.max(inset.left, Math.min(maxX, x)),
+      y: Math.max(namePad, Math.min(maxY, y)),
     };
   });
 }

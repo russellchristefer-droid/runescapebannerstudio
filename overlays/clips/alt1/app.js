@@ -27,6 +27,9 @@
   let outPoint = 0;
   let cropId = "16:9-720";
   let busy = false;
+  let stillImg = null;
+  let stillUrl = "";
+  let stillScale = 1;
 
   function say(line) {
     status.textContent = line;
@@ -55,6 +58,28 @@
     const dw = vw * scale;
     const dh = vh * scale;
     ctx.drawImage(video, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    if (stillImg && stillImg.naturalWidth) {
+      const nw = stillImg.naturalWidth;
+      const nh = stillImg.naturalHeight;
+      const dw2 = w * stillScale;
+      const dh2 = h * stillScale;
+      const dx = (w - dw2) / 2;
+      const dy = (h - dh2) / 2;
+      const srcRatio = nw / nh;
+      const dstRatio = dw2 / Math.max(1, dh2);
+      let sx = 0;
+      let sy = 0;
+      let sw = nw;
+      let sh = nh;
+      if (srcRatio > dstRatio) {
+        sw = nh * dstRatio;
+        sx = (nw - sw) / 2;
+      } else {
+        sh = nw / dstRatio;
+        sy = (nh - sh) / 2;
+      }
+      ctx.drawImage(stillImg, sx, sy, sw, sh, dx, dy, dw2, dh2);
+    }
   }
 
   function downloadBlob(blob, fileName) {
@@ -234,4 +259,60 @@
       void saveCrop(id);
     });
   });
+
+  const stillFileEl = document.getElementById("stillFile");
+  const uploadStillBtn = document.getElementById("uploadStill");
+  const removeStillBtn = document.getElementById("removeStill");
+  const stillPlusBtn = document.getElementById("stillPlus");
+  const stillMinusBtn = document.getElementById("stillMinus");
+  if (uploadStillBtn && stillFileEl) {
+    uploadStillBtn.onclick = function () {
+      stillFileEl.click();
+    };
+    stillFileEl.addEventListener("change", function () {
+      const file = stillFileEl.files && stillFileEl.files[0];
+      stillFileEl.value = "";
+      if (!file) return;
+      const ok = (file.type && file.type.indexOf("image/") === 0) || /\.(png|jpe?g|webp)$/i.test(file.name || "");
+      if (!ok) {
+        say("That file is not a still.");
+        return;
+      }
+      if (stillUrl) URL.revokeObjectURL(stillUrl);
+      stillUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = function () {
+        stillImg = img;
+        stillScale = 1;
+        say("Still on the clip. Still + / − to scale.");
+      };
+      img.onerror = function () {
+        say("That still did not load.");
+      };
+      img.src = stillUrl;
+    });
+  }
+  if (stillPlusBtn) {
+    stillPlusBtn.onclick = function () {
+      if (!stillImg) return;
+      stillScale = Math.min(3, stillScale * 1.08);
+      say("Still scaled.");
+    };
+  }
+  if (stillMinusBtn) {
+    stillMinusBtn.onclick = function () {
+      if (!stillImg) return;
+      stillScale = Math.max(0.4, stillScale / 1.08);
+      say("Still scaled.");
+    };
+  }
+  if (removeStillBtn) {
+    removeStillBtn.onclick = function () {
+      stillImg = null;
+      stillScale = 1;
+      if (stillUrl) URL.revokeObjectURL(stillUrl);
+      stillUrl = "";
+      say("Still off.");
+    };
+  }
 })();

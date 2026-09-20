@@ -35,7 +35,7 @@ function BriefPage() {
           <h2 className="section-h2">What it does</h2>
           <ul className="list-disc space-y-2 pl-5">
             <li>
-              <In to="/">Banner Studio</In> — one plate. PlaceRail at the top is Towns / Gods / Bosses / PvP, then OSRS or RS3. Picture on a card opens that page. Use on banner writes that still onto the desk and stays in this chrome. Twelve-letter display name is yellow RS Chat Bold: drag it, wheel or +/− to resize. Stamp skills and marks; All-pack on 1200×480 is a 40px cell. Look up Hiscores (Jagex first; Wise Old Man is Old School only). One Download under Postie Pete.
+              <In to="/">Banner Studio</In> — one plate. PlaceRail at the top is Towns / Gods / Bosses / PvP, then OSRS or RS3. Picture on a card opens that page. Use on banner writes that still onto the desk and stays in this chrome. Twelve-letter display name is yellow RS Chat Bold: drag it, wheel or +/− to resize. Click one skill or mark to move, scale, or Remove that one. Shift-drag slides the whole pack. Fit plate keeps the pack in a strip under the name. Twitch crop is 1200×480; YouTube crop is 1280×720. Look up Hiscores (Jagex first; Wise Old Man is Old School only). Save for clips pins the JPEG for the clip bench. One Download under Postie Pete.
             </li>
             <li>
               Sizes — 1200×480 Twitch profile banner, 1280×720 YouTube thumb, 1920×1080 offline / player banner, 1920×480 wide panel. The preview can look smaller. The file is those pixels.
@@ -76,7 +76,7 @@ function BriefPage() {
               <In to="/stream">Stream</In> — go-live notes. <In to="/x-live">X live</In> — hall of public X handles (Old School, RuneScape, Dragonwilds) plus Live Studio steps. No stream key on this origin. <In to="/streamers">Twitch Streamers</In> — one Twitch hall. <In to="/youtubers">YouTube Streamers</In> — YouTube hall only. <In to="/discord">Discord</In> — official Jagex servers first, then wiki and tools. Not a clan dump.
             </li>
             <li>
-              <In to="/edit">Clips</In> — local video bench. Upload, In / Out, mute, gain, fades, Save an MP4. The clip stays on this device. It does not go live.
+              <In to="/edit">Clips</In> — local video bench. Upload a clip you own, mark In / Out, mute, gain, fades, Save an MP4. Desk banner (from Save for clips) sits top or bottom — Remove banner takes it off. Upload still drops a photo on the frame; drag, wheel, or Still + / − scale it like the desk; Remove still clears that photo. The clip stays on this device. It does not go live.
             </li>
             <li>
               Alt1 and RuneLite sidecars live on GitHub only. Still compositor and clip bench are separate add-app / sideload plugins. They do not click. They are not Plugin Hub. Marks stay Jagex's.

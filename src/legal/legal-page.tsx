@@ -15,7 +15,7 @@ export function LegalPage() {
           Independent fan studio. Not a Jagex product.
         </p>
         <p className="mt-1 text-center text-[11px] text-faint">
-          Notice · 14 September 2026 · Not legal advice
+          Notice · 19 September 2026 · Not legal advice
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
@@ -67,9 +67,11 @@ export function LegalPage() {
         <Notice id="studio" title="What this is">
           <p>
             A free identification desk: stills, banners, halls, skill and fight notes, and a local
-            clip bench. It is not a game, not a client, not Support, not a bank, and not a store. It
-            does not log into the game, sell gold, or print official Jagex logos. Guides are notes
-            from public pages. Clips stay on your machine. Export only what you have a right to use.
+            clip bench. Save for clips pins a JPEG for the bench; you can take that banner off, or
+            overlay a still you own. It is not a game, not a client, not Support, not a bank, and not
+            a store. It does not log into the game, sell gold, or print official Jagex logos. Guides
+            are notes from public pages. Clips stay on your machine. Export only what you have a
+            right to use.
           </p>
         </Notice>
 
@@ -114,7 +116,9 @@ export function LegalPage() {
             and clip MP4s stay on your device unless you upload them. Do not export a Bank PIN.
             Hiscores are public Jagex boards, fail-soft. Wiki links go to the wiki projects. Live
             badges only if a key is configured — a missing key is not a fake Live. History rooms
-            (Myths, Legends, Wizards) are public work only, not a paid endorsement.
+            (Myths, Legends, Wizards) are public work only, not a paid endorsement. Alt1 and
+            RuneLite sidecars on GitHub are the same two jobs (still compositor, clip bench); they
+            are not this origin and they are not Plugin Hub.
           </p>
         </Notice>
 

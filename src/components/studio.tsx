@@ -67,6 +67,8 @@ export function Studio() {
   const [poolSkip, setPoolSkip] = useState(0);
   const [, setCycleTick] = useState(0);
   const [sizeId, setSizeId] = useState<BannerSizeId>(() => migrateBannerSizeId(boot.sizeId ?? saved.sizeId ?? "1200x480"));
+  const sizeIdRef = useRef(sizeId);
+  sizeIdRef.current = sizeId;
   const [streamer, setStreamer] = useState(saved.streamer ?? "");
   const [clan, setClan] = useState(saved.clan ?? "");
   const [handle, setHandle] = useState(saved.handle ?? "");
@@ -133,7 +135,11 @@ export function Studio() {
   });
   const [armedSkill, setArmedSkill] = useState<string | null>(null);
   const [pickedSkill, setPickedSkill] = useState<string | null>(null);
+  const pickedSkillRef = useRef<string | null>(null);
+  pickedSkillRef.current = pickedSkill;
   const [pickedText, setPickedText] = useState<string | null>(null);
+  const pickedTextRef = useRef<string | null>(null);
+  pickedTextRef.current = pickedText;
   const [textPos, setTextPos] = useState<Record<string, { x: number; y: number }>>({});
   const [textScale, setTextScale] = useState<Record<string, number>>(saved.textScale ?? {});
   const [plateCaption, setPlateCaption] = useState("");
@@ -155,12 +161,17 @@ export function Studio() {
   const boxesRef = useRef<{ id: string; x: number; y: number; w: number; h: number }[]>([]);
   const dragRef = useRef<{
     id: string;
-    kind: "skill" | "text" | "still";
+    kind: "skill" | "text" | "still" | "scale";
     x0: number;
     y0: number;
     px: number;
     py: number;
     mates?: { id: string; x0: number; y0: number }[];
+    cx?: number;
+    cy?: number;
+    dist0?: number;
+    startScale?: number;
+    text?: boolean;
   } | null>(null);
   const [placeCap, setPlaceCap] = useState(12);
   const [placeGod, setPlaceGod] = useState<(typeof GODS)[number] | null>(null);
@@ -215,6 +226,7 @@ export function Studio() {
   const customFileRef = useRef<File | null>(null);
   const [grabbing, setGrabbing] = useState(false);
   const [overIcon, setOverIcon] = useState(false);
+  const [overHandle, setOverHandle] = useState<"nwse" | "nesw" | null>(null);
   const [bannerCaps, setBannerCaps] = useState(false);
 
   const location = LOCATIONS.find((l) => l.id === locationId) ?? LOCATIONS[0];
@@ -307,17 +319,21 @@ export function Studio() {
   }, [sceneSrc]);
 
   useEffect(() => {
-    const img = stillImgRef.current;
-    if (!img?.naturalWidth) return;
-    const cache = stillCacheRef.current ?? document.createElement("canvas");
-    cache.width = size.width;
-    cache.height = size.height;
-    const c = cache.getContext("2d", { alpha: false });
-    if (!c) return;
-    c.imageSmoothingEnabled = true;
-    c.imageSmoothingQuality = "high";
-    coverStill(c, img, size.width, size.height, stillZoom, stillPan.x, stillPan.y);
-    stillCacheRef.current = cache;
+    const img =
+      stillImgRef.current ??
+      (typeof document !== "undefined" ? (document.getElementById("still") as HTMLImageElement | null) : null);
+    if (img?.naturalWidth) {
+      const cache = stillCacheRef.current ?? document.createElement("canvas");
+      cache.width = size.width;
+      cache.height = size.height;
+      const c = cache.getContext("2d");
+      if (c) {
+        c.imageSmoothingEnabled = true;
+        c.imageSmoothingQuality = "high";
+        coverStill(c, img, size.width, size.height, stillZoom, stillPan.x, stillPan.y);
+      }
+      stillCacheRef.current = cache;
+    }
     requestPaint();
   }, [stillZoom, stillPan, size.width, size.height]);
 
@@ -465,29 +481,69 @@ export function Studio() {
     setTextPos(textPosRef.current);
   }
 
-  function packMates(id: string) {
+  function packMates(id: string, pack = false) {
     const hit = skillPicksRef.current.find((item) => item.id === id);
-    if (!hit?.group) return skillPicksRef.current.filter((item) => item.id === id);
-    return skillPicksRef.current.filter((item) => item.group === hit.group);
+    if (!hit) return [];
+    if (!pack || isMark(id)) return skillPicksRef.current.filter((item) => item.id === id);
+    return skillPicksRef.current.filter((item) => !isMark(item.id) && item.x != null);
+  }
+
+  function stampBox(item: (typeof skillPicksRef.current)[number]) {
+    if (item.x == null || item.y == null) return null;
+    const mark = Math.max(24, (item.size ?? skillSize) * (item.scale ?? 1));
+    const label = (item.level ?? "").trim();
+    const extra = !isMark(item.id) && label ? Math.max(22, mark * 0.8) : 0;
+    return { id: item.id, x: item.x, y: item.y, w: mark + extra, h: mark };
   }
 
   function stampHit(x: number, y: number, slop: number) {
-    let best: (typeof skillPicksRef.current)[number] | null = null;
-    let bestD = Infinity;
-    for (const item of skillPicksRef.current) {
-      if (item.x == null || item.y == null) continue;
-      const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
-      const cx = item.x + mark / 2;
-      const cy = item.y + mark / 2;
-      const dx = Math.max(0, Math.abs(x - cx) - mark / 2);
-      const dy = Math.max(0, Math.abs(y - cy) - mark / 2);
-      const d = Math.hypot(dx, dy);
-      if (d <= slop && d <= bestD) {
-        best = item;
-        bestD = d;
+    for (let i = skillPicksRef.current.length - 1; i >= 0; i--) {
+      const item = skillPicksRef.current[i];
+      const box = stampBox(item);
+      if (!box) continue;
+      if (x >= box.x - slop && x <= box.x + box.w + slop && y >= box.y - slop && y <= box.y + box.h + slop) {
+        return item;
       }
     }
-    return best;
+    return null;
+  }
+
+  function handleSize() {
+    return Math.max(12, size.width * 0.014);
+  }
+
+  function hitHandle(x: number, y: number) {
+    const picked = pickedSkill ?? pickedText;
+    if (!picked) return null;
+    const box = boxesRef.current.find((row) => row.id === picked);
+    if (!box) return null;
+    const hs = handleSize();
+    const pts = [
+      { id: "nw" as const, x: box.x, y: box.y },
+      { id: "ne" as const, x: box.x + box.w, y: box.y },
+      { id: "se" as const, x: box.x + box.w, y: box.y + box.h },
+      { id: "sw" as const, x: box.x, y: box.y + box.h },
+    ];
+    for (const p of pts) {
+      if (Math.abs(x - p.x) <= hs && Math.abs(y - p.y) <= hs) return { handle: p.id, box };
+    }
+    return null;
+  }
+
+  function bringToFront(id: string) {
+    const cur = skillPicksRef.current;
+    const hit = cur.find((item) => item.id === id);
+    if (!hit || cur[cur.length - 1]?.id === id) return;
+    skillPicksRef.current = [...cur.filter((item) => item.id !== id), hit];
+  }
+
+  function dropStamp(id: string) {
+    setSkillPicks((cur) => {
+      const next = cur.filter((item) => item.id !== id);
+      skillPicksRef.current = next;
+      return next;
+    });
+    if (pickedSkill === id) setPickedSkill(null);
   }
 
   function nudgePack(dx: number, dy: number) {
@@ -513,6 +569,46 @@ export function Studio() {
     }
   }
 
+  function nudgeSelected(dx: number, dy: number) {
+    if (pickedText) {
+      setTextPos((cur) => {
+        const pos = cur[pickedText] ?? { x: 36, y: 24 };
+        const next = {
+          ...cur,
+          [pickedText]: {
+            x: Math.max(0, Math.min(size.width - 24, pos.x + dx)),
+            y: Math.max(0, Math.min(size.height - 24, pos.y + dy)),
+          },
+        };
+        textPosRef.current = next;
+        return next;
+      });
+      setAriaLive("Name moved");
+      return;
+    }
+    if (pickedSkill) {
+      setSkillPicks((cur) => {
+        const next = cur.map((item) => {
+          if (item.id !== pickedSkill || item.x == null || item.y == null) return item;
+          const mark = Math.max(12, (item.size ?? skillSize) * (item.scale ?? 1));
+          return {
+            ...item,
+            x: Math.max(0, Math.min(size.width - mark, item.x + dx)),
+            y: Math.max(0, Math.min(size.height - mark, item.y + dy)),
+          };
+        });
+        skillPicksRef.current = next;
+        return next;
+      });
+      const lead = skillPicksRef.current.find((item) => item.id === pickedSkill);
+      if (lead?.x != null && lead.y != null) {
+        setAriaLive(`Moved to ${Math.round(lead.x)}, ${Math.round(lead.y)}`);
+      }
+      return;
+    }
+    nudgePack(dx, dy);
+  }
+
   function packScale(_count: number, mode: "fit" | "room" | "desk" = packFit) {
     if (mode === "fit") return 1;
     if (mode === "room") return 0.7;
@@ -527,7 +623,6 @@ export function Studio() {
         id: skill.id,
         game: skillPack,
         level: pick?.level || boardLevels[skillPack][skill.id] || "",
-        group: "skills-all" as const,
         size: skillSize,
         scale: 1,
       };
@@ -575,7 +670,33 @@ export function Studio() {
 
   function applyPackFit(mode: "fit" | "room" | "desk") {
     setPackFit(mode);
-    fitPackToPlate(size.width, size.height, mode, true);
+    const box = BANNER_SIZES.find((s) => s.id === sizeIdRef.current) ?? size;
+    fitPackToPlate(box.width, box.height, mode, true);
+  }
+
+  function applyCrop(id: BannerSizeId, zone?: SafeZone) {
+    const box = BANNER_SIZES.find((s) => s.id === id) ?? BANNER_SIZES[0];
+    sizeIdRef.current = box.id;
+    const nextZone: SafeZone =
+      zone ??
+      (box.mark === "twitch" || box.mark === "youtube" ? box.mark : zoneForPlate(box.width, box.height));
+    try {
+      fitPackToPlate(box.width, box.height, packFit, false);
+    } catch {
+      /* keep the crop even if the pack fails */
+    }
+    setSizeId(box.id);
+    setGhostZone(nextZone);
+    const tag =
+      nextZone === "twitch" ? " Twitch crop" : nextZone === "youtube" ? " YouTube crop" : "";
+    setSaveNote(`${box.width}×${box.height}${tag}. Pack fitted.`);
+    setAriaLive(`${box.width} by ${box.height}${tag}`);
+    const canvas = canvasRef.current;
+    if (canvas) {
+      if (canvas.width !== box.width) canvas.width = box.width;
+      if (canvas.height !== box.height) canvas.height = box.height;
+    }
+    requestPaint();
   }
 
   function placeAllPack(packScaleValue?: number, mode: "fit" | "room" | "desk" = packFit) {
@@ -636,12 +757,7 @@ export function Studio() {
         dragRef.current = null;
         setGrabbing(false);
         if (skillId) {
-          setSkillPicks((cur) => {
-            const lead = cur.find((item) => item.id === skillId);
-            if (lead?.group) return cur.filter((item) => item.group !== lead.group);
-            return cur.filter((item) => item.id !== skillId);
-          });
-          setPickedSkill(null);
+          dropStamp(skillId);
         }
         if (textId) {
           if (textId === "streamer") setStreamer("");
@@ -676,21 +792,16 @@ export function Studio() {
         const dx = dir === "left" ? -stepBase : dir === "right" ? stepBase : 0;
         const dy = dir === "up" ? -stepBase : dir === "down" ? stepBase : 0;
         if (pickedText) {
-          setTextPos((cur) => {
-            const pos = cur[pickedText] ?? { x: 36, y: 24 };
-            const next = {
-              ...cur,
-              [pickedText]: {
-                x: Math.max(0, Math.min(size.width - 24, pos.x + dx)),
-                y: Math.max(0, Math.min(size.height - 24, pos.y + dy)),
-              },
-            };
-            textPosRef.current = next;
-            return next;
-          });
-          setAriaLive(`Name moved`);
+          e.preventDefault();
+          nudgeSelected(dx, dy);
           return;
         }
+        if (pickedSkill) {
+          e.preventDefault();
+          nudgeSelected(dx, dy);
+          return;
+        }
+        e.preventDefault();
         nudgePack(dx, dy);
       }
     };
@@ -785,11 +896,17 @@ export function Studio() {
       } catch {
         continue;
       }
-      boxes.push({ id: skill.id, x: px, y: py, w: icon, h: icon });
       const label = (pick.level ?? "").trim();
+      const ls = label ? Math.max(14, Math.round(icon * 0.42)) : 0;
+      boxes.push({
+        id: skill.id,
+        x: px,
+        y: py,
+        w: icon + (label ? Math.round(ls * Math.min(3, label.length) * 0.62) + 6 : 0),
+        h: icon,
+      });
       if (label) {
-        const ls = Math.max(16, Math.round(icon * 0.5));
-        paintRSYellow(ctx, label, px + icon + 4, py + Math.round(icon / 2) - ls / 2, ls);
+        paintRSYellow(ctx, label, px + icon + 3, py + Math.round((icon - ls) / 2), ls);
       }
     }
     const copy = copyRef.current;
@@ -815,8 +932,9 @@ export function Studio() {
   function paintNow() {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const w = size.width;
-    const h = size.height;
+    const box = BANNER_SIZES.find((s) => s.id === sizeIdRef.current) ?? size;
+    const w = box.width;
+    const h = box.height;
     if (canvas.width !== w) canvas.width = w;
     if (canvas.height !== h) canvas.height = h;
     const ctx = canvas.getContext("2d");
@@ -824,6 +942,32 @@ export function Studio() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, w, h);
     boxesRef.current = paintHud(ctx, w, h, 1, 1);
+    const picked = pickedSkillRef.current ?? pickedTextRef.current;
+    if (picked) {
+      const sel = boxesRef.current.find((row) => row.id === picked);
+      if (sel) {
+        ctx.save();
+        ctx.strokeStyle = "rgba(255, 233, 176, 0.95)";
+        ctx.lineWidth = Math.max(2, w / 700);
+        ctx.setLineDash([7, 4]);
+        ctx.strokeRect(sel.x - 3, sel.y - 3, sel.w + 6, sel.h + 6);
+        ctx.setLineDash([]);
+        const hs = Math.max(10, w * 0.012);
+        ctx.fillStyle = "#ffe9b0";
+        ctx.strokeStyle = "#1a140c";
+        ctx.lineWidth = 1;
+        for (const [hx, hy] of [
+          [sel.x, sel.y],
+          [sel.x + sel.w, sel.y],
+          [sel.x + sel.w, sel.y + sel.h],
+          [sel.x, sel.y + sel.h],
+        ] as const) {
+          ctx.fillRect(hx - hs / 2, hy - hs / 2, hs, hs);
+          ctx.strokeRect(hx - hs / 2, hy - hs / 2, hs, hs);
+        }
+        ctx.restore();
+      }
+    }
   }
 
   function requestPaint() {
@@ -842,7 +986,7 @@ export function Studio() {
     if (skillId) {
       const lead = skillPicksRef.current.find((item) => item.id === skillId);
       const old0 = lead?.scale ?? 1;
-      applyStampScale(skillId, Math.min(2.5, Math.max(0.5, old0 + delta)));
+      applyStampScale(skillId, Math.min(3, Math.max(0.4, old0 + delta)));
       return;
     }
     if (!pickedText) return;
@@ -869,40 +1013,28 @@ export function Studio() {
 
   function applyStampScale(skillId: string, nextScale: number) {
     scalingRef.current = true;
-    const mates = packMates(skillId).filter((item) => item.x != null && item.y != null);
-    const targets = mates.length ? mates : skillPicksRef.current.filter((item) => item.id === skillId && item.x != null);
-    if (!targets.length) {
+    const item = skillPicksRef.current.find((row) => row.id === skillId);
+    if (!item || item.x == null || item.y == null) {
       scalingRef.current = false;
       return;
     }
-    const old0 = targets[0].scale ?? 1;
-    const scale = Math.min(2.5, Math.max(0.5, nextScale));
-    const ratio = scale / Math.max(0.01, old0);
-    let gx = 0;
-    let gy = 0;
-    for (const item of targets) {
-      const base = item.size ?? skillSize;
-      const old = item.scale ?? 1;
-      gx += (item.x as number) + (base * old) / 2;
-      gy += (item.y as number) + (base * old) / 2;
-    }
-    gx /= targets.length;
-    gy /= targets.length;
-    skillPicksRef.current = skillPicksRef.current.map((item) => {
-      if (!targets.some((row) => row.id === item.id) || item.x == null || item.y == null) return item;
-      const old = item.scale ?? 1;
-      const base = item.size ?? skillSize;
-      const cx = item.x + (base * old) / 2;
-      const cy = item.y + (base * old) / 2;
-      const nx = gx + (cx - gx) * ratio - (base * scale) / 2;
-      const ny = gy + (cy - gy) * ratio - (base * scale) / 2;
-      return {
-        ...item,
-        scale,
-        x: Math.max(0, Math.min(size.width - base * scale, nx)),
-        y: Math.max(0, Math.min(size.height - base * scale, ny)),
-      };
-    });
+    const scale = Math.min(3, Math.max(0.4, nextScale));
+    const old = item.scale ?? 1;
+    const base = item.size ?? skillSize;
+    const cx = item.x + (base * old) / 2;
+    const cy = item.y + (base * old) / 2;
+    const nx = cx - (base * scale) / 2;
+    const ny = cy - (base * scale) / 2;
+    skillPicksRef.current = skillPicksRef.current.map((row) =>
+      row.id !== skillId || row.x == null || row.y == null
+        ? row
+        : {
+            ...row,
+            scale,
+            x: Math.max(0, Math.min(size.width - base * scale, nx)),
+            y: Math.max(0, Math.min(size.height - base * scale, ny)),
+          },
+    );
     requestPaint();
     window.clearTimeout(scaleTimer.current);
     scaleTimer.current = window.setTimeout(() => {
@@ -1016,7 +1148,7 @@ export function Studio() {
 
   useEffect(() => {
     requestPaint();
-  }, [skillPicks, streamer, clan, handle, tagline, world, discord, grind, textPos, textScale, skillSize, skillPlace, edition, bannerCaps]);
+  }, [skillPicks, streamer, clan, handle, tagline, world, discord, grind, textPos, textScale, skillSize, skillPlace, edition, bannerCaps, sizeId, pickedSkill, pickedText]);
 
   useEffect(() => {
     const el = canvasRef.current;
@@ -1032,8 +1164,9 @@ export function Studio() {
     const plate = typeof document !== "undefined" ? (document.getElementById("still") as HTMLImageElement | null) : null;
     const still = stillCacheRef.current ?? (plate && plate.naturalWidth ? plate : null);
     if (!still) return null;
-    const w = box?.width ?? size.width;
-    const h = box?.height ?? size.height;
+    const live = BANNER_SIZES.find((s) => s.id === sizeIdRef.current) ?? size;
+    const w = box?.width ?? live.width;
+    const h = box?.height ?? live.height;
     const out = document.createElement("canvas");
     out.width = w;
     out.height = h;
@@ -1041,7 +1174,7 @@ export function Studio() {
     if (!ctx) return null;
     ctx.fillStyle = "#1a1610";
     ctx.fillRect(0, 0, out.width, out.height);
-    paintOnto(ctx, still, out.width, out.height, size.width, size.height);
+    paintOnto(ctx, still, w, h, w, h);
     return out;
   }
 
@@ -1275,6 +1408,7 @@ export function Studio() {
           id="plate"
           className="desk-preview-well relative mx-auto w-full overflow-hidden"
           ref={previewRef}
+          data-crop={sizeId}
           style={{
             maxWidth: size.height > size.width ? "24rem" : "min(100%, 80rem)",
             width: "100%",
@@ -1322,7 +1456,7 @@ export function Studio() {
             ref={canvasRef}
             width={size.width}
             height={size.height}
-            className={`desk-preview absolute inset-0 h-full w-full touch-none ${grabbing ? "cursor-grabbing" : overIcon ? "cursor-grab" : "cursor-default"}`}
+            className={`desk-preview absolute inset-0 h-full w-full touch-none ${grabbing ? "cursor-grabbing" : overHandle === "nwse" ? "cursor-nwse-resize" : overHandle === "nesw" ? "cursor-nesw-resize" : overIcon ? "cursor-grab" : "cursor-default"}`}
             tabIndex={0}
             role="img"
             aria-label={`${location.name}, ${edition === "OSRS" ? "Old School RuneScape" : "RuneScape"}`}
@@ -1384,8 +1518,8 @@ export function Studio() {
                 const lead = skillPicksRef.current.find((item) => item.id === skillId);
                 const old = lead?.scale ?? 1;
                 const next = e.shiftKey
-                  ? Math.min(2.5, Math.max(0.5, old + (e.deltaY > 0 ? -0.25 : 0.25)))
-                  : Math.min(2.5, Math.max(0.5, old * factor));
+                  ? Math.min(3, Math.max(0.4, old + (e.deltaY > 0 ? -0.12 : 0.12)))
+                  : Math.min(3, Math.max(0.4, old * factor));
                 applyStampScale(skillId, next);
                 return;
               }
@@ -1404,7 +1538,35 @@ export function Studio() {
               const rect = canvas.getBoundingClientRect();
               const x = ((e.clientX - rect.left) / rect.width) * size.width;
               const y = ((e.clientY - rect.top) / rect.height) * size.height;
-              const slop = Math.max(12, (44 * size.width) / Math.max(1, rect.width));
+              const slop =
+                e.pointerType === "touch"
+                  ? Math.max(16, (44 * size.width) / Math.max(1, rect.width))
+                  : Math.max(6, (10 * size.width) / Math.max(1, rect.width));
+              const handle = hitHandle(x, y);
+              if (handle && (pickedSkill || pickedText)) {
+                const box = handle.box;
+                const cx = box.x + box.w / 2;
+                const cy = box.y + box.h / 2;
+                setGrabbing(true);
+                draggingRef.current = true;
+                dragRef.current = {
+                  id: pickedSkill ?? pickedText ?? "",
+                  x0: box.x,
+                  y0: box.y,
+                  px: e.clientX,
+                  py: e.clientY,
+                  kind: "scale",
+                  cx,
+                  cy,
+                  dist0: Math.max(8, Math.hypot(x - cx, y - cy)),
+                  startScale: pickedSkill
+                    ? skillPicksRef.current.find((item) => item.id === pickedSkill)?.scale ?? 1
+                    : textScaleRef.current[pickedText ?? ""] ?? 1,
+                  text: Boolean(pickedText && !pickedSkill),
+                };
+                (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
+                return;
+              }
               if (pointersRef.current.size >= 2) {
                 const midX = x;
                 const midY = y;
@@ -1464,7 +1626,10 @@ export function Studio() {
               });
               if (textHit) {
                 setPickedText(textHit.id);
+                pickedTextRef.current = textHit.id;
                 setPickedSkill(null);
+                pickedSkillRef.current = null;
+                requestPaint();
                 if (e.detail >= 2) return;
                 setGrabbing(true);
                 draggingRef.current = true;
@@ -1482,16 +1647,18 @@ export function Studio() {
               const skillHit = stampHit(x, y, slop);
               if (skillHit && skillHit.x != null && skillHit.y != null) {
                 setPickedSkill(skillHit.id);
+                pickedSkillRef.current = skillHit.id;
                 setPickedText(null);
+                pickedTextRef.current = null;
+                bringToFront(skillHit.id);
+                requestPaint();
                 if (e.detail >= 2) return;
                 setGrabbing(true);
                 draggingRef.current = true;
-                const touch = e.pointerType === "touch";
-                const mates = touch
-                  ? [{ id: skillHit.id, x0: skillHit.x, y0: skillHit.y }]
-                  : packMates(skillHit.id)
-                      .filter((item) => item.x != null && item.y != null)
-                      .map((item) => ({ id: item.id, x0: item.x as number, y0: item.y as number }));
+                const pack = e.shiftKey && !isMark(skillHit.id);
+                const mates = packMates(skillHit.id, pack)
+                  .filter((item) => item.x != null && item.y != null)
+                  .map((item) => ({ id: item.id, x0: item.x as number, y0: item.y as number }));
                 dragRef.current = {
                   id: skillHit.id,
                   x0: skillHit.x,
@@ -1499,41 +1666,16 @@ export function Studio() {
                   px: e.clientX,
                   py: e.clientY,
                   kind: "skill",
-                  mates,
+                  mates: mates.length ? mates : [{ id: skillHit.id, x0: skillHit.x, y0: skillHit.y }],
                 };
                 (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
                 return;
               }
-              if (pickedSkill && e.pointerType !== "touch") {
-                const lead = skillPicksRef.current.find((item) => item.id === pickedSkill);
-                if (lead) {
-                  const mark = Math.max(28, (lead.size ?? skillSize) * (lead.scale ?? 1));
-                  const px = Math.max(0, Math.min(size.width - mark, x));
-                  const py = Math.max(0, Math.min(size.height - mark, y));
-                  const mates = packMates(pickedSkill).filter((item) => item.x != null && item.y != null);
-                  const dx = px - (lead.x ?? 0);
-                  const dy = py - (lead.y ?? 0);
-                  setSkillPicks((cur) =>
-                    cur.map((item) => {
-                      const mate = mates.find((row) => row.id === item.id);
-                      if (!mate || item.x == null || item.y == null) {
-                        if (item.id !== pickedSkill) return item;
-                        return { ...item, x: px, y: py, scale: item.scale ?? 1 };
-                      }
-                      const extent = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
-                      return {
-                        ...item,
-                        scale: item.scale ?? 1,
-                        x: Math.max(0, Math.min(size.width - extent, item.x + dx)),
-                        y: Math.max(0, Math.min(size.height - extent, item.y + dy)),
-                      };
-                    }),
-                  );
-                }
-                return;
-              }
               setPickedSkill(null);
+              pickedSkillRef.current = null;
               setPickedText(null);
+              pickedTextRef.current = null;
+              requestPaint();
               setGrabbing(true);
               draggingRef.current = true;
               dragRef.current = {
@@ -1568,19 +1710,23 @@ export function Studio() {
               const rect = canvas.getBoundingClientRect();
               const x = ((e.clientX - rect.left) / rect.width) * size.width;
               const y = ((e.clientY - rect.top) / rect.height) * size.height;
-              const pad = Math.max(8, (44 * size.width) / Math.max(1, rect.width));
+              const handleHover = !dragRef.current ? hitHandle(x, y) : null;
+              setOverHandle(
+                handleHover
+                  ? handleHover.handle === "nw" || handleHover.handle === "se"
+                    ? "nwse"
+                    : "nesw"
+                  : null,
+              );
               setOverIcon(
-                skillPicksRef.current.some((item) => {
-                  if (item.x == null || item.y == null) return false;
-                  const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
-                  return x >= item.x && x <= item.x + mark && y >= item.y && y <= item.y + mark;
-                }) ||
-                  boxesRef.current.some((box) => {
-                    if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
-                    const hw = Math.max(28, box.w);
-                    const hh = Math.max(28, box.h);
-                    return x >= box.x && x <= box.x + hw && y >= box.y && y <= box.y + hh;
-                  }),
+                !handleHover &&
+                  (Boolean(stampHit(x, y, 4)) ||
+                    boxesRef.current.some((box) => {
+                      if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
+                      const hw = Math.max(28, box.w);
+                      const hh = Math.max(28, box.h);
+                      return x >= box.x && x <= box.x + hw && y >= box.y && y <= box.y + hh;
+                    })),
               );
               const drag = dragRef.current;
               if (!drag) return;
@@ -1589,6 +1735,31 @@ export function Studio() {
               const rectScaleY = size.height / Math.max(1, rect.height);
               const nx = drag.x0 + (e.clientX - drag.px) * rectScaleX;
               const ny = drag.y0 + (e.clientY - drag.py) * rectScaleY;
+              if (drag.kind === "scale") {
+                const cx = drag.cx ?? 0;
+                const cy = drag.cy ?? 0;
+                const dist = Math.hypot(x - cx, y - cy);
+                const next = Math.min(3, Math.max(0.4, (drag.startScale ?? 1) * (dist / Math.max(8, drag.dist0 ?? 8))));
+                if (drag.text) {
+                  const old = textScaleRef.current[drag.id] ?? 1;
+                  const box = boxesRef.current.find((row) => row.id === drag.id);
+                  if (box) {
+                    const ratio = next / Math.max(0.01, old);
+                    textPosRef.current = {
+                      ...textPosRef.current,
+                      [drag.id]: {
+                        x: box.x + box.w / 2 - (box.w * ratio) / 2,
+                        y: box.y + box.h / 2 - (box.h * ratio) / 2,
+                      },
+                    };
+                  }
+                  textScaleRef.current = { ...textScaleRef.current, [drag.id]: next };
+                  requestPaint();
+                  return;
+                }
+                applyStampScale(drag.id, next);
+                return;
+              }
               if (drag.kind === "still") {
                 const z = Math.max(1, stillZoom);
                 const maxX = (size.width * (1 - 1 / z)) / 2;
@@ -1638,13 +1809,14 @@ export function Studio() {
               } catch {
                 /* already released */
               }
-              const groupDrag = (dragRef.current?.mates?.length ?? 0) > 1;
+              const packDrag = (dragRef.current?.mates?.length ?? 0) > 1;
               dragRef.current = null;
               setGrabbing(false);
               draggingRef.current = false;
               setSkillPicks(skillPicksRef.current);
-              if (groupDrag) centerNameOverStamps(skillPicksRef.current);
+              if (packDrag) centerNameOverStamps(skillPicksRef.current);
               setTextPos(textPosRef.current);
+              setTextScale({ ...textScaleRef.current });
               requestPaint();
             }}
             onPointerCancel={(e) => {
@@ -1667,7 +1839,7 @@ export function Studio() {
             ? safeZoneRects(ghostZone).map((zone) => (
                 <div
                   key={`${zone.label}-${zone.x}-${zone.y}`}
-                  className="pointer-events-none absolute border border-dashed border-[#ffe9b0]/70 bg-black/20 text-[9px] text-[#ffe9b0]"
+                  className="pointer-events-none absolute z-20 border border-dashed border-[#ffe9b0]/70 bg-black/20 text-[9px] text-[#ffe9b0]"
                   style={{
                     left: `${zone.x * 100}%`,
                     top: `${zone.y * 100}%`,
@@ -1681,7 +1853,9 @@ export function Studio() {
             : null}
         </div>
         <p className="mt-2 text-center text-[10px] text-muted">
-          {plateCaption || `${size.width}×${size.height} JPEG`}
+          {plateCaption ? `${plateCaption} · ` : ""}
+          {size.width}×{size.height}
+          {ghostZone === "twitch" ? " Twitch crop" : ghostZone === "youtube" ? " YouTube crop" : " JPEG"}
         </p>
         <div id="aria-live" className="sr-only" aria-live="polite" aria-atomic="true">
           {ariaLive}
@@ -1692,39 +1866,31 @@ export function Studio() {
             type="button"
             className={`min-h-11 rounded-md border px-2 text-[10px] ${ghostZone === "none" ? "border-parchment" : "border-line"}`}
             onClick={() => {
-              setGhostZone((zone) => (zone === "none" ? zoneForPlate(size.width, size.height) : "none"));
+              const box = BANNER_SIZES.find((s) => s.id === sizeIdRef.current) ?? size;
+              setGhostZone((zone) => (zone === "none" ? zoneForPlate(box.width, box.height) : "none"));
             }}
           >
             Ghosts {ghostZone === "none" ? "off" : "on"}
           </button>
           <button
             type="button"
+            data-crop="twitch"
             className={`min-h-11 rounded-md border px-2 text-[10px] ${sizeId === "1200x480" && ghostZone === "twitch" ? "border-parchment" : "border-line"}`}
-            onClick={() => {
-              setSizeId("1200x480");
-              setGhostZone("twitch");
-              requestPaint();
-              fitPackToPlate(1200, 480, packFit, false);
-              setSaveNote("1200×480 Twitch crop. Pack fitted.");
-            }}
+            onClick={() => applyCrop("1200x480", "twitch")}
           >
             Twitch crop
           </button>
           <button
             type="button"
+            data-crop="youtube"
             className={`min-h-11 rounded-md border px-2 text-[10px] ${sizeId === "1280x720" && ghostZone === "youtube" ? "border-parchment" : "border-line"}`}
-            onClick={() => {
-              setSizeId("1280x720");
-              setGhostZone("youtube");
-              requestPaint();
-              fitPackToPlate(1280, 720, packFit, false);
-              setSaveNote("1280×720 YouTube crop. Pack fitted.");
-            }}
+            onClick={() => applyCrop("1280x720", "youtube")}
           >
             YouTube crop
           </button>
           <button
             type="button"
+            data-crop="discard"
             className="min-h-11 rounded-md border border-line px-2 text-[10px]"
             onClick={() => {
               const still = document.getElementById("still") as HTMLImageElement | null;
@@ -1732,7 +1898,7 @@ export function Studio() {
               const w = still?.naturalWidth || cache?.width || 1920;
               const h = still?.naturalHeight || cache?.height || 1080;
               const ratio = w / Math.max(1, h);
-              let next: typeof sizeId = "1280x720";
+              let next: BannerSizeId = "1280x720";
               let best = Infinity;
               for (const box of BANNER_SIZES) {
                 const d = Math.abs(box.width / box.height - ratio);
@@ -1741,12 +1907,8 @@ export function Studio() {
                   next = box.id;
                 }
               }
-              setSizeId(next);
-              setGhostZone("none");
-              requestPaint();
-              const box = BANNER_SIZES.find((row) => row.id === next);
-              if (box) fitPackToPlate(box.width, box.height, packFit, false);
-              setSaveNote(`Full still · ${box?.width}×${box?.height}.`);
+              applyCrop(next, "none");
+              setSaveNote(`Full still · ${BANNER_SIZES.find((row) => row.id === next)?.width}×${BANNER_SIZES.find((row) => row.id === next)?.height}.`);
             }}
           >
             Discard crop
@@ -1804,7 +1966,7 @@ export function Studio() {
                 const step = e.shiftKey ? 10 : 2;
                 const dx = dir === "left" ? -step : dir === "right" ? step : 0;
                 const dy = dir === "up" ? -step : dir === "down" ? step : 0;
-                nudgePack(dx, dy);
+                nudgeSelected(dx, dy);
               }}
             >
               {dir}
@@ -1826,9 +1988,9 @@ export function Studio() {
                 return;
               }
               setSkillPicks((cur) => {
-                const lead = cur.find((item) => item.id === pickedSkill);
-                if (lead?.group) return cur.filter((item) => item.group !== lead.group);
-                return cur.filter((item) => item.id !== pickedSkill);
+                const next = cur.filter((item) => item.id !== pickedSkill);
+                skillPicksRef.current = next;
+                return next;
               });
               setPickedSkill(null);
             }}
@@ -1969,12 +2131,8 @@ export function Studio() {
                 <button
                   key={box.id}
                   type="button"
-                  onClick={() => {
-                    setSizeId(box.id);
-                    requestPaint();
-                    fitPackToPlate(box.width, box.height, packFit, false);
-                    setSaveNote(`${box.width}×${box.height}. Pack fitted.`);
-                  }}
+                  data-crop={box.id}
+                  onClick={() => applyCrop(box.id)}
                   className={`min-h-11 rounded-md border px-2 text-[10px] ${sizeId === box.id ? "border-parchment" : "border-line"}`}
                 >
                   {box.name}
@@ -1983,7 +2141,10 @@ export function Studio() {
               <button
                 type="button"
                 className="h-7 min-h-11 rounded-md border border-line px-2 text-[10px]"
-                onClick={() => fitPackToPlate(size.width, size.height, packFit, true)}
+                onClick={() => {
+                  const box = BANNER_SIZES.find((s) => s.id === sizeIdRef.current) ?? size;
+                  fitPackToPlate(box.width, box.height, packFit, true);
+                }}
               >
                 All skills
               </button>
@@ -2020,13 +2181,13 @@ export function Studio() {
                 Clear
               </button>
             </div>
-            <div className="grid grid-cols-4 gap-1 sm:grid-cols-6 xl:grid-cols-8">
+            <div className="grid grid-cols-5 gap-1 p-1 sm:grid-cols-6 md:grid-cols-7 xl:grid-cols-8">
               {SKILLS.filter((skill) => skill.editions.includes(skillPack)).map((skill) => {
                 const pick = skillPicks.find((item) => item.id === skill.id);
                 const on = armedSkill === skill.id || Boolean(pick);
                 const cap = skillLevelCap(skill.id, skillPack);
                 return (
-                  <div key={skill.id} className="flex items-center gap-0.5">
+                  <div key={skill.id} className="flex min-w-0 flex-col items-center gap-0.5">
                     <button
                       type="button"
                       title={skill.name}
@@ -2043,16 +2204,17 @@ export function Studio() {
                         const pic = (ev.currentTarget as HTMLButtonElement).querySelector("img");
                         placeStamp(skill.id, pic);
                       }}
-                      className={`flex size-11 shrink-0 items-center justify-center rounded-sm p-0 [touch-action:manipulation] ${on ? "bg-[#241e16]" : "bg-[#1a140c]"}`}
+                      className={`flex size-10 shrink-0 items-center justify-center rounded-sm p-0 [touch-action:manipulation] ${on ? "bg-[#241e16]" : "bg-[#1a140c]"}`}
                     >
-                      <img src={skill.src} alt="" className={`size-8 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
+                      <img src={skill.src} alt="" className={`size-7 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
                     </button>
                     <input
                       aria-label={`${skill.name} level`}
                       inputMode="numeric"
                       value={pick?.level ?? boardLevels[skillPack][skill.id] ?? ""}
                       placeholder="—"
-                      className="h-8 w-11 rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-0.5 text-center text-[11px] tabular-nums text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+                      maxLength={3}
+                      className="h-6 w-8 rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-0 text-center text-[10px] tabular-nums text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
                       onChange={(e) => {
                         const next = sanitizeSkillLevel(e.target.value, cap);
                         setSkillPicks((cur) => {
@@ -2370,8 +2532,7 @@ export function Studio() {
                 type="button"
                 className="min-h-11 rounded-md border border-parchment px-3 text-sm text-parchment"
                 onClick={() => {
-                  setSizeId(box.id);
-                  requestPaint();
+                  applyCrop(box.id);
                   downloadJpeg(box);
                 }}
               >

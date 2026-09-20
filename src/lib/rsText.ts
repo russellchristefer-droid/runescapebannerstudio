@@ -89,8 +89,6 @@ export function sanitizeDiscord(raw: string): string {
 }
 
 export function typeDiscord(raw: string): string {
-  const done = sanitizeDiscord(raw);
-  if (done) return done;
   return nfc(raw).replace(/[^A-Za-z0-9./:\-]/g, "").slice(0, DISCORD_MAX);
 }
 

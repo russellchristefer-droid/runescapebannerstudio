@@ -13,11 +13,11 @@ Two remotes. Public is what people clone. Private is the backup I actually trust
 
 ## What you can do here
 
-On the desk you pick a still (or upload one), crop it to Twitch 1200×480 or YouTube 1280×720, zoom and pan the picture, drop skills and partyhats, and download a JPEG. Levels sit next to the icons in RS Chat Bold. Fit plate / Room / Desk change how tight the pack is. Hiscores fill levels when the boards answer.
+On the desk you pick a still (or upload one), crop it to Twitch 1200×480 or YouTube 1280×720, zoom and pan the picture, drop skills and partyhats, and download a JPEG. Click one stamp to move, scale, or delete it. Fit plate keeps the pack in a strip under the name. Levels sit next to the icons in RS Chat Bold. Hiscores fill levels when the boards answer. Save for clips pins that JPEG for the clip bench.
 
 Towns, gods, bosses, and the bestiary keep two canons. Gods sit on their prayer-book field — Saradomin blue, Zamorak red, the rest matching the book. Dragons keep red, blue, green, and black behind them. The bestiary is slayer and dungeon rooms, split by Old School or RuneScape, then by room (dragons, Stronghold, Tower, Legends’ Guild). Bosses stay off that list.
 
-`/pvp` has both canons on one page, separate sheets. `/skills` lists Old School and RuneScape skills with early / mid / late, what to wear, and the live wiki. `/edit` is a local clip bench: upload a video, mark In / Out, mute, gain, fades, Save as MP4. Stills stay on the desk.
+`/pvp` has both canons on one page, separate sheets. `/skills` lists Old School and RuneScape skills with early / mid / late, what to wear, and the live wiki. `/edit` is a local clip bench: upload a video, mark In / Out, mute, gain, fades, Save as MP4. Desk banner (from Save for clips) can sit top or bottom and has a Remove. Upload still drops a photo you own onto the frame; drag or wheel scales it like the desk; Remove still clears it.
 
 Streamer, YouTuber, and X halls list names even when live check is off. `/discord` is official Jagex servers first, then wiki and tool invites. History has three rooms: Myths' Guild (Golden Gnome winners; the name opens the film), Legends' Guild (first room on the left — Zezima, The Old Nite, 25 Buttholes, and the hiscores firsts), and Wizards' Guild (Yanille — Andrew, Paul, and Ian Gower, who wrote the first client). Public names only. Not a rank.
 
