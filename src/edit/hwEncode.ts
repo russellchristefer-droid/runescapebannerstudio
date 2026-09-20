@@ -19,6 +19,7 @@ export async function pickEncoder(q: EncQ) {
       height,
       bitrate: q.bitrate,
       framerate: q.fps,
+      bitrateMode: "variable",
       hardwareAcceleration: "prefer-hardware",
       latencyMode: "quality",
       avc: { format: "avc" },
@@ -31,6 +32,7 @@ export async function pickEncoder(q: EncQ) {
       height,
       bitrate: q.bitrate,
       framerate: q.fps,
+      bitrateMode: "variable",
       hardwareAcceleration: "no-preference",
       latencyMode: "quality",
       avc: { format: "avc" },
@@ -40,6 +42,22 @@ export async function pickEncoder(q: EncQ) {
     try {
       const r = await VideoEncoder.isConfigSupported(cfg);
       if (r.supported) return { ...cfg, ...(r.config ?? {}) } as VideoEncoderConfig;
+    } catch {
+      /* next */
+    }
+  }
+  for (const codec of AVC) {
+    try {
+      const r = await VideoEncoder.isConfigSupported({
+        codec,
+        width,
+        height,
+        bitrate: q.bitrate,
+        framerate: q.fps,
+        latencyMode: "quality",
+        avc: { format: "avc" },
+      });
+      if (r.supported) return { ...r.config } as VideoEncoderConfig;
     } catch {
       /* next */
     }

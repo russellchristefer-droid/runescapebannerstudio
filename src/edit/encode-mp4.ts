@@ -1,5 +1,5 @@
 import { Muxer, ArrayBufferTarget } from "mp4-muxer";
-import { clipVideoBitrate, qualityForSize } from "./quality";
+import { clipVideoBitrate } from "./quality";
 import { captureSmooth } from "./captureSmooth";
 import { seekTo } from "./seekSafe";
 
@@ -13,6 +13,8 @@ type EncodeOpts = {
   outT: number;
   w: number;
   h: number;
+  bitrate?: number;
+  audioBitrate?: number;
   audioTracks: MediaStreamTrack[];
   onPct: (n: number) => void;
 };
@@ -25,8 +27,12 @@ function codecLadder() {
   return ["avc1.640028", "avc1.4D0028", "avc1.42E01E", "avc1.42001E"];
 }
 
-async function pickVideoConfig(width: number, height: number, fps: number): Promise<VideoEncoderConfig | null> {
-  const bitrate = clipVideoBitrate(width, height);
+async function pickVideoConfig(
+  width: number,
+  height: number,
+  fps: number,
+  bitrate: number,
+): Promise<VideoEncoderConfig | null> {
   for (const hw of ["prefer-hardware", "no-preference", "prefer-software"] as const) {
     for (const codec of codecLadder()) {
       const cfg: VideoEncoderConfig = {
@@ -35,7 +41,7 @@ async function pickVideoConfig(width: number, height: number, fps: number): Prom
         height,
         bitrate,
         framerate: fps,
-        bitrateMode: "constant",
+        bitrateMode: "variable",
         avc: { format: "avc" },
         hardwareAcceleration: hw,
         latencyMode: "quality",
@@ -206,15 +212,15 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
   const { video, inT, outT, paint } = opts;
   video.pause();
   video.playbackRate = 1;
-  const q = qualityForSize(width, height);
-  const fps = q.fps;
+  const fps = 30;
+  const bitrate = opts.bitrate || clipVideoBitrate(width, height);
   await seekTo(video, inT);
   video.pause();
 
-  const videoCfg = await pickVideoConfig(width, height, fps);
+  const videoCfg = await pickVideoConfig(width, height, fps, bitrate);
   if (!videoCfg) return null;
 
-  const audioCfg = await pickAacConfig(q.audioBps);
+  const audioCfg = await pickAacConfig(opts.audioBitrate || 128_000);
   const wantAudio = Boolean(audioCfg);
 
   const target = new ArrayBufferTarget();

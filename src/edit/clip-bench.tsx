@@ -9,7 +9,7 @@ import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTra
 import { canEncodeMp4 } from "./encode-mp4";
 import { canWebCodecs, encodeClip } from "./webcodecsExport";
 import { exportMp4 } from "./muxExport";
-import { drawHi, pickRecorderMime, qualityForSize } from "./quality";
+import { applyPack, exportBox, drawHi, LADDER, pickRecorderMime, qualityForSize, type Pack } from "./quality";
 import { seekTo, SeekError } from "./seekSafe";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
 import {
@@ -115,6 +115,7 @@ export function ClipBench() {
   const [muted, setMuted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [aspect, setAspect] = useState<ClipAspect>(() => loadEditPrefs().aspect ?? "9x16");
+  const [pack, setPack] = useState<Pack>("balanced");
   const [overlay, setOverlay] = useState<OverlayPos>("off");
   const [ghost, setGhost] = useState<SafeZone>("none");
   const [edition, setEdition] = useState<"OSRS" | "RS3">("OSRS");
@@ -1328,7 +1329,9 @@ export function ClipBench() {
     if (!canEncodeMp4() && !mime) throw new Error("mime");
     const inT = Math.max(0, Math.min(inPoint, video.duration - 0.05));
     const outT = Math.max(inT + 0.05, Math.min(outPoint || video.duration, video.duration));
-    const q = qualityForSize(w, h);
+    const chip = qualityForSize(w, h);
+    const box = exportBox(chip.w, chip.h, video.videoWidth || chip.w, video.videoHeight || chip.h);
+    const q = applyPack(box, pack);
     const canvas = document.createElement("canvas");
     canvas.width = q.w;
     canvas.height = q.h;
@@ -1418,7 +1421,7 @@ export function ClipBench() {
         onLine,
       });
       if (muxed && muxed.size >= 1024) {
-        return { blob: muxed, audioOk: Boolean(processed.length && !muted), mime: "video/mp4" };
+        return { blob: muxed, audioOk: Boolean(processed.length && !muted), mime: "video/mp4", w: q.w, h: q.h };
       }
     } catch {
       /* no AVC WebCodecs — try the other muxer, then MediaRecorder */
@@ -1436,7 +1439,7 @@ export function ClipBench() {
           audioTracks: muted ? [] : processed,
         });
         if (blob && blob.size >= 1024) {
-          return { blob, audioOk: Boolean(processed.length && !muted), mime: "video/mp4" };
+          return { blob, audioOk: Boolean(processed.length && !muted), mime: "video/mp4", w: q.w, h: q.h };
         }
       }
     } catch {
@@ -1534,7 +1537,7 @@ export function ClipBench() {
     if (blob.size < 1024) throw new Error("empty-blob");
     const outMime = recorder.mimeType || mime || blob.type || "video/mp4";
     if (!/mp4|webm/i.test(outMime)) throw new Error("mime");
-    return { blob, audioOk, mime: /webm/i.test(outMime) ? "video/webm" : "video/mp4" };
+    return { blob, audioOk, mime: /webm/i.test(outMime) ? "video/webm" : "video/mp4", w: q.w, h: q.h };
     } finally {
       try {
         canvas.remove();
@@ -1594,14 +1597,13 @@ export function ClipBench() {
       const one = await recordOnce(first.w, first.h);
       setEncLine("Saving…");
       setExportPct(100);
-      await downloadBlob(one.blob, qualityForSize(first.w, first.h).w, qualityForSize(first.w, first.h).h, one.mime);
+      await downloadBlob(one.blob, one.w, one.h, one.mime);
       if (pair) {
         const two = await recordOnce(1080, 1920);
-        await downloadBlob(two.blob, 1080, 1920, two.mime);
+        await downloadBlob(two.blob, two.w, two.h, two.mime);
       }
-      const out = CLIP_ASPECTS[aspect];
       setEncLine("Saved.");
-      setBench("ready", `Saved. ${out.w}×${out.h}`);
+      setBench("ready", `Saved. ${one.w}×${one.h}`);
     } catch (err) {
       const why = err instanceof Error ? err.message : "";
       if (err instanceof SeekError) {
@@ -1833,6 +1835,25 @@ export function ClipBench() {
                     onClick={() => applyClipCrop(id)}
                   >
                     {CLIP_ASPECTS[id].label}
+                  </button>
+                ))}
+              </div>
+            </section>
+            <section className="space-y-2">
+              <h2 className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-faint">Pack</h2>
+              <div className="flex flex-wrap gap-2">
+                {(["small", "balanced", "high"] as Pack[]).map((id) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={pack === id ? CHIP_ON : CHIP}
+                    onClick={() => {
+                      setPack(id);
+                      const bits = LADDER[id];
+                      setStatus(`${id[0].toUpperCase()}${id.slice(1)} · ${Math.round(bits.video / 1_000_000)} Mbps VBR`);
+                    }}
+                  >
+                    {id === "small" ? "Small" : id === "high" ? "High" : "Balanced"}
                   </button>
                 ))}
               </div>

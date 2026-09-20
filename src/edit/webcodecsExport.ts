@@ -58,6 +58,7 @@ export async function encodeClip(opts: {
     outT,
     w: q.w,
     h: q.h,
+    bitrate: q.bitrate,
     audioTracks: opts.audioTracks ?? [],
     onPct: opts.onPct ?? (() => {}),
   });

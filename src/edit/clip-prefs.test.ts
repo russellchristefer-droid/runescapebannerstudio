@@ -16,7 +16,7 @@ import {
   bannerStretchLay,
   clampPlateLay,
 } from "./clip-math.ts";
-import { QUALITY, FORMAT, qualityForAspect, qualityForSize, clipVideoBitrate } from "./quality.ts";
+import { QUALITY, FORMAT, LADDER, qualityForAspect, qualityForSize, clipVideoBitrate, exportBox, applyPack } from "./quality.ts";
 import { slugPart } from "../lib/filename.ts";
 import { markContainRect, MARK_SIDE } from "../lib/marks.ts";
 
@@ -57,20 +57,32 @@ test("fps snap matches broadcast steps", () => {
   assert.equal(clipSnapFps(24.0), 24);
 });
 
-test("TikTok 9:16 is 1080×1920 at 12 Mbps 30 fps", () => {
+test("TikTok 9:16 is 1080×1920 at 30 fps; Balanced is 6.5 Mbps VBR", () => {
   const q = qualityForAspect("9x16");
   assert.equal(q.w, 1080);
   assert.equal(q.h, 1920);
   assert.equal(q.fps, 30);
-  assert.equal(q.videoBps, 12_000_000);
+  assert.equal(LADDER.balanced.video, 6_500_000);
+  assert.equal(LADDER.small.video, 4_000_000);
+  assert.equal(LADDER.high.video, 10_000_000);
+  assert.equal(applyPack(q, "balanced").videoBps, 6_500_000);
+  assert.equal(applyPack(q, "small").audioBps, 96_000);
+  assert.equal(clipVideoBitrate(1080, 1920), 6_500_000);
   assert.equal(qualityForSize(1080, 1920), QUALITY.tiktok);
-  assert.equal(clipVideoBitrate(1080, 1920), 12_000_000);
-  assert.equal(clipVideoBitrate(1080, 1080), 10_000_000);
-  assert.equal(clipVideoBitrate(1280, 720), 8_000_000);
   assert.equal(FORMAT["9:16"].w, 1080);
   assert.equal(FORMAT["9:16"].h, 1920);
   assert.equal(FORMAT["16:9-1080"].w, 1920);
   assert.equal(FORMAT.banner.w, 1200);
+});
+
+test("export box never upscales a small source", () => {
+  assert.deepEqual(exportBox(1080, 1920, 1920, 1080), { w: 1080, h: 1920 });
+  const phone = exportBox(1080, 1920, 720, 1280);
+  assert.equal(phone.w, 720);
+  assert.equal(phone.h, 1280);
+  const tiny = exportBox(1920, 1080, 640, 360);
+  assert.ok(tiny.w <= 640);
+  assert.ok(tiny.h <= 360);
 });
 
 test("clip file name is christefer-1 plus size", () => {
@@ -135,7 +147,7 @@ test("WebCodecs helper is present and muxes only through MP4", () => {
   assert.equal(QUALITY.tiktok.w, 1080);
   assert.equal(QUALITY.tiktok.h, 1920);
   assert.equal(QUALITY.tiktok.fps, 30);
-  assert.equal(QUALITY.tiktok.videoBps, 12_000_000);
+  assert.equal(QUALITY.tiktok.videoBps, 6_500_000);
 });
 
 test("mux export helpers exist", async () => {

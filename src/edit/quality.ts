@@ -1,9 +1,9 @@
 export const QUALITY = {
-  tiktok: { w: 1080, h: 1920, fps: 30, videoBps: 12_000_000, audioBps: 192_000 },
-  yt16: { w: 1920, h: 1080, fps: 30, videoBps: 12_000_000, audioBps: 192_000 },
-  yt720: { w: 1280, h: 720, fps: 30, videoBps: 8_000_000, audioBps: 160_000 },
-  square: { w: 1080, h: 1080, fps: 30, videoBps: 10_000_000, audioBps: 192_000 },
-  banner: { w: 1200, h: 480, fps: 30, videoBps: 6_000_000, audioBps: 128_000 },
+  tiktok: { w: 1080, h: 1920, fps: 30, videoBps: 6_500_000, audioBps: 128_000 },
+  yt16: { w: 1920, h: 1080, fps: 30, videoBps: 6_500_000, audioBps: 128_000 },
+  yt720: { w: 1280, h: 720, fps: 30, videoBps: 6_500_000, audioBps: 128_000 },
+  square: { w: 1080, h: 1080, fps: 30, videoBps: 6_500_000, audioBps: 128_000 },
+  banner: { w: 1200, h: 480, fps: 30, videoBps: 6_500_000, audioBps: 128_000 },
 } as const;
 
 export const FORMAT = {
@@ -14,8 +14,26 @@ export const FORMAT = {
   banner: { w: 1200, h: 480 },
 } as const;
 
+export const LADDER = {
+  small: { video: 4_000_000, audio: 96_000 },
+  balanced: { video: 6_500_000, audio: 128_000 },
+  high: { video: 10_000_000, audio: 160_000 },
+} as const;
+
+export type Pack = keyof typeof LADDER;
 export type QualityKey = keyof typeof QUALITY;
-export type QualityPreset = (typeof QUALITY)[QualityKey];
+export type QualityPreset = {
+  w: number;
+  h: number;
+  fps: number;
+  videoBps: number;
+  audioBps: number;
+  bitrateMode?: "variable" | "constant";
+};
+
+function even(n: number) {
+  return Math.max(16, n & ~1);
+}
 
 export function qualityKeyForAspect(aspect: string): QualityKey {
   if (aspect === "9x16") return "tiktok";
@@ -43,8 +61,33 @@ export function qualityForSize(w: number, h: number): QualityPreset {
   return QUALITY.banner;
 }
 
-export function clipVideoBitrate(width: number, height: number) {
-  return qualityForSize(width, height).videoBps;
+/** Chip canvas, never upscale a smaller source. Keeps the crop ratio. */
+export function exportBox(chipW: number, chipH: number, srcW: number, srcH: number) {
+  const cw = even(chipW);
+  const ch = even(chipH);
+  const sw = Math.max(16, srcW || cw);
+  const sh = Math.max(16, srcH || ch);
+  if (sw >= cw || sh >= ch) return { w: cw, h: ch };
+  const s = Math.min(sw / cw, sh / ch);
+  return { w: even(Math.max(16, Math.round(cw * s))), h: even(Math.max(16, Math.round(ch * s))) };
+}
+
+export function applyPack(q: { w: number; h: number; fps?: number }, pack: Pack = "balanced"): QualityPreset {
+  const bits = LADDER[pack];
+  return {
+    w: even(q.w),
+    h: even(q.h),
+    fps: 30,
+    videoBps: bits.video,
+    audioBps: bits.audio,
+    bitrateMode: "variable",
+  };
+}
+
+export function clipVideoBitrate(width: number, height: number, pack: Pack = "balanced") {
+  void width;
+  void height;
+  return LADDER[pack].video;
 }
 
 export function pickRecorderMime() {

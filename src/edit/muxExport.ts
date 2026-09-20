@@ -166,7 +166,8 @@ export async function exportMp4(opts: {
     width,
     height,
     bitrate: q.bitrate,
-    framerate: q.fps,
+    framerate: q.fps || 30,
+    bitrateMode: "variable",
     latencyMode: "quality",
     avc: { format: "avc" },
   });
