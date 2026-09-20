@@ -81,9 +81,11 @@ export function sanitizeDiscord(raw: string): string {
   const m =
     s.match(/(?:https?:\/\/)?(?:www\.)?(?:discord\.gg|discord\.com\/invite)\/([A-Za-z0-9-]+)/i) ||
     s.match(/^([A-Za-z0-9-]{2,32})$/);
-  if (!m) return "";
-  const code = (m[1] || "").slice(0, 32);
-  return code ? `discord.gg/${code}` : "";
+  if (m) {
+    const code = (m[1] || "").slice(0, 32);
+    return code ? `discord.gg/${code}` : "";
+  }
+  return typeDiscord(s);
 }
 
 export function typeDiscord(raw: string): string {

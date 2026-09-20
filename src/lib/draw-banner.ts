@@ -211,7 +211,7 @@ export function skillGrid(
   const chip = typeScale(width, height);
   const icon = Math.max(24, Math.min(72, Math.round(iconSize ?? chip.icon)));
   const type = Math.max(14, Math.round(chip.level));
-  const labelW = withLevels ? Math.round(type * 2.4) : 0;
+  const labelW = withLevels ? Math.round(type * 3.4) : 0;
   const gapX = Math.max(chip.gap, Math.round(icon * 0.22));
   const gapY = Math.max(chip.gap, Math.round(icon * 0.28));
   const cellW = icon + labelW + gapX;
@@ -309,12 +309,16 @@ function drawIdentityPlate(
   extras.forEach((text, i) => lines.push({ id: `extra-${i}`, text: cap(text), size: chip.line ?? 15 }));
   const layout: Layout = options.layout ?? "banner";
   ctx.textAlign = layout === "title-card" ? "center" : "left";
+  const nameSize0 = lines.find((row) => row.id === "streamer")?.size ?? chip.name;
   let y =
     layout === "lower-third"
       ? Math.round(height * 0.74)
       : layout === "title-card"
         ? Math.round(height * 0.42)
-        : chip.top;
+        : options.nameAnchor
+          ? options.nameAnchor.y + nameSize0 + 8
+          : chip.top;
+  const underNameX = options.nameAnchor?.x ?? null;
   for (const line of lines) {
     const scale = Math.min(2, Math.max(0.75, options.textScale?.[line.id] ?? 1));
     const size = Math.max(8, Math.round(line.size * scale));
@@ -328,16 +332,14 @@ function drawIdentityPlate(
         ? pos.x + 4
         : layout === "title-card"
           ? Math.round(options.width / 2)
-          : inset;
-    const yy = packPos ? packPos.y + size : pos ? pos.y + size : y;
+          : underNameX != null && !nameLine
+            ? underNameX
+            : inset;
+    const yy = packPos ? packPos.y : pos ? pos.y : y;
     ctx.font = `700 ${size}px ${plateFont}`;
-    if (nameLine) {
-      paintRSYellow(ctx, line.text, x, yy, size, color);
-    } else {
-      fitYellow(ctx, line.text, x, yy, size, textMax, plateFont, "800", color, "chat");
-    }
+    paintRSYellow(ctx, line.text, x, yy, size, color);
     const hitW = Math.max(36, Math.ceil(ctx.measureText(line.text).width) + 8);
-    boxes.push({ id: line.id, x: x - 4, y: yy - size, w: hitW, h: size + 8 });
+    boxes.push({ id: line.id, x: x - 4, y: yy, w: hitW, h: size + 8 });
     y = yy + size + 8;
   }
   return y;
@@ -411,34 +413,39 @@ export function drawBanner(
   if (options.overlayOnly) {
     ctx.clearRect(0, 0, width, height);
   } else {
-  ctx.fillStyle = "#100e0c";
-  ctx.fillRect(0, 0, width, height);
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = "high";
-  const src = scene as { width?: number; height?: number; naturalWidth?: number; naturalHeight?: number };
-  const sw = Math.max(1, src.naturalWidth ?? src.width ?? width);
-  const sh = Math.max(1, src.naturalHeight ?? src.height ?? height);
-  const srcRatio = sw / sh;
-  const dstRatio = width / Math.max(1, height);
-  let sx = 0;
-  let sy = 0;
-  let tw = sw;
-  let th = sh;
-  if (srcRatio > dstRatio) {
-    tw = sh * dstRatio;
-    sx = (sw - tw) / 2;
-  } else {
-    th = sw / dstRatio;
-    sy = (sh - th) / 2;
-  }
-  ctx.drawImage(scene, sx, sy, tw, th, 0, 0, width, height);
-  ctx.imageSmoothingEnabled = options.edition !== "OSRS";
-  const fade = ctx.createLinearGradient(0, 0, 0, height);
-  fade.addColorStop(0, "rgba(0,0,0,0.25)");
-  fade.addColorStop(0.55, "rgba(0,0,0,0)");
-  fade.addColorStop(1, "rgba(0,0,0,0.35)");
-  ctx.fillStyle = fade;
-  ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = "#100e0c";
+    ctx.fillRect(0, 0, width, height);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    try {
+      if (scene === ctx.canvas) throw new Error("skip-self");
+      const src = scene as { width?: number; height?: number; naturalWidth?: number; naturalHeight?: number };
+      const sw = Math.max(1, src.naturalWidth ?? src.width ?? width);
+      const sh = Math.max(1, src.naturalHeight ?? src.height ?? height);
+      const srcRatio = sw / sh;
+      const dstRatio = width / Math.max(1, height);
+      let sx = 0;
+      let sy = 0;
+      let tw = sw;
+      let th = sh;
+      if (srcRatio > dstRatio) {
+        tw = sh * dstRatio;
+        sx = (sw - tw) / 2;
+      } else {
+        th = sw / dstRatio;
+        sy = (sh - th) / 2;
+      }
+      ctx.drawImage(scene, sx, sy, tw, th, 0, 0, width, height);
+    } catch {
+      /* still missing — type still paints */
+    }
+    ctx.imageSmoothingEnabled = options.edition !== "OSRS";
+    const fade = ctx.createLinearGradient(0, 0, 0, height);
+    fade.addColorStop(0, "rgba(0,0,0,0.25)");
+    fade.addColorStop(0.55, "rgba(0,0,0,0)");
+    fade.addColorStop(1, "rgba(0,0,0,0.35)");
+    ctx.fillStyle = fade;
+    ctx.fillRect(0, 0, width, height);
   }
 
   const boardW = Math.round(width * 0.34);
@@ -541,7 +548,14 @@ export function drawBanner(
         px = Math.round(Math.max(0, Math.min(slot.x, width - icon)));
         py = Math.round(Math.max(0, Math.min(slot.y, height - icon)));
       }
-      ctx.drawImage(slot.img, px, py, icon, icon);
+      try {
+        const pic = slot.img as CanvasImageSource & { complete?: boolean; naturalWidth?: number };
+        if (pic.complete === false) return;
+        if (typeof pic.naturalWidth === "number" && pic.naturalWidth === 0) return;
+        ctx.drawImage(slot.img, px, py, icon, icon);
+      } catch {
+        return;
+      }
       const label = slot.level.trim();
       if (label) {
         const levelSize = Math.max(16, Math.round(Math.max(chip.level || 22, icon * 0.55) * scale));

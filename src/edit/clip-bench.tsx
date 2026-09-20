@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent as PtrEvent } from "react";
 import { readDesk } from "@/desk/store";
+import { CLIP_BANNER_EVENT, CLIP_BANNER_LS, saveClipBanner } from "@/desk/clip-banner";
+import { clampBannerLayout, layoutFromStrip, renderDeskBanner, type BannerLayout } from "@/desk/render-banner";
 import { sanitizeClan, sanitizeDisplayName, sanitizeWorld, worldLabel } from "@/lib/rsText";
-import { LOCATIONS } from "@/lib/locations";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
 import { paintRSYellow } from "@/lib/draw-banner";
 import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTracks } from "./clipSound";
@@ -45,6 +46,9 @@ export function ClipBench() {
   const objectUrl = useRef<string | null>(null);
   const bannerUrl = useRef<string | null>(null);
   const bannerImg = useRef<CanvasImageSource | null>(null);
+  const bannerNat = useRef({ w: 1200, h: 480 });
+  const bannerLay = useRef<BannerLayout | null>(null);
+  const bannerDrag = useRef<{ id: number; ox: number; oy: number; x: number; y: number } | null>(null);
   const markCache = useRef<Record<string, HTMLImageElement>>({});
   const recorderRef = useRef<MediaRecorder | null>(null);
   const hidden = useRef(false);
@@ -81,7 +85,7 @@ export function ClipBench() {
   const [muted, setMuted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [aspect, setAspect] = useState<ClipAspect>(() => loadEditPrefs().aspect ?? "16x9-720");
-  const [overlay, setOverlay] = useState<OverlayPos>(() => loadEditPrefs().overlay ?? "off");
+  const [overlay, setOverlay] = useState<OverlayPos>("off");
   const [ghost, setGhost] = useState<SafeZone>("none");
   const [edition, setEdition] = useState<"OSRS" | "RS3">("OSRS");
   const [name, setName] = useState("");
@@ -176,7 +180,46 @@ export function ClipBench() {
     if (saved.edition === "RS3" || saved.edition === "OSRS") setEdition(saved.edition);
     setName(sanitizeDisplayName(saved.streamer ?? ""));
     setClan(sanitizeClan(saved.clan ?? ""));
+    let stop = false;
+    const pinLive = async () => {
+      const painted = await renderDeskBanner();
+      if (stop || !painted) return;
+      const prev = bannerImg.current;
+      if (prev && "close" in prev && typeof (prev as ImageBitmap).close === "function") {
+        (prev as ImageBitmap).close();
+      }
+      bannerImg.current = painted.bitmap;
+      bannerNat.current = { w: painted.w, h: painted.h };
+      setOverlay((cur) => {
+        const next = cur === "off" ? "lower" : cur;
+        if (!bannerLay.current) snapBanner(next === "top" ? "top" : "lower");
+        return next;
+      });
+    };
+    void pinLive();
+    const onPin = () => void pinLive();
+    const onStore = (e: StorageEvent) => {
+      if (e.key === CLIP_BANNER_LS) void pinLive();
+    };
+    const onVis = () => {
+      if (document.visibilityState === "visible") void pinLive();
+    };
+    let bus: BroadcastChannel | null = null;
+    try {
+      bus = new BroadcastChannel(CLIP_BANNER_EVENT);
+      bus.onmessage = onPin;
+    } catch {
+      bus = null;
+    }
+    window.addEventListener(CLIP_BANNER_EVENT, onPin);
+    window.addEventListener("storage", onStore);
+    document.addEventListener("visibilitychange", onVis);
     return () => {
+      stop = true;
+      window.removeEventListener(CLIP_BANNER_EVENT, onPin);
+      window.removeEventListener("storage", onStore);
+      document.removeEventListener("visibilitychange", onVis);
+      bus?.close();
       releaseVideo(videoRef.current, objectUrl.current);
       objectUrl.current = null;
       if (bannerUrl.current) URL.revokeObjectURL(bannerUrl.current);
@@ -240,7 +283,7 @@ export function ClipBench() {
     };
   }
 
-  function paint(canvas: HTMLCanvasElement, video: HTMLVideoElement, ghosts: boolean, w = size.w, h = size.h, forFile = false) {
+  function paint(canvas: HTMLCanvasElement, video: HTMLVideoElement | null, ghosts: boolean, w = size.w, h = size.h, forFile = false) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const s = paintArgs.current;
@@ -248,7 +291,7 @@ export function ClipBench() {
     if (canvas.height !== h) canvas.height = h;
     ctx.fillStyle = "#120f0c";
     ctx.fillRect(0, 0, w, h);
-    if (video.readyState >= 2 && video.videoWidth) {
+    if (video && video.readyState >= 2 && video.videoWidth) {
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.rotate((s.rotate * Math.PI) / 180);
@@ -258,7 +301,7 @@ export function ClipBench() {
       ctx.drawImage(video, box.sx, box.sy, box.sw, box.sh, 0, 0, w, h);
       ctx.restore();
     }
-    const t = video.currentTime || s.now;
+    const t = (video?.currentTime || s.now);
     const fadeInSec = (s.fadeIn / Math.max(1, s.fps)) / Math.max(0.25, s.speed);
     const fadeOutSec = (s.fadeOut / Math.max(1, s.fps)) / Math.max(0.25, s.speed);
     let fade = 1;
@@ -269,11 +312,20 @@ export function ClipBench() {
       ctx.fillRect(0, 0, w, h);
     }
     if (s.overlay !== "off" && bannerImg.current) {
-      const barH = Math.round(h * (s.overlay === "top" ? 0.2 : 0.22));
-      const y = s.overlay === "top" ? 0 : h - barH;
+      const nat = bannerNat.current;
+      const lay =
+        bannerLay.current ??
+        layoutFromStrip(w, h, nat.w || 1200, nat.h || 480, s.overlay === "top" ? "top" : "lower");
+      const strip = {
+        x: lay.x * w,
+        y: lay.y * h,
+        w: lay.w * w,
+        h: lay.h * h,
+      };
       ctx.save();
-      ctx.globalAlpha = Math.min(1, Math.max(0.6, s.opacity / 100));
-      ctx.drawImage(bannerImg.current, 0, y, w, barH);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(bannerImg.current, strip.x, strip.y, strip.w, strip.h);
       ctx.restore();
     }
     const mark = CLIP_MARKS.find((item) => item.id === s.markId && item.id !== "none");
@@ -303,14 +355,13 @@ export function ClipBench() {
       const video = videoRef.current;
       const canvas = canvasRef.current;
       const s = paintArgs.current;
-      if (video && canvas) {
-        if (exportingRef.current) {
+      if (canvas) {
+        if (video && exportingRef.current) {
           const rvfcBusy = video as HTMLVideoElement & { requestVideoFrameCallback?: (cb: () => void) => number };
           id = rvfcBusy.requestVideoFrameCallback ? rvfcBusy.requestVideoFrameCallback(tick) : window.requestAnimationFrame(tick);
           return;
         }
-        const t = video.currentTime;
-        if (!exportingRef.current && s.loop && s.outPoint > s.inPoint && t >= s.outPoint - 0.04) {
+        if (video && !exportingRef.current && s.loop && s.outPoint > s.inPoint && video.currentTime >= s.outPoint - 0.04) {
           video.currentTime = s.inPoint;
         }
         const preview = previewSize(CLIP_ASPECTS[s.aspect].w, CLIP_ASPECTS[s.aspect].h);
@@ -318,6 +369,7 @@ export function ClipBench() {
         const stamp = performance.now();
         if (stamp - lastUi.current > 80) {
           lastUi.current = stamp;
+          const t = video?.currentTime ?? 0;
           setNow(t);
           applyLiveGain(t);
           const node = analyser.current;
@@ -336,46 +388,157 @@ export function ClipBench() {
           }
         }
       }
-      const rvfc = video as HTMLVideoElement & { requestVideoFrameCallback?: (cb: () => void) => number };
-      id = rvfc?.requestVideoFrameCallback ? rvfc.requestVideoFrameCallback(tick) : window.requestAnimationFrame(tick);
+      id = window.requestAnimationFrame(tick);
     };
     tick();
     return () => {
       live = false;
-      const rvfc = videoRef.current as HTMLVideoElement & { cancelVideoFrameCallback?: (n: number) => void };
-      if (rvfc?.cancelVideoFrameCallback) rvfc.cancelVideoFrameCallback(id);
-      else window.cancelAnimationFrame(id);
+      window.cancelAnimationFrame(id);
     };
-  }, [hasClip]);
+  }, []);
 
   useEffect(() => {
-    saveEditPrefs(aspect, overlay);
-  }, [aspect, overlay]);
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    if (!canvas) return;
+    const preview = previewSize(size.w, size.h);
+    paint(canvas, video, true, preview.w, preview.h);
+  }, [aspect, size.w, size.h]);
 
-  function useDeskBanner() {
-    const saved = readDesk();
-    const loc = LOCATIONS.find((item) => item.id === saved.locationId) ?? LOCATIONS.find((item) => item.edition === edition);
-    const src = saved.stillSrc || (loc ? (saved.view === "b" && loc.viewB ? loc.viewB : loc.viewA) : "");
-    if (!src) {
-      setStatus("No desk still saved.");
-      return;
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (overlay === "off" || !bannerLay.current) return;
+      e.preventDefault();
+      const lay = bannerLay.current;
+      const factor = e.deltaY < 0 ? 1.08 : 1 / 1.08;
+      const cx = lay.x + lay.w / 2;
+      const cy = lay.y + lay.h / 2;
+      const nw = lay.w * factor;
+      const nh = lay.h * factor;
+      bannerLay.current = clampBannerLayout({
+        w: nw,
+        h: nh,
+        x: cx - nw / 2,
+        y: cy - nh / 2,
+      });
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [overlay, hasClip]);
+
+  function snapBanner(pos: "top" | "lower") {
+    const box = CLIP_ASPECTS[paintArgs.current.aspect];
+    const nat = bannerNat.current;
+    bannerLay.current = layoutFromStrip(box.w, box.h, nat.w || 1200, nat.h || 480, pos);
+  }
+
+  function canvasPoint(e: PtrEvent<HTMLCanvasElement>) {
+    const canvas = canvasRef.current;
+    if (!canvas) return null;
+    const r = canvas.getBoundingClientRect();
+    if (!r.width || !r.height) return null;
+    return {
+      x: ((e.clientX - r.left) / r.width) * canvas.width,
+      y: ((e.clientY - r.top) / r.height) * canvas.height,
+      cw: canvas.width,
+      ch: canvas.height,
+    };
+  }
+
+  function onBannerPointerDown(e: PtrEvent<HTMLCanvasElement>) {
+    if (overlay === "off" || !bannerImg.current) return;
+    const p = canvasPoint(e);
+    if (!p) return;
+    const lay =
+      bannerLay.current ??
+      layoutFromStrip(p.cw, p.ch, bannerNat.current.w, bannerNat.current.h, overlay === "top" ? "top" : "lower");
+    bannerLay.current = lay;
+    const x = lay.x * p.cw;
+    const y = lay.y * p.ch;
+    const w = lay.w * p.cw;
+    const h = lay.h * p.ch;
+    if (p.x < x || p.x > x + w || p.y < y || p.y > y + h) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    bannerDrag.current = { id: e.pointerId, ox: p.x - x, oy: p.y - y, x, y };
+  }
+
+  function onBannerPointerMove(e: PtrEvent<HTMLCanvasElement>) {
+    const drag = bannerDrag.current;
+    if (!drag || drag.id !== e.pointerId) return;
+    const p = canvasPoint(e);
+    if (!p || !bannerLay.current) return;
+    e.preventDefault();
+    const nx = (p.x - drag.ox) / p.cw;
+    const ny = (p.y - drag.oy) / p.ch;
+    bannerLay.current = clampBannerLayout({ ...bannerLay.current, x: nx, y: ny });
+  }
+
+  function onBannerPointerUp(e: PtrEvent<HTMLCanvasElement>) {
+    if (bannerDrag.current?.id === e.pointerId) {
+      bannerDrag.current = null;
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch {
+        /* already */
+      }
     }
-    const img = new Image();
-    img.onload = async () => {
+  }
+
+  async function loadDeskBanner(pos: OverlayPos = overlay === "off" ? "lower" : overlay) {
+    setStatus("Reading the desk…");
+    const painted = await renderDeskBanner();
+    if (!painted) {
+      setStatus("Save for clips on the home desk first.");
+      return false;
+    }
+    const prev = bannerImg.current;
+    if (prev && "close" in prev && typeof (prev as ImageBitmap).close === "function") {
+      (prev as ImageBitmap).close();
+    }
+    bannerImg.current = painted.bitmap;
+    bannerNat.current = { w: painted.w, h: painted.h };
+    const next = pos === "off" ? "lower" : pos;
+    snapBanner(next);
+    setOverlay(next);
+    const who = sanitizeDisplayName(readDesk().streamer ?? "") || "desk";
+    setStatus(`${who} · ${painted.w}×${painted.h} on the clip.`);
+    return true;
+  }
+
+  async function placeDeskBanner(pos: "top" | "lower") {
+    await loadDeskBanner(pos);
+  }
+
+  async function takeBannerFile(file: File) {
+    const ok = (file.type && file.type.indexOf("image/") === 0) || /\.(png|jpe?g|webp)$/i.test(file.name || "");
+    if (!ok) return false;
+    const href = URL.createObjectURL(file);
+    try {
+      const img = new Image();
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error("banner"));
+        img.src = href;
+      });
       const prev = bannerImg.current;
       if (prev && "close" in prev && typeof (prev as ImageBitmap).close === "function") {
         (prev as ImageBitmap).close();
       }
-      try {
-        bannerImg.current = await createImageBitmap(img);
-      } catch {
-        bannerImg.current = img;
-      }
-      if (overlay === "off") setOverlay("lower");
-      setStatus("Desk still loaded as overlay.");
-    };
-    img.onerror = () => setStatus("That still did not load.");
-    img.src = src;
+      bannerImg.current = img;
+      bannerNat.current = { w: img.naturalWidth || 1200, h: img.naturalHeight || 480 };
+      const blob = file.type.startsWith("image/") ? file : await (await fetch(href)).blob();
+      await saveClipBanner(blob, bannerNat.current.w, bannerNat.current.h);
+      const pos = overlay === "top" ? "top" : "lower";
+      snapBanner(pos);
+      setOverlay(pos);
+      setStatus("Saved plate on the clip.");
+      return true;
+    } catch {
+      setStatus("That still did not load.");
+      return false;
+    }
   }
 
   async function holdingCard() {
@@ -445,6 +608,10 @@ export function ClipBench() {
   }
 
   function takeVideo(file: File) {
+    if (file.type.startsWith("image/") || /\.(png|jpe?g|webp)$/i.test(file.name)) {
+      void takeBannerFile(file);
+      return;
+    }
     const looksVideo = file.type.startsWith("video/") || /\.(mp4|webm|mov|m4v|mkv)$/i.test(file.name);
     if (!looksVideo) {
       setStatus("Could not read that file.");
@@ -776,9 +943,27 @@ export function ClipBench() {
     canvas.style.position = "fixed";
     canvas.style.left = "-9999px";
     document.body.appendChild(canvas);
-    canvas.getContext("2d", { alpha: false, desynchronized: true });
+    canvas.getContext("2d", { alpha: false, willReadFrequently: true });
+    const overlayOn = paintArgs.current.overlay !== "off" && Boolean(bannerImg.current);
+    const plate = document.createElement("canvas");
+    if (overlayOn && bannerImg.current) {
+      plate.width = Math.max(2, Math.round(bannerNat.current.w) || 1200);
+      plate.height = Math.max(2, Math.round(bannerNat.current.h) || 480);
+      const baked = plate.getContext("2d", { alpha: false });
+      baked?.drawImage(bannerImg.current, 0, 0, plate.width, plate.height);
+    }
+    const laySnap = bannerLay.current;
     const ctxTick = () => {
       paint(canvas, video, false, w, h, true);
+      if (overlayOn && plate.width > 2) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const lay =
+            laySnap ??
+            layoutFromStrip(w, h, plate.width, plate.height, paintArgs.current.overlay === "top" ? "top" : "lower");
+          ctx.drawImage(plate, lay.x * w, lay.y * h, lay.w * w, lay.h * h);
+        }
+      }
     };
     exportingRef.current = true;
     attachSound(video);
@@ -933,7 +1118,7 @@ export function ClipBench() {
     window.setTimeout(() => {
       a.remove();
       URL.revokeObjectURL(href);
-    }, 2500);
+    }, 30000);
     return file;
   }
 
@@ -960,11 +1145,11 @@ export function ClipBench() {
       setStatus("This browser cannot write an MP4.");
       return;
     }
+    const first = pair ? CLIP_ASPECTS["16x9-720"] : box ?? size;
     setBusy(true);
     setExportPct(0);
     setStatus("Making clip…");
     try {
-      const first = pair ? CLIP_ASPECTS["16x9-720"] : box ?? size;
       const one = await recordOnce(first.w, first.h);
       await downloadBlob(one.blob, first.w, first.h, one.mime);
       if (pair) {
@@ -1029,7 +1214,10 @@ export function ClipBench() {
           if (file) takeVideo(file);
         }}
       >
-        <div className="relative mx-auto w-full max-w-[960px] overflow-hidden bg-[#120f0c]" style={{ aspectRatio: `${size.w} / ${size.h}` }}>
+        <div
+          className="relative mx-auto w-full max-w-[960px] overflow-hidden bg-[#120f0c]"
+          style={{ aspectRatio: `${size.w} / ${size.h}` }}
+        >
           {!hasClip ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
               <p className="text-sm text-muted">{ready === "loading" ? "Reading clip…" : "No clip"}</p>
@@ -1042,7 +1230,14 @@ export function ClipBench() {
               </button>
             </div>
           ) : null}
-          <canvas ref={canvasRef} className="block h-full w-full object-contain" />
+          <canvas
+            ref={canvasRef}
+            className="block h-full w-full touch-none object-contain"
+            onPointerDown={onBannerPointerDown}
+            onPointerMove={onBannerPointerMove}
+            onPointerUp={onBannerPointerUp}
+            onPointerCancel={onBannerPointerUp}
+          />
           {hasClip ? (
             <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-2 font-mono text-[10px] tabular-nums text-[#efe4c8]">
               <div className="flex items-start justify-between gap-2">
@@ -1250,6 +1445,26 @@ export function ClipBench() {
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
+            className={overlay !== "off" ? CHIP_ON : CHIP}
+            onClick={() => {
+              if (overlay !== "off") {
+                setOverlay("off");
+                setStatus("Banner off the clip.");
+                return;
+              }
+              void loadDeskBanner("lower");
+            }}
+          >
+            Desk banner
+          </button>
+          <button type="button" className={overlay === "top" ? CHIP_ON : CHIP} onClick={() => void placeDeskBanner("top")}>
+            Top
+          </button>
+          <button type="button" className={overlay === "lower" ? CHIP_ON : CHIP} onClick={() => void placeDeskBanner("lower")}>
+            Bottom
+          </button>
+          <button
+            type="button"
             className={ltOn ? CHIP_ON : CHIP}
             onClick={() => {
               setLtOn((on) => !on);
@@ -1287,7 +1502,7 @@ export function ClipBench() {
             </button>
           ))}
         </div>
-        <p className="text-[11px] text-muted">Upload. Mark In and Out. Pick a size. Save clip.</p>
+        <p className="text-[11px] text-muted">Upload. Drag the desk banner. Pick a size. Save clip.</p>
         <p className="text-[11px] text-muted" aria-live="polite">
           {busy ? `Making clip… ${Math.round(exportPct)}%` : status}
           {fileLabel && !busy ? ` · ${fileLabel}` : ""}

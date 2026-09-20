@@ -5,8 +5,9 @@ import { TodayDesk } from "@/components/today-desk";
 import { TownHero } from "@/components/town-hero";
 import { OracleLine } from "@/components/oracle-line";
 import { StillPhoto } from "@/components/still-photo";
-import { drawBanner, ensurePlateFont, loadImage, plateMetrics, putStillOnDesk, layoutPack, pickRandom, loadStill, eraCaption, captionForSrc, FALLBACK } from "@/desk";
+import { paintRSYellow, ensurePlateFont, plateMetrics, putStillOnDesk, layoutPack, pickRandom, loadStill, eraCaption, captionForSrc, FALLBACK } from "@/desk";
 import { loadStudioSave, writeStudioSave } from "@/desk/save";
+import { saveClipBanner } from "@/desk/clip-banner";
 import { deskSharePath, readDeskQuery } from "@/desk/desk-link";
 import { PlaceRail } from "@/places";
 import { stillIndex } from "@/lib/still-clock";
@@ -39,7 +40,7 @@ import { townNote } from "@/lib/town-notes";
 import {
   looksLikeStaffName,
   sanitizeClan,
-  sanitizeDiscord,
+  sanitizeDiscordLive,
   sanitizeDisplayName,
   sanitizeGrind,
   sanitizeHandle,
@@ -183,6 +184,9 @@ export function Studio() {
       setPlateFontOk(ok);
       requestPaint();
     });
+    for (const row of [...SKILLS, ...MARKS]) {
+      void ensureStamp(row.src).catch(() => undefined);
+    }
     const onShow = (event: PageTransitionEvent) => {
       if (event.persisted) setPlaceCap((n) => n);
     };
@@ -382,6 +386,41 @@ export function Studio() {
     );
   }
 
+  function ensureStamp(src: string) {
+    const hit = stampBitmaps.current.get(src);
+    if (hit?.complete && hit.naturalWidth) return Promise.resolve(hit);
+    return new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        stampBitmaps.current.set(src, img);
+        resolve(img);
+      };
+      img.onerror = () => reject(new Error(src));
+      img.src = src;
+    });
+  }
+
+  function grabStamp(src: string, pic?: HTMLImageElement | null) {
+    if (pic && pic.complete && pic.naturalWidth) {
+      stampBitmaps.current.set(src, pic);
+      return pic;
+    }
+    const hit = stampBitmaps.current.get(src);
+    if (hit?.complete && hit.naturalWidth) return hit;
+    if (typeof document === "undefined") return undefined;
+    const nodes = document.querySelectorAll("img");
+    for (const el of nodes) {
+      const attr = el.getAttribute("src") || "";
+      if (attr === src || el.src.endsWith(src) || (src.startsWith("/") && el.src.includes(src))) {
+        if (el.complete && el.naturalWidth) {
+          stampBitmaps.current.set(src, el);
+          return el;
+        }
+      }
+    }
+    return undefined;
+  }
+
   function dropIllegal(pack: "OSRS" | "RS3") {
     setSkillPicks((cur) =>
       cur.filter((item) => catalog.some((row) => row.id === item.id && row.editions.includes(pack))),
@@ -480,19 +519,25 @@ export function Studio() {
     return 0.88;
   }
 
-  function fitPackToPlate(w: number, h: number, mode: "fit" | "room" | "desk" = packFit, fillAll = false) {
-    const marks = skillPicksRef.current.filter((item) => isMark(item.id)).slice(0, 16);
-    let skills = skillPicksRef.current.filter((item) => !isMark(item.id));
-    if (fillAll || !skills.length) {
-      skills = SKILLS.filter((skill) => skill.editions.includes(skillPack)).map((skill) => ({
+  function traySkills() {
+    const placed = skillPicksRef.current.filter((item) => !isMark(item.id));
+    return SKILLS.filter((skill) => skill.editions.includes(skillPack)).map((skill) => {
+      const pick = placed.find((item) => item.id === skill.id);
+      return {
         id: skill.id,
         game: skillPack,
-        level: boardLevels[skillPack][skill.id] ?? "",
+        level: pick?.level || boardLevels[skillPack][skill.id] || "",
         group: "skills-all" as const,
         size: skillSize,
         scale: 1,
-      }));
-    }
+      };
+    });
+  }
+
+  function fitPackToPlate(w: number, h: number, mode: "fit" | "room" | "desk" = packFit, fillAll = false) {
+    const marks = skillPicksRef.current.filter((item) => isMark(item.id)).slice(0, 16);
+    const placed = skillPicksRef.current.filter((item) => !isMark(item.id));
+    const skills = fillAll || mode === "fit" || !placed.length ? traySkills() : placed;
     const laid = layoutPack(
       skills.map((item) => ({
         ...item,
@@ -510,11 +555,27 @@ export function Studio() {
     setSkillPicks(next);
     centerNameOverStamps(next);
     setSaveNote(mode === "fit" ? `Fit ${w}×${h}.` : mode === "room" ? `Room on ${w}×${h}.` : `Desk on ${w}×${h}.`);
+    for (const item of next) {
+      const skill = stampFile(item.id, item.game);
+      if (skill) grabStamp(skill.src);
+    }
+    requestPaint();
+    void Promise.all(
+      next.map(async (item) => {
+        const skill = stampFile(item.id, item.game);
+        if (!skill) return;
+        try {
+          await ensureStamp(skill.src);
+        } catch {
+          /* skip */
+        }
+      }),
+    ).then(() => requestPaint());
   }
 
   function applyPackFit(mode: "fit" | "room" | "desk") {
     setPackFit(mode);
-    fitPackToPlate(size.width, size.height, mode, false);
+    fitPackToPlate(size.width, size.height, mode, true);
   }
 
   function placeAllPack(packScaleValue?: number, mode: "fit" | "room" | "desk" = packFit) {
@@ -522,11 +583,12 @@ export function Studio() {
     void packScaleValue;
   }
 
-  function placeStamp(id: string) {
+  function placeStamp(id: string, pic?: HTMLImageElement | null) {
+    const file = stampFile(id, skillPack) ?? catalog.find((item) => item.id === id);
+    if (file) grabStamp(file.src, pic ?? null);
     setSkillPicks((cur) => {
       const existing = cur.find((item) => item.id === id);
       if (existing) {
-        setPickedSkill(id);
         return cur;
       }
       const marks = cur.filter((item) => isMark(item.id)).length;
@@ -540,10 +602,18 @@ export function Studio() {
       const left = Math.round(size.width * 0.04);
       const x = skillPlace === "name" ? left + n * (mark + 6) : Math.round(size.width * 0.06 + (n % 8) * (mark + 8));
       const y = skillPlace === "name" ? Math.round(size.height * 0.28) : Math.round(size.height * 0.52 + Math.floor(n / 8) * (mark + 8));
-      setPickedSkill(id);
-      setArmedSkill(null);
-      return [...cur, { id, game: skillPack, level: boardLevels[skillPack][id] ?? "", x, y, size: skillSize, scale }];
+      const next = [...cur, { id, game: skillPack, level: boardLevels[skillPack][id] ?? "", x, y, size: skillSize, scale }];
+      skillPicksRef.current = next;
+      return next;
     });
+    setPickedSkill(id);
+    setArmedSkill(null);
+    requestPaint();
+    if (file?.src) {
+      void ensureStamp(file.src)
+        .then(() => requestPaint())
+        .catch(() => requestPaint());
+    }
   }
 
   useEffect(() => {
@@ -698,85 +768,62 @@ export function Studio() {
     ctx.drawImage(img, sx, sy, tw2, th2, 0, 0, w, h);
   }
 
+  function paintHud(ctx: CanvasRenderingContext2D, w: number, h: number, sx = 1, sy = 1) {
+    const boxes: { id: string; x: number; y: number; w: number; h: number }[] = [];
+    ctx.imageSmoothingEnabled = edition !== "OSRS";
+    if (ctx.imageSmoothingEnabled) ctx.imageSmoothingQuality = "high";
+    for (const pick of skillPicksRef.current) {
+      const skill = stampFile(pick.id, pick.game) ?? catalog.find((item) => item.id === pick.id);
+      if (!skill) continue;
+      const img = grabStamp(skill.src);
+      if (!img) continue;
+      const icon = Math.max(24, Math.round((pick.size ?? skillSize) * (pick.scale ?? 1) * sx));
+      const px = Math.round(Math.max(0, Math.min(w - icon, (pick.x ?? 40) * sx)));
+      const py = Math.round(Math.max(0, Math.min(h - icon, (pick.y ?? 80) * sy)));
+      try {
+        ctx.drawImage(img, px, py, icon, icon);
+      } catch {
+        continue;
+      }
+      boxes.push({ id: skill.id, x: px, y: py, w: icon, h: icon });
+      const label = (pick.level ?? "").trim();
+      if (label) {
+        const ls = Math.max(16, Math.round(icon * 0.5));
+        paintRSYellow(ctx, label, px + icon + 4, py + Math.round(icon / 2) - ls / 2, ls);
+      }
+    }
+    const copy = copyRef.current;
+    const name = sanitizeDisplayName(copy.streamer);
+    const chip = plateMetrics(w, h);
+    const pos = textPosRef.current.streamer;
+    let nx = (pos?.x ?? 36) * sx;
+    let ny = (pos?.y ?? 24) * sy;
+    const ns = Math.max(18, Math.round(chip.name * (textScaleRef.current.streamer ?? 1)));
+    if (name) {
+      paintRSYellow(ctx, copy.caps ? name.toUpperCase() : name, nx, ny, ns);
+      boxes.push({ id: "streamer", x: nx, y: ny, w: Math.max(80, name.length * ns * 0.6), h: ns + 8 });
+      ny += ns + 6;
+    }
+    for (const line of [copy.clan, copy.handle, copy.tagline].filter(Boolean)) {
+      const sz = Math.max(12, Math.round(ns * 0.42));
+      paintRSYellow(ctx, line, nx, ny, sz);
+      ny += sz + 4;
+    }
+    return boxes;
+  }
+
   function paintNow() {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    if (canvas.width !== size.width) canvas.width = size.width;
-    if (canvas.height !== size.height) canvas.height = size.height;
-    const still = stillCacheRef.current;
-    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
+    const w = size.width;
+    const h = size.height;
+    if (canvas.width !== w) canvas.width = w;
+    if (canvas.height !== h) canvas.height = h;
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, size.width, size.height);
-    ctx.imageSmoothingEnabled = edition !== "OSRS" && !draggingRef.current;
-    if (ctx.imageSmoothingEnabled) ctx.imageSmoothingQuality = "high";
-    const catalog = [...SKILLS, ...MARKS, ...customMarks.map((mark) => ({
-    id: mark.id,
-    name: mark.name,
-    editions: [mark.game] as ("OSRS" | "RS3")[],
-    src: mark.src,
-  }))];
-    const icons = [];
-    for (const pick of skillPicksRef.current) {
-      const skill = stampFile(pick.id, pick.game) ?? catalog.find((item) => item.id === pick.id);
-      const img = skill ? stampBitmaps.current.get(skill.src) : undefined;
-      if (!skill || !img) continue;
-      icons.push({
-        id: skill.id,
-        img,
-        level: pick.level ?? "",
-        x: pick.x,
-        y: pick.y,
-        size: pick.size ?? skillSize,
-        scale: pick.scale ?? 1,
-      });
-    }
-    const copy = copyRef.current;
-    drawBanner(ctx, still ?? canvas, {
-      showRules: false,
-      overlayOnly: true,
-      streamer: copy.streamer,
-      clan: copy.clan,
-      handle: copy.handle,
-      tagline: copy.tagline,
-      god: copy.god,
-      world: copy.world,
-      maxed: false,
-      mode: "",
-      focus: "",
-      style: "",
-      cape: "",
-      discord: copy.discord,
-      grind: copy.grind,
-      learners: false,
-      layout: "banner",
-      vosLine: "",
-      showSafeZones: false,
-      safeZone: "none",
-      showGod: false,
-      edition: copy.edition,
-      caps: copy.caps,
-      textColor: "#ffff00",
-      rulesTitle: "",
-      honourHead: "",
-      honourBody: "",
-      respectHead: "",
-      respectBody: "",
-      securityHead: "",
-      securityBody: "",
-      width: size.width,
-      height: size.height,
-      skillIcons: icons,
-      skillX: copy.skillX,
-      skillY: copy.skillY,
-      skillPlace: copy.skillPlace,
-      skillSize: copy.skillSize,
-      textPos: textPosRef.current,
-      textScale: textScaleRef.current,
-      onSkillBoxes: (boxes) => {
-        boxesRef.current = boxes;
-      },
-    });
+    ctx.clearRect(0, 0, w, h);
+    boxesRef.current = paintHud(ctx, w, h, 1, 1);
   }
 
   function requestPaint() {
@@ -784,7 +831,6 @@ export function Studio() {
     if (rafRef.current) return;
     rafRef.current = window.requestAnimationFrame(() => {
       rafRef.current = 0;
-      if (document.visibilityState === "hidden") return;
       if (!dirtyRef.current) return;
       dirtyRef.current = false;
       paintNow();
@@ -950,30 +996,27 @@ export function Studio() {
 
   useEffect(() => {
     let gone = false;
-    const catalog = [...SKILLS, ...MARKS, ...customMarks.map((mark) => ({
-    id: mark.id,
-    name: mark.name,
-    editions: [mark.game] as ("OSRS" | "RS3")[],
-    src: mark.src,
-  }))];
     void (async () => {
       for (const pick of skillPicks) {
-        const skill = stampFile(pick.id, pick.game) ?? catalog.find((item) => item.id === pick.id);
-        if (!skill || stampBitmaps.current.has(skill.src)) continue;
+        const skill = stampFile(pick.id, pick.game);
+        if (!skill) continue;
         try {
-          const img = await loadImage(skill.src);
-          if (gone) return;
-          stampBitmaps.current.set(skill.src, img);
+          await ensureStamp(skill.src);
         } catch {
-          /* skip */
+          /* skip missing sprite */
         }
+        if (gone) break;
       }
-      requestPaint();
+      if (!gone) requestPaint();
     })();
     return () => {
       gone = true;
     };
-  }, [skillPicks, customMarks, streamer, clan, handle, tagline, world, discord, grind, textPos, textScale, skillSize, skillPlace, edition, bannerCaps]);
+  }, [skillPicks]);
+
+  useEffect(() => {
+    requestPaint();
+  }, [skillPicks, streamer, clan, handle, tagline, world, discord, grind, textPos, textScale, skillSize, skillPlace, edition, bannerCaps]);
 
   useEffect(() => {
     const el = canvasRef.current;
@@ -985,37 +1028,40 @@ export function Studio() {
     return () => el.removeEventListener("wheel", stop);
   }, [pickedSkill, pickedText, overIcon]);
 
-  function downloadJpeg(box?: { width: number; height: number }) {
-    const still = stillCacheRef.current;
-    const overlay = canvasRef.current;
+  function composePlate(box?: { width: number; height: number }) {
+    const plate = typeof document !== "undefined" ? (document.getElementById("still") as HTMLImageElement | null) : null;
+    const still = stillCacheRef.current ?? (plate && plate.naturalWidth ? plate : null);
+    if (!still) return null;
     const w = box?.width ?? size.width;
     const h = box?.height ?? size.height;
     const out = document.createElement("canvas");
     out.width = w;
     out.height = h;
     const ctx = out.getContext("2d", { alpha: false });
-    if (!ctx) {
-      setSaveNote("Could not save. Try 1200×480.");
-      return;
-    }
+    if (!ctx) return null;
     ctx.fillStyle = "#1a1610";
     ctx.fillRect(0, 0, out.width, out.height);
-    if (still && (still as HTMLCanvasElement).width) {
-      paintOnto(ctx, still, out.width, out.height, size.width, size.height);
-    } else if (overlay) {
-      const plate = document.getElementById("still") as HTMLImageElement | null;
-      if (plate && plate.naturalWidth) coverStill(ctx, plate, out.width, out.height);
-      ctx.drawImage(overlay, 0, 0, out.width, out.height);
-    } else {
+    paintOnto(ctx, still, out.width, out.height, size.width, size.height);
+    return out;
+  }
+
+  function downloadJpeg(box?: { width: number; height: number }) {
+    const out = composePlate(box);
+    if (!out) {
       setSaveNote("Could not save. Try 1200×480.");
       return;
     }
+    const w = out.width;
+    const h = out.height;
     out.toBlob(
       (blob) => {
         if (!blob) {
           setSaveNote("Could not save. Try 1200×480.");
           return;
         }
+        void saveClipBanner(blob, w, h).then(() => {
+          setSaveNote(`Saved ${w}×${h}. On the clip bench too.`);
+        });
         const who = sanitizeDisplayName(streamer);
         const worldTag = sanitizeWorld(world) ? `-w${sanitizeWorld(world)}` : "";
         const href = URL.createObjectURL(blob);
@@ -1030,7 +1076,27 @@ export function Studio() {
           a.remove();
           URL.revokeObjectURL(href);
         }, 2500);
-        setSaveNote(`Saved ${w}×${h}.`);
+      },
+      "image/jpeg",
+      0.96,
+    );
+  }
+
+  function saveForClips() {
+    const out = composePlate();
+    if (!out) {
+      setSaveNote("Could not save. Try 1200×480.");
+      return;
+    }
+    out.toBlob(
+      (blob) => {
+        if (!blob) {
+          setSaveNote("Could not save. Try 1200×480.");
+          return;
+        }
+        void saveClipBanner(blob, out.width, out.height).then(() => {
+          setSaveNote(`Saved for clips · ${out.width}×${out.height}. Video editor → Desk banner.`);
+        });
       },
       "image/jpeg",
       0.96,
@@ -1045,75 +1111,17 @@ export function Studio() {
     layoutW = size.width,
     layoutH = size.height,
   ) {
-    const sx = w / layoutW;
-    const sy = h / layoutH;
-    const catalog = [...SKILLS, ...MARKS, ...customMarks.map((mark) => ({
-    id: mark.id,
-    name: mark.name,
-    editions: [mark.game] as ("OSRS" | "RS3")[],
-    src: mark.src,
-  }))];
-    const icons = [];
-    for (const pick of skillPicksRef.current) {
-      const skill = stampFile(pick.id, pick.game) ?? catalog.find((item) => item.id === pick.id);
-      const img = skill ? stampBitmaps.current.get(skill.src) : undefined;
-      if (!skill || !img) continue;
-      icons.push({
-        id: skill.id,
-        img,
-        level: pick.level ?? "",
-        x: pick.x != null ? pick.x * sx : undefined,
-        y: pick.y != null ? pick.y * sy : undefined,
-        size: (pick.size ?? skillSize) * sx,
-        scale: pick.scale ?? 1,
-      });
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = "#1a1610";
+    ctx.fillRect(0, 0, w, h);
+    if (still && still !== ctx.canvas) {
+      try {
+        coverStill(ctx, still, w, h, stillZoom, stillPan.x, stillPan.y);
+      } catch {
+        /* still missing */
+      }
     }
-    const scaledPos = Object.fromEntries(
-      Object.entries(textPosRef.current).map(([key, pos]) => [key, { x: pos.x * sx, y: pos.y * sy }]),
-    );
-    const copy = copyRef.current;
-    drawBanner(ctx, still, {
-      showRules: false,
-      streamer: copy.streamer,
-      clan: copy.clan,
-      handle: copy.handle,
-      tagline: copy.tagline,
-      god: copy.god,
-      world: copy.world,
-      maxed: false,
-      mode: "",
-      focus: "",
-      style: "",
-      cape: "",
-      discord: copy.discord,
-      grind: copy.grind,
-      learners: false,
-      layout: "banner",
-      vosLine: "",
-      showSafeZones: false,
-      safeZone: "none",
-      showGod: false,
-      edition: copy.edition,
-      caps: copy.caps,
-      textColor: "#ffff00",
-      rulesTitle: "",
-      honourHead: "",
-      honourBody: "",
-      respectHead: "",
-      respectBody: "",
-      securityHead: "",
-      securityBody: "",
-      width: w,
-      height: h,
-      skillIcons: icons,
-      skillX: copy.skillX,
-      skillY: copy.skillY,
-      skillPlace: copy.skillPlace,
-      skillSize: copy.skillSize * sx,
-      textPos: scaledPos,
-      textScale: textScaleRef.current,
-      onSkillBoxes: () => undefined,
-    });
+    paintHud(ctx, w, h, w / Math.max(1, layoutW), h / Math.max(1, layoutH));
   }
 
   function downloadPair() {
@@ -1268,7 +1276,8 @@ export function Studio() {
           className="desk-preview-well relative mx-auto w-full overflow-hidden"
           ref={previewRef}
           style={{
-            maxWidth: size.height > size.width ? "22rem" : "56rem",
+            maxWidth: size.height > size.width ? "24rem" : "min(100%, 80rem)",
+            width: "100%",
             aspectRatio: `${size.width} / ${size.height}`,
             background: "#1a1610",
             boxShadow: "inset 0 8px 18px rgba(0,0,0,0.35)",
@@ -1288,8 +1297,10 @@ export function Studio() {
             onLoad={(e) => {
               e.currentTarget.dataset.ok = e.currentTarget.currentSrc;
               setPlateReady(true);
+              stillImgRef.current = e.currentTarget;
               const era = captionForSrc(e.currentTarget.currentSrc || e.currentTarget.src || sceneSrc || "");
               setPlateCaption(era ? `${era} · ${size.width}×${size.height}` : `${location.name} · ${size.width}×${size.height} JPEG · ${size.note}`);
+              requestPaint();
             }}
             onError={(e) => {
               const last = e.currentTarget.dataset.ok;
@@ -1311,7 +1322,7 @@ export function Studio() {
             ref={canvasRef}
             width={size.width}
             height={size.height}
-            className={`desk-preview absolute inset-0 h-full w-full touch-none object-cover ${grabbing ? "cursor-grabbing" : overIcon ? "cursor-grab" : "cursor-default"}`}
+            className={`desk-preview absolute inset-0 h-full w-full touch-none ${grabbing ? "cursor-grabbing" : overIcon ? "cursor-grab" : "cursor-default"}`}
             tabIndex={0}
             role="img"
             aria-label={`${location.name}, ${edition === "OSRS" ? "Old School RuneScape" : "RuneScape"}`}
@@ -1741,6 +1752,23 @@ export function Studio() {
             Discard crop
           </button>
         </div>
+        <div className="mt-1 flex flex-wrap justify-center gap-1">
+          <button
+            type="button"
+            className="min-h-11 rounded-md border border-parchment px-3 text-sm text-parchment"
+            onClick={() => downloadJpeg()}
+          >
+            Download {size.name}
+          </button>
+          <button
+            type="button"
+            className="min-h-11 rounded-md border border-parchment px-3 text-sm text-parchment"
+            onClick={saveForClips}
+          >
+            Save for clips
+          </button>
+        </div>
+        {saveNote ? <p className="mt-1 text-center text-[10px] text-parchment">{saveNote}</p> : null}
         {plateFontOk ? null : (
           <p className="mt-1 text-center text-[10px] text-[#c07050]">Font file missing</p>
         )}
@@ -2007,10 +2035,14 @@ export function Studio() {
                       onPointerUp={(ev) => {
                         if (ev.pointerType === "touch") {
                           ev.preventDefault();
-                          placeStamp(skill.id);
+                          const pic = (ev.currentTarget as HTMLButtonElement).querySelector("img");
+                          placeStamp(skill.id, pic);
                         }
                       }}
-                      onClick={() => placeStamp(skill.id)}
+                      onClick={(ev) => {
+                        const pic = (ev.currentTarget as HTMLButtonElement).querySelector("img");
+                        placeStamp(skill.id, pic);
+                      }}
                       className={`flex size-11 shrink-0 items-center justify-center rounded-sm p-0 [touch-action:manipulation] ${on ? "bg-[#241e16]" : "bg-[#1a140c]"}`}
                     >
                       <img src={skill.src} alt="" className={`size-8 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
@@ -2020,17 +2052,42 @@ export function Studio() {
                       inputMode="numeric"
                       value={pick?.level ?? boardLevels[skillPack][skill.id] ?? ""}
                       placeholder="—"
-                      className="h-8 w-8 rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-0.5 text-center text-[10px] text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+                      className="h-8 w-11 rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-0.5 text-center text-[11px] tabular-nums text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
                       onChange={(e) => {
                         const next = sanitizeSkillLevel(e.target.value, cap);
                         setSkillPicks((cur) => {
                           const existing = cur.find((item) => item.id === skill.id);
                           if (existing) {
-                            return cur.map((item) => (item.id === skill.id ? { ...item, level: next } : item));
+                            const mapped = cur.map((item) => (item.id === skill.id ? { ...item, level: next } : item));
+                            skillPicksRef.current = mapped;
+                            return mapped;
                           }
                           if (!next) return cur;
-                          return [...cur, { id: skill.id, game: skillPack, level: next, size: skillSize, scale: packScale(cur.length + 1) }];
+                          const n = cur.length;
+                          const scale = packScale(n + 1);
+                          const mark = skillSize * scale;
+                          const left = Math.round(size.width * 0.04);
+                          const row = [
+                            ...cur,
+                            {
+                              id: skill.id,
+                              game: skillPack,
+                              level: next,
+                              x: skillPlace === "name" ? left + n * (mark + 6) : Math.round(size.width * 0.06 + (n % 8) * (mark + 8)),
+                              y: skillPlace === "name" ? Math.round(size.height * 0.28) : Math.round(size.height * 0.52 + Math.floor(n / 8) * (mark + 8)),
+                              size: skillSize,
+                              scale,
+                            },
+                          ];
+                          skillPicksRef.current = row;
+                          return row;
                         });
+                        const file = stampFile(skill.id, skillPack);
+                        if (file?.src) {
+                          void ensureStamp(file.src).then(() => requestPaint()).catch(() => requestPaint());
+                        } else {
+                          requestPaint();
+                        }
                       }}
                     />
                   </div>
@@ -2041,7 +2098,7 @@ export function Studio() {
         </div>
 
         <div>
-          <p className="px-1 text-[10px] text-muted">Marks · partyhats sit at skill size, pixel-scaled</p>
+          <p className="px-1 text-[10px] text-muted">Marks · map key, potions, partyhats. Pixel-scaled</p>
           <div className="grid grid-cols-8 gap-0.5 p-1 sm:grid-cols-10">
             {MARKS.filter((mark) => mark.editions.includes(skillPack)).map((mark) => {
               const on = armedSkill === mark.id || skillPicks.some((item) => item.id === mark.id);
@@ -2055,10 +2112,14 @@ export function Studio() {
                   onPointerUp={(ev) => {
                     if (ev.pointerType === "touch") {
                       ev.preventDefault();
-                      placeStamp(mark.id);
+                      const pic = (ev.currentTarget as HTMLButtonElement).querySelector("img");
+                      placeStamp(mark.id, pic);
                     }
                   }}
-                  onClick={() => placeStamp(mark.id)}
+                  onClick={(ev) => {
+                    const pic = (ev.currentTarget as HTMLButtonElement).querySelector("img");
+                    placeStamp(mark.id, pic);
+                  }}
                   className={`flex size-12 items-center justify-center rounded-none bg-transparent p-0 [touch-action:manipulation] ${on ? "outline outline-1 outline-[#F5C400]" : ""}`}
                 >
                   <img src={mark.src} alt="" className={`size-8 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
@@ -2196,7 +2257,7 @@ export function Studio() {
           </label>
           <label className="text-[10px] text-muted">
             Discord
-            <input value={discord} onChange={(e) => setDiscord(sanitizeDiscord(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
+            <input value={discord} onChange={(e) => setDiscord(sanitizeDiscordLive(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
           </label>
           <label className="text-[10px] text-muted">
             Grind
@@ -2271,8 +2332,11 @@ export function Studio() {
             <li>Wheel to scale. Drag the pack. The name sits over the iron you placed.</li>
             <li>Pixels are the platform’s. Match the chip before you title the stream.</li>
             <li>Pete writes the JPEG. That is the work. The wiki keeps the hour.</li>
+            <li>Save for clips. Then Video editor → Desk banner → Top or Bottom.</li>
           </ol>
-          <p className="mt-2 text-[11px] text-faint">Clips are on the Video editor page.</p>
+          <p className="mt-2 text-[11px] text-faint">
+            <Link to="/edit">Clips are on the Video editor page.</Link>
+          </p>
         </article>
         <figure className="mt-4 flex flex-col items-center gap-2">
           <img

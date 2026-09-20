@@ -31,20 +31,22 @@ function codecLadder() {
 
 async function pickVideoConfig(width: number, height: number, fps: number): Promise<VideoEncoderConfig | null> {
   const bitrate = clipVideoBitrate(width, height);
-  for (const codec of codecLadder()) {
-    const cfg: VideoEncoderConfig = {
-      codec,
-      width,
-      height,
-      bitrate,
-      framerate: fps,
-      bitrateMode: "constant",
-      avc: { format: "avc" },
-      hardwareAcceleration: "no-preference",
-      latencyMode: "realtime",
-    };
-    const ok = await VideoEncoder.isConfigSupported(cfg).catch(() => null);
-    if (ok?.supported) return { ...cfg, ...(ok.config ?? {}) };
+  for (const hw of ["prefer-hardware", "no-preference", "prefer-software"] as const) {
+    for (const codec of codecLadder()) {
+      const cfg: VideoEncoderConfig = {
+        codec,
+        width,
+        height,
+        bitrate,
+        framerate: fps,
+        bitrateMode: "constant",
+        avc: { format: "avc" },
+        hardwareAcceleration: hw,
+        latencyMode: "quality",
+      };
+      const ok = await VideoEncoder.isConfigSupported(cfg).catch(() => null);
+      if (ok?.supported) return { ...cfg, ...(ok.config ?? {}) };
+    }
   }
   return null;
 }
@@ -91,11 +93,89 @@ async function writeSilentAac(muxer: Muxer<ArrayBufferTarget>, durationSec: numb
     audio.close();
     frame += n;
   }
-  await encoder.flush().catch(() => undefined);
-  encoder.close();
+  await Promise.race([encoder.flush().catch(() => undefined), sleep(4000)]);
+  try {
+    encoder.close();
+  } catch {
+    /* already closed */
+  }
 }
 
-function waitQueue(encoder: VideoEncoder, max = 2) {
+async function encodePcmAac(
+  muxer: Muxer<ArrayBufferTarget>,
+  buffer: AudioBuffer,
+  inT: number,
+  outT: number,
+  cfg: AudioEncoderConfig,
+) {
+  const encoder = new AudioEncoder({
+    output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
+    error: () => {
+      /* silent fallback */
+    },
+  });
+  encoder.configure(cfg);
+  const sampleRate = cfg.sampleRate;
+  const channels = 2;
+  const hop = 1024;
+  const start = Math.max(0, Math.floor(inT * buffer.sampleRate));
+  const end = Math.min(buffer.length, Math.ceil(outT * buffer.sampleRate));
+  const srcLen = Math.max(1, end - start);
+  const ratio = sampleRate / buffer.sampleRate;
+  const total = Math.max(hop, Math.round(srcLen * ratio));
+  const ch0 = buffer.getChannelData(0);
+  const ch1 = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : ch0;
+  let frame = 0;
+  while (frame < total) {
+    const n = Math.min(hop, total - frame);
+    const data = new Float32Array(n * channels);
+    for (let i = 0; i < n; i++) {
+      const src = start + Math.min(srcLen - 1, Math.floor((frame + i) / ratio));
+      data[i * 2] = ch0[src] || 0;
+      data[i * 2 + 1] = ch1[src] || 0;
+    }
+    const audio = new AudioData({
+      format: "f32",
+      sampleRate,
+      numberOfFrames: n,
+      numberOfChannels: channels,
+      timestamp: Math.round((frame / sampleRate) * 1_000_000),
+      data,
+    });
+    encoder.encode(audio);
+    audio.close();
+    frame += n;
+  }
+  await Promise.race([encoder.flush().catch(() => undefined), sleep(4000)]);
+  try {
+    encoder.close();
+  } catch {
+    /* already closed */
+  }
+}
+
+async function audioFromVideo(video: HTMLVideoElement, inT: number, outT: number, muxer: Muxer<ArrayBufferTarget>, cfg: AudioEncoderConfig) {
+  const src = video.currentSrc || video.src;
+  if (!src) {
+    await writeSilentAac(muxer, outT - inT, cfg);
+    return;
+  }
+  try {
+    const raw = await fetch(src).then((r) => r.arrayBuffer());
+    const ctx = new AudioContext({ sampleRate: cfg.sampleRate });
+    const decoded = await ctx.decodeAudioData(raw.slice(0));
+    await ctx.close().catch(() => undefined);
+    await encodePcmAac(muxer, decoded, inT, outT, cfg);
+  } catch {
+    await writeSilentAac(muxer, outT - inT, cfg);
+  }
+}
+
+function sleep(ms: number) {
+  return new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+}
+
+function waitQueue(encoder: VideoEncoder, max = 8) {
   if (encoder.encodeQueueSize < max) return Promise.resolve();
   return new Promise<void>((resolve) => {
     const onDeq = () => {
@@ -105,13 +185,17 @@ function waitQueue(encoder: VideoEncoder, max = 2) {
       }
     };
     encoder.addEventListener("dequeue", onDeq);
+    window.setTimeout(() => {
+      encoder.removeEventListener("dequeue", onDeq);
+      resolve();
+    }, 250);
   });
 }
 
 function seekTo(video: HTMLVideoElement, t: number) {
   const target = Math.max(0, t);
   return new Promise<void>((resolve) => {
-    if (Math.abs((video.currentTime || 0) - target) < 0.003 && video.readyState >= 2) {
+    if (Math.abs((video.currentTime || 0) - target) < 0.02 && video.readyState >= 2) {
       resolve();
       return;
     }
@@ -128,21 +212,7 @@ function seekTo(video: HTMLVideoElement, t: number) {
     } catch {
       finish();
     }
-    window.setTimeout(finish, 280);
-  });
-}
-
-function waitPresented(video: HTMLVideoElement) {
-  return new Promise<void>((resolve) => {
-    if (typeof video.requestVideoFrameCallback === "function") {
-      const id = video.requestVideoFrameCallback(() => resolve());
-      window.setTimeout(() => {
-        video.cancelVideoFrameCallback(id);
-        resolve();
-      }, 100);
-      return;
-    }
-    window.requestAnimationFrame(() => resolve());
+    window.setTimeout(finish, 120);
   });
 }
 
@@ -163,7 +233,7 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
   if (!videoCfg) return null;
 
   const audioCfg = await pickAacConfig();
-  const liveAudio = opts.audioTracks.some((t) => t.readyState === "live");
+  const wantAudio = Boolean(audioCfg);
 
   const target = new ArrayBufferTarget();
   const muxer = new Muxer({
@@ -191,107 +261,83 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
     avc: { format: "avc" },
   });
 
-  const step = 1 / fps;
   const durationUs = Math.round(1_000_000 / fps);
-  const span = Math.max(step, outT - inT);
+  const span = Math.max(1 / fps, outT - inT);
   let frames = 0;
   let lastTs = -1;
+  let encodeChain = Promise.resolve();
 
-  for (let t = inT, i = 0; t < outT - step / 4; t += step, i += 1) {
-    if (videoError) {
-      encoder.close();
-      return null;
-    }
-    const media = Math.min(t, outT - step);
-    await seekTo(video, media);
-    await waitPresented(video);
-    paint();
-    const ts = Math.max(0, Math.round((media - inT) * 1_000_000));
-    if (ts <= lastTs) continue;
-    lastTs = ts;
-    await waitQueue(encoder);
-    if (encoder.state !== "configured") break;
-    const frame = new VideoFrame(opts.canvas, { timestamp: ts, duration: durationUs, alpha: "discard" });
-    try {
-      encoder.encode(frame, { keyFrame: i === 0 || i % (fps * 2) === 0 });
-      frames += 1;
-    } finally {
-      frame.close();
-    }
-    opts.onPct(Math.min(99, Math.max(0, ((media - inT) / span) * 100)));
-  }
-
-  if (frames < 2) {
-    encoder.close();
-    return null;
-  }
-
-  await encoder.flush().catch(() => undefined);
-  encoder.close();
-
-  if (audioCfg) {
-    if (liveAudio) {
-      const audioEncoder = new AudioEncoder({
-        output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
-        error: () => {
-          /* silent AAC below if this fails */
-        },
-      });
-      audioEncoder.configure(audioCfg);
-      const Processor = (window as unknown as {
-        MediaStreamTrackProcessor?: new (init: { track: MediaStreamTrack }) => {
-          readable: ReadableStream<AudioData>;
-        };
-      }).MediaStreamTrackProcessor;
-      const track = opts.audioTracks[0];
-      let audioReader: ReadableStreamDefaultReader<AudioData> | null = null;
-      let gotAudio = false;
-      if (Processor && track) {
-        const processor = new Processor({ track });
-        audioReader = processor.readable.getReader();
-        void (async () => {
-          try {
-            for (;;) {
-              const { done, value } = await audioReader.read();
-              if (done) break;
-              if (audioEncoder.state === "configured") {
-                audioEncoder.encode(value);
-                gotAudio = true;
-              }
-              value.close();
-            }
-          } catch {
-            /* track ended */
-          }
-        })();
+  const pushFrame = () => {
+    encodeChain = encodeChain.then(async () => {
+      if (videoError || encoder.state !== "configured") return;
+      const ts = frames * durationUs;
+      if (ts <= lastTs) return;
+      lastTs = ts;
+      await waitQueue(encoder);
+      if (encoder.state !== "configured") return;
+      paint();
+      const flush = opts.canvas.getContext("2d");
+      try {
+        flush?.getImageData(0, 0, 1, 1);
+      } catch {
+        /* ignore */
       }
-      await seekTo(video, inT);
-      video.playbackRate = 1;
-      await video.play().catch(() => undefined);
-      await new Promise<void>((resolve) => {
-        const watch = () => {
-          if (video.currentTime >= outT - 0.02 || video.ended) {
-            video.pause();
-            resolve();
-            return;
-          }
-          window.requestAnimationFrame(watch);
-        };
-        watch();
-        window.setTimeout(() => {
-          video.pause();
-          resolve();
-        }, Math.min(180000, span * 1000 + 1500));
-      });
-      if (audioReader) await audioReader.cancel().catch(() => undefined);
-      await audioEncoder.flush().catch(() => undefined);
-      audioEncoder.close();
-      if (!gotAudio) await writeSilentAac(muxer, span, audioCfg);
-    } else {
-      await writeSilentAac(muxer, span, audioCfg);
-    }
+      const frame = new VideoFrame(opts.canvas, { timestamp: ts, duration: durationUs, alpha: "discard" });
+      try {
+        encoder.encode(frame, { keyFrame: frames === 0 || frames % (fps * 2) === 0 });
+        frames += 1;
+      } finally {
+        frame.close();
+      }
+      opts.onPct(Math.min(95, Math.max(0, (frames / Math.max(1, Math.round(span * fps))) * 95)));
+    });
+  };
+
+  await seekTo(video, inT);
+  video.playbackRate = 1;
+  await video.play().catch(() => undefined);
+
+  await new Promise<void>((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      video.pause();
+      resolve();
+    };
+    const tick = () => {
+      if (settled) return;
+      const media = video.currentTime;
+      if (media + 0.5 / fps >= outT || video.ended) {
+        pushFrame();
+        finish();
+        return;
+      }
+      const expected = inT + frames / fps;
+      if (media >= expected - 0.25 / fps) pushFrame();
+      window.requestAnimationFrame(tick);
+    };
+    window.requestAnimationFrame(tick);
+    window.setTimeout(finish, Math.min(180000, span * 1000 + 1500));
+  });
+
+  opts.onPct(97);
+  await encodeChain.catch(() => undefined);
+  await Promise.race([encoder.flush().catch(() => undefined), sleep(5000)]);
+  try {
+    encoder.close();
+  } catch {
+    /* already closed */
   }
 
+  if (frames < 2) return null;
+
+  opts.onPct(98);
+  if (wantAudio && audioCfg) {
+    const audioSpan = Math.max(span, frames / fps);
+    await Promise.race([audioFromVideo(video, inT, inT + audioSpan, muxer, audioCfg), sleep(8000)]);
+  }
+  opts.onPct(99);
   muxer.finalize();
   opts.onPct(100);
   const buffer = target.buffer;

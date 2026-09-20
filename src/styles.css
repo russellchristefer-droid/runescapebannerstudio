@@ -230,7 +230,6 @@ button,
 }
 
 .desk-preview-well {
-  contain: layout paint;
   border-radius: 6px;
 }
 

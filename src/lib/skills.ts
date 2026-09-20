@@ -17,18 +17,10 @@ const RS3_OWN = new Set([
   "necromancy",
 ]);
 
-const RS3_120 = new Set([
-  "invention",
-  "dungeoneering",
-  "slayer",
-  "farming",
-  "herblore",
-  "archaeology",
-  "necromancy",
-  "rs3-slayer",
-  "rs3-farming",
-  "rs3-herblore",
-]);
+export function skillLevelCap(_id: string, pack: "OSRS" | "RS3") {
+  if (pack === "RS3") return 120;
+  return 99;
+}
 
 function osrs(name: string): Skill {
   return {
@@ -104,11 +96,6 @@ export const SKILLS: Skill[] = [
   rs3("Archaeology"),
   rs3("Necromancy"),
 ];
-
-export function skillLevelCap(id: string, pack: "OSRS" | "RS3") {
-  if (pack === "RS3" && RS3_120.has(id.toLowerCase())) return 120;
-  return 99;
-}
 
 export function skillIdForHiscore(skillName: string, pack: "OSRS" | "RS3") {
   const key = skillName.toLowerCase().replace(/[^a-z]/g, "");
