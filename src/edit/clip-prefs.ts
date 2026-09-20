@@ -32,6 +32,23 @@ export const CLIP_ASPECTS: Record<ClipAspect, { w: number; h: number; label: str
   banner: { w: 1200, h: 480, label: "Banner" },
 };
 
+/** Chip `data-crop` labels. Pixels are CLIP_ASPECTS / FORMAT. */
+export const FORMAT = {
+  "16:9-1080": { w: 1920, h: 1080 },
+  "16:9-720": { w: 1280, h: 720 },
+  "9:16": { w: 1080, h: 1920 },
+  "1:1": { w: 1080, h: 1080 },
+  banner: { w: 1200, h: 480 },
+} as const;
+
+export const CROP_ATTR: Record<ClipAspect, keyof typeof FORMAT> = {
+  "16x9-1080": "16:9-1080",
+  "16x9-720": "16:9-720",
+  "9x16": "9:16",
+  "1x1": "1:1",
+  banner: "banner",
+};
+
 export const CLIP_MAX_BYTES = 2 * 1024 * 1024 * 1024;
 export const CLIP_WARN_SECONDS = 600;
 export const EDIT_PREFS = "rsbs.edit.v1";

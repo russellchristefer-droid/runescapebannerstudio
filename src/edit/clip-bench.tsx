@@ -17,6 +17,7 @@ import {
   CLIP_MARKS,
   CLIP_MAX_BYTES,
   CLIP_WARN_SECONDS,
+  CROP_ATTR,
   clipFileName,
   clipMime,
   clampRange,
@@ -351,23 +352,26 @@ export function ClipBench() {
     if (canvas.width !== w) canvas.width = w;
     if (canvas.height !== h) canvas.height = h;
     const videoReady = Boolean(video && video.readyState >= 2 && video.videoWidth);
-    if (forFile) {
-      if (videoReady && video) {
-        ctx.save();
-        ctx.translate(w / 2, h / 2);
-        ctx.rotate((s.rotate * Math.PI) / 180);
-        ctx.scale(s.zoom, s.zoom);
-        ctx.translate(-w / 2, -h / 2);
-        drawHi(ctx, video, w, h);
-        ctx.restore();
-      } else if (lastVid.current && lastVid.current.width) {
-        ctx.drawImage(lastVid.current, 0, 0, w, h);
-      } else {
-        ctx.fillStyle = "#120f0c";
-        ctx.fillRect(0, 0, w, h);
+    if (videoReady && video) {
+      ctx.save();
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate((s.rotate * Math.PI) / 180);
+      ctx.scale(s.zoom, s.zoom);
+      ctx.translate(-w / 2, -h / 2);
+      drawHi(ctx, video, w, h);
+      ctx.restore();
+      if (!forFile) {
+        if (!lastVid.current) lastVid.current = document.createElement("canvas");
+        const hold = lastVid.current;
+        if (hold.width !== w) hold.width = w;
+        if (hold.height !== h) hold.height = h;
+        hold.getContext("2d")?.drawImage(canvas, 0, 0);
       }
+    } else if (lastVid.current && lastVid.current.width) {
+      ctx.drawImage(lastVid.current, 0, 0, w, h);
     } else {
-      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#0b0a08";
+      ctx.fillRect(0, 0, w, h);
     }
     const t = (video?.currentTime || s.now);
     const fadeInSec = (s.fadeIn / Math.max(1, s.fps)) / Math.max(0.25, s.speed);
@@ -584,7 +588,7 @@ export function ClipBench() {
     setAspect(id);
     refitPlates(id);
     const box = CLIP_ASPECTS[id];
-    setStatus(`${box.label} · ${box.w}×${box.h}. Plate fitted.`);
+    setStatus(`OUT ${box.w}×${box.h}`);
   }
 
   function canvasPoint(e: PtrEvent<HTMLCanvasElement>) {
@@ -1660,18 +1664,15 @@ export function ClipBench() {
               <video
                 id="preview-video"
                 ref={videoRef}
-                className="pointer-events-none absolute inset-0 h-full w-full bg-[#0b0a08] object-contain"
+                className="pointer-events-none absolute h-px w-px opacity-0"
                 playsInline
                 preload="metadata"
                 muted
                 controls={false}
-                style={{
-                  transform: rotate || zoom !== 1 ? `rotate(${rotate}deg) scale(${zoom})` : undefined,
-                }}
               />
               <canvas
                 ref={canvasRef}
-                className="absolute inset-0 z-[1] block h-full w-full touch-none object-contain"
+                className="relative z-[1] block h-full w-full touch-none object-contain"
                 onPointerDown={onBannerPointerDown}
                 onPointerMove={onBannerPointerMove}
                 onPointerUp={onBannerPointerUp}
@@ -1769,7 +1770,7 @@ export function ClipBench() {
                   <button
                     key={id}
                     type="button"
-                    data-crop={id}
+                    data-crop={CROP_ATTR[id]}
                     className={aspect === id ? CHIP_ON : CHIP}
                     onClick={() => applyClipCrop(id)}
                   >

@@ -6,6 +6,14 @@ export const QUALITY = {
   banner: { w: 1200, h: 480, fps: 30, videoBps: 6_000_000, audioBps: 128_000 },
 } as const;
 
+export const FORMAT = {
+  "16:9-1080": { w: 1920, h: 1080 },
+  "16:9-720": { w: 1280, h: 720 },
+  "9:16": { w: 1080, h: 1920 },
+  "1:1": { w: 1080, h: 1080 },
+  banner: { w: 1200, h: 480 },
+} as const;
+
 export type QualityKey = keyof typeof QUALITY;
 export type QualityPreset = (typeof QUALITY)[QualityKey];
 
@@ -66,3 +74,6 @@ export function drawHi(ctx: CanvasRenderingContext2D, video: HTMLVideoElement, w
   const s = Math.max(w / Math.max(1, vw), h / Math.max(1, vh));
   ctx.drawImage(video, (w - vw * s) / 2, (h - vh * s) / 2, vw * s, vh * s);
 }
+
+/** Same cover as the desk. Preview CSS must not change w/h. */
+export const drawCover = drawHi;

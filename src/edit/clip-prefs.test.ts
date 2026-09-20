@@ -16,7 +16,7 @@ import {
   bannerStretchLay,
   clampPlateLay,
 } from "./clip-math.ts";
-import { QUALITY, qualityForAspect, qualityForSize, clipVideoBitrate } from "./quality.ts";
+import { QUALITY, FORMAT, qualityForAspect, qualityForSize, clipVideoBitrate } from "./quality.ts";
 import { slugPart } from "../lib/filename.ts";
 import { markContainRect, MARK_SIDE } from "../lib/marks.ts";
 
@@ -67,6 +67,10 @@ test("TikTok 9:16 is 1080×1920 at 12 Mbps 30 fps", () => {
   assert.equal(clipVideoBitrate(1080, 1920), 12_000_000);
   assert.equal(clipVideoBitrate(1080, 1080), 10_000_000);
   assert.equal(clipVideoBitrate(1280, 720), 8_000_000);
+  assert.equal(FORMAT["9:16"].w, 1080);
+  assert.equal(FORMAT["9:16"].h, 1920);
+  assert.equal(FORMAT["16:9-1080"].w, 1920);
+  assert.equal(FORMAT.banner.w, 1200);
 });
 
 test("clip file name is christefer-1 plus size", () => {
