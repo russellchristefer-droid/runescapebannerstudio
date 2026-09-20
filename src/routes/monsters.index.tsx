@@ -3,6 +3,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { MONSTERS, monsterStillLine, monsterStillSrc, monsterWash } from "@/lib/monsters";
+import { familyLore } from "@/lib/monster-lore";
 import { pageMeta } from "@/lib/page-title";
 import type { Edition } from "@/lib/locations";
 import type { Monster } from "@/lib/monsters";
@@ -108,8 +109,8 @@ function BestiaryPage() {
         ) : null}
       </header>
       <main className="mx-auto max-w-5xl px-5 py-6 md:px-8">
-        {canon !== "RS3" ? <GameBlock id="osrs" title="Old School RuneScape" rows={osrs} /> : null}
-        {canon !== "OSRS" ? <GameBlock id="rs3" title="RuneScape" rows={rs3} /> : null}
+        {canon !== "RS3" ? <GameBlock id="osrs" title="Old School RuneScape" edition="OSRS" rows={osrs} /> : null}
+        {canon !== "OSRS" ? <GameBlock id="rs3" title="RuneScape" edition="RS3" rows={rs3} /> : null}
       </main>
     </div>
   );
@@ -139,7 +140,7 @@ function CanonChip({
   );
 }
 
-function GameBlock({ id, title, rows }: { id: string; title: string; rows: Monster[] }) {
+function GameBlock({ id, title, edition, rows }: { id: string; title: string; edition: Edition; rows: Monster[] }) {
   const groups = FAMILY_ORDER.map((family) => ({
     family,
     rows: rows.filter((row) => familyOf(row) === family),
@@ -151,9 +152,12 @@ function GameBlock({ id, title, rows }: { id: string; title: string; rows: Monst
         <span className="ml-2 text-[11px] font-normal text-faint">{rows.length}</span>
       </h2>
       {groups.length ? (
-        groups.map((group) => (
+        groups.map((group) => {
+          const deck = familyLore(group.family, edition);
+          return (
           <div key={group.family} className="mb-8">
             <h3 className="mb-3 text-center text-sm text-parchment">{group.family}</h3>
+            {deck ? <p className="mx-auto mb-3 max-w-2xl text-center text-[12px] text-muted">{deck}</p> : null}
             <PlaceGrid>
               {group.rows.map((row) => (
                 <PlaceCard
@@ -170,7 +174,8 @@ function GameBlock({ id, title, rows }: { id: string; title: string; rows: Monst
               ))}
             </PlaceGrid>
           </div>
-        ))
+          );
+        })
       ) : (
         <p className="text-center text-sm text-muted">Nothing here yet. Clear Slayer or search.</p>
       )}

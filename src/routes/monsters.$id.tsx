@@ -2,6 +2,7 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { StillPhoto } from "@/components/still-photo";
 import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillLine, monsterStillSrc, monsterTaskLine, monsterWatchLine, monsterWash, sisterMonster } from "@/lib/monsters";
+import { monsterLead, monsterLore } from "@/lib/monster-lore";
 import { UseOnBanner } from "@/components/use-on-banner";
 import { OfficialPulse } from "@/components/official-pulse";
 import { pageMeta } from "@/lib/page-title";
@@ -18,7 +19,8 @@ function MonsterPage() {
   const game = row.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   const src = monsterStillSrc(row);
   const sister = sisterMonster(row);
-  const note = "You already know the room. The creature is the constant. You are the variable.";
+  const note = monsterLead(row);
+  const lore = monsterLore(row);
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
@@ -47,6 +49,12 @@ function MonsterPage() {
         <p className="mt-2 text-center font-[Fondamento] text-lg text-parchment">{note}</p>
         <p className="mt-1 text-center text-[11px] text-muted">{monsterStillLine(row)}</p>
         <p className="mt-1 text-center text-[11px] text-muted">{row.slayer ? "Slayer" : "Monster"} · {game}</p>
+        {lore ? (
+          <section className="mt-6">
+            <h2 className="section-h2">Lore</h2>
+            <p className="text-sm text-muted">{lore}</p>
+          </section>
+        ) : null}
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <section>
             <h2 className="section-h2">Where</h2>
