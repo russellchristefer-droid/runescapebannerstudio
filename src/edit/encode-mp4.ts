@@ -171,6 +171,15 @@ function sleep(ms: number) {
   return new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 }
 
+function withTimeout<T>(p: Promise<T>, ms: number, label: string) {
+  return Promise.race([
+    p,
+    new Promise<T>((_, rej) => {
+      window.setTimeout(() => rej(new Error(label)), ms);
+    }),
+  ]);
+}
+
 function waitQueue(encoder: VideoEncoder, max = 8) {
   if (encoder.encodeQueueSize < max) return Promise.resolve();
   return new Promise<void>((resolve) => {
@@ -237,7 +246,6 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
 
   const durationUs = Math.round(1_000_000 / fps);
   const span = Math.max(1 / fps, outT - inT);
-  const expected = Math.max(1, Math.round(span * fps));
   let frames = 0;
   let lastTs = -1;
 
@@ -259,10 +267,16 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
     } finally {
       frame.close();
     }
-    opts.onPct(Math.min(95, Math.max(0, (frames / expected) * 95)));
+    opts.onPct(Math.min(99, Math.floor(((meta.mediaTime - inT) / Math.max(0.001, span)) * 100)));
   });
-  opts.onPct(97);
-  await Promise.race([encoder.flush().catch(() => undefined), sleep(5000)]);
+  video.pause();
+  video.muted = true;
+  video.volume = 0;
+  try {
+    await withTimeout(encoder.flush(), 8000, "flush-timeout");
+  } catch {
+    /* finish the file anyway */
+  }
   try {
     encoder.close();
   } catch {
@@ -271,15 +285,13 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
 
   if (frames < 2) return null;
 
-  opts.onPct(98);
   if (wantAudio && audioCfg) {
     const audioSpan = Math.max(span, frames / fps);
     await Promise.race([audioFromVideo(video, inT, inT + audioSpan, muxer, audioCfg), sleep(8000)]);
   }
-  opts.onPct(99);
   muxer.finalize();
   opts.onPct(100);
   const buffer = target.buffer;
-  if (!buffer || buffer.byteLength < 64) return null;
+  if (!buffer || buffer.byteLength < 1024) return null;
   return { blob: new Blob([buffer], { type: "video/mp4" }), mime: "video/mp4" };
 }

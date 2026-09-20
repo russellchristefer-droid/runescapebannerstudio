@@ -70,6 +70,16 @@ function meter() {
   raf = requestAnimationFrame(tick);
 }
 
+export function setSpeaker(on: boolean) {
+  if (!gainNode || !ctx) return;
+  try {
+    gainNode.disconnect(ctx.destination);
+  } catch {
+    /* not connected */
+  }
+  if (on) gainNode.connect(ctx.destination);
+}
+
 export function setMute(on: boolean) {
   sound.muted = on;
   applyGain();

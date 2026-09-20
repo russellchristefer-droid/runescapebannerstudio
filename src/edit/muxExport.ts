@@ -13,6 +13,15 @@ function sleep(ms: number) {
   return new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 }
 
+function withTimeout<T>(p: Promise<T>, ms: number, label: string) {
+  return Promise.race([
+    p,
+    new Promise<T>((_, rej) => {
+      window.setTimeout(() => rej(new Error(label)), ms);
+    }),
+  ]);
+}
+
 function waitQueue(encoder: VideoEncoder, max = 8) {
   if (encoder.encodeQueueSize < max) return Promise.resolve();
   return new Promise<void>((resolve) => {
@@ -103,6 +112,7 @@ export async function exportMp4(opts: {
   q: MuxQ;
   draw: () => void;
   onPct?: (n: number) => void;
+  onLine?: (msg: string) => void;
 }): Promise<Blob> {
   const { canvas, video, inT, outT, q, draw } = opts;
   if (typeof VideoEncoder === "undefined" || typeof VideoFrame === "undefined") {
@@ -164,11 +174,13 @@ export async function exportMp4(opts: {
   const fps = Math.max(1, q.fps);
   const durationUs = Math.round(1_000_000 / fps);
   const span = Math.max(1 / fps, outT - inT);
-  const expected = Math.max(1, Math.round(span * fps));
   let n = 0;
   let lastPts = -1;
   video.pause();
   video.playbackRate = 1;
+  video.muted = true;
+  video.volume = 0;
+  opts.onLine?.("Preparing encoder…");
   await seekTo(video, inT);
 
   await captureSmooth(video, inT, outT, fps, async (_v, meta) => {
@@ -187,30 +199,42 @@ export async function exportMp4(opts: {
     try {
       encoder.encode(frame, { keyFrame: n === 0 || n % (fps * 2) === 0 });
       n += 1;
-      opts.onPct?.(Math.min(95, Math.max(0, (n / expected) * 95)));
+      const pct = Math.min(99, Math.floor(((pts - inT) / Math.max(0.001, span)) * 100));
+      opts.onPct?.(pct);
+      opts.onLine?.(`Encoding ${pct}%`);
     } finally {
       frame.close();
     }
   });
 
   if (videoError) throw videoError;
-  opts.onPct?.(97);
-  await Promise.race([encoder.flush().catch(() => undefined), sleep(5000)]);
+  video.pause();
+  video.muted = true;
+  video.volume = 0;
+  opts.onLine?.("Flushing encoder…");
+  try {
+    await withTimeout(encoder.flush(), 8000, "flush-timeout");
+  } catch {
+    opts.onLine?.("Flush timed out — finishing file.");
+  }
   try {
     encoder.close();
   } catch {
     /* already closed */
   }
   if (n < 2) throw new Error("no-frames");
-  opts.onPct?.(98);
+  opts.onLine?.("Muxing MP4…");
   if (audioCfg) {
-    await muxAacFromVideo(video, inT, inT + Math.max(span, n / fps), muxer, audioCfg);
+    await Promise.race([
+      muxAacFromVideo(video, inT, inT + Math.max(span, n / fps), muxer, audioCfg),
+      sleep(8000),
+    ]);
   }
-  opts.onPct?.(99);
   muxer.finalize();
+  opts.onLine?.("Saving…");
   opts.onPct?.(100);
   const buffer = target.buffer;
-  if (!buffer || buffer.byteLength < 64) throw new Error("empty-mp4");
+  if (!buffer || buffer.byteLength < 1024) throw new Error("empty-mp4");
   return new Blob([buffer], { type: "video/mp4" });
 }
 

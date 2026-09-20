@@ -9,11 +9,14 @@ export async function captureSmooth(
 ): Promise<void> {
   video.pause();
   video.playbackRate = 1;
+  video.muted = true;
+  video.volume = 0;
   await seekTo(video, inT);
   await video.play();
   let lastPts = -1;
   const rvfc = typeof video.requestVideoFrameCallback === "function";
   let chain = Promise.resolve();
+  const stopAt = outT - 0.15;
   await new Promise<void>((resolve, reject) => {
     let settled = false;
     let handle = 0;
@@ -21,6 +24,8 @@ export async function captureSmooth(
       if (settled) return;
       settled = true;
       video.pause();
+      video.muted = true;
+      video.volume = 0;
       if (handle) {
         if (rvfc) video.cancelVideoFrameCallback(handle);
         else window.cancelAnimationFrame(handle);
@@ -30,11 +35,12 @@ export async function captureSmooth(
     };
     const tick = (_now: number, meta?: VideoFrameCallbackMetadata) => {
       if (settled) return;
-      if (video.currentTime >= outT || video.ended) {
+      const t = video.currentTime;
+      if (t >= stopAt || t >= outT || video.ended) {
         finish();
         return;
       }
-      const pts = meta && Number.isFinite(meta.mediaTime) ? meta.mediaTime : video.currentTime;
+      const pts = meta && Number.isFinite(meta.mediaTime) ? meta.mediaTime : t;
       if (pts !== lastPts) {
         lastPts = pts;
         chain = chain.then(() => onFrame(video, { mediaTime: pts }));

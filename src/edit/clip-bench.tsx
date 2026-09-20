@@ -5,7 +5,7 @@ import { layoutFromStrip, renderDeskBanner, type BannerLayout } from "@/desk/ren
 import { sanitizeClan, sanitizeDisplayName, sanitizeWorld, worldLabel } from "@/lib/rsText";
 import { drawSafeZoneGhosts, type SafeZone } from "@/lib/bannerFeatures";
 import { paintRSYellow } from "@/lib/draw-banner";
-import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTracks, setLiveMul, sound } from "./clipSound";
+import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTracks, setLiveMul, setSpeaker, sound } from "./clipSound";
 import { canEncodeMp4 } from "./encode-mp4";
 import { canWebCodecs, encodeClip } from "./webcodecsExport";
 import { exportMp4 } from "./muxExport";
@@ -144,6 +144,7 @@ export function ClipBench() {
   const [peak, setPeak] = useState(0);
   const [hold, setHold] = useState(0);
   const [exportPct, setExportPct] = useState(0);
+  const [encLine, setEncLine] = useState("Encoding…");
   const [fileBytes, setFileBytes] = useState(0);
   const [hasStill, setHasStill] = useState(false);
   const [stillShape, setStillShape] = useState<StillShape>("native");
@@ -1271,6 +1272,7 @@ export function ClipBench() {
     recorderRef.current = null;
     const video = videoRef.current;
     const s = paintArgs.current;
+    setSpeaker(!muted);
     setMute(muted);
     setGain(Math.max(0, Math.min(2, gainPct / 100)));
     if (video) {
@@ -1281,7 +1283,7 @@ export function ClipBench() {
       }
       video.playbackRate = Math.max(0.25, s.speed || 1);
       video.muted = muted;
-      video.volume = volume;
+      video.volume = muted ? 0 : volume;
       void seekTo(video, Math.max(0, s.inPoint)).catch(() => undefined);
     }
     setPlaying(false);
@@ -1291,6 +1293,32 @@ export function ClipBench() {
       const preview = previewSize(CLIP_ASPECTS[s.aspect].w, CLIP_ASPECTS[s.aspect].h);
       paint(canvas, video, true, preview.w, preview.h);
     }
+  }
+
+  function beginEncode() {
+    const video = videoRef.current;
+    exportingRef.current = true;
+    setBusy(true);
+    setExportPct(0);
+    setEncLine("Preparing encoder…");
+    setSpeaker(false);
+    setMute(true);
+    if (video) {
+      try {
+        video.pause();
+      } catch {
+        /* ignore */
+      }
+      video.muted = true;
+      video.volume = 0;
+    }
+    setPlaying(false);
+    setBench("encoding", "Preparing encoder…");
+  }
+
+  function endEncode() {
+    restoreAfterExport();
+    setBusy(false);
   }
 
   async function recordOnce(w: number, h: number) {
@@ -1353,21 +1381,31 @@ export function ClipBench() {
     exportingRef.current = true;
     try {
     attachSound(video);
-    video.muted = false;
-    video.volume = 1;
+    setSpeaker(false);
+    video.muted = true;
+    video.volume = 0;
     video.playbackRate = 1;
     try {
-      setBench("loading", "Seeking…");
+      setEncLine("Seeking…");
       await seekTo(video, inT);
     } catch (e) {
       throw e instanceof SeekError ? e : new SeekError("Could not seek that file.");
     }
-    setMute(muted);
+    setMute(true);
     setGain(Math.max(0, Math.min(2, gainPct / 100)));
     setFade(fadeIn > 0 ? 0.5 : 0, fadeOut > 0 ? 0.5 : 0);
     armFades(video, inT, outT);
     ctxTick();
     const processed = soundTracks();
+    const onPct = (n: number) => {
+      setExportPct(n);
+      setEncLine(n >= 100 ? "Saving…" : `Encoding ${Math.round(n)}%`);
+      setBench("encoding", `Encoding ${Math.round(n)}% · do not leave`);
+    };
+    const onLine = (msg: string) => {
+      setEncLine(msg);
+      setBench("encoding", msg);
+    };
     try {
       const muxed = await exportMp4({
         canvas,
@@ -1376,14 +1414,10 @@ export function ClipBench() {
         outT,
         q: { w: q.w, h: q.h, fps: q.fps, bitrate: q.videoBps },
         draw: ctxTick,
-        onPct: (n) => {
-          setExportPct(n);
-          const total = Math.max(1, Math.round((outT - inT) * q.fps));
-          const done = Math.round((n / 100) * total);
-          setBench("encoding", `Encoding ${done}/${total} · do not leave`);
-        },
+        onPct,
+        onLine,
       });
-      if (muxed && muxed.size >= 64) {
+      if (muxed && muxed.size >= 1024) {
         return { blob: muxed, audioOk: Boolean(processed.length && !muted), mime: "video/mp4" };
       }
     } catch {
@@ -1398,15 +1432,10 @@ export function ClipBench() {
           outT,
           q: { w: q.w, h: q.h, fps: q.fps, bitrate: q.videoBps },
           draw: ctxTick,
-          onPct: (n) => {
-            setExportPct(n);
-            const total = Math.max(1, Math.round((outT - inT) * q.fps));
-            const done = Math.round((n / 100) * total);
-            setBench("encoding", `Encoding ${done}/${total} · do not leave`);
-          },
+          onPct,
           audioTracks: muted ? [] : processed,
         });
-        if (blob && blob.size >= 64) {
+        if (blob && blob.size >= 1024) {
           return { blob, audioOk: Boolean(processed.length && !muted), mime: "video/mp4" };
         }
       }
@@ -1415,6 +1444,8 @@ export function ClipBench() {
     }
     video.pause();
     video.playbackRate = 1;
+    video.muted = true;
+    video.volume = 0;
     await seekTo(video, inT);
     if (!canEncodeMp4() && !mime) {
       throw new Error("mime");
@@ -1458,6 +1489,9 @@ export function ClipBench() {
     recorder.start(200);
     ctxTick();
     const useRvfc = typeof video.requestVideoFrameCallback === "function";
+    video.muted = true;
+    video.volume = 0;
+    setSpeaker(false);
     await video.play().catch(() => undefined);
     await new Promise<void>((resolve) => {
       let handle = 0;
@@ -1470,6 +1504,8 @@ export function ClipBench() {
           else window.cancelAnimationFrame(handle);
         }
         video.pause();
+        video.muted = true;
+        video.volume = 0;
         if (recorder.state !== "inactive") recorder.stop();
         resolve();
       };
@@ -1477,8 +1513,10 @@ export function ClipBench() {
         const t = meta && Number.isFinite(meta.mediaTime) ? meta.mediaTime : video.currentTime;
         ctxTick();
         const spanOut = Math.max(0.05, outT - inT);
-        setExportPct(Math.min(100, Math.max(0, ((t - inT) / spanOut) * 100)));
-        if (t >= outT - 0.02 || video.ended || recorder.state === "inactive") {
+        const pct = Math.min(99, Math.floor(((t - inT) / spanOut) * 100));
+        setExportPct(pct);
+        setEncLine(`Encoding ${pct}%`);
+        if (t >= outT - 0.15 || video.ended || recorder.state === "inactive") {
           finish();
           return;
         }
@@ -1493,7 +1531,7 @@ export function ClipBench() {
     });
     const blob = await done;
     recorderRef.current = null;
-    if (blob.size < 64) throw new Error("empty-blob");
+    if (blob.size < 1024) throw new Error("empty-blob");
     const outMime = recorder.mimeType || mime || blob.type || "video/mp4";
     if (!/mp4|webm/i.test(outMime)) throw new Error("mime");
     return { blob, audioOk, mime: /webm/i.test(outMime) ? "video/webm" : "video/mp4" };
@@ -1503,7 +1541,6 @@ export function ClipBench() {
       } catch {
         /* already */
       }
-      restoreAfterExport();
     }
   }
 
@@ -1552,29 +1589,36 @@ export function ClipBench() {
       return;
     }
     const first = pair ? CLIP_ASPECTS["16x9-720"] : box ?? size;
-    const qNote = qualityForSize(first.w, first.h);
-    setBusy(true);
-    setExportPct(0);
-    const total = Math.max(1, Math.round((outPoint - inPoint) * qNote.fps));
-    setBench("encoding", `Encoding 0/${total} · do not leave`);
+    beginEncode();
     try {
       const one = await recordOnce(first.w, first.h);
+      setEncLine("Saving…");
+      setExportPct(100);
       await downloadBlob(one.blob, qualityForSize(first.w, first.h).w, qualityForSize(first.w, first.h).h, one.mime);
       if (pair) {
         const two = await recordOnce(1080, 1920);
         await downloadBlob(two.blob, 1080, 1920, two.mime);
       }
-      const box = CLIP_ASPECTS[aspect];
-      setBench("ready", `Ready · ${box.w}×${box.h} · ${Math.round(Math.max(0, outPoint - inPoint))}s`);
+      const out = CLIP_ASPECTS[aspect];
+      setEncLine("Saved.");
+      setBench("ready", `Saved. ${out.w}×${out.h}`);
     } catch (err) {
       const why = err instanceof Error ? err.message : "";
-      if (err instanceof SeekError) setBench("error", err.message);
-      else if (why === "mime") setBench("error", "This browser cannot export a clip.");
-      else if (why === "empty-blob") setBench("error", "Export wrote an empty file. Try Chrome or Edge.");
-      else setBench("error", "Export stopped.");
+      if (err instanceof SeekError) {
+        setEncLine(err.message);
+        setBench("error", err.message);
+      } else if (why === "mime") {
+        setEncLine("Could not finish that file.");
+        setBench("error", "This browser cannot export a clip.");
+      } else if (why === "empty-blob" || why === "empty-mp4") {
+        setEncLine("Could not finish that file. Try MediaRecorder Save.");
+        setBench("error", "Export wrote an empty file. Try Chrome or Edge.");
+      } else {
+        setEncLine("Could not finish that file.");
+        setBench("error", "Export stopped.");
+      }
     } finally {
-      setBusy(false);
-      setExportPct(0);
+      endEncode();
     }
   }
 
@@ -1592,6 +1636,7 @@ export function ClipBench() {
     restoreAfterExport();
     setBusy(false);
     setExportPct(0);
+    setEncLine("Export cancelled.");
     setBench("ready", "Export cancelled.");
   }
 
@@ -1678,6 +1723,19 @@ export function ClipBench() {
                 onPointerUp={onBannerPointerUp}
                 onPointerCancel={onBannerPointerUp}
               />
+              {busy ? (
+                <div
+                  id="enc-mask"
+                  className="absolute inset-0 z-20 grid place-content-center gap-2 bg-[rgba(11,10,8,0.92)] text-center text-parchment"
+                >
+                  <p id="enc-line" className="m-0 text-sm">
+                    {encLine}
+                  </p>
+                  <p id="enc-pct" className="m-0 font-mono text-[11px] tabular-nums text-faint">
+                    {Math.round(exportPct)}%
+                  </p>
+                </div>
+              ) : null}
               {hasClip ? (
                 <div className="pointer-events-none absolute inset-0 z-[2] flex flex-col justify-between p-2 font-mono text-[10px] tabular-nums text-fg">
                   <div className="flex items-start justify-between gap-2">
