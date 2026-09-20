@@ -244,6 +244,9 @@ function ClanWarsPage() {
           <Link to="/pvp" className="text-parchment">
             PvP
           </Link>
+          <a className="text-parchment" href="#win">
+            How to win
+          </a>
         </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
         <div className="mt-3">
@@ -624,8 +627,113 @@ function ClanWarsPage() {
           <StillGrid items={PIT_STILLS} />
         </section>
 
-        <section>
-          <h2 className="section-h2">How to not donate the hour</h2>
+        <section id="win" className="scroll-mt-20">
+          <h2 className="section-h2">How to win</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            Captains pick the box. The pile follows one name. The wall is two minutes.
+            Optimal is not a secret Discord dump. It is reading the terms, standing on
+            the right side of the wall, and not chasing a rule you turned off. Wiki
+            keeps the living options.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The terms — the actual fight</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Only a captain or higher can send the challenge. On Old School that is
+            chat-channel rank. On RuneScape that is Friends Chat. If you cannot open
+            the sheet, you are not the captain. Read every box before you step.
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted">
+            <li>
+              <span className="text-fg">Last team standing.</span> No rejoin. A death is
+              out. Tank. Do not donate an early click. This is the old war.
+            </li>
+            <li>
+              <span className="text-fg">First to X kills.</span> Rejoin is on. Die, run
+              back, pile again. Pad the count. Do not treat it like last-team.
+            </li>
+            <li>
+              <span className="text-fg">Most kills on a clock.</span> The timer is the
+              other team. Kill, reset, kill. A stall is a wasted minute.
+            </li>
+            <li>
+              <span className="text-fg">King of the hill.</span> The tile is the score.
+              A chase off the hill is a gift.
+            </li>
+            <li>
+              <span className="text-fg">Oddskull.</span> Hold the skull. Points tick
+              while you have it. 28 January 2026: the other team can pick a dropped
+              skull back up. Do not leave it on the floor.
+            </li>
+            <li>
+              <span className="text-fg">Food, potions, prayer, spec, familiars.</span>{" "}
+              Off is a different fight than on. A brew in a no-food war is not clever.
+              It is a forfeit if the box says no.
+            </li>
+            <li>
+              <span className="text-fg">Melee / range / magic.</span> Triangle is the
+              sheet. Mage and range can fire while the wall is still up. Melee waits.
+              That first volley is free if you lined it.
+            </li>
+            <li>
+              <span className="text-fg">Magic dropdown (23 May 2024, Old School).</span>{" "}
+              Bind-only if you want 2007 F2P grammar. Ice barrage in that box is a
+              different war than the one you scheduled.
+            </li>
+            <li>
+              <span className="text-fg">Team cap and map.</span> Twelve Old School maps.
+              Classic arena is one of them. Soggy Swamp is F2P. Confirm the live list
+              on the wiki. A hundred a side on RuneScape is the Grotto ceiling.
+            </li>
+            <li>
+              <span className="text-fg">Keep items / lose items.</span> Most arranged
+              wars keep the bag. If the box says lose, Protect Item is the keep. Red
+              FFA on RuneScape is that tax without a captain.
+            </li>
+          </ul>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Old School — Ferox</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Ring, minigame teleport, or canoe. Pool first. Purple when the terms are
+            agreed. White is practice — stats restore, no sheet. Official FFA world is
+            printed on the wiki; do not tattoo a number here. Watch orbs exist if you
+            missed the wall.
+          </p>
+          <ol className="mt-3 space-y-2 text-sm text-muted">
+            <li>1. One caller. One target. The pile clicks that name. A second call is a split pile.</li>
+            <li>2. Auto-retaliate off. (Unofficial, public habit.) The tank who swings back walks into the stack.</li>
+            <li>3. Line mage and range on the wall. Melee steps when it drops. Early melee is a gift.</li>
+            <li>4. Last-team: stay in. First-to-X: death is a reset, not a sulk.</li>
+            <li>5. Do not chase a runner into a rule you disabled — single, no-magic, no-food. They are bait.</li>
+            <li>6. Bind-only wars are step and pile, not freeze-lock. Confirm the Magic box.</li>
+            <li>7. LMS, Bounty Hunter, and Castle Wars are other doors in the same pocket. They are not this match.</li>
+          </ol>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">RuneScape — Grotto</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            North of Falador. Friends Chat. Purple is the war. White is safe FFA. Red
+            drops the bag. Play the bar or Legacy as the chat called — do not mix those
+            two grammars in one pile. Ability lines live on the wiki. Rated, if the
+            lobby is up, is Clan Camp.
+          </p>
+          <ol className="mt-3 space-y-2 text-sm text-muted">
+            <li>1. Same caller rule. One name. The combat triangle is the public sheet: mage on melee, melee on range, range on mage.</li>
+            <li>2. From the wall, range and mage work first. Melee waits. That is still true on this client.</li>
+            <li>3. Auto-retaliate off while you tank. (Unofficial, public habit.) Sounds on if the caller uses them.</li>
+            <li>4. Red portal: Protect Item. White is practice. Do not walk red in a bank tab.</li>
+            <li>5. Citadels are a skill. This cave is a fight. Do not mix them.</li>
+          </ol>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The ditch after the portal</h3>
+          <p className="text-sm leading-relaxed text-muted">
+            Two chats and a multi tile is still a clan war. It is not Ferox. It is not
+            the Grotto. Skull, bracket, Protect Item. File that on{" "}
+            <Link to="/pvp" className="text-parchment">
+              PvP
+            </Link>
+            . This page keeps the ceiling.
+          </p>
+
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">How to not donate the hour</h3>
           <ol className="mt-3 space-y-2 text-sm text-muted">
             <li>1. Read the terms. Food off is a different fight than food on.</li>
             <li>2. Enter before the wall drops. Late is a spectator.</li>
