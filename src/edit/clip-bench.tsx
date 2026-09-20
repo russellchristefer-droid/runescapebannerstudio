@@ -19,7 +19,6 @@ import {
   CLIP_WARN_SECONDS,
   clipFileName,
   clipMime,
-  clipSnapFps,
   clampRange,
   coverRect,
   fitStillLayout,
@@ -290,7 +289,7 @@ export function ClipBench() {
     const video = videoRef.current;
     if (video) {
       video.playbackRate = speed;
-      video.muted = false;
+      video.muted = muted;
     }
     setMute(muted);
     setGain(Math.max(0, Math.min(2, gainPct / 100)));
@@ -352,26 +351,23 @@ export function ClipBench() {
     if (canvas.width !== w) canvas.width = w;
     if (canvas.height !== h) canvas.height = h;
     const videoReady = Boolean(video && video.readyState >= 2 && video.videoWidth);
-    if (videoReady && video) {
-      ctx.save();
-      ctx.translate(w / 2, h / 2);
-      ctx.rotate((s.rotate * Math.PI) / 180);
-      ctx.scale(s.zoom, s.zoom);
-      ctx.translate(-w / 2, -h / 2);
-      drawHi(ctx, video, w, h);
-      ctx.restore();
-      if (!forFile) {
-        if (!lastVid.current) lastVid.current = document.createElement("canvas");
-        const hold = lastVid.current;
-        if (hold.width !== w) hold.width = w;
-        if (hold.height !== h) hold.height = h;
-        hold.getContext("2d")?.drawImage(canvas, 0, 0);
+    if (forFile) {
+      if (videoReady && video) {
+        ctx.save();
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate((s.rotate * Math.PI) / 180);
+        ctx.scale(s.zoom, s.zoom);
+        ctx.translate(-w / 2, -h / 2);
+        drawHi(ctx, video, w, h);
+        ctx.restore();
+      } else if (lastVid.current && lastVid.current.width) {
+        ctx.drawImage(lastVid.current, 0, 0, w, h);
+      } else {
+        ctx.fillStyle = "#120f0c";
+        ctx.fillRect(0, 0, w, h);
       }
-    } else if (lastVid.current && lastVid.current.width) {
-      ctx.drawImage(lastVid.current, 0, 0, w, h);
     } else {
-      ctx.fillStyle = "#120f0c";
-      ctx.fillRect(0, 0, w, h);
+      ctx.clearRect(0, 0, w, h);
     }
     const t = (video?.currentTime || s.now);
     const fadeInSec = (s.fadeIn / Math.max(1, s.fps)) / Math.max(0.25, s.speed);
@@ -945,6 +941,7 @@ export function ClipBench() {
     video.src = url;
     video.playsInline = true;
     video.preload = "metadata";
+    video.muted = true;
     video.onplay = () => setPlaying(true);
     video.onpause = () => setPlaying(false);
     video.onended = () => setPlaying(false);
@@ -955,18 +952,14 @@ export function ClipBench() {
       setBench("error", "Could not read that file.");
     };
     loadWatch.current = window.setTimeout(() => {
-      if ((videoRef.current?.readyState ?? 0) < 1) {
+      if ((videoRef.current?.readyState ?? 0) < 2) {
         setHasClip(false);
         setBench("error", "Could not read that file.");
       }
     }, 8000);
     video.onloadedmetadata = () => {
-      window.clearTimeout(loadWatch.current);
       const dur = video.duration || 0;
-      if (!Number.isFinite(dur) || dur <= 0) {
-        setBench("error", "Could not read that file.");
-        return;
-      }
+      if (!Number.isFinite(dur) || dur <= 0) return;
       setDuration(dur);
       setInPoint(0);
       setOutPoint(dur);
@@ -982,44 +975,19 @@ export function ClipBench() {
       undoRef.current = [];
       redoRef.current = [];
       setNative(`${video.videoWidth}×${video.videoHeight}`);
-      setHasClip(true);
-      setReady("ready");
       const tracks = (video as HTMLVideoElement & { audioTracks?: { length: number } }).audioTracks;
       setHasAudio(tracks ? tracks.length > 0 : true);
-      video.preload = "auto";
-      hookAudio(video);
-      void (async () => {
-        if (dur > 45) return;
-        try {
-          await video.play();
-          if (typeof video.requestVideoFrameCallback === "function") {
-            const times: number[] = [];
-            await new Promise<void>((resolve) => {
-              const rec = (_n: number, meta: { mediaTime: number }) => {
-                if (Number.isFinite(meta.mediaTime)) times.push(meta.mediaTime);
-                if (times.length >= 12) {
-                  resolve();
-                  return;
-                }
-                video.requestVideoFrameCallback(rec);
-              };
-              video.requestVideoFrameCallback(rec);
-              window.setTimeout(resolve, 400);
-            });
-            if (times.length >= 6) {
-              const dt = (times[times.length - 1] - times[0]) / (times.length - 1);
-              if (dt > 0.008 && dt < 0.06) setFps(clipSnapFps(1 / dt));
-            }
-          }
-        } catch {
-          /* autoplay blocked */
-        }
-        video.pause();
-      })();
-      setBench(
-        "ready",
-        `Ready · ${video.videoWidth}×${video.videoHeight} · ${Math.round(dur)}s`,
-      );
+    };
+    video.onloadeddata = () => {
+      window.clearTimeout(loadWatch.current);
+      const dur = video.duration || 0;
+      if (!Number.isFinite(dur) || dur <= 0) {
+        setBench("error", "Could not read that file.");
+        return;
+      }
+      setHasClip(true);
+      void seekTo(video, 0).catch(() => undefined);
+      setBench("ready", `Ready · ${video.videoWidth}×${video.videoHeight}`);
     };
   }
 
@@ -1111,6 +1079,8 @@ export function ClipBench() {
         });
       }
       attachSound(video);
+      video.muted = muted;
+      video.preload = "auto";
       void video.play().catch(() => undefined);
     } else {
       video.pause();
@@ -1687,16 +1657,28 @@ export function ClipBench() {
                   </button>
                 </div>
               ) : null}
+              <video
+                id="preview-video"
+                ref={videoRef}
+                className="pointer-events-none absolute inset-0 h-full w-full bg-[#0b0a08] object-contain"
+                playsInline
+                preload="metadata"
+                muted
+                controls={false}
+                style={{
+                  transform: rotate || zoom !== 1 ? `rotate(${rotate}deg) scale(${zoom})` : undefined,
+                }}
+              />
               <canvas
                 ref={canvasRef}
-                className="block h-full w-full touch-none object-contain"
+                className="absolute inset-0 z-[1] block h-full w-full touch-none object-contain"
                 onPointerDown={onBannerPointerDown}
                 onPointerMove={onBannerPointerMove}
                 onPointerUp={onBannerPointerUp}
                 onPointerCancel={onBannerPointerUp}
               />
               {hasClip ? (
-                <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-2 font-mono text-[10px] tabular-nums text-fg">
+                <div className="pointer-events-none absolute inset-0 z-[2] flex flex-col justify-between p-2 font-mono text-[10px] tabular-nums text-fg">
                   <div className="flex items-start justify-between gap-2">
                     <span className={busy ? "rounded-sm bg-play px-1.5 py-0.5 font-semibold tracking-widest" : "rounded-sm bg-black/55 px-1.5 py-0.5"}>
                       {busy ? "REC" : playing ? "PLAY" : "STOP"}
@@ -1724,7 +1706,6 @@ export function ClipBench() {
                 </div>
               ) : null}
             </div>
-            <video ref={videoRef} className="pointer-events-none absolute h-px w-px opacity-0" playsInline preload="none" muted={false} controls={false} />
             <div className="flex flex-wrap items-center gap-2 border-t border-line/30 bg-raised px-3 py-2">
               <button type="button" disabled={!hasClip} className={CHIP} id="back2" onClick={() => seek(now - 2)}>
                 −2s
