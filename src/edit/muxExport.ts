@@ -1,4 +1,5 @@
 import { Muxer, ArrayBufferTarget } from "mp4-muxer";
+import { pickEncoder } from "./hwEncode";
 
 export type MuxQ = { w: number; h: number; fps: number; bitrate: number };
 
@@ -123,36 +124,6 @@ async function muxAacFromVideo(
   }
 }
 
-const CODEC_CFG = [
-  { codec: "avc1.640028", mux: "avc" as const },
-  { codec: "avc1.4D401F", mux: "avc" as const },
-  { codec: "avc1.4D0028", mux: "avc" as const },
-  { codec: "avc1.42E01E", mux: "avc" as const },
-];
-
-export async function pickAvc(q: MuxQ) {
-  if (typeof VideoEncoder === "undefined") return null;
-  const width = even(q.w);
-  const height = even(q.h);
-  for (const c of CODEC_CFG) {
-    try {
-      const ok = await VideoEncoder.isConfigSupported({
-        codec: c.codec,
-        width,
-        height,
-        bitrate: q.bitrate,
-        framerate: q.fps,
-        avc: { format: "avc" },
-        latencyMode: "quality",
-      });
-      if (ok.supported) return c;
-    } catch {
-      /* next */
-    }
-  }
-  return null;
-}
-
 /**
  * WebCodecs H.264 + mp4-muxer. Raw EncodedVideoChunk blobs do not play in VLC.
  * Short clips seek frame-by-frame. Longer spans play once and mux the same way.
@@ -174,8 +145,8 @@ export async function exportMp4(opts: {
   const height = even(q.h);
   canvas.width = width;
   canvas.height = height;
-  const picked = await pickAvc({ ...q, w: width, h: height });
-  if (!picked) throw new Error("no-avc");
+  const hw = await pickEncoder({ w: width, h: height, fps: q.fps, bitrate: q.bitrate });
+  if (!hw) throw new Error("no-avc");
 
   let audioCfg: AudioEncoderConfig | null = null;
   if (typeof AudioEncoder !== "undefined") {
@@ -197,7 +168,7 @@ export async function exportMp4(opts: {
   const target = new ArrayBufferTarget();
   const muxer = new Muxer({
     target,
-    video: { codec: picked.mux, width, height, frameRate: q.fps },
+    video: { codec: "avc", width, height, frameRate: q.fps },
     audio: audioCfg
       ? { codec: "aac", numberOfChannels: audioCfg.numberOfChannels, sampleRate: audioCfg.sampleRate }
       : undefined,
@@ -213,7 +184,8 @@ export async function exportMp4(opts: {
     },
   });
   encoder.configure({
-    codec: picked.codec,
+    ...hw,
+    codec: hw.codec,
     width,
     height,
     bitrate: q.bitrate,

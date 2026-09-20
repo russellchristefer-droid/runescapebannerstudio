@@ -9,6 +9,7 @@ import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTra
 import { canEncodeMp4 } from "./encode-mp4";
 import { canWebCodecs, encodeClip } from "./webcodecsExport";
 import { exportMp4 } from "./muxExport";
+import { hwNote } from "./hwEncode";
 import { drawHi, pickRecorderMime, qualityForSize } from "./quality";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
 import {
@@ -1549,9 +1550,10 @@ export function ClipBench() {
       return;
     }
     const first = pair ? CLIP_ASPECTS["16x9-720"] : box ?? size;
+    const qNote = qualityForSize(first.w, first.h);
     setBusy(true);
     setExportPct(0);
-    setStatus("Making clip…");
+    setStatus(`Making clip… ${await hwNote({ w: qNote.w, h: qNote.h, fps: qNote.fps, bitrate: qNote.videoBps })}`);
     try {
       const one = await recordOnce(first.w, first.h);
       await downloadBlob(one.blob, qualityForSize(first.w, first.h).w, qualityForSize(first.w, first.h).h, one.mime);
@@ -1559,7 +1561,7 @@ export function ClipBench() {
         const two = await recordOnce(1080, 1920);
         await downloadBlob(two.blob, 1080, 1920, two.mime);
       }
-      setStatus("In the bag.");
+      setStatus(`In the bag. ${await hwNote({ w: qNote.w, h: qNote.h, fps: qNote.fps, bitrate: qNote.videoBps })}`);
     } catch (err) {
       const why = err instanceof Error ? err.message : "";
       if (why === "mime") setStatus("This browser cannot export a clip.");

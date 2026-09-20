@@ -112,7 +112,14 @@ test("WebCodecs helper is present and muxes only through MP4", () => {
 });
 
 test("mux export helpers exist", async () => {
-  const { exportMp4, saveMp4OrRecorder } = await import("./muxExport.ts");
-  assert.equal(typeof exportMp4, "function");
-  assert.equal(typeof saveMp4OrRecorder, "function");
+  const { pickEncoder, hwNote } = await import("./hwEncode.ts");
+  assert.equal(typeof pickEncoder, "function");
+  assert.equal(typeof hwNote, "function");
+});
+
+test("hardware encode is a browser hint, not NVENC", async () => {
+  const { pickEncoder, hwNote } = await import("./hwEncode.ts");
+  assert.equal(typeof pickEncoder, "function");
+  assert.equal(await hwNote({ w: 1080, h: 1920, fps: 30, bitrate: 12_000_000 }), "encoder: none (recorder fallback)");
+  assert.equal(await pickEncoder({ w: 1080, h: 1920, fps: 30, bitrate: 12_000_000 }), null);
 });

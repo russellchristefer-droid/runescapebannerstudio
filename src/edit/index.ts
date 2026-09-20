@@ -8,3 +8,4 @@ export {
 } from "./clip-prefs";
 export { canWebCodecs, encodeClip, pickCodec } from "./webcodecsExport";
 export { exportMp4, saveMp4OrRecorder } from "./muxExport";
+export { pickEncoder, hwNote } from "./hwEncode";
