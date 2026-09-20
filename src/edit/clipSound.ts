@@ -80,6 +80,12 @@ export function setGain(g: number) {
   applyGain();
 }
 
+export function setLiveMul(mul: number) {
+  if (!gainNode || !ctx) return;
+  const g = sound.muted ? 0 : sound.gain * Math.max(0, Math.min(1, mul));
+  gainNode.gain.setTargetAtTime(g, ctx.currentTime, 0.03);
+}
+
 export function setFade(inn: number, out: number) {
   sound.fadeIn = Math.max(0, inn);
   sound.fadeOut = Math.max(0, out);

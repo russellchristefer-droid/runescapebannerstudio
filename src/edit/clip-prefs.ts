@@ -1,5 +1,6 @@
 import { slugPart } from "@/lib/filename";
 import { sanitizeDisplayName } from "@/lib/rsText";
+import { pickRecorderMime } from "./quality";
 
 export {
   clampRange,
@@ -11,6 +12,13 @@ export {
   prevMarkerTime,
   snapTime,
   timecode,
+  clampPlateLay,
+  scalePlateLay,
+  plateHandleHit,
+  resizePlateLay,
+  bannerFitLay,
+  type PlateLay,
+  type PlateHandle,
 } from "./clip-math";
 
 export type ClipAspect = "16x9-1080" | "16x9-720" | "9x16" | "1x1" | "banner";
@@ -23,8 +31,8 @@ export const CLIP_ASPECTS: Record<ClipAspect, { w: number; h: number; label: str
   banner: { w: 1200, h: 480, label: "Banner" },
 };
 
-export const CLIP_MAX_BYTES = 500 * 1024 * 1024;
-export const CLIP_WARN_SECONDS = 180;
+export const CLIP_MAX_BYTES = 2 * 1024 * 1024 * 1024;
+export const CLIP_WARN_SECONDS = 600;
 export const EDIT_PREFS = "rsbs.edit.v1";
 
 export const CLIP_MARKS: { id: string; name: string; games: Array<"OSRS" | "RS3">; src: string }[] = [
@@ -50,25 +58,17 @@ export const CLIP_CAPTIONS = [
 
 
 export function clipMime() {
-  if (typeof MediaRecorder === "undefined") return "";
-  const types = [
-    "video/mp4;codecs=avc1.640028,mp4a.40.2",
-    "video/mp4;codecs=avc1.4D0028,mp4a.40.2",
-    "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
-    "video/mp4;codecs=h264,mp4a.40.2",
-    "video/mp4;codecs=avc1.42E01E",
-    "video/mp4",
-  ];
-  return types.find((type) => MediaRecorder.isTypeSupported(type)) ?? "";
+  return pickRecorderMime();
 }
 
-export function clipExt(_mime?: string) {
-  return "mp4";
+export function clipExt(mime?: string) {
+  return /webm/i.test(mime || "") ? "webm" : "mp4";
 }
 
-export function clipFileName(edition: "OSRS" | "RS3", name: string, w: number, h: number, _mime = "video/mp4") {
-  const game = edition === "OSRS" ? "osrs" : "rs3";
-  return `clip-${game}-${slugPart(sanitizeDisplayName(name) || "clip")}-${w}x${h}.mp4`;
+export function clipFileName(edition: "OSRS" | "RS3", name: string, w: number, h: number, mime = "video/mp4") {
+  void edition;
+  const who = slugPart(sanitizeDisplayName(name) || "christefer-1", 24);
+  return `${who}-${w}x${h}.${clipExt(mime)}`;
 }
 
 export function snapToPoints(t: number, points: number[], windowSec: number) {
@@ -99,6 +99,41 @@ export function coverRect(srcW: number, srcH: number, dstW: number, dstH: number
     sy = (srcH - sh) / 2;
   }
   return { sx, sy, sw, sh };
+}
+
+export type StillShape = "native" | "16x9" | "9x16" | "1x1";
+
+export function stillShapeRatio(shape: StillShape, imgW: number, imgH: number) {
+  if (shape === "16x9") return 16 / 9;
+  if (shape === "9x16") return 9 / 16;
+  if (shape === "1x1") return 1;
+  return imgW / Math.max(1, imgH);
+}
+
+/** Centre a still in the frame. Native keeps the photo's own ratio — no forced banner strip. fill=1 uses the whole plate. */
+export function fitStillLayout(
+  frameW: number,
+  frameH: number,
+  imgW: number,
+  imgH: number,
+  shape: StillShape = "native",
+  fill = 1,
+): { x: number; y: number; w: number; h: number } {
+  const ratio = stillShapeRatio(shape, imgW, imgH);
+  const maxW = Math.max(8, frameW * fill);
+  const maxH = Math.max(8, frameH * fill);
+  let w = maxW;
+  let h = w / Math.max(0.05, ratio);
+  if (h > maxH) {
+    h = maxH;
+    w = h * ratio;
+  }
+  return {
+    x: (frameW - w) / 2 / Math.max(1, frameW),
+    y: (frameH - h) / 2 / Math.max(1, frameH),
+    w: w / Math.max(1, frameW),
+    h: h / Math.max(1, frameH),
+  };
 }
 
 export function loadEditPrefs(): { aspect?: ClipAspect; overlay?: "off" | "top" | "lower" } {

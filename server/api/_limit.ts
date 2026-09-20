@@ -23,9 +23,17 @@ export function tooMany(key: string, max = 40, windowMs = 60_000) {
   const next = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
   next.push(now);
   hits.set(key, next);
-  if (hits.size > 4000) {
+  if (hits.size > 2000) {
+    for (const [slot, times] of hits) {
+      const keep = times.filter((t) => now - t < windowMs);
+      if (!keep.length) hits.delete(slot);
+      else hits.set(slot, keep);
+    }
+  }
+  while (hits.size > 2000) {
     const first = hits.keys().next().value;
-    if (first) hits.delete(first);
+    if (!first) break;
+    hits.delete(first);
   }
   return next.length > max;
 }

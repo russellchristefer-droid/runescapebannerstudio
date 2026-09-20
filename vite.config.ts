@@ -10,7 +10,7 @@ import { nitro } from "nitro/vite";
 import { grokPwaPlugin } from "./scripts/grok-pwa-plugin.mjs";
 // @ts-expect-error JS plugin alongside the TS vite config
 import { appEnvPlugin } from "./scripts/app-env-plugin.mjs";
-import { applySecurityHeaders } from "./src/lib/headers";
+import { applySecurityHeaders, LIVE_CACHE, HISCORE_CACHE } from "./src/lib/headers";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -179,7 +179,7 @@ function liveProxyPlugin(): Plugin {
             const board = await tube.fetchYoutubeBoard();
             res.statusCode = 200;
             res.setHeader("content-type", "application/json; charset=utf-8");
-            res.setHeader("cache-control", "public, max-age=180");
+            res.setHeader("cache-control", LIVE_CACHE);
             res.end(JSON.stringify(board));
             return;
           }
@@ -190,7 +190,7 @@ function liveProxyPlugin(): Plugin {
             const board = await xmod.fetchXLiveBoard();
             res.statusCode = 200;
             res.setHeader("content-type", "application/json; charset=utf-8");
-            res.setHeader("cache-control", "no-store");
+            res.setHeader("cache-control", LIVE_CACHE);
             res.end(JSON.stringify(board));
             return;
           }
@@ -203,7 +203,7 @@ function liveProxyPlugin(): Plugin {
             const board = await mod.fetchTwitchLiveBoard(logins);
             res.statusCode = 200;
             res.setHeader("content-type", "application/json; charset=utf-8");
-            res.setHeader("cache-control", "no-store");
+            res.setHeader("cache-control", LIVE_CACHE);
             res.end(JSON.stringify(board));
             return;
           }
@@ -294,7 +294,7 @@ function hiscoresProxyPlugin(): Plugin {
           );
           res.statusCode = result.status;
           res.setHeader("content-type", "text/plain; charset=utf-8");
-          res.setHeader("cache-control", "no-store");
+          res.setHeader("cache-control", HISCORE_CACHE);
           res.end(result.text ?? result.error ?? "");
         } catch {
           res.statusCode = 502;

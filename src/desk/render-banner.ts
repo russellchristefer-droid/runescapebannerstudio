@@ -2,6 +2,7 @@ import { BANNER_SIZES, LOCATIONS, migrateBannerSizeId } from "@/lib/locations";
 import { MARKS } from "@/lib/marks";
 import { SKILLS } from "@/lib/skills";
 import { drawBanner, ensurePlateFont, loadImage } from "@/lib/draw-banner";
+import { bannerFitLay } from "@/edit/clip-math";
 import { loadClipBanner } from "./clip-banner";
 import { readDesk } from "./store";
 
@@ -33,24 +34,12 @@ export function bannerStrip(
   imgH: number,
   pos: "top" | "lower",
 ) {
-  const aspect = Math.max(0.25, imgW / Math.max(1, imgH));
-  const portrait = frameH > frameW;
-  const maxH = Math.round(frameH * (portrait ? 0.24 : frameH <= 480 ? 0.5 : 0.28));
-  let w = frameW;
-  let h = Math.round(frameW / aspect);
-  if (h > maxH) {
-    h = maxH;
-    w = Math.round(h * aspect);
-  }
-  if (w >= frameW * 0.9) {
-    w = frameW;
-    h = Math.min(maxH, Math.round(frameW / aspect));
-  }
+  const lay = bannerFitLay(frameW, frameH, imgW, imgH, pos);
   return {
-    x: Math.round((frameW - w) / 2),
-    y: pos === "top" ? 0 : Math.max(0, frameH - h),
-    w: Math.max(1, w),
-    h: Math.max(1, h),
+    x: Math.round(lay.x * frameW),
+    y: Math.round(lay.y * frameH),
+    w: Math.max(1, Math.round(lay.w * frameW)),
+    h: Math.max(1, Math.round(lay.h * frameH)),
   };
 }
 
@@ -63,13 +52,7 @@ export function layoutFromStrip(
   imgH: number,
   pos: "top" | "lower",
 ): BannerLayout {
-  const s = bannerStrip(frameW, frameH, imgW, imgH, pos);
-  return {
-    x: s.x / Math.max(1, frameW),
-    y: s.y / Math.max(1, frameH),
-    w: s.w / Math.max(1, frameW),
-    h: s.h / Math.max(1, frameH),
-  };
+  return bannerFitLay(frameW, frameH, imgW, imgH, pos);
 }
 
 export function clampBannerLayout(lay: BannerLayout): BannerLayout {

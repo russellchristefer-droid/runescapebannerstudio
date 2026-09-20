@@ -1,3 +1,21 @@
+export const MARK_SIDE = 96;
+
+/** Contain any picture in a square mark cell. Used when the user uploads their own mark. */
+export function markContainRect(srcW: number, srcH: number, side = MARK_SIDE) {
+  const sw = Math.max(1, srcW);
+  const sh = Math.max(1, srcH);
+  const scale = Math.min(side / sw, side / sh);
+  const w = Math.max(1, Math.round(sw * scale));
+  const h = Math.max(1, Math.round(sh * scale));
+  return {
+    x: Math.round((side - w) / 2),
+    y: Math.round((side - h) / 2),
+    w,
+    h,
+    side,
+  };
+}
+
 export type Mark = {
   id: string;
   name: string;

@@ -1,5 +1,5 @@
 import { fetchHiscoreLite } from "../../src/lib/hiscores.server";
-import { apiHeaders } from "../../src/lib/headers";
+import { apiHeaders, HISCORE_CACHE } from "../../src/lib/headers";
 import { clientKey, limited, tooMany } from "./_limit";
 
 export default async function handler(event: {
@@ -21,7 +21,7 @@ export default async function handler(event: {
     }
     return new Response(result.text, {
       status: 200,
-      headers: apiHeaders({ "content-type": "text/plain; charset=utf-8" }),
+      headers: apiHeaders({ "content-type": "text/plain; charset=utf-8", "cache-control": HISCORE_CACHE }),
     });
   } catch {
     return new Response("missing", {

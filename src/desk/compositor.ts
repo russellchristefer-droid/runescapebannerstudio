@@ -45,22 +45,25 @@ export function layoutPack<T extends Stamp>(
         ? 7
         : Math.min(7, Math.max(4, n));
   const rows = Math.max(1, Math.ceil(n / cols));
-  const namePad = m.top + m.name + 10;
+  const namePad = m.top + m.name + m.clan * 2 + 18;
   const availW = Math.max(64, exportW - inset.left - inset.right);
   const availH = Math.max(40, exportH - namePad - inset.bottom);
   const factor = Math.min(1, Math.max(0.45, packScale));
-  const cap = short ? 40 : exportH >= 1000 ? 52 : 44;
-  const levelW = Math.max(26, Math.round(m.level * 1.7));
-  let cell = Math.max(16, Math.min(cap, Math.floor(m.icon * factor)));
-  let gap = Math.max(4, Math.round(cell * 0.16));
+  const maxByW = Math.floor((availW + 8) / (cols * 2.08));
+  const maxByH = Math.floor((availH + 8) / (rows * 1.16));
+  const fill = Math.max(20, Math.min(maxByW, maxByH, short ? 56 : 160));
+  const levelWFor = (c: number) => Math.max(32, Math.round(c * 0.95));
+  let cell = Math.max(18, Math.floor(fill * factor));
+  let gap = Math.max(6, Math.round(cell * 0.16));
   const fits = (c: number, g: number) => {
-    const stride = c + levelW + g;
+    const stride = c + levelWFor(c) + g;
     return cols * stride - g <= availW && rows * (c + g) - g <= availH;
   };
-  while (!fits(cell, gap) && cell > 16) {
+  while (!fits(cell, gap) && cell > 18) {
     cell -= 1;
-    gap = Math.max(4, Math.round(cell * 0.16));
+    gap = Math.max(6, Math.round(cell * 0.16));
   }
+  const levelW = levelWFor(cell);
   const stride = cell + levelW + gap;
   const gridW = cols * stride - gap;
   const originX = Math.round(inset.left + Math.max(0, (availW - gridW) / 2));

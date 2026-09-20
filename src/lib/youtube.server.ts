@@ -1,5 +1,6 @@
 import { YOUTUBERS } from "@/data/youtubers";
 import { CHANNELS } from "@/data/channels";
+import { capMap, singleFlight } from "./flight";
 
 export type TubeBoardRow = {
   id: string;
@@ -286,7 +287,10 @@ async function resolveChannelId(key: string, raw: string) {
   url.searchParams.set("key", key);
   const body = await youtubeJson(url);
   const id = typeof body?.items?.[0]?.id === "string" ? body.items[0].id : "";
-  if (id) idCache.set(ref.value.toLowerCase(), id);
+  if (id) {
+    idCache.set(ref.value.toLowerCase(), id);
+    capMap(idCache, 400);
+  }
   return id;
 }
 
@@ -329,6 +333,10 @@ function mergeLive(parts: TubeBoardRow[][]) {
 
 export async function fetchYoutubeBoard(): Promise<TubeBoard> {
   if (liveDisabled()) return { off: true, ok: false, rows: [] };
+  return singleFlight("youtube-board", loadYoutubeBoard);
+}
+
+async function loadYoutubeBoard(): Promise<TubeBoard> {
   if (boardMemo && Date.now() - boardMemo.at < BOARD_TTL) return boardMemo.payload;
 
   try {

@@ -1,4 +1,5 @@
 import { X_HALL, type XGame, type XVoice } from "@/data/x-hall";
+import { singleFlight } from "./flight";
 
 export type XBoardRow = {
   id: string;
@@ -85,6 +86,10 @@ export async function fetchXLiveBoard(): Promise<XBoard> {
   if (liveDisabled()) return { off: true, ok: false, rows: [] };
   const token = bearer();
   if (!token) return { off: true, ok: false, rows: [] };
+  return singleFlight("x-board", () => loadXBoard(token));
+}
+
+async function loadXBoard(token: string): Promise<XBoard> {
   if (boardMemo && Date.now() - boardMemo.at < BOARD_TTL) return boardMemo.payload;
   const queries = ["Old School RuneScape", "OSRS", "RuneScape", "Dragonwilds"];
   const rows: XBoardRow[] = [];

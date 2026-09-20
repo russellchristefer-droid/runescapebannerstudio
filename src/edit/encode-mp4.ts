@@ -1,4 +1,7 @@
 import { Muxer, ArrayBufferTarget } from "mp4-muxer";
+import { clipVideoBitrate, qualityForSize } from "./quality";
+
+export { clipVideoBitrate } from "./quality";
 
 type EncodeOpts = {
   canvas: HTMLCanvasElement;
@@ -14,15 +17,6 @@ type EncodeOpts = {
 
 export function canEncodeMp4() {
   return typeof VideoEncoder !== "undefined" && typeof VideoFrame !== "undefined";
-}
-
-/** YouTube / TikTok / X / Kick recommended source rates for H.264 MP4. */
-export function clipVideoBitrate(width: number, height: number) {
-  const pixels = width * height;
-  if (pixels >= 1920 * 1080) return 12_000_000;
-  if (pixels >= 1080 * 1080) return 8_000_000;
-  if (pixels >= 1280 * 720) return 7_500_000;
-  return 5_000_000;
 }
 
 function codecLadder() {
@@ -51,14 +45,14 @@ async function pickVideoConfig(width: number, height: number, fps: number): Prom
   return null;
 }
 
-async function pickAacConfig(): Promise<AudioEncoderConfig | null> {
+async function pickAacConfig(bitrate = 192_000): Promise<AudioEncoderConfig | null> {
   if (typeof AudioEncoder === "undefined") return null;
   for (const sampleRate of [48000, 44100]) {
     const trial: AudioEncoderConfig = {
       codec: "mp4a.40.2",
       numberOfChannels: 2,
       sampleRate,
-      bitrate: 128_000,
+      bitrate,
     };
     const ok = await AudioEncoder.isConfigSupported(trial).catch(() => null);
     if (ok?.supported) return { ...trial, ...(ok.config ?? {}) };
@@ -225,14 +219,15 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
   const { video, inT, outT, paint } = opts;
   video.pause();
   video.playbackRate = 1;
-  const fps = 30;
+  const q = qualityForSize(width, height);
+  const fps = q.fps;
   await seekTo(video, inT);
   video.pause();
 
   const videoCfg = await pickVideoConfig(width, height, fps);
   if (!videoCfg) return null;
 
-  const audioCfg = await pickAacConfig();
+  const audioCfg = await pickAacConfig(q.audioBps);
   const wantAudio = Boolean(audioCfg);
 
   const target = new ArrayBufferTarget();
@@ -267,7 +262,8 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
   let lastTs = -1;
   let encodeChain = Promise.resolve();
 
-  const pushFrame = () => {
+  const pushFrame = (key = false) => {
+    const forceKey = key;
     encodeChain = encodeChain.then(async () => {
       if (videoError || encoder.state !== "configured") return;
       const ts = frames * durationUs;
@@ -284,7 +280,7 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
       }
       const frame = new VideoFrame(opts.canvas, { timestamp: ts, duration: durationUs, alpha: "discard" });
       try {
-        encoder.encode(frame, { keyFrame: frames === 0 || frames % (fps * 2) === 0 });
+        encoder.encode(frame, { keyFrame: forceKey || frames === 0 || frames % (fps * 2) === 0 });
         frames += 1;
       } finally {
         frame.close();
@@ -309,7 +305,7 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
       if (settled) return;
       const media = video.currentTime;
       if (media + 0.5 / fps >= outT || video.ended) {
-        pushFrame();
+        pushFrame(true);
         finish();
         return;
       }
@@ -318,7 +314,7 @@ export async function encodeClipMp4(opts: EncodeOpts): Promise<{ blob: Blob; mim
       window.requestAnimationFrame(tick);
     };
     window.requestAnimationFrame(tick);
-    window.setTimeout(finish, Math.min(180000, span * 1000 + 1500));
+    window.setTimeout(finish, Math.min(45 * 60 * 1000, span * 4000 + 8000));
   });
 
   opts.onPct(97);

@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { CHANNELS } from "@/data/channels";
+import { capMap, singleFlight } from "./flight";
 
 const cache = new Map<string, { at: number; up: string | null }>();
 const sticky = new Map<string, { at: number; row: TwitchBoardRow }>();
@@ -273,9 +274,11 @@ export async function fetchTwitchUptime(loginRaw: string) {
         ? null
         : text.slice(0, 80);
     cache.set(login, { at: Date.now(), up });
+    capMap(cache, 400);
     return up;
   } catch {
     cache.set(login, { at: Date.now(), up: null });
+    capMap(cache, 400);
     return null;
   }
 }
@@ -324,6 +327,7 @@ async function decapiBoard(logins: string[]): Promise<TwitchBoardRow[]> {
           game: gameForHandle(handle) ?? "osrs",
         },
       });
+      capMap(sticky, 200);
     });
   }
   const now = Date.now();
@@ -340,6 +344,10 @@ async function decapiBoard(logins: string[]): Promise<TwitchBoardRow[]> {
 
 export async function fetchTwitchLiveBoard(logins: string[]): Promise<TwitchBoard> {
   if (liveDisabled()) return { off: true, ok: false, rows: [] };
+  return singleFlight("twitch-board", () => loadTwitchBoard(logins));
+}
+
+async function loadTwitchBoard(logins: string[]): Promise<TwitchBoard> {
   if (boardMemo && Date.now() - boardMemo.at < BOARD_TTL) return boardMemo.payload;
 
   const asked = [...new Set((logins ?? []).map(cleanLogin).filter(Boolean))];

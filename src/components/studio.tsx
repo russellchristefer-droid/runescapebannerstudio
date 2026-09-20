@@ -12,7 +12,8 @@ import { deskSharePath, readDeskQuery } from "@/desk/desk-link";
 import { PlaceRail } from "@/places";
 import { stillIndex } from "@/lib/still-clock";
 import { safeZoneRects, zoneForPlate, type SafeZone } from "@/lib/bannerFeatures";
-import { MARKS } from "@/lib/marks";
+import { MARKS, MARK_SIDE, markContainRect } from "@/lib/marks";
+import { IMAGE_COMPRESS } from "@/lib/image-compress";
 import { godInk } from "@/lib/gods";
 import { sanitizeSkillLevel, skillIdForHiscore, skillLevelCap, SKILLS } from "@/lib/skills";
 import {
@@ -881,8 +882,7 @@ export function Studio() {
 
   function paintHud(ctx: CanvasRenderingContext2D, w: number, h: number, sx = 1, sy = 1) {
     const boxes: { id: string; x: number; y: number; w: number; h: number }[] = [];
-    ctx.imageSmoothingEnabled = edition !== "OSRS";
-    if (ctx.imageSmoothingEnabled) ctx.imageSmoothingQuality = "high";
+    ctx.imageSmoothingEnabled = false;
     for (const pick of skillPicksRef.current) {
       const skill = stampFile(pick.id, pick.game) ?? catalog.find((item) => item.id === pick.id);
       if (!skill) continue;
@@ -1211,7 +1211,7 @@ export function Studio() {
         }, 2500);
       },
       "image/jpeg",
-      0.96,
+      IMAGE_COMPRESS.downloadQuality,
     );
   }
 
@@ -1232,7 +1232,7 @@ export function Studio() {
         });
       },
       "image/jpeg",
-      0.96,
+      IMAGE_COMPRESS.downloadQuality,
     );
   }
 
@@ -1249,11 +1249,14 @@ export function Studio() {
     ctx.fillRect(0, 0, w, h);
     if (still && still !== ctx.canvas) {
       try {
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
         coverStill(ctx, still, w, h, stillZoom, stillPan.x, stillPan.y);
       } catch {
         /* still missing */
       }
     }
+    ctx.imageSmoothingEnabled = false;
     paintHud(ctx, w, h, w / Math.max(1, layoutW), h / Math.max(1, layoutH));
   }
 
@@ -1289,7 +1292,7 @@ export function Studio() {
         URL.revokeObjectURL(a.href);
         done += 1;
         if (done === jobs.length) setSaveNote("Saved 1200×480 and 1280×720.");
-      }, "image/jpeg", 0.96);
+      }, "image/jpeg", IMAGE_COMPRESS.downloadQuality);
     }
   }
 
@@ -1320,7 +1323,7 @@ export function Studio() {
       a.click();
       URL.revokeObjectURL(a.href);
       setSaveNote("Saved holding card.");
-    }, "image/jpeg", 0.96);
+    }, "image/jpeg", IMAGE_COMPRESS.downloadQuality);
   }
 
   const visible = LOCATIONS.filter((loc) => {
@@ -2289,7 +2292,7 @@ export function Studio() {
               );
             })}
           </div>
-          <p className="mt-1 px-1 text-[10px] text-muted">Your marks · 16–128px PNG or WebP, close to square. Session only.</p>
+          <p className="mt-1 px-1 text-[10px] text-muted">Your marks · any picture. Squared to 96px. Session only.</p>
           <div className="flex flex-wrap items-center gap-1 p-1">
             <button
               type="button"
@@ -2307,51 +2310,77 @@ export function Studio() {
                 const file = e.target.files?.[0];
                 e.target.value = "";
                 if (!file) return;
-                if (file.size > 250_000) {
+                if (file.size > 8_000_000) {
                   setStatus("That file is too heavy for a mark.");
                   return;
                 }
                 const src = URL.createObjectURL(file);
                 const img = new Image();
                 img.onload = () => {
-                  const w = img.naturalWidth;
-                  const h = img.naturalHeight;
-                  const ratio = Math.max(w, h) / Math.max(1, Math.min(w, h));
-                  if (w < 16 || h < 16 || w > 128 || h > 128 || ratio > 1.35) {
+                  const side = MARK_SIDE;
+                  const box = markContainRect(img.naturalWidth, img.naturalHeight, side);
+                  const plate = document.createElement("canvas");
+                  plate.width = side;
+                  plate.height = side;
+                  const ctx = plate.getContext("2d");
+                  if (!ctx) {
                     URL.revokeObjectURL(src);
-                    setStatus("Mark must be 16–128px and nearly square.");
+                    setStatus("Could not square that mark.");
                     return;
                   }
-                  const id = `mark-custom-${Date.now()}`;
-                  stampBitmaps.current.set(src, img);
-                  setCustomMarks((cur) => [...cur, { id, name: file.name.replace(/\.[^.]+$/, "").slice(0, 24) || "Mark", src, game: skillPack }]);
-                  setSkillPicks((cur) => {
-                    const marks = cur.filter((item) => isMark(item.id)).length;
-                    if (marks >= 16) {
-                      setStatus("Sixteen marks on this banner.");
-                      return cur;
+                  ctx.clearRect(0, 0, side, side);
+                  ctx.imageSmoothingEnabled = true;
+                  ctx.imageSmoothingQuality = "high";
+                  ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, box.x, box.y, box.w, box.h);
+                  plate.toBlob((blob) => {
+                    URL.revokeObjectURL(src);
+                    if (!blob) {
+                      setStatus("Could not square that mark.");
+                      return;
                     }
-                    const n = cur.length;
-                    const scale = packScale(n + 1);
-                    const mark = skillSize * scale;
-                    const left = Math.round(size.width * 0.04);
-                    return [
-                      ...cur,
-                      {
-                        id,
-                        game: skillPack,
-                        level: "",
-                        x: left + (n % 8) * (mark + 8),
-                        y: Math.round(size.height * 0.52 + Math.floor(n / 8) * (mark + 8)),
-                        size: skillSize,
-                        scale,
-                      },
-                    ];
-                  });
-                  setPickedSkill(id);
-                  setArmedSkill(null);
-                  requestPaint();
-                  setStatus("Mark on the plate. Drag it like the others.");
+                    const href = URL.createObjectURL(blob);
+                    const markImg = new Image();
+                    markImg.onload = () => {
+                      stampBitmaps.current.set(href, markImg);
+                      const id = `mark-custom-${Date.now()}`;
+                      setCustomMarks((cur) => [
+                        ...cur,
+                        { id, name: file.name.replace(/\.[^.]+$/, "").slice(0, 24) || "Mark", src: href, game: skillPack },
+                      ]);
+                      setSkillPicks((cur) => {
+                        const marks = cur.filter((item) => isMark(item.id)).length;
+                        if (marks >= 16) {
+                          setStatus("Sixteen marks on this banner.");
+                          return cur;
+                        }
+                        const n = cur.length;
+                        const scale = packScale(n + 1);
+                        const mark = skillSize * scale;
+                        const left = Math.round(size.width * 0.04);
+                        return [
+                          ...cur,
+                          {
+                            id,
+                            game: skillPack,
+                            level: "",
+                            x: left + (n % 8) * (mark + 8),
+                            y: Math.round(size.height * 0.52 + Math.floor(n / 8) * (mark + 8)),
+                            size: skillSize,
+                            scale,
+                          },
+                        ];
+                      });
+                      setPickedSkill(id);
+                      setArmedSkill(null);
+                      requestPaint();
+                      setStatus("Mark squared and on the plate. Drag it like the others.");
+                    };
+                    markImg.onerror = () => {
+                      URL.revokeObjectURL(href);
+                      setStatus("That picture would not open.");
+                    };
+                    markImg.src = href;
+                  }, "image/png");
                 };
                 img.onerror = () => {
                   URL.revokeObjectURL(src);

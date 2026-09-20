@@ -6,7 +6,11 @@ import {
   sanitizeDiscord,
   sanitizeDisplayName,
   sanitizeHandle,
+  typeClan,
   typeDisplayName,
+  typeHandle,
+  typeTagline,
+  typeWorld,
 } from "./rsText.ts";
 
 test("Rs@Player", () => {
@@ -30,7 +34,23 @@ test("discord invite", () => {
 });
 
 test("javascript clan stripped", () => {
-  assert.equal(sanitizeClan("javascript:alert(1)"), "javascriptalert1");
+  assert.equal(sanitizeClan("javascript:alert(1)"), "alert(1)");
+});
+
+test("clan live keeps space and numbers", () => {
+  assert.equal(typeClan("Exiled Island 99"), "Exiled Island 99");
+});
+
+test("handle live keeps underscore and numbers", () => {
+  assert.equal(typeHandle("Christefer_1"), "Christefer_1");
+});
+
+test("tagline live keeps punctuation", () => {
+  assert.equal(typeTagline("Maxed, 99s!"), "Maxed, 99s!");
+});
+
+test("world live keeps digits", () => {
+  assert.equal(typeWorld("420"), "420");
 });
 
 test("hiscores query has no @", () => {

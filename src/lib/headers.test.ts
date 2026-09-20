@@ -29,9 +29,18 @@ describe("security headers", () => {
     assert.equal(tls.get("Strict-Transport-Security"), "max-age=15552000");
   });
 
-  it("marks API as no-store", () => {
+  it("marks API as no-store unless the caller shares a public board", () => {
     const headers = apiHeaders({ "content-type": "application/json; charset=utf-8" });
     assert.equal(headers.get("cache-control"), "no-store");
+    assert.equal(headers.get("x-content-type-options"), "nosniff");
+  });
+
+  it("lets a live board share a short public cache", () => {
+    const headers = apiHeaders({
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "public, max-age=15, s-maxage=20, stale-while-revalidate=20",
+    });
+    assert.match(headers.get("cache-control") ?? "", /public/);
     assert.equal(headers.get("x-content-type-options"), "nosniff");
   });
 

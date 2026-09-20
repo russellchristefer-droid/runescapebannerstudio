@@ -11,9 +11,10 @@ export const WORLD_MAX = 999;
 
 const ZERO_WIDTH = /[\u200B-\u200D\uFEFF\u00AD]/g;
 const DISPLAY_KEEP = /[^A-Za-z0-9 _-]/g;
-const CLAN_KEEP = /[^A-Za-z0-9 _'-]/g;
-const TAG_KEEP = /[^A-Za-z0-9 .,!?'+:\-]/g;
-const HANDLE_KEEP = /[^A-Za-z0-9_@/-]/g;
+const CLAN_KEEP = /[^\w !?.,@#'\-+&():]/g;
+const TAG_KEEP = /[^\w !?.,@#'\-+&():/]/g;
+const HANDLE_KEEP = /[^\w ._@/\-]/g;
+const LINE_CTRL = /[\u0000-\u001F\u007F<>]/g;
 
 export function nfc(raw: string): string {
   return (raw ?? "").normalize("NFC").replace(ZERO_WIDTH, "");
@@ -21,6 +22,10 @@ export function nfc(raw: string): string {
 
 function squeeze(s: string): string {
   return s.replace(/ {2,}/g, " ").replace(/[-_]{2,}/g, (m) => m[0]);
+}
+
+function stripScheme(s: string): string {
+  return s.replace(/^\s*(javascript|data)\s*:/i, "");
 }
 
 export function typeDisplayName(raw: string): string {
@@ -39,20 +44,36 @@ export function looksLikeStaffName(raw: string) {
 
 export const sanitizeDisplayNameLive = typeDisplayName;
 
+export function typeClan(raw: string): string {
+  return nfc(raw).replace(LINE_CTRL, "").replace(CLAN_KEEP, "").slice(0, CLAN_MAX);
+}
+
 export function sanitizeClan(raw: string): string {
-  return squeeze(nfc(raw).replace(CLAN_KEEP, "")).trim().slice(0, CLAN_MAX);
+  return squeeze(stripScheme(nfc(raw)).replace(LINE_CTRL, "").replace(CLAN_KEEP, "")).trim().slice(0, CLAN_MAX);
+}
+
+export function typeTagline(raw: string): string {
+  return nfc(raw).replace(LINE_CTRL, "").replace(TAG_KEEP, "").slice(0, TAGLINE_MAX);
 }
 
 export function sanitizeLine(raw: string, max: number) {
-  return squeeze(nfc(raw).replace(TAG_KEEP, "")).trim().slice(0, max);
+  return squeeze(nfc(raw).replace(LINE_CTRL, "").replace(TAG_KEEP, "")).trim().slice(0, max);
 }
 
 export function sanitizeTagline(raw: string): string {
   return sanitizeLine(raw, TAGLINE_MAX);
 }
 
+export function typeGrind(raw: string): string {
+  return nfc(raw).replace(LINE_CTRL, "").replace(TAG_KEEP, "").slice(0, GRIND_MAX);
+}
+
 export function sanitizeGrind(raw: string): string {
   return sanitizeTagline(raw).slice(0, GRIND_MAX);
+}
+
+export function typeHandle(raw: string): string {
+  return nfc(raw).replace(LINE_CTRL, "").replace(HANDLE_KEEP, "").slice(0, HANDLE_MAX);
 }
 
 export function sanitizeHandle(raw: string): string {
@@ -89,14 +110,20 @@ export function sanitizeDiscord(raw: string): string {
 }
 
 export function typeDiscord(raw: string): string {
-  return nfc(raw).replace(/[^A-Za-z0-9./:\-]/g, "").slice(0, DISCORD_MAX);
+  return nfc(raw).replace(LINE_CTRL, "").replace(/[^\w ./:\-]/g, "").slice(0, DISCORD_MAX);
 }
 
 export const sanitizeDiscordLive = typeDiscord;
 
+export function typeWorld(raw: string): string {
+  return String(raw ?? "").replace(/\D/g, "").slice(0, 3);
+}
+
 export function sanitizeWorld(raw: string): string {
-  const n = parseInt(String(raw).replace(/\D/g, ""), 10);
-  if (!Number.isFinite(n) || n < WORLD_MIN || n > WORLD_MAX) return "";
+  const digits = typeWorld(raw);
+  if (!digits) return "";
+  const n = parseInt(digits, 10);
+  if (!Number.isFinite(n) || n < WORLD_MIN || n > WORLD_MAX) return digits;
   return String(n);
 }
 

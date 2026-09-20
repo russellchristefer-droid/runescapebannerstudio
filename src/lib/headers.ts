@@ -64,8 +64,14 @@ export function stampResponse(response: Response, path = "", https = false) {
   });
 }
 
+export const LIVE_CACHE = "public, max-age=15, s-maxage=20, stale-while-revalidate=20";
+export const HISCORE_CACHE = "public, max-age=30, s-maxage=30";
+
 export function apiHeaders(extra: Record<string, string> = {}) {
-  const headers = new Headers(extra);
+  const headers = new Headers();
   applySecurityHeaders(headers, "/api/");
+  for (const [name, value] of Object.entries(extra)) {
+    headers.set(name, value);
+  }
   return headers;
 }
