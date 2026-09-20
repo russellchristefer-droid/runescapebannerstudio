@@ -110,3 +110,9 @@ test("WebCodecs helper is present and muxes only through MP4", () => {
   assert.equal(QUALITY.tiktok.fps, 30);
   assert.equal(QUALITY.tiktok.videoBps, 12_000_000);
 });
+
+test("mux export helpers exist", async () => {
+  const { exportMp4, saveMp4OrRecorder } = await import("./muxExport.ts");
+  assert.equal(typeof exportMp4, "function");
+  assert.equal(typeof saveMp4OrRecorder, "function");
+});

@@ -8,6 +8,7 @@ import { paintRSYellow } from "@/lib/draw-banner";
 import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTracks, setLiveMul, sound } from "./clipSound";
 import { canEncodeMp4 } from "./encode-mp4";
 import { canWebCodecs, encodeClip } from "./webcodecsExport";
+import { exportMp4 } from "./muxExport";
 import { drawHi, pickRecorderMime, qualityForSize } from "./quality";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
 import {
@@ -1367,6 +1368,22 @@ export function ClipBench() {
     ctxTick();
     const processed = soundTracks();
     try {
+      const muxed = await exportMp4({
+        canvas,
+        video,
+        inT,
+        outT,
+        q: { w: q.w, h: q.h, fps: q.fps, bitrate: q.videoBps },
+        draw: ctxTick,
+        onPct: setExportPct,
+      });
+      if (muxed && muxed.size >= 64) {
+        return { blob: muxed, audioOk: Boolean(processed.length && !muted), mime: "video/mp4" };
+      }
+    } catch {
+      /* no AVC WebCodecs — try the other muxer, then MediaRecorder */
+    }
+    try {
       if (canWebCodecs()) {
         const blob = await encodeClip({
           canvas,
@@ -1383,7 +1400,7 @@ export function ClipBench() {
         }
       }
     } catch {
-      /* WebCodecs or muxer missing — MediaRecorder still saves */
+      /* MediaRecorder still saves */
     }
     video.pause();
     video.playbackRate = 1;

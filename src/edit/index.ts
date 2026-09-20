@@ -7,3 +7,4 @@ export {
   type ClipAspect,
 } from "./clip-prefs";
 export { canWebCodecs, encodeClip, pickCodec } from "./webcodecsExport";
+export { exportMp4, saveMp4OrRecorder } from "./muxExport";
