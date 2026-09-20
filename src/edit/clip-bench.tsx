@@ -42,6 +42,7 @@ import {
   plateHandleHit,
   resizePlateLay,
   bannerFitLay,
+  bannerStretchLay,
   type PlateHandle,
   type PlateLay,
 } from "./clip-prefs";
@@ -554,6 +555,13 @@ export function ClipBench() {
     const nat = bannerNat.current;
     bannerLay.current = bannerFitLay(box.w, box.h, nat.w || 1200, nat.h || 480, pos);
     plateSel.current = "banner";
+  }
+
+  function stretchBanner(pos: "top" | "lower" = overlay === "top" ? "top" : "lower") {
+    const box = CLIP_ASPECTS[paintArgs.current.aspect];
+    bannerLay.current = bannerStretchLay(box.w, box.h, pos, bannerLay.current);
+    plateSel.current = "banner";
+    setStatus("Banner stretched to the crop. Drag the inner edge.");
   }
 
   function refitPlates(id: ClipAspect) {
@@ -1797,6 +1805,22 @@ export function ClipBench() {
                 </button>
                 <button type="button" className={CHIP} disabled={overlay === "off"} onClick={() => scaleBanner(1 / 1.08)}>
                   Banner −
+                </button>
+                <button
+                  type="button"
+                  className={CHIP}
+                  disabled={overlay === "off"}
+                  onClick={() => snapBanner(overlay === "top" ? "top" : "lower")}
+                >
+                  Fit
+                </button>
+                <button
+                  type="button"
+                  className={CHIP}
+                  disabled={overlay === "off"}
+                  onClick={() => stretchBanner(overlay === "top" ? "top" : "lower")}
+                >
+                  Stretch
                 </button>
                 <button type="button" className={hasStill ? CHIP_ON : CHIP} onClick={() => stillFileRef.current?.click()}>
                   Upload still

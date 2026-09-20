@@ -13,6 +13,7 @@ import {
   resizePlateLay,
   scalePlateLay,
   bannerFitLay,
+  bannerStretchLay,
   clampPlateLay,
 } from "./clip-math.ts";
 import { QUALITY, qualityForAspect, qualityForSize, clipVideoBitrate } from "./quality.ts";
@@ -79,6 +80,28 @@ test("desk banner refits each clip crop", () => {
   assert.ok(phone.h < 0.35);
   assert.ok(phone.y + phone.h > 0.97);
   assert.ok(twitch.w > 0.95);
+});
+
+test("banner stretch fills TikTok width and flushes the dock", () => {
+  const fit = bannerFitLay(1080, 1920, 1200, 480, "lower");
+  const stretched = bannerStretchLay(1080, 1920, "lower", fit);
+  assert.ok(stretched.w > 0.99);
+  assert.ok(stretched.x < 0.01);
+  assert.ok(stretched.y + stretched.h > 0.99);
+  assert.ok(stretched.h > fit.h);
+  const landscape = bannerStretchLay(1920, 1080, "lower");
+  assert.equal(landscape.w, 1);
+  assert.equal(landscape.h, 1);
+});
+
+test("south handle stretches height without shrinking width", () => {
+  const lay = { x: 0, y: 0.7, w: 1, h: 0.22 };
+  const next = resizePlateLay(lay, "s", 0.5, 1);
+  assert.ok(Math.abs(next.w - 1) < 0.02);
+  assert.ok(next.y + next.h > 0.97);
+  const north = resizePlateLay(lay, "n", 0.5, 0.5);
+  assert.ok(Math.abs(north.w - 1) < 0.02);
+  assert.ok(north.h > lay.h);
 });
 
 test("scale up against the plate edge keeps the still's ratio", () => {

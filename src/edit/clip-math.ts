@@ -129,6 +129,7 @@ export function plateHandleHit(
 
 export function resizePlateLay(lay: PlateLay, handle: PlateHandle, nx: number, ny: number): PlateLay {
   if (handle === "move") return clampPlateLay({ ...lay, x: nx, y: ny }, false);
+  const corner = handle === "nw" || handle === "ne" || handle === "sw" || handle === "se";
   const aspect = lay.h / Math.max(0.0001, lay.w);
   let x = lay.x;
   let y = lay.y;
@@ -156,24 +157,20 @@ export function resizePlateLay(lay: PlateLay, handle: PlateHandle, nx: number, n
     y = bottom - h;
   } else if (handle === "e") {
     w = Math.max(0.06, nx - lay.x);
-    h = w * aspect;
     y = midY - h / 2;
   } else if (handle === "w") {
     w = Math.max(0.06, right - nx);
-    h = w * aspect;
     x = right - w;
     y = midY - h / 2;
   } else if (handle === "s") {
     h = Math.max(0.04, ny - lay.y);
-    w = h / aspect;
     x = midX - w / 2;
   } else {
     h = Math.max(0.04, bottom - ny);
-    w = h / aspect;
     y = bottom - h;
     x = midX - w / 2;
   }
-  return clampPlateLay({ x, y, w, h });
+  return clampPlateLay({ x, y, w, h }, corner);
 }
 
 /** Desk banner strip for this crop. Same-ratio plates fill. Others dock a strip. */
@@ -209,4 +206,25 @@ export function bannerFitLay(
     w: Math.max(1, w) / Math.max(1, frameW),
     h: Math.max(1, h) / Math.max(1, frameH),
   };
+}
+
+/** Full-width dock. Distorts the JPEG so 9:16 has no brown gap under the banner. */
+export function bannerStretchLay(
+  frameW: number,
+  frameH: number,
+  pos: "top" | "lower",
+  current?: PlateLay | null,
+): PlateLay {
+  const portrait = frameH > frameW * 1.05;
+  const square = Math.abs(frameW - frameH) / Math.max(1, frameW) < 0.04;
+  if (!portrait && !square) {
+    return { x: 0, y: 0, w: 1, h: 1 };
+  }
+  const fallback = portrait ? 0.38 : 0.42;
+  if (pos === "lower") {
+    const h = Math.max(fallback, current?.h ?? 0);
+    return clampPlateLay({ x: 0, y: 1 - h, w: 1, h }, false);
+  }
+  const h = Math.max(fallback, current?.h ?? 0);
+  return clampPlateLay({ x: 0, y: 0, w: 1, h }, false);
 }

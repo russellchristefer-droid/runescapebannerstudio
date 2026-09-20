@@ -17,6 +17,7 @@ export {
   plateHandleHit,
   resizePlateLay,
   bannerFitLay,
+  bannerStretchLay,
   type PlateLay,
   type PlateHandle,
 } from "./clip-math";
