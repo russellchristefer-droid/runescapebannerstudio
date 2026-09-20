@@ -202,7 +202,7 @@ export async function exportMp4(opts: {
       n += 1;
       const pct = Math.min(99, Math.floor(((pts - inT) / Math.max(0.001, span)) * 100));
       opts.onPct?.(pct);
-      opts.onLine?.(`Encoding ${pct}%`);
+      opts.onLine?.("Encoding");
     } finally {
       frame.close();
     }

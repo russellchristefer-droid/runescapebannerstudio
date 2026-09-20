@@ -1301,7 +1301,7 @@ export function ClipBench() {
     exportingRef.current = true;
     setBusy(true);
     setExportPct(0);
-    setEncLine("Preparing encoder…");
+    setEncLine("Preparing");
     setSpeaker(false);
     setMute(true);
     if (video) {
@@ -1402,12 +1402,10 @@ export function ClipBench() {
     const processed = soundTracks();
     const onPct = (n: number) => {
       setExportPct(n);
-      setEncLine(n >= 100 ? "Saving…" : `Encoding ${Math.round(n)}%`);
-      setBench("encoding", `Encoding ${Math.round(n)}% · do not leave`);
+      if (n >= 100) setEncLine("Saving");
     };
     const onLine = (msg: string) => {
-      setEncLine(msg);
-      setBench("encoding", msg);
+      setEncLine(msg.replace(/\s*\d+\s*%/g, "").replace(/[.…]+$/g, "").trim() || "Encoding");
     };
     try {
       const muxed = await exportMp4({
@@ -1518,7 +1516,7 @@ export function ClipBench() {
         const spanOut = Math.max(0.05, outT - inT);
         const pct = Math.min(99, Math.floor(((t - inT) / spanOut) * 100));
         setExportPct(pct);
-        setEncLine(`Encoding ${pct}%`);
+        setEncLine("Encoding");
         if (t >= outT - 0.15 || video.ended || recorder.state === "inactive") {
           finish();
           return;
@@ -1728,14 +1726,22 @@ export function ClipBench() {
               {busy ? (
                 <div
                   id="enc-mask"
-                  className="absolute inset-0 z-20 grid place-content-center gap-2 bg-[rgba(11,10,8,0.92)] text-center text-parchment"
+                  className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-[rgba(11,10,8,0.92)] text-center"
                 >
-                  <p id="enc-line" className="m-0 text-sm">
-                    {encLine}
+                  <p id="enc-line" className="m-0 font-serif text-[11px] uppercase tracking-[0.32em] text-parchment">
+                    {encLine.replace(/\s*\d+\s*%/g, "").replace(/[.…]+$/g, "").trim() || "Encoding"}
                   </p>
-                  <p id="enc-pct" className="m-0 font-mono text-[11px] tabular-nums text-faint">
+                  <p
+                    id="enc-pct"
+                    className="m-0 font-mono text-5xl tabular-nums leading-none text-[#ffff00]"
+                    style={{ textShadow: "2px 2px 0 #000" }}
+                  >
                     {Math.round(exportPct)}%
                   </p>
+                  <div className="h-1.5 w-44 overflow-hidden rounded-sm border border-black bg-[#120f0c] ring-1 ring-line/40">
+                    <div className="h-full bg-[#ffff00]" style={{ width: `${Math.min(100, Math.max(0, exportPct))}%` }} />
+                  </div>
+                  <p className="m-0 text-[11px] tracking-wide text-faint">Do not leave</p>
                 </div>
               ) : null}
               {hasClip ? (
@@ -2111,7 +2117,7 @@ export function ClipBench() {
         </div>
 
         <p id="clip-status" className="px-3 py-2 text-[11px] text-muted" aria-live="polite">
-          {busy ? `Encoding ${Math.round(exportPct)}% · do not leave` : status}
+          {busy ? "Do not leave." : status}
           {fileLabel && !busy ? ` · ${fileLabel}` : ""}
         </p>
         {busy ? (
