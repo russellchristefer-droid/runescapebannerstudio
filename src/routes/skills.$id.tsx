@@ -5,7 +5,10 @@ import { pageMeta } from "@/lib/page-title";
 import { sisterSkill, skillGuideById } from "@/lib/skill-guides";
 
 export const Route = createFileRoute("/skills/$id")({
-  head: ({ params }) => pageMeta(skillGuideById(params.id)?.skill.name ?? "Skills", "Afk and fast. Wiki keeps the hour."),
+  head: ({ params }) => {
+    const row = skillGuideById(params.id);
+    return pageMeta(row?.skill.name ?? "Skills", row?.tagline ?? "Unlocks, cost, methods. Wiki keeps the number.");
+  },
   component: SkillPage,
 });
 
@@ -23,17 +26,10 @@ function SkillPage() {
           Skills · {game}
         </p>
         <h1 className="page-h1 site-title mt-1">{row.skill.name}</h1>
-        <p className="mt-2 text-center text-sm text-muted">{row.hook}</p>
+        <p className="mt-2 text-center text-sm text-muted">{row.tagline}</p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto max-w-3xl px-5 py-6 md:px-8">
-        <OfficialPulse
-          note="Official training page. Official news wins."
-          links={[
-            { label: `${row.skill.name} · ${game} wiki`, href: row.wiki },
-            { label: "Training", href: row.train },
-          ]}
-        />
         <img
           src={row.skill.src}
           alt={`${row.skill.name} in ${game}`}
@@ -42,9 +38,9 @@ function SkillPage() {
           className="mx-auto h-24 w-24 object-contain"
         />
         <p className="mt-3 text-center text-[11px] text-muted">{game}</p>
-        <p className="mt-2 text-center text-sm text-muted">
-          Early, mid, and late are rooms, not a promise. Rates move. Wiki keeps the hour. A paid coach is a call, not this page.
-        </p>
+        {row.moving ? (
+          <p className="mt-3 text-center text-sm text-[#ffff00]">Methods still moving. Wiki is the source.</p>
+        ) : null}
         <section className="mt-6">
           <h2 className="section-h2">Need</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">{row.need}</p>
@@ -54,25 +50,20 @@ function SkillPage() {
           <p className="mt-2 text-sm leading-relaxed text-muted">{row.money}</p>
         </section>
         <section className="mt-6">
-          <h2 className="section-h2">Levels</h2>
-          <dl className="mt-3 space-y-4">
-            <div>
-              <h3 className="text-sm text-parchment">Early</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{row.early}</p>
-            </div>
-            <div>
-              <h3 className="text-sm text-parchment">Mid</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{row.mid}</p>
-            </div>
-            <div>
-              <h3 className="text-sm text-parchment">Late</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{row.late}</p>
-            </div>
-          </dl>
+          <h2 className="section-h2">Early</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.early}</p>
+        </section>
+        <section className="mt-6">
+          <h2 className="section-h2">Mid</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.mid}</p>
+        </section>
+        <section className="mt-6">
+          <h2 className="section-h2">Late</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.late}</p>
         </section>
         <section className="mt-6">
           <h2 className="section-h2">Wear</h2>
-          <p className="text-sm leading-relaxed text-muted">{row.wear}</p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.wear}</p>
         </section>
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <section>
@@ -86,8 +77,15 @@ function SkillPage() {
         </div>
         <section className="mt-6">
           <h2 className="section-h2">Watch</h2>
-          <p className="text-sm leading-relaxed text-muted">{row.watch}</p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.watch}</p>
         </section>
+        <OfficialPulse
+          note="XP rates move. Use the live wiki for the number."
+          links={[
+            { label: "Live wiki", href: row.wiki },
+            { label: "Training", href: row.train },
+          ]}
+        />
         <p className="mt-6 text-sm text-muted">
           <a href={row.wiki} target="_blank" rel="noopener noreferrer" className="text-parchment">
             Live wiki
