@@ -134,7 +134,7 @@ Same two jobs. GitHub will highlight these as code. They are not the client plug
 | Kali / bash | [still-compositor.sh](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/kali/still-compositor.sh) | [clip-bench.sh](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/kali/clip-bench.sh) |
 | PowerShell | [still-desk.ps1](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/win/still-desk.ps1) | [clip-bench.ps1](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/win/clip-bench.ps1) |
 
-Index: [sidecars/README.md](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/README.md)
+Index: [sidecars/README.md](https://github.com/russellchristefer-droid/runescapebannerstudio/blob/main/sidecars/README.md). Clip pack: `--pack small|balanced|high` (default balanced). Default crop `9:16`.
 
 ---
 

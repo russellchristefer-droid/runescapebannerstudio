@@ -30,7 +30,7 @@ for (const needle of ["toBlob", "captureHold", "getElementById(\"plate\")", "dat
 }
 
 const clips = readFileSync(join(root, "clips/alt1/app.js"), "utf8");
-for (const needle of ["MediaRecorder", "markIn", "getElementById(\"vid\")", "1920", "1280", "1200", "data-dl", "downloadBlob", "fileEl.click", "video/mp4", "uploadStill", "removeStill"]) {
+for (const needle of ["MediaRecorder", "markIn", "getElementById(\"vid\")", "1920", "1280", "1200", "data-dl", "downloadBlob", "fileEl.click", "video/mp4", "uploadStill", "removeStill", "christefer-1", "enc-mask", "balanced"]) {
   if (!clips.includes(needle)) fail.push(`clips app.js ${needle}`);
 }
 
@@ -49,6 +49,9 @@ if (!clipsHtml.includes('id="upload"')) fail.push("clips html upload");
 if (!clipsHtml.includes("data-dl=")) fail.push("clips html downloads");
 if (!clipsHtml.includes('id="uploadStill"')) fail.push("clips html still");
 if (!clipsHtml.includes('id="removeStill"')) fail.push("clips html remove still");
+if (!clipsHtml.includes('data-crop="9:16"')) fail.push("clips html 9:16 crop");
+if (!clipsHtml.includes("data-pack=")) fail.push("clips html pack");
+if (!clipsHtml.includes("enc-mask")) fail.push("clips html enc-mask");
 for (const size of ["16:9-720", "16:9-1080", "9:16", "1:1", "banner", "native"]) {
   if (!clipsHtml.includes(`data-dl="${size}"`)) fail.push(`clips html ${size}`);
 }
@@ -67,7 +70,7 @@ for (const needle of ["1200x480", "1280x720", "1920x1080", "1920x480", "native",
   if (!pyStill.includes(needle)) fail.push(`still_desk.py ${needle}`);
 }
 const pyClip = readFileSync(join(root, "../sidecars/clip_bench.py"), "utf8");
-for (const needle of ["16:9-720", "16:9-1080", "9:16", "1:1", "banner", "native", "libx264", "aac", "+faststart", "--still"]) {
+for (const needle of ["16:9-720", "16:9-1080", "9:16", "1:1", "banner", "native", "libx264", "aac", "+faststart", "--still", "--pack", "balanced", "export_box"]) {
   if (!pyClip.includes(needle)) fail.push(`clip_bench.py ${needle}`);
 }
 

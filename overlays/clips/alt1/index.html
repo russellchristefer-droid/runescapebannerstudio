@@ -25,8 +25,16 @@
       <p>Local clips. Not a live studio. Not a bot.</p>
     </header>
     <p id="status">Drop a clip you own, or upload one.</p>
-    <video id="vid" playsinline controls></video>
-    <canvas id="stage" width="1280" height="720" hidden></canvas>
+    <div class="stage-wrap">
+      <video id="vid" playsinline controls></video>
+      <div id="enc-mask" hidden>
+        <p id="enc-line">Encoding</p>
+        <p id="enc-pct">0%</p>
+        <div id="enc-bar"><span></span></div>
+        <p class="fine">Do not leave</p>
+      </div>
+    </div>
+    <canvas id="stage" width="1080" height="1920" hidden></canvas>
     <input id="file" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov,video/*" hidden />
     <div class="row">
       <button type="button" class="chip" id="upload">Upload clip</button>
@@ -36,14 +44,20 @@
       <button type="button" class="chip" id="markOut">Out</button>
     </div>
     <p id="span">In 0.00 · Out 0.00</p>
-    <p class="fine">Crops (preview)</p>
+    <p class="fine">Crops (preview). Default 9:16 for TikTok.</p>
     <div class="row" id="crops">
-      <button type="button" class="chip on" data-crop="16:9-720">720p 16:9</button>
+      <button type="button" class="chip" data-crop="16:9-720">720p 16:9</button>
       <button type="button" class="chip" data-crop="16:9-1080">1080p 16:9</button>
-      <button type="button" class="chip" data-crop="9:16">9:16</button>
+      <button type="button" class="chip on" data-crop="9:16">9:16</button>
       <button type="button" class="chip" data-crop="1:1">1:1</button>
       <button type="button" class="chip" data-crop="banner">Banner</button>
       <button type="button" class="chip" data-crop="native">Native</button>
+    </div>
+    <p class="fine">Pack (bits, not pixels)</p>
+    <div class="row" id="packs">
+      <button type="button" class="chip" data-pack="small">Small</button>
+      <button type="button" class="chip on" data-pack="balanced">Balanced</button>
+      <button type="button" class="chip" data-pack="high">High</button>
     </div>
     <input id="stillFile" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" hidden />
     <div class="row">

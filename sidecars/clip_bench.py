@@ -4,7 +4,7 @@
 Not the website editor. The live bench stays in the browser.
 
   python3 clip_bench.py public/media/poh.mp4 --in 0 --out 3 --write clip.mp4
-  python3 clip_bench.py clip.mp4 --size 16:9-720 --mute --fade-in 0.5 --fade-out 0.5
+  python3 clip_bench.py clip.mp4 --size 9:16 --pack balanced --write clip.mp4
   python3 clip_bench.py clip.mp4 --still public/Falador.png --write clip.mp4
 
 Writes H.264 + AAC MP4 (TikTok / Twitch / X). Needs ffmpeg on PATH.
@@ -43,19 +43,28 @@ def ffmpeg_bin() -> str | None:
 _ENCODER_CACHE: str | None = None
 
 
+LADDER = {
+    "small": ("4M", "96k"),
+    "balanced": ("6.5M", "128k"),
+    "high": ("10M", "160k"),
+}
+
+
 def even(n: int) -> int:
     return max(16, int(n) & ~1)
 
 
-def bitrate_for(w: int, h: int) -> str:
-    pixels = w * h
-    if pixels >= 1920 * 1080:
-        return "12M"
-    if pixels >= 1080 * 1080:
-        return "8M"
-    if pixels >= 1280 * 720:
-        return "7.5M"
-    return "5M"
+def export_box(chip_w: int, chip_h: int, src_w: int, src_h: int) -> tuple[int, int]:
+    cw, ch = even(chip_w), even(chip_h)
+    sw, sh = max(16, src_w), max(16, src_h)
+    if sw >= cw or sh >= ch:
+        return cw, ch
+    scale = min(sw / cw, sh / ch)
+    return even(max(16, round(cw * scale))), even(max(16, round(ch * scale)))
+
+
+def bitrate_for(pack: str) -> tuple[str, str]:
+    return LADDER.get(pack, LADDER["balanced"])
 
 
 def list_encoders(bin_: str) -> set[str]:
@@ -83,9 +92,9 @@ def pick_h264(bin_: str, want: str = "auto") -> str:
     return "libx264"
 
 
-def video_args(encoder: str, w: int, h: int) -> list[str]:
-    rate = bitrate_for(w, h)
-    tail = ["-pix_fmt", "yuv420p", "-r", "30", "-g", "60", "-b:v", rate]
+def video_args(encoder: str, pack: str) -> list[str]:
+    rate, _audio = bitrate_for(pack)
+    tail = ["-pix_fmt", "yuv420p", "-r", "30", "-g", "60", "-b:v", rate, "-maxrate", rate, "-bufsize", str(int(float(rate.replace("M", "")) * 2)) + "M"]
     if encoder == "h264_nvenc":
         return [
             "-c:v",
@@ -164,6 +173,7 @@ def trim(
     gain: float,
     encoder: str = "auto",
     still: Path | None = None,
+    pack: str = "balanced",
 ) -> int:
     bin_ = ffmpeg_bin()
     if not bin_:
@@ -172,11 +182,12 @@ def trim(
     if not src.is_file():
         print(f"No clip at {src}", file=sys.stderr)
         return 1
+    src_w, src_h = probe_size(src)
     if size_id == "native":
-        w, h = probe_size(src)
+        w, h = src_w, src_h
     else:
-        pair = SIZES.get(size_id) or SIZES["1280x720"]
-        w, h = even(pair[0]), even(pair[1])
+        pair = SIZES.get(size_id) or SIZES["9:16"]
+        w, h = export_box(pair[0], pair[1], src_w, src_h)
     span = max(0.05, out_t - in_t)
     if out.suffix.lower() not in {".mp4", ".m4v"}:
         out = out.with_suffix(".mp4")
@@ -238,12 +249,12 @@ def trim(
                 cmd += ["-map", "1:a"]
             else:
                 cmd += ["-map", "0:a?"]
-            cmd += video_args(enc, w, h)
+            cmd += video_args(enc, pack)
         else:
             cmd += [
                 "-vf",
                 ",".join(vf),
-                *video_args(enc, w, h),
+                *video_args(enc, pack),
             ]
         if not mute:
             af = []
@@ -266,7 +277,7 @@ def trim(
             "-ac",
             "2",
             "-b:a",
-            "128k",
+            bitrate_for(pack)[1],
             "-shortest",
             "-movflags",
             "+faststart",
@@ -284,7 +295,7 @@ def trim(
     else:
         print(last_err, file=sys.stderr)
         return 1
-    print(f"Wrote {out} ({w}x{h}, {used})")
+    print(f"Wrote {out} ({w}x{h}, {used}, {pack} VBR)")
     return 0
 
 
@@ -293,8 +304,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("clip", type=Path, help="Source video you own")
     p.add_argument("--in", dest="in_t", type=float, default=0.0)
     p.add_argument("--out", dest="out_t", type=float, default=6.0)
-    p.add_argument("--size", default="1280x720", choices=list(SIZES))
-    p.add_argument("--write", type=Path, default=ROOT / "clip-out.mp4")
+    p.add_argument("--size", default="9:16", choices=list(SIZES))
+    p.add_argument("--pack", default="balanced", choices=list(LADDER), help="VBR ladder: small 4M, balanced 6.5M, high 10M")
+    p.add_argument("--write", type=Path, default=None)
     p.add_argument("--mute", action="store_true")
     p.add_argument("--fade-in", type=float, default=0.0)
     p.add_argument("--fade-out", type=float, default=0.0)
@@ -307,6 +319,8 @@ def main(argv: list[str] | None = None) -> int:
         help="Video encoder. auto picks NVENC/QSV/AMF/VideoToolbox, else libx264.",
     )
     args = p.parse_args(argv)
+    if args.write is None:
+        args.write = ROOT / "christefer-1.mp4"
     return trim(
         args.clip,
         args.write,
@@ -319,6 +333,7 @@ def main(argv: list[str] | None = None) -> int:
         args.gain,
         args.encoder,
         args.still,
+        args.pack,
     )
 
 

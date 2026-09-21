@@ -67,3 +67,48 @@ label.chip {
 .chip.on {
   border-color: #efe4c8;
 }
+.stage-wrap {
+  position: relative;
+  margin: 0 12px 10px;
+}
+#enc-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 10, 8, 0.92);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 20;
+  text-align: center;
+}
+#enc-mask.on {
+  display: flex;
+}
+#enc-line {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #efe4c8;
+}
+#enc-pct {
+  margin: 0;
+  font: 40px/1 ui-monospace, monospace;
+  color: #ffff00;
+  text-shadow: 2px 2px 0 #000;
+}
+#enc-bar {
+  height: 6px;
+  width: 176px;
+  overflow: hidden;
+  border: 1px solid #000;
+  background: #120f0c;
+}
+#enc-bar > span {
+  display: block;
+  height: 100%;
+  background: #ffff00;
+  width: 0;
+}

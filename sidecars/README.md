@@ -18,13 +18,14 @@ These files are extra downloads GitHub will highlight as real languages. They ar
 python3 sidecars/still_desk.py --still public/Falador.png --name Christefer
 python3 sidecars/still_desk.py --still public/Falador.png --size native --out banner.jpg
 node sidecars/node/still-desk.mjs --still public/Falador.png --name Christefer --size 1280x720
-python3 sidecars/clip_bench.py clip.mp4 --in 2 --out 8 --size 16:9-720
+python3 sidecars/clip_bench.py clip.mp4 --in 2 --out 8 --size 9:16 --pack balanced
 python3 sidecars/clip_bench.py clip.mp4 --in 2 --out 8 --still public/Falador.png --write clip.mp4
-node sidecars/node/clip-bench.mjs clip.mp4 --in 2 --out 8 --size banner --mute
+node sidecars/node/clip-bench.mjs clip.mp4 --in 2 --out 8 --size banner --mute --pack small
 ```
 
 Still crops: `1200x480` `1280x720` `1920x1080` `1920x480` `native`.
-Clip crops: `16:9-1080` `16:9-720` `9:16` `1:1` `banner` `native` (pixel sizes still work).
+Clip crops: `16:9-1080` `16:9-720` `9:16` (default) `1:1` `banner` `native`.
+Clip pack: `small` 4 Mbps · `balanced` 6.5 Mbps · `high` 10 Mbps. VBR. One encode. In→Out only. Does not upscale a smaller source.
 Clip files are **MP4** (H.264 + AAC). `--still` cover-crops a photo onto the frame the same way the website bench does.
 
 The live site also has Desk banner (Save for clips) with Remove banner, plus Upload still / Remove still. These sidecars do the file job without the browser chrome.

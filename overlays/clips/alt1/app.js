@@ -25,11 +25,21 @@
   let objectUrl = "";
   let inPoint = 0;
   let outPoint = 0;
-  let cropId = "16:9-720";
+  let cropId = "9:16";
+  let packId = "balanced";
   let busy = false;
   let stillImg = null;
   let stillUrl = "";
   let stillScale = 1;
+  const LADDER = {
+    small: { video: 4_000_000, audio: 96_000 },
+    balanced: { video: 6_500_000, audio: 128_000 },
+    high: { video: 10_000_000, audio: 160_000 },
+  };
+  const mask = document.getElementById("enc-mask");
+  const encLine = document.getElementById("enc-line");
+  const encPct = document.getElementById("enc-pct");
+  const encBar = document.querySelector("#enc-bar > span");
 
   function say(line) {
     status.textContent = line;
@@ -157,12 +167,23 @@
 
   document.querySelectorAll("[data-crop]").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      cropId = btn.getAttribute("data-crop") || "16:9-720";
+      cropId = btn.getAttribute("data-crop") || "9:16";
       document.querySelectorAll("[data-crop]").forEach(function (el) {
         el.classList.toggle("on", el === btn);
       });
       const box = sizeFor(cropId);
       say(cropId + " · " + box.w + "×" + box.h);
+    });
+  });
+
+  document.querySelectorAll("[data-pack]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      packId = btn.getAttribute("data-pack") || "balanced";
+      document.querySelectorAll("[data-pack]").forEach(function (el) {
+        el.classList.toggle("on", el === btn);
+      });
+      const bits = LADDER[packId] || LADDER.balanced;
+      say(packId + " · " + Math.round(bits.video / 1_000_000) + " Mbps VBR");
     });
   });
 
@@ -196,18 +217,38 @@
     const w = box.w & ~1;
     const h = box.h & ~1;
     busy = true;
-    say("Making " + w + "×" + h + "…");
+    video.pause();
+    video.muted = true;
+    video.volume = 0;
+    if (mask) {
+      mask.hidden = false;
+      mask.classList.add("on");
+    }
+    if (encLine) encLine.textContent = "Encoding";
+    if (encPct) encPct.textContent = "0%";
+    if (encBar) encBar.style.width = "0%";
+    say("Do not leave.");
     coverDraw(w, h);
     const capture = stage.captureStream || stage.mozCaptureStream;
     if (!capture) {
       busy = false;
+      video.muted = false;
+      if (mask) {
+        mask.hidden = true;
+        mask.classList.remove("on");
+      }
       say("This window cannot write an MP4.");
       return;
     }
     const stream = capture.call(stage, 30);
     let rec;
+    const bits = LADDER[packId] || LADDER.balanced;
     try {
-      rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 7500000, audioBitsPerSecond: 128000 });
+      rec = new MediaRecorder(stream, {
+        mimeType: mime,
+        videoBitsPerSecond: bits.video,
+        audioBitsPerSecond: bits.audio,
+      });
     } catch (err) {
       busy = false;
       say("This window cannot write an MP4.");
@@ -219,13 +260,18 @@
     };
     rec.onstop = function () {
       busy = false;
+      video.muted = false;
+      if (mask) {
+        mask.hidden = true;
+        mask.classList.remove("on");
+      }
       const blob = new Blob(chunks, { type: "video/mp4" });
       if (blob.size < 64) {
         say("Export wrote an empty file.");
         return;
       }
-      downloadBlob(blob, "clip-" + w + "x" + h + "-" + Math.round(inPoint) + "-" + Math.round(outPoint) + ".mp4");
-      say("In the bag · " + w + "×" + h + " MP4");
+      downloadBlob(blob, "christefer-1-" + w + "x" + h + ".mp4");
+      say("Saved. " + w + "×" + h);
     };
     video.currentTime = inPoint;
     await video.play().catch(function () {});
@@ -235,6 +281,10 @@
     }, Math.min(120000, Math.max(800, (outPoint - inPoint) * 1000 + 2000)));
     function tick() {
       coverDraw(w, h);
+      const span = Math.max(0.001, outPoint - inPoint);
+      const pct = Math.min(99, Math.floor(((video.currentTime - inPoint) / span) * 100));
+      if (encPct) encPct.textContent = pct + "%";
+      if (encBar) encBar.style.width = pct + "%";
       if (video.currentTime >= outPoint || video.ended) {
         video.pause();
         if (rec.state !== "inactive") rec.stop();
@@ -254,7 +304,7 @@
 
   document.querySelectorAll("[data-dl]").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      const id = btn.getAttribute("data-dl") || "16:9-720";
+      const id = btn.getAttribute("data-dl") || "9:16";
       cropId = id;
       void saveCrop(id);
     });
