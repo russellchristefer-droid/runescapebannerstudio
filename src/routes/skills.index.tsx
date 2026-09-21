@@ -29,7 +29,7 @@ function SkillsPage() {
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Skills</h1>
         <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
-          One canon at a time. Sequence as the client lists them. Open a card for early, mid, late, and what to wear.
+          One canon at a time. Sequence as the client lists them. Open a card for unlocks, whether the hour pays, early, mid, late, and what to wear.
         </p>
         <p className="mt-1 text-center text-sm">
           <Link to="/monsters" className="text-parchment">

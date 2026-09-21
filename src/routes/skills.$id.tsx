@@ -23,6 +23,7 @@ function SkillPage() {
           Skills · {game}
         </p>
         <h1 className="page-h1 site-title mt-1">{row.skill.name}</h1>
+        <p className="mt-2 text-center text-sm text-muted">{row.hook}</p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto max-w-3xl px-5 py-6 md:px-8">
@@ -44,6 +45,14 @@ function SkillPage() {
         <p className="mt-2 text-center text-sm text-muted">
           Early, mid, and late are rooms, not a promise. Rates move. Wiki keeps the hour. A paid coach is a call, not this page.
         </p>
+        <section className="mt-6">
+          <h2 className="section-h2">Need</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.need}</p>
+        </section>
+        <section className="mt-6">
+          <h2 className="section-h2">Money</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.money}</p>
+        </section>
         <section className="mt-6">
           <h2 className="section-h2">Levels</h2>
           <dl className="mt-3 space-y-4">
