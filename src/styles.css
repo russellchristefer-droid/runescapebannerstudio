@@ -1022,42 +1022,53 @@ a.skill-link:focus-visible {
 .cw-page .bleed-spray {
   position: absolute;
   z-index: 0;
-  left: -8%;
-  right: -8%;
-  top: 54%;
-  height: 4.4rem;
+  left: 8%;
+  top: 78%;
+  width: 2px;
+  height: 2px;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 5px 3px at 7% 22%, rgba(42, 4, 6, 0.95) 0 42%, transparent 74%),
-    radial-gradient(circle 1.5px at 11% 48%, rgba(28, 2, 4, 0.92) 0 55%, transparent 78%),
-    radial-gradient(ellipse 3px 2px at 15% 18%, rgba(54, 6, 8, 0.88) 0 40%, transparent 72%),
-    radial-gradient(ellipse 9px 3px at 19% 36%, rgba(36, 4, 6, 0.55) 0 38%, transparent 76%),
-    radial-gradient(circle 2px at 24% 62%, rgba(32, 3, 5, 0.9) 0 50%, transparent 76%),
-    radial-gradient(ellipse 2px 4px at 28% 28%, rgba(48, 5, 7, 0.86) 0 45%, transparent 74%),
-    radial-gradient(circle 1px at 31% 44%, rgba(22, 2, 3, 0.95) 0 60%, transparent 80%),
-    radial-gradient(ellipse 7px 2.5px at 36% 20%, rgba(40, 4, 6, 0.62) 0 36%, transparent 74%),
-    radial-gradient(ellipse 4px 3px at 41% 52%, rgba(58, 6, 8, 0.8) 0 42%, transparent 74%),
-    radial-gradient(circle 2.2px at 46% 30%, rgba(30, 3, 4, 0.94) 0 48%, transparent 76%),
-    radial-gradient(ellipse 11px 3px at 52% 42%, rgba(34, 4, 6, 0.48) 0 34%, transparent 78%),
-    radial-gradient(circle 1.4px at 57% 18%, rgba(46, 5, 7, 0.9) 0 55%, transparent 78%),
-    radial-gradient(ellipse 3px 5px at 61% 58%, rgba(26, 2, 4, 0.88) 0 40%, transparent 74%),
-    radial-gradient(ellipse 6px 2px at 66% 26%, rgba(50, 6, 8, 0.7) 0 40%, transparent 75%),
-    radial-gradient(circle 1px at 70% 46%, rgba(20, 2, 3, 0.96) 0 60%, transparent 82%),
-    radial-gradient(ellipse 4px 3px at 74% 34%, rgba(44, 4, 6, 0.86) 0 42%, transparent 74%),
-    radial-gradient(ellipse 8px 2.5px at 79% 60%, rgba(32, 3, 5, 0.5) 0 36%, transparent 76%),
-    radial-gradient(circle 2px at 84% 22%, rgba(38, 4, 6, 0.9) 0 50%, transparent 76%),
-    radial-gradient(ellipse 3px 2px at 88% 48%, rgba(24, 2, 4, 0.92) 0 45%, transparent 74%),
-    radial-gradient(circle 1.2px at 93% 30%, rgba(52, 6, 8, 0.85) 0 55%, transparent 78%),
-    radial-gradient(ellipse 2px 3px at 96% 56%, rgba(28, 3, 4, 0.8) 0 42%, transparent 74%),
-    radial-gradient(circle 1px at 14% 72%, rgba(18, 2, 3, 0.75) 0 60%, transparent 80%),
-    radial-gradient(ellipse 5px 2px at 63% 74%, rgba(36, 4, 6, 0.55) 0 38%, transparent 76%);
+  background: #ff2944;
+  image-rendering: pixelated;
+  box-shadow:
+    0 0 0 1px #000,
+    10px 4px 0 0 #7a0e18,
+    10px 4px 0 1px #000,
+    22px 12px 0 1px #ff2944,
+    22px 12px 0 2px #000,
+    36px 2px 0 0 #4a0810,
+    48px 16px 0 0 #ff2944,
+    48px 16px 0 1px #000,
+    64px 6px 0 0 #6a0c14,
+    78px 18px 0 1px #c41024,
+    78px 18px 0 2px #000,
+    96px 4px 0 0 #ff2944,
+    96px 4px 0 1px #000,
+    112px 14px 0 0 #3a060c,
+    128px 8px 0 1px #ff3350,
+    128px 8px 0 2px #000,
+    146px 2px 0 0 #7a0e18,
+    160px 16px 0 0 #ff2944,
+    160px 16px 0 1px #000,
+    176px 6px 0 0 #4a0810,
+    192px 12px 0 1px #c41024,
+    208px 4px 0 0 #ff2944,
+    208px 4px 0 1px #000,
+    224px 18px 0 0 #6a0c14,
+    240px 8px 0 0 #ff2944,
+    240px 8px 0 1px #000,
+    18px 22px 0 0 #3a060c,
+    70px 24px 0 1px #ff2944,
+    140px 22px 0 0 #7a0e18,
+    200px 24px 0 0 #c41024,
+    0 0 6px #ff2040;
 }
 .cw-page .bleed-ch {
   position: relative;
   z-index: 2;
   display: inline-block;
+  font-weight: 700;
   color: #e7e1d6;
-  background-image: linear-gradient(180deg, #f4efe6 0%, #c9c2b6 50%, #7a7470 72%, #4a1216 88%, #2a0608 100%);
+  background-image: linear-gradient(180deg, #f4efe6 0 64%, #ff3350 64% 82%, #6a0810 82% 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1066,62 +1077,46 @@ a.skill-link:focus-visible {
 .cw-page .bleed-ch::after {
   content: "";
   position: absolute;
-  left: 46%;
-  top: 82%;
+  left: 50%;
+  top: 88%;
   pointer-events: none;
   z-index: -1;
+  image-rendering: pixelated;
+  filter: none;
 }
 .cw-page .bleed-ch[data-drip="0"]::before,
 .cw-page .bleed-ch[data-drip="0"]::after {
   content: none;
 }
 .cw-page .bleed-ch::before {
-  width: 14px;
-  height: calc(var(--drip, 0px) * 0.9);
+  width: 8px;
+  height: calc(var(--drip, 0px) + 4px);
   transform: translateX(-50%);
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(42, 4, 6, 0.72), rgba(22, 2, 4, 0.2) 58%, transparent 80%),
-    radial-gradient(circle 2px at 80% 35%, rgba(36, 4, 6, 0.9) 0 45%, transparent 72%),
-    radial-gradient(circle 1.5px at 12% 55%, rgba(24, 2, 3, 0.85) 0 50%, transparent 74%);
-  filter: blur(1.2px);
+  background: #000;
 }
 .cw-page .bleed-ch::after {
-  width: 5px;
+  width: 6px;
   height: var(--drip, 0px);
   transform: translateX(-50%);
-  background: linear-gradient(
+  background: repeating-linear-gradient(
     180deg,
-    rgba(48, 6, 8, 0.98) 0%,
-    rgba(62, 8, 10, 0.82) 16%,
-    rgba(32, 4, 6, 0.7) 52%,
-    rgba(18, 2, 4, 0.28) 84%,
-    transparent 100%
+    #ff3350 0 3px,
+    #9b1020 3px 5px,
+    #ff2944 5px 8px
   );
-  filter: blur(0.15px);
   box-shadow:
-    6px 6px 0 0 rgba(36, 4, 6, 0.9),
-    -5px 10px 0 0 rgba(22, 2, 3, 0.85),
-    8px 16px 0 0 rgba(40, 4, 6, 0.55),
-    -7px 3px 0 0 rgba(28, 3, 4, 0.7);
+    0 0 0 1px #000,
+    0 0 6px #ff2040,
+    8px 6px 0 0 #ff2944,
+    8px 6px 0 1px #000,
+    -8px 10px 0 0 #7a0e18,
+    -8px 10px 0 1px #000;
 }
-.cw-page .bleed-ch[data-k="0"]::after {
-  clip-path: polygon(40% 0, 68% 0, 60% 24%, 84% 52%, 54% 78%, 62% 100%, 36% 100%, 44% 70%, 26% 38%);
-}
-.cw-page .bleed-ch[data-k="1"]::after {
-  left: 58%;
-  clip-path: polygon(32% 0, 62% 0, 74% 30%, 48% 58%, 70% 100%, 40% 100%, 34% 62%, 22% 28%);
-}
-.cw-page .bleed-ch[data-k="2"]::after {
-  width: 4px;
-  clip-path: polygon(36% 0, 66% 0, 58% 40%, 76% 68%, 48% 100%, 34% 92%, 42% 60%, 28% 22%);
-}
-.cw-page .bleed-ch[data-k="3"]::after {
-  left: 38%;
-  clip-path: polygon(42% 0, 78% 0, 64% 26%, 86% 48%, 50% 100%, 32% 100%, 46% 54%, 24% 20%);
-}
-.cw-page .bleed-ch[data-k="4"]::after {
-  clip-path: polygon(30% 0, 64% 0, 72% 18%, 50% 46%, 78% 74%, 46% 100%, 30% 100%, 40% 66%, 22% 32%);
-}
+.cw-page .bleed-ch[data-k="0"]::after { width: 6px; }
+.cw-page .bleed-ch[data-k="1"]::after { width: 4px; left: 62%; }
+.cw-page .bleed-ch[data-k="2"]::after { width: 8px; }
+.cw-page .bleed-ch[data-k="3"]::after { width: 4px; left: 36%; }
+.cw-page .bleed-ch[data-k="4"]::after { width: 6px; left: 58%; }
 .cw-page h2,
 .cw-page h3,
 .cw-page .section-h2,
