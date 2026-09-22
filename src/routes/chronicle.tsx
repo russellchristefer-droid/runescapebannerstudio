@@ -266,8 +266,6 @@ function ChroniclePage() {
           <Link to="/history">History</Link>
           {" · "}
           <Link to="/towns">Towns</Link>
-          {" · "}
-          <Link to="/legal">Legal</Link>
         </p>
         <p className="text-xs text-faint">
           Independent studio · not a Jagex® product. RuneScape®, Old School RuneScape®, RuneScape: Dragonwilds™, and Jagex® are trademarks of Jagex Limited.

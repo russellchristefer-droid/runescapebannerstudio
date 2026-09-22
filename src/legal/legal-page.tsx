@@ -295,8 +295,6 @@ export function LegalPage() {
         <p className="text-parchment">
           <Link to="/">Desk</Link>
           {" · "}
-          <Link to="/brief">Brief</Link>
-          {" · "}
           <Link to="/donate">Donate</Link>
           {" · "}
           <a href="mailto:russell.christefer@gmail.com">russell.christefer@gmail.com</a>

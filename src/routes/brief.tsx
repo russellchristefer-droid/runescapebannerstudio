@@ -103,8 +103,6 @@ function BriefPage() {
         <p className="text-parchment">
           <Link to="/">Home</Link>
           {" · "}
-          <Link to="/legal">Legal</Link>
-          {" · "}
           <Link to="/donate">Donate</Link>
           {" · "}
           <Link to="/knowledge">Sites</Link>

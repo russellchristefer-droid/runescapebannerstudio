@@ -83,8 +83,6 @@ function DiscordPage() {
           <Link to="/jmods">Jagex directory</Link>
           {" · "}
           <Link to="/streamers">Twitch Streamers</Link>
-          {" · "}
-          <Link to="/legal">Legal</Link>
         </p>
       </main>
     </div>

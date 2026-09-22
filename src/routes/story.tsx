@@ -63,10 +63,6 @@ function StoryPage() {
         </p>
         <p className="text-parchment">
           <Link to="/">Desk</Link>
-          {" · "}
-          <Link to="/brief">Brief</Link>
-          {" · "}
-          <Link to="/legal">Legal</Link>
         </p>
       </main>
     </div>

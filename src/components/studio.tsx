@@ -2710,10 +2710,6 @@ export function Studio() {
             <span className="text-faint">·</span>
             <Link to="/x-live">X live</Link>
             <span className="text-faint">·</span>
-            <Link to="/brief">Brief</Link>
-            <span className="text-faint">·</span>
-            <Link to="/legal">Legal</Link>
-            <span className="text-faint">·</span>
             <a href="mailto:russell.christefer@gmail.com">russell.christefer@gmail.com</a>
             <span className="text-faint">·</span>
             <a

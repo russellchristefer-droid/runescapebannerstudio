@@ -7,19 +7,15 @@ export const GAME_NAV = [
   ["/classic", "Classic"],
 ] as const;
 
-/** The product. */
+/** The product. Legal lives in the footer. */
 export const STUDIO_NAV = [
   ["/", "Banner Studio"],
   ["/edit", "Clip Editor"],
   ["/brief", "Brief"],
-  ["/legal", "Legal"],
 ] as const;
 
-/** Footer product only. Atlas stays in GAME_NAV. */
+/** Footer: Legal · Donate. */
 export const STUDIO_INDEX = [
-  ["/", "Banner Studio"],
-  ["/edit", "Clip Editor"],
-  ["/brief", "Brief"],
   ["/legal", "Legal"],
   ["/donate", "Donate"],
 ] as const;
