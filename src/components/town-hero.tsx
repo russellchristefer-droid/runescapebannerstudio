@@ -1,9 +1,55 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { HERO_PERIOD_MS, formatRemain, heroStillIndex } from "@/lib/still-clock";
 import { bobLine, placeSlug } from "@/lib/bob-lines";
 import { type Edition } from "@/lib/locations";
 import { type HeroChip, gameLabel, heroPool } from "@/lib/hero-pools";
+
+const HALLS = [
+  { to: "/streamers", label: "Twitch", aria: "Twitch Streamers", src: "/brands/twitch.svg" },
+  { to: "/youtubers", label: "YouTube", aria: "YouTube", src: "/brands/youtube.svg" },
+  { to: "/x-live", label: "X", aria: "X", src: "/brands/x.svg" },
+] as const;
+
+const ERAS = [
+  ["RSC", "Classic"],
+  ["OSRS", "Old School"],
+  ["RS3", "RuneScape"],
+] as const;
+
+function HallChip({
+  to,
+  label,
+  aria,
+  src,
+}: {
+  to: string;
+  label: string;
+  aria: string;
+  src: string;
+}) {
+  const [mark, setMark] = useState(true);
+  return (
+    <Link
+      to={to}
+      aria-label={aria}
+      className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line bg-surface px-3 text-xs text-parchment"
+    >
+      {mark ? (
+        <img
+          src={src}
+          alt=""
+          width={16}
+          height={16}
+          className="h-4 w-4"
+          onError={() => setMark(false)}
+        />
+      ) : null}
+      {label}
+    </Link>
+  );
+}
 
 function heroFromSearch(): HeroChip {
   if (typeof window === "undefined") return "OSRS";
@@ -71,27 +117,11 @@ export function TownHero({
 
   return (
     <section id="hero" className="border-b border-line bg-raised">
-      <div className="flex flex-wrap justify-center gap-2 px-3 py-3 md:px-8">
-        {(
-          [
-            ["RSC", "Classic"],
-            ["OSRS", "Old School"],
-            ["RS3", "RuneScape"],
-          ] as const
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            type="button"
-            aria-pressed={edition === id}
-            className={`min-h-11 rounded-md border px-3 text-xs ${
-              edition === id ? "border-parchment bg-surface text-parchment" : "border-line text-muted"
-            }`}
-            onClick={() => pick(id)}
-          >
-            {label}
-          </button>
+      <nav aria-label="Stream halls" className="flex flex-wrap justify-center gap-2 px-3 py-3 md:px-8">
+        {HALLS.map((hall) => (
+          <HallChip key={hall.to} {...hall} />
         ))}
-      </div>
+      </nav>
       <div className="relative w-full overflow-hidden border-y border-[#c6a45a] bg-[#1a1612]" style={{ aspectRatio: "1200 / 480" }}>
         {shown ? (
           <img
@@ -107,6 +137,21 @@ export function TownHero({
         ) : (
           <p className="absolute inset-0 flex items-center justify-center text-sm text-muted">Still needed.</p>
         )}
+        <div className="absolute bottom-2 left-2 z-10 flex flex-wrap gap-1 rounded-md bg-[#0b0a08]/70 p-1">
+          {ERAS.map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              aria-pressed={edition === id}
+              className={`min-h-11 rounded-md border px-3 text-xs ${
+                edition === id ? "border-parchment bg-surface text-parchment" : "border-line bg-surface/80 text-muted"
+              }`}
+              onClick={() => pick(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
       <p className="px-3 py-2 text-center text-sm text-fg md:px-8">
         {name} · {game}

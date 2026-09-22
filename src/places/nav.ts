@@ -20,9 +20,6 @@ export const STUDIO_INDEX = [
   ["/jmods", "Jagex directory"],
   ["/history", "History"],
   ["/chronicle", "Chronicle"],
-  ["/streamers", "Twitch Streamers"],
-  ["/youtubers", "YouTube"],
-  ["/x-live", "X live"],
   ["/discord", "Discord"],
   ["/stream", "How to go live"],
 ] as const;
