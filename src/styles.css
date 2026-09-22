@@ -62,9 +62,12 @@
     overflow-x: clip;
     background-color: var(--color-bg);
     background-image:
-      radial-gradient(ellipse at 50% -8%, rgba(184, 168, 74, 0.08), transparent 52%),
+      radial-gradient(ellipse at 50% 108%, rgba(255, 72, 12, 0.22), transparent 44%),
+      radial-gradient(ellipse at 18% 92%, rgba(255, 150, 40, 0.10), transparent 32%),
+      radial-gradient(ellipse at 82% 90%, rgba(92, 48, 180, 0.10), transparent 30%),
+      radial-gradient(ellipse at 50% -8%, rgba(196, 163, 90, 0.10), transparent 52%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='88' viewBox='0 0 160 88'%3E%3Crect fill='%23050505' width='160' height='88'/%3E%3Cg fill='none' stroke='%231a180c' stroke-width='1.5'%3E%3Crect x='1' y='1' width='52' height='28' fill='%23111111'/%3E%3Crect x='55' y='1' width='64' height='28' fill='%230c0c0c'/%3E%3Crect x='121' y='1' width='38' height='28' fill='%23161616'/%3E%3Crect x='1' y='31' width='38' height='26' fill='%230a0a0a'/%3E%3Crect x='41' y='31' width='70' height='26' fill='%23131313'/%3E%3Crect x='113' y='31' width='46' height='26' fill='%230e0e0e'/%3E%3Crect x='1' y='59' width='72' height='28' fill='%23101010'/%3E%3Crect x='75' y='59' width='44' height='28' fill='%23080808'/%3E%3Crect x='121' y='59' width='38' height='28' fill='%23141414'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: auto, 160px 88px;
+    background-size: auto, auto, auto, auto, 160px 88px;
     color: var(--color-fg);
     font-family: var(--font-sans);
     font-size: 16px;
@@ -91,8 +94,23 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    background: radial-gradient(ellipse at 50% 20%, transparent 40%, #000 100%);
-    opacity: 0.55;
+    background:
+      radial-gradient(ellipse 90% 42% at 50% 108%, rgba(255, 78, 8, 0.34), transparent 52%),
+      radial-gradient(ellipse 36% 28% at 22% 100%, rgba(255, 170, 50, 0.16), transparent 60%),
+      radial-gradient(ellipse 34% 26% at 78% 100%, rgba(110, 42, 210, 0.14), transparent 58%),
+      radial-gradient(ellipse at 50% 18%, transparent 42%, #000 100%);
+    opacity: 0.85;
+    animation: hearth 9s ease-in-out infinite;
+  }
+
+  @keyframes hearth {
+    0%,
+    100% {
+      opacity: 0.72;
+    }
+    50% {
+      opacity: 0.95;
+    }
   }
 
   body > * {
@@ -527,6 +545,10 @@ a.rs-chip.god-chip[aria-current="page"] {
 @media (prefers-reduced-motion: reduce) {
   body::before {
     opacity: 0.04;
+  }
+  body::after {
+    animation: none;
+    opacity: 0.82;
   }
   #bob-wotd {
     content: url("/bob/bob-still.png");
