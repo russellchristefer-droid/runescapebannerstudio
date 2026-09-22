@@ -2673,28 +2673,35 @@ export function Studio() {
             <Link to="/edit">Clip Editor is the other half of this desk.</Link>
           </p>
         </article>
-        <figure className="mx-auto mt-4 w-full max-w-[280px]">
-          <div className="aspect-[9/16] w-full overflow-hidden bg-black">
-            <iframe
-              title="Christefer_1 on TikTok"
-              src="https://www.tiktok.com/player/v1/7688221732364176654?music_info=0&description=0&rel=0&closed_caption=0"
-              className="block h-full w-full border-0"
-              allow="fullscreen; encrypted-media; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="strict-origin-when-cross-origin"
-            />
-          </div>
-          <p className="py-2 text-center text-[11px] text-parchment">
-            <a
-              href="https://www.tiktok.com/@christefer_1/video/7688221732364176654"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              TikTok
-            </a>
-          </p>
-        </figure>
+        <div className="mx-auto mt-4 flex w-full max-w-xl flex-col items-center justify-center gap-4 sm:flex-row sm:items-start">
+          {[
+            ["7688221732364176654", "Christefer_1 on TikTok"],
+            ["7687791660293508365", "Christefer_1 on TikTok, second clip"],
+          ].map(([id, label]) => (
+            <figure key={id} className="w-full max-w-[280px]">
+              <div className="aspect-[9/16] w-full overflow-hidden bg-black">
+                <iframe
+                  title={label}
+                  src={`https://www.tiktok.com/player/v1/${id}?music_info=0&description=0&rel=0&closed_caption=0`}
+                  className="block h-full w-full border-0"
+                  allow="fullscreen; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
+              </div>
+              <p className="py-2 text-center text-[11px] text-parchment">
+                <a
+                  href={`https://www.tiktok.com/@christefer_1/video/${id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  TikTok
+                </a>
+              </p>
+            </figure>
+          ))}
+        </div>
         <figure className="mt-4 flex flex-col items-center gap-2">
           <img
             src="/brand/postie-pete.png"
