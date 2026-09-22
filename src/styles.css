@@ -434,18 +434,21 @@ a.min-h-11.border-parchment {
 }
 
 input.skill-level {
-  min-height: 28px;
-  height: 28px;
-  width: 2.75rem;
+  min-height: 40px;
+  height: 40px;
+  width: 3.4rem;
   padding: 0 2px;
   border: 1px solid color-mix(in srgb, var(--color-line) 55%, transparent);
   border-radius: 4px;
   background: #0b0b0b;
   color: var(--color-parchment);
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
+  line-height: 40px;
   font-variant-numeric: tabular-nums;
   box-shadow: none;
+  touch-action: manipulation;
+  user-select: text;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]):not([type="color"]):not(.skill-level),

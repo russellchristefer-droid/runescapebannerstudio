@@ -2208,10 +2208,16 @@ export function Studio() {
               <input
                 value={skillPicks.find((item) => item.id === pickedSkill)?.level ?? ""}
                 inputMode="numeric"
+                enterKeyHint="done"
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
                 maxLength={3}
                 title={`1–${skillLevelCap(pickedSkill, skillPack)} · real ${skillRealCap(pickedSkill, skillPack)}`}
                 className="skill-level"
                 onPointerDown={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
                 onChange={(e) => {
                   const cap = skillLevelCap(pickedSkill, skillPack);
@@ -2234,7 +2240,7 @@ export function Studio() {
 
         <div className="mt-2 grid gap-2 lg:grid-cols-2" style={{ borderTop: "1px solid rgba(198,164,90,0.2)" }}>
         <div className="lg:border-r lg:border-[#c4a35a]/20">
-          <p className="px-1 pt-2 text-[10px] text-muted">Skills</p>
+          <p className="px-1 pt-2 text-[10px] text-muted">Skills · one number each</p>
           <div className="flex flex-col gap-1 p-1">
             <div className="flex flex-wrap gap-1">
               {(["OSRS", "RS3"] as const).map((pack) => (
@@ -2332,12 +2338,18 @@ export function Studio() {
                     <input
                       aria-label={`${skill.name} level`}
                       inputMode="numeric"
+                      enterKeyHint="done"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck={false}
                       value={pick?.level ?? boardLevels[skillPack][skill.id] ?? ""}
-                      placeholder={String(skillRealCap(skill.id, skillPack))}
+                      placeholder={String(cap)}
                       title={`${skill.name}. Real ${skillRealCap(skill.id, skillPack)}. Virtual ${cap}.`}
                       maxLength={3}
                       className="skill-level"
                       onPointerDown={(e) => e.stopPropagation()}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onTouchStart={(e) => e.stopPropagation()}
                       onKeyDown={(e) => e.stopPropagation()}
                       onChange={(e) => {
                         const next = sanitizeSkillLevel(e.target.value, cap);
