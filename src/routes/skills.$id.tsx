@@ -2,7 +2,7 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { OfficialPulse } from "@/components/official-pulse";
 import { pageMeta } from "@/lib/page-title";
-import { sisterSkill, skillGuideById } from "@/lib/skill-guides";
+import { sisterSkill, skillGuideById, type SkillBand } from "@/lib/skill-guides";
 
 export const Route = createFileRoute("/skills/$id")({
   head: ({ params }) => {
@@ -22,9 +22,7 @@ function SkillPage() {
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
-        <p className="eyebrow text-center text-[10px] uppercase tracking-[0.18em] text-muted">
-          Skills · {game}
-        </p>
+        <p className="eyebrow text-center text-[10px] uppercase tracking-[0.18em] text-muted">Skills · {game}</p>
         <h1 className="page-h1 site-title mt-1">{row.skill.name}</h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-sm leading-relaxed text-muted">{row.deck}</p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
@@ -37,50 +35,47 @@ function SkillPage() {
           height={96}
           className="mx-auto h-24 w-24 object-contain"
         />
-        <p className="mt-3 text-center text-[11px] text-muted">{game}</p>
         {row.moving ? (
           <p className="mt-3 text-center text-sm text-[#ffff00]">Methods still moving. Wiki is the source.</p>
         ) : null}
         <section className="mt-6">
-          <h2 className="section-h2">Need</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{row.need}</p>
+          <h2 className="section-h2">Unlock</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.unlock}</p>
         </section>
         <section className="mt-6">
-          <h2 className="section-h2">Money</h2>
+          <h2 className="section-h2">The route</h2>
+          <ul className="mt-3 grid gap-3">
+            {row.route.map((band) => (
+              <Band key={band.band} band={band} />
+            ))}
+          </ul>
+        </section>
+        <section className="mt-6">
+          <h2 className="section-h2">Inventory</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.inventory}</p>
+        </section>
+        <section className="mt-6">
+          <h2 className="section-h2">Money fork</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">{row.money}</p>
         </section>
         <section className="mt-6">
-          <h2 className="section-h2">Early</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{row.early}</p>
+          <h2 className="section-h2">Iron fork</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.iron}</p>
         </section>
         <section className="mt-6">
-          <h2 className="section-h2">Mid</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{row.mid}</p>
+          <h2 className="section-h2">Kit</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.kit}</p>
         </section>
         <section className="mt-6">
-          <h2 className="section-h2">Late</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{row.late}</p>
+          <h2 className="section-h2">Mistakes</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.mistakes}</p>
         </section>
         <section className="mt-6">
-          <h2 className="section-h2">Wear</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{row.wear}</p>
-        </section>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
-          <section>
-            <h2 className="section-h2">Afk</h2>
-            <p className="text-sm leading-relaxed text-muted">{row.afk}</p>
-          </section>
-          <section>
-            <h2 className="section-h2">Fast</h2>
-            <p className="text-sm leading-relaxed text-muted">{row.fast}</p>
-          </section>
-        </div>
-        <section className="mt-6">
-          <h2 className="section-h2">Watch</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{row.watch}</p>
+          <h2 className="section-h2">Stop</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{row.stop}</p>
         </section>
         <OfficialPulse
-          note="XP rates move. Use the live wiki for the number."
+          note="XP rates move. Use the live wiki for the number. This page is the route."
           links={[
             { label: "Live wiki", href: row.wiki },
             { label: "Training", href: row.train },
@@ -110,5 +105,27 @@ function SkillPage() {
         </p>
       </main>
     </div>
+  );
+}
+
+function Band({ band }: { band: SkillBand }) {
+  const cells = [
+    ["Method", band.method],
+    ["Place", band.place],
+    ["Click", band.click],
+    ["Leave", band.leave],
+  ];
+  return (
+    <li className="rs-panel rounded-md px-4 py-3">
+      <p className="text-sm text-parchment">{band.band}</p>
+      <dl className="mt-2 grid gap-2">
+        {cells.map(([label, value]) => (
+          <div key={label}>
+            <dt className="text-[10px] uppercase tracking-[0.14em] text-faint">{label}</dt>
+            <dd className="text-sm leading-relaxed text-muted">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </li>
   );
 }

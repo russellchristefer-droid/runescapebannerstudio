@@ -1,20 +1,27 @@
 import { SKILLS, type Skill } from "./skills";
 
+export type SkillBand = {
+  band: string;
+  method: string;
+  place: string;
+  click: string;
+  leave: string;
+};
+
 export type SkillGuide = {
   skill: Skill;
   slug: string;
   hook: string;
   tagline: string;
   deck: string;
-  afk: string;
-  fast: string;
-  watch: string;
-  early: string;
-  mid: string;
-  late: string;
-  wear: string;
-  need: string;
+  unlock: string;
+  route: SkillBand[];
+  inventory: string;
   money: string;
+  iron: string;
+  kit: string;
+  mistakes: string;
+  stop: string;
   wiki: string;
   train: string;
   moving?: boolean;
@@ -32,6 +39,11 @@ type Note = {
   afk: string;
   fast: string;
   watch: string;
+  route?: SkillBand[];
+  inventory?: string;
+  iron?: string;
+  stop?: string;
+  mistakes?: string;
   page: string;
   train?: string;
   wikiPage?: string;
@@ -104,16 +116,52 @@ const OSRS_NOTE: Record<string, Note> = {
   },
   prayer: {
     tagline: "Bones on a gilded or chaos altar. Protect inventory.",
-    deck: "Prayer is bones on an altar. This page is Old School. A gilded house is safe. The chaos altar is the Wilderness.",
-    need: "Priest in Peril for the temple. The Restless Ghost helps. A gilded altar is a player-owned house with two burners. The chaos altar is in the Wilderness.",
-    money: "Dragon bones and superior dragon bones cost. Ensouled heads can be cheaper. The chaos altar saves bones and can take the bag. Wiki for gp/XP this month.",
-    early: "1–43. Quests, then cheap bones on any altar. Click every bone. Alternative: ensouled heads if you already have them.",
-    mid: "43–70. Dragon bones on a gilded altar, two burners lit. Click. Alternative: a friend’s house if yours has no burners.",
-    late: "70–99. Superior dragon bones, or the bone the wiki ranks, same gilded altar. Click. Alternative: the chaos altar if you accept a PKer.",
-    wear: "Nothing that matters on a gilded altar. Wilderness: cheap gear, a loot key if you use one, not the bank.",
-    afk: "None. Click the bone.",
-    fast: "Chaos altar, or a gilded altar with a runner. Wiki for the current gp/XP. Do not mix the two kits.",
-    watch: "The chaos altar with a full bank tab. A gilded altar with the burners out.",
+    deck: "Prayer is the protection and the piety you take into a fight. This sheet is Old School. A main can buy bones. An iron buries what they killed.",
+    need: "The Restless Ghost and Priest in Peril open the early path. A gilded altar is a player-owned house with both burners lit. The chaos altar is level 38 Wilderness. Piety wants 70 Prayer and the King’s Ransom line. Rigour and Augury want their scrolls on top of the prayer level.",
+    money: "A gilded altar is the XP hour you can buy: dragon bones, then superior dragon bones. The chaos altar saves bones and can take the bag, so it is not a gp hour. Ensouled heads are a third bill if you already have the Arceuus spell. Wiki for this month’s gp/XP. Stop buying superiors when the next boss you want only needed piety.",
+    early: "1–43. Quests, then big bones on any altar.",
+    mid: "43–70. Dragon bones, gilded, two burners.",
+    late: "70–99. Superiors, or the chaos altar if you accept the PKer.",
+    wear: "Gilded: nothing that matters. Wilderness: monk robes or black d’hide you can lose, a one-click teleport, protect item.",
+    afk: "None.",
+    fast: "Chaos altar or a gilded altar with both burners and a runner.",
+    watch: "Chaos altar with a cash stack. Gilded with the burners out. Buying 99 before piety.",
+    route: [
+      {
+        band: "1–43",
+        method: "Quest XP first, then the cheapest bone you will actually offer. Big bones are enough. Dragon bones at this level are a main showing off.",
+        place: "Any altar. Lumbridge or Edgeville is fine. You are not in the Wilderness yet.",
+        click: "One bone, one offer. This is a click, not an afk.",
+        leave: "Leave when protection prayers are unlocked. That is the point of this band. Do not sit here to 70.",
+      },
+      {
+        band: "43–70",
+        method: "Dragon bones on a gilded altar. Both burners lit. A friend’s house counts if yours has no burners. This is the default, not a failure.",
+        place: "A player-owned house. Light the burners with clean marrentill. Unnote bones at the nearby bank or with a servant if you use one.",
+        click: "Offer, offer, offer. A runner makes it a main’s hour. Without a runner it is still the right altar.",
+        leave: "Leave at 70 if piety is what you came for. Stay only if the next boss wants a higher prayer.",
+      },
+      {
+        band: "70–77",
+        method: "Superior dragon bones on the same gilded altar, or the bone the wiki ranks this month. Rigour is 74 plus the scroll. Augury is 77 plus its scroll. The bone does not unlock the scroll.",
+        place: "Same house. Do not move this band to the Wilderness unless you have decided the risk is the method.",
+        click: "Same offer click. Burners still have to be lit. An unlit gilded altar is a worse altar.",
+        leave: "Leave when the prayer the boss wants is on. 77 is enough for almost every account that has a raid to do.",
+      },
+      {
+        band: "Chaos altar",
+        method: "The same bones, offered at the chaos altar, because half of them can be saved. You accept that a PKer can take the rest.",
+        place: "Level 38 Wilderness. Burning amulet to the lava maze, then the run. A teleport you will actually click.",
+        click: "Offer until the inventory is thin, then leave. Do not finish a full inventory because the last bone feels expensive.",
+        leave: "Leave the moment someone shows up, or when the bag is the one you will not laugh off. This is not the gilded kit.",
+      },
+    ],
+    inventory:
+      "Gilded: unnoted dragon or superior bones, clean marrentill for the burners, a house teleport, a rune pouch only if you are lighting your own. Chaos: the same bones, a burning amulet, one teleport, protect item, no cash stack, no rune stack, no spare gear. Never bring the bank. Noted bones do not go on the altar.",
+    iron: "You do not buy the bone pile. Slayer and the dragons you can kill are the supply. Use a gilded altar when you have a house and the bones. Use the chaos altar only for a bag you already decided to risk. Ectofuntus is the slow iron path if you will not enter the Wilderness. Do not copy a main’s superior-dragon shopping list.",
+    stop: "43 is protection prayers. 70 is piety. 74 and 77 are rigour and augury if you own the scrolls. 99 is a cape. Most accounts with a boss to kill are done at 70 or 77.",
+    mistakes:
+      "The chaos altar with a full bank tab. A gilded altar with both burners out. Buying 99 prayer before the account has piety, then calling the leftover bones a plan.",
     page: "Prayer",
   },
   magic: {
@@ -263,16 +311,52 @@ const OSRS_NOTE: Record<string, Note> = {
   },
   mining: {
     tagline: "Motherlode Mine, then amethyst or the rock the wiki ranks.",
-    deck: "Mining is a rock you can leave, or a tick you will actually do. This page is Old School. Motherlode starts at 30. Amethyst starts at 92.",
-    need: "None to start. Motherlode Mine wants 30. Amethyst wants 92. A 3-tick method wants a pickaxe and the patience to keep the tick.",
-    money: "Motherlode pays nuggets and ore. Amethyst pays. 3-tick granite is XP, not cash. Wiki for the ore price.",
-    early: "1–30. Iron at Varrock west or Al Kharid, or the quest XP you still have. Light clicks. Pick up prospector from Motherlode as you go. Alternative: Doric’s Quest if you have not done it.",
-    mid: "30–92. Motherlode Mine. Pay-dirt is the click. Prospector on. Light. Alternative: volcanic mine if you have a group.",
-    late: "92–99. Amethyst in the Mining Guild with expert mining gloves. Afk. Alternative: shooting stars if you want to leave, or 3-tick granite if you will actually tick.",
-    wear: "Prospector. Expert mining gloves at amethyst. A dragon or crystal pickaxe. A celestial ring if you own it.",
-    afk: "Shooting stars, and amethyst. Motherlode is a light click, not a logout.",
-    fast: "3-tick granite. Only if you will keep the tick. Otherwise Motherlode or the rock the wiki ranks.",
-    watch: "Powermining iron to 99 and calling it a plan. Amethyst with no gloves.",
+    deck: "You need ores, the prospector outfit, and amethyst if you want the afk ore. This sheet is Old School. You do not need 99 to go kill a boss.",
+    need: "Iron is fine from 15. Motherlode Mine wants 30. The upper floor wants 72. Amethyst wants 92 and expert mining gloves if you want the ore to be worth the time. 3-tick granite wants a rune pick or better and an hour you will actually watch.",
+    money: "Motherlode is nuggets plus ores. That is the mixed hour. Amethyst is the gp hour. 3-tick granite is the XP hour and a bad money method. Volcanic Mine can pay if you have a group. Wiki for this month’s ore price. Do not sell a granite hour as a moneymaker.",
+    early: "1–30 iron, then Motherlode.",
+    mid: "30–92 Motherlode. Pay-dirt is the click.",
+    late: "92 amethyst, stars, or 3-tick granite if you will tick.",
+    wear: "Prospector. Expert mining gloves at amethyst. Best pick you can use. Celestial ring if you own it.",
+    afk: "Amethyst and shooting stars.",
+    fast: "3-tick granite only if you will tick.",
+    watch: "Powermining iron to 99. Amethyst with no gloves. Stars while calling it efficient.",
+    route: [
+      {
+        band: "1–15",
+        method: "Tin and copper, or the quest XP you still have. Doric’s Quest if it is undone. This band exists to get you a pick and a bank.",
+        place: "Lumbridge swamp or the Varrock south-east mine. The rock does not matter. The walk back to a bank does.",
+        click: "Light. Drop or bank. You are not building a 99 here.",
+        leave: "Leave at 15 for iron. Staying on copper is how an hour disappears.",
+      },
+      {
+        band: "15–30",
+        method: "Iron. Bank it if you will smith it. Drop it if you only want the level. Start Motherlode the day you hit 30 and buy prospector pieces as the nuggets come.",
+        place: "Varrock west mine or Al Kharid. Not a power-iron tile you will still be on at 70.",
+        click: "Light. Three rocks, a drop, repeat. This is not a tick method.",
+        leave: "Leave at 30. Motherlode is the next door. Iron to 99 is not a personality.",
+      },
+      {
+        band: "30–92",
+        method: "Motherlode Mine. Pay-dirt into the hopper, sack when it is full, deposit. The outfit goes on as you can afford the pieces. This is the default, not a failure.",
+        place: "Motherlode, upper level once you have 72. A gem bag if you have one. The sack is the loop.",
+        click: "Light. You can look away for a vein. You cannot log out and call it mined.",
+        leave: "Leave at 92 if you want amethyst or stars. Leave earlier only for a diary requirement you already hit. Volcanic Mine is the group fork, not the replacement.",
+      },
+      {
+        band: "92+",
+        method: "Amethyst if you want gp. Shooting stars if you want to leave the keyboard. 3-tick granite only if you will tick for a full hour. Pick one. Do not rotate them to feel busy.",
+        place: "Amethyst is the Mining Guild. Stars are wherever the scout is. Granite is the quarry, with a pick that can tick.",
+        click: "Amethyst and stars are afk. Granite is a tick. Mixing them in one inventory is how you do none of them.",
+        leave: "Leave when the diary or the ammo you wanted is done. 99 is a cape. 92 was the real line.",
+      },
+    ],
+    inventory:
+      "Best pick you can use. Prospector, once you have it. A gem bag if you own one. Stamina only if the walk is the waste. At amethyst, expert mining gloves. No second pick, no smithing hammer, no loot from the last trip. The bag is the rock and the way back.",
+    iron: "You live on Motherlode longer, because the ores and the coal are the account. Do not buy a granite stack to pretend you are on a main’s XP hour. Amethyst is still the afk ore when you reach it. Prospector is earned here, not bought.",
+    stop: "70 to 80 covers most diaries. 92 is the line that changes the hour. 99 is a cape you can get later, after the boss you were mining for.",
+    mistakes:
+      "Powermining iron to 99 and calling it a plan. Amethyst with no expert gloves. Shooting stars while telling yourself you are being efficient.",
     page: "Mining",
   },
   smithing: {
@@ -601,16 +685,52 @@ const RS3_NOTE: Record<string, Note> = {
   },
   mining: {
     tagline: "The Mining and Smithing rework owns the pick. Not Motherlode.",
-    deck: "Mining is the rework rock and the pick tier. This page is the RuneScape sheet. Motherlode Mine is Old School.",
-    need: "The rework tutorial. A pickaxe of your tier. Higher rocks want the Mining level on the rock, not a quest from the other game.",
-    money: "Ore you will smith is useful. Extra ore can sell. Wiki for the rock that pays. Do not camp Motherlode.",
-    early: "1–30. Copper, tin, then iron on the rework rocks nearest a bank. Light. Alternative: the Burthorpe rocks if you are already there.",
-    mid: "30–70. Coal, then mithril and the luminite path the skill guide opens. Light to afk on a rock that lasts. Alternative: the next tier rock, not a granite tick from Old School.",
-    late: "70–99. Banite, light animica, or Seren stones if the wiki still lists them. Afk on the rock that lasts. Alternative: the stone the live page ranks this month.",
-    wear: "Magic golem outfit if you own it. The best pickaxe you can use. The Honed perk later, on Invention, not instead of the pick.",
-    afk: "The rock the wiki still calls afk. Not Motherlode Mine.",
-    fast: "The rock the wiki ranks at your level. Pick tier first.",
-    watch: "Motherlode Mine pasted from Old School. A bronze pick on a banite rock.",
+    deck: "You need ore for the rework and a pick of your tier. This sheet is RuneScape. Motherlode Mine is the other client. You do not need 99 to go use the ore.",
+    need: "The Mining and Smithing rework tutorial. The pickaxe tier has to match the rock. Higher rocks want the Mining level written on them. Confirm the current high-XP rock on the live wiki before you copy a layout from last year.",
+    money: "Ore you will smith is the useful hour. Extra ore is the gp hour if the wiki price says so. A click-heavy rockertunity hour is XP, not a shop. Wiki for this month’s ore. Do not price an Old School amethyst stack on this page.",
+    early: "Copper, tin, and iron on the rework rocks.",
+    mid: "The concentrated rock the wiki still lists. Not Motherlode.",
+    late: "The afk rock versus the rock you click. Confirm both on the wiki.",
+    wear: "Magic golem outfit if you own it. Best pick you can use. Stone spirits for the ore you mean to keep. Honed is an Invention perk, not a substitute for the pick.",
+    afk: "The rock the wiki still calls afk. Not Motherlode.",
+    fast: "Rockertunities on the highest ore you can mine, if you will click them.",
+    watch: "Motherlode pasted from Old School. A bronze pick on a high rock. An F2P iron hour used as a members plan.",
+    route: [
+      {
+        band: "Early",
+        method: "Copper, tin, then iron. The tutorial mine is enough. You are learning the swing and the ore box, not hunting a secret rock.",
+        place: "Burthorpe, or the mine the tutorial left you in. A bank or an ore box close enough that the walk is not the skill.",
+        click: "Light. Mine the rock until it is done, bank or box the ore, repeat.",
+        leave: "Leave when the next tier rock on the skill guide turns white. Staying on copper because it is quiet is the wasted hour.",
+      },
+      {
+        band: "Mid",
+        method: "The concentrated deposit the live wiki still ranks at your level. Concentrated coal in the Living Rock Caverns is the name to check. If that deposit is gone, use the rock the training page names. Do not invent a quarry, and do not write Motherlode.",
+        place: "Living Rock Caverns if concentrated coal is still the listed method. Otherwise the mine printed on the current training page.",
+        click: "Light to afk on a rock that lasts. Click the rockertunity if you are at the screen. Missing one is fine. Missing the tier is not.",
+        leave: "Leave when your pick and your level open the next ore you will actually smith. A pretty XP rock you will not use is a main’s hour.",
+      },
+      {
+        band: "Late · afk",
+        method: "The rock the wiki currently calls the afk hour. Animica is the family to check. If the page names a different rock this month, that rock wins. Seren stones only if they are still listed.",
+        place: "The mine the training page gives for that rock. Not a guessed coordinate, and not an Old School guild.",
+        click: "Afk. You swing, you wait, you bank. Stone spirits if you want the extra ore.",
+        leave: "Leave when you have the ore the smithing goal needed, or when the wiki moves the afk rock. Do not keep a dead rock out of habit.",
+      },
+      {
+        band: "Late · click",
+        method: "The same tier or the next one, played for rockertunities. This is the XP fork. It is not a second skill.",
+        place: "Same mine, or the higher rock the wiki ranks for click-heavy mining. Confirm it. Do not paste granite.",
+        click: "You click the rockertunity. If you will not watch the screen, you are on the afk band. Go back.",
+        leave: "Leave when the hour stops being clicks and becomes a video in another tab. That is the afk rock’s job.",
+      },
+    ],
+    inventory:
+      "Best pick you can use. Ore box. Stone spirits for the ore you intend to keep, not a stack of every spirit. Magic golem pieces if you have them. A porter only if the live page still says the rock wants one. No Old School gem bag, no Motherlode sack, no second style.",
+    iron: "Smith what you mine. The rework is the point. Do not buy a main’s animica stack and call it a route. If a concentrated rock wants a stone spirit you cannot make yet, mine the ore you can use and come back.",
+    stop: "Stop when the smithing tier you needed is supplied. 99 is a cape. The ore in the box was the reason you were here.",
+    mistakes:
+      "Pasting Motherlode Mine onto this page. Mining F2P iron for a members hour. A bronze pick on a rock two tiers above it.",
     page: "Mining",
   },
   smithing: {
@@ -787,6 +907,24 @@ function keyOf(skill: Skill) {
   return skill.name.toLowerCase().replace(/[^a-z]/g, "");
 }
 
+function sentences(text: string) {
+  return text
+    .split(/(?<=\.)\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function bandFrom(label: string, text: string): SkillBand {
+  const parts = sentences(text);
+  return {
+    band: label,
+    method: parts[0] ?? text,
+    place: parts[1] ?? text,
+    click: parts[2] ?? parts[0] ?? text,
+    leave: parts[3] ?? parts[parts.length - 1] ?? text,
+  };
+}
+
 export function skillGuides(): SkillGuide[] {
   return SKILLS.map((skill) => {
     const key = keyOf(skill);
@@ -801,21 +939,32 @@ export function skillGuides(): SkillGuide[] {
     const deck =
       note?.deck ??
       `${skill.name} is trained on ${client}. ${tagline} The live wiki keeps the rate.`;
+    const wear = note?.wear ?? "Wear what the method needs. Confirm the live page.";
+    const money = note?.money ?? "Wiki wins on whether the method pays. Wiki for this month’s gp/XP.";
     return {
       skill,
       slug: skill.id,
       hook: tagline,
       tagline,
       deck,
-      afk: note?.afk ?? "Confirm the live wiki.",
-      fast: note?.fast ?? "Confirm the live wiki.",
-      watch: note?.watch ?? "Confirm the live wiki.",
-      early: note?.early ?? "Start where the training page starts.",
-      mid: note?.mid ?? "Confirm the live wiki.",
-      late: note?.late ?? "Confirm the live wiki.",
-      wear: note?.wear ?? "Wear what the method needs. Confirm the live page.",
-      need: note?.need ?? "Confirm unlocks on the live wiki.",
-      money: note?.money ?? "Wiki wins on whether the method pays.",
+      unlock: note?.need ?? "Confirm the unlock on the live wiki before you buy supplies.",
+      route: note?.route ?? [
+        bandFrom("Early", note?.early ?? "Start where the training page starts."),
+        bandFrom("Mid", note?.mid ?? "Confirm the live wiki."),
+        bandFrom("Late", note?.late ?? "Confirm the live wiki."),
+      ],
+      inventory:
+        note?.inventory ??
+        `${wear} The bag is that kit and the input the method uses. Leave the bank tab, the spare style, and anything you cannot stand to lose.`,
+      money,
+      iron:
+        note?.iron ??
+        "If you cannot buy the supplies, stay on the earlier band and gather the input yourself. A main’s shopping list is not an iron route.",
+      kit: wear,
+      mistakes: note?.mistakes ?? note?.watch ?? "Confirm the live wiki before you copy a method from the other client.",
+      stop:
+        note?.stop ??
+        "Stop when the unlock you came for is done. A diary, a prayer, a weapon tier. 99 is a cape. It is not required to go do the thing this skill was for.",
       wiki,
       train,
       moving: note?.moving,
