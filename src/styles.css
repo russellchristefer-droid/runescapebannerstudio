@@ -308,10 +308,36 @@ header {
   border-bottom: 1px solid color-mix(in srgb, #c4a35a 60%, transparent);
 }
 
-.page-band {
-  max-width: 72rem;
+.section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: none;
+  padding-bottom: 1.15rem;
+  text-align: center;
+}
+.section-head > h1.page-h1,
+.section-head > h1.page-h1.site-title {
+  display: block;
+  width: 100%;
+  margin-top: 0.2rem;
+  font-size: clamp(1.35rem, 3vw, 1.65rem);
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+.section-head > p {
+  width: min(40rem, 100%);
   margin-inline: auto;
-  padding-inline: 1rem;
+  text-align: center;
+}
+.section-head > span[aria-hidden="true"] {
+  width: min(16rem, 58%);
+  height: 1px;
+  margin-top: 0.85rem;
+  background: linear-gradient(90deg, transparent, var(--color-line), transparent);
+}
+.section-head > div {
+  width: 100%;
 }
 
 .section-h2 {

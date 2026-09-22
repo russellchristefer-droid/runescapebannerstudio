@@ -21,7 +21,7 @@ function SkillsPage() {
   );
   return (
     <div className="min-h-dvh bg-bg text-fg">
-      <header className="border-b border-line px-5 py-5 md:px-8">
+      <header className="section-head px-5 pt-2 md:px-8">
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Skills</h1>
         <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-muted">

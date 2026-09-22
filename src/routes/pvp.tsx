@@ -35,7 +35,7 @@ export const Route = createFileRoute("/pvp")({
 function PvpPage() {
   return (
     <div className="min-h-dvh bg-bg text-fg">
-      <header className="border-b border-line px-5 py-5 md:px-8">
+      <header className="section-head px-5 pt-2 md:px-8">
         <BackLink />
         <h1 className="page-h1 mt-1">PvP</h1>
         <p className="mt-1 text-center text-sm text-parchment">

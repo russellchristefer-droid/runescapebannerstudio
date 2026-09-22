@@ -23,7 +23,7 @@ function GodsIndex() {
   const game = edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   return (
     <div className="gods-index min-h-dvh bg-bg text-fg">
-      <header className="border-b border-line px-5 py-5 md:px-8">
+      <header className="section-head px-5 pt-2 md:px-8">
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Gods</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
