@@ -190,77 +190,110 @@ function ClanWarsPage() {
         <section className="flex flex-col gap-3">
           <h2 className="section-h2">The circle people watch</h2>
           <p className="text-center text-sm text-muted">
-            Same heat as the bowl. Not this desk. Not a ranked door. Public record.
+            Floor · purse · stage. Three different fights.
           </p>
           <div className="grid gap-3 lg:grid-cols-3">
             <article className="rs-panel p-4">
-              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Clan pile</h3>
-              <p className="mt-2 text-center text-[10px] text-muted">In the game. Scene names, not a ranking.</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Free-to-play and members piles still happen at Clan Wars and on the ditch.
-                Names that show up on public wars: Reign of Terror (ROT), Infliction, CWC, TF.
-                Whoever is calling the next world is the rest of the list.
+              <h3 className="cw-card-title">In-game wars</h3>
+              <p className="mt-2 text-center text-sm leading-relaxed text-muted">
+                Chat sides. Ferox or the ditch. ROT, Infliction, CWC, TF, whoever called the world.
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Odablock hosted a public free-to-play spectacle against ROT, CWC, TF, and
-                Infliction. The title was 500 versus 500. The world filled and they restarted.
-                That is a show war. It is not the rated door.
-              </p>
-              <Watch
-                href="https://www.youtube.com/watch?v=rS_ob_TvQ4w"
-                kicker="Watch"
-                title="500 versus 500"
-                line="Public upload. F2P spectacle. Not Ferox."
-              />
+              <div className="cw-watch-stack">
+                <Watch
+                  href="https://www.youtube.com/watch?v=rS_ob_TvQ4w"
+                  kicker="2025"
+                  title="Odablock · 500 v 500"
+                  line="F2P Clan Wars. ROT, CWC, TF, Infliction. Not the rated door."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=gz5LYzBmwBw"
+                  kicker="2022"
+                  title="Rhys · 10B bracket"
+                  line="Clan Wars tournament. Restricted gear. Not a ditch pile."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=WxEC43raj4Y"
+                  kicker="2020"
+                  title="Framed · Ferox"
+                  line="Wilderness outside the safe zone. Not the purple portal."
+                />
+              </div>
             </article>
             <article className="rs-panel p-4">
-              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Creator payouts</h3>
-              <p className="mt-2 text-center text-[10px] text-muted">A purse on a stream. Not the pit. Not Ferox.</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Crusader Classic 2026. Public clips and posts said Odablock beat PetaOSRS
-                in the finale for $5,000.
+              <h3 className="cw-card-title">Streamer purses</h3>
+              <p className="mt-2 text-center text-sm leading-relaxed text-muted">
+                Brackets with cash or GP. Rules on the stream. Not the rated door.
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                EVScape has run creator battle-royale fields with the prize in the title.
-                One public one was $20,000, with Odablock on the card.
-              </p>
-              <Watch
-                href="https://www.youtube.com/shorts/JFjapFMT0iw"
-                kicker="Watch"
-                title="Crusader Classic"
-                line="Finale. Public clip. Purse on the stream."
-              />
-              <Watch
-                href="https://www.youtube.com/watch?v=Gkyo8b34ljA"
-                kicker="Watch"
-                title="EVScape purse"
-                line="Creator field. The prize was in the title."
-              />
+              <div className="cw-watch-stack">
+                <Watch
+                  href="https://www.youtube.com/shorts/JFjapFMT0iw"
+                  kicker="2026"
+                  title="Crusader Classic"
+                  line="Odablock beat PetaOSRS. $5,000 on the stream."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=oZdjUkSxUnk"
+                  kicker="2021"
+                  title="pip · $1,000 3v3"
+                  line="Odablock’s king of PvP. Vos and Abu on the card."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=fuM5xcjaWTU"
+                  kicker="EVScape"
+                  title="$5,000 battle royale"
+                  line="B0aty, Torvesta, Framed, C Engineer."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=Gkyo8b34ljA"
+                  kicker="2022"
+                  title="$20,000 battle royale"
+                  line="EVScape. Odablock, Solo Mission, Sparc Mac, Sir Pugger."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=4GodB6yXsdA"
+                  kicker="2020"
+                  title="1013 · 7.1B tribrid"
+                  line="Odablock’s tournament. First place, then the stake."
+                />
+              </div>
             </article>
             <article className="rs-panel p-4">
-              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Deadman All Stars</h3>
-              <p className="mt-2 text-center text-[10px] text-muted">A stage. Not your live world. Not the bowl.</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Jagex put Season 3 on a LAN at the Rosemont Theatre, Chicago, 20 June 2026.
-                Special instance. Not the world you log into.
+              <h3 className="cw-card-title">Deadman All Stars</h3>
+              <p className="mt-2 text-center text-sm leading-relaxed text-muted">
+                Jagex LAN. Special instance. Not your live world.
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Official result: Team Dino Nuggets. Dino, B0aty, 61M, Sick Nerd, MMORPG.
-                They beat Rhys Rhinos in the final. The rest of the official field was
-                Odablock Warriors, Framed Friends, Westham Weasels, and Purpp Rebels.
-              </p>
-              <Watch
-                href="https://www.jagex.com/news/dino-nuggets-takes-the-crown-in-an-epic-old-school-runescape-all-stars-live-final"
-                kicker="Official"
-                title="Dino Nuggets"
-                line="Jagex recap. Chicago. 20 June 2026."
-              />
-              <Watch
-                href="https://secure.runescape.com/m=news/deadman-all-stars-season-3-finale---live-now?oldschool=1"
-                kicker="Official"
-                title="All Stars news"
-                line="Old School news post. Not a world you can log."
-              />
+              <div className="cw-watch-stack">
+                <Watch
+                  href="https://www.jagex.com/news/dino-nuggets-takes-the-crown-in-an-epic-old-school-runescape-all-stars-live-final"
+                  kicker="2026"
+                  title="Dino Nuggets"
+                  line="Chicago LAN. 20 June. Official recap."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=J7L1HXksOnI"
+                  kicker="2026"
+                  title="Finale highlights"
+                  line="Solo Mission. Dino Nuggets beat Rhys Rhinos."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=VosjlKTiOdI"
+                  kicker="2026"
+                  title="Day 1 highlights"
+                  line="Solo Mission. Official reel. Not a live world."
+                />
+                <Watch
+                  href="https://www.youtube.com/watch?v=VugEXHobou4"
+                  kicker="2021"
+                  title="Deadman Reborn"
+                  line="1013. Cash finals. $15,000. Not All Stars."
+                />
+                <Watch
+                  href="https://www.youtube.com/playlist?list=PLRs68iqW7gYuJTKrpQCLJuin8dLD5zcsx"
+                  kicker="Older"
+                  title="Official Deadman"
+                  line="Old School RuneScape playlist. Seasons before the LAN."
+                />
+              </div>
             </article>
           </div>
         </section>

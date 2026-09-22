@@ -1053,6 +1053,26 @@ a.skill-link:focus-visible {
   background: #3a1408;
   border-color: #ffb15a;
 }
+.cw-watch-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+.cw-watch-stack .cw-watch {
+  margin-top: 0;
+}
+.cw-card-title {
+  display: block;
+  width: 100%;
+  margin: 0;
+  font-family: Cinzel, "Source Serif 4", Palatino, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: #ff6a1a;
+}
 .cw-watch-row {
   display: grid;
   gap: 8px;
