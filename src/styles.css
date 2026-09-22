@@ -397,3 +397,19 @@ figure.street,
   border: 1px solid #c4a35a;
   box-shadow: inset 0 0 0 1px #0b0a08, 0 8px 24px rgba(0, 0, 0, 0.35);
 }
+
+.bob-pic,
+figure.bob img,
+#bob-pic {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  object-position: bottom;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #bob-pic,
+  .bob-pic {
+    content: url("/bob/bob-still.png");
+  }
+}

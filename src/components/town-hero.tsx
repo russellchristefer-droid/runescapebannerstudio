@@ -5,6 +5,7 @@ import { HERO_PERIOD_MS, formatRemain, heroStillIndex } from "@/lib/still-clock"
 import { bobLine, placeSlug } from "@/lib/bob-lines";
 import { type Edition } from "@/lib/locations";
 import { type HeroChip, gameLabel, heroPool } from "@/lib/hero-pools";
+import { BobPic } from "@/components/bob-pic";
 
 const HALLS = [
   { to: "/streamers", label: "Twitch", aria: "Twitch Streamers", src: "/brands/twitch.svg" },
@@ -154,13 +155,16 @@ export function TownHero({
       <p className="px-3 py-2 text-center text-sm text-fg md:px-8">
         {name} · {game}
       </p>
-      <p
-        className="px-3 pb-1 text-center text-sm text-parchment/80 md:px-8"
-        style={{ fontFamily: "Fondamento, serif" }}
-        aria-live="polite"
-      >
-        “{quote}”
-      </p>
+      <div className="flex items-center justify-center gap-2 px-3 pb-1 md:px-8">
+        <BobPic edition={edition === "RS3" ? "rs3" : edition === "RSC" ? "rsc" : "osrs"} />
+        <p
+          className="text-center text-sm text-parchment/80"
+          style={{ fontFamily: "Fondamento, serif" }}
+          aria-live="polite"
+        >
+          “{quote}”
+        </p>
+      </div>
       <p className="text-center text-[11px] text-muted">— Bob the Cat</p>
       <p className="pb-2 text-center text-[11px] text-faint">
         {edition === "RSC" ? "Archive. The worlds are not on this page." : `Next still in ${formatRemain(remain)}`}
