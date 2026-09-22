@@ -101,14 +101,18 @@ export function PlaceCard({
           )}
           <span
             className="site-title mx-auto block w-full px-2 pt-1.5 text-center text-sm no-underline"
-            style={{ color: hue, display: "block", width: "100%", textAlign: "center" }}
+            style={
+              banner
+                ? { display: "block", width: "100%", textAlign: "center" }
+                : { color: hue, display: "block", width: "100%", textAlign: "center" }
+            }
           >
             {name}
           </span>
         </AppLink>
         {kind === "Town" && god ? (
           <p className="w-full px-2 pb-1 text-center text-[10px]">
-            <span style={{ color: banner?.ink }}>{(region ?? "").replace(/\s·\sOSRS$/, "")}</span>
+            <span className="text-muted">{(region ?? "").replace(/\s·\sOSRS$/, "")}</span>
             {region ? " · " : ""}
             <span style={{ color: godNeon(god) }}>{god}</span>
           </p>

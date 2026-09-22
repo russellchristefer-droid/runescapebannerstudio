@@ -525,10 +525,12 @@ a.rs-chip.god-chip[aria-current="page"] {
   --god: #c4a35a;
 }
 .rs-panel.region-card {
-  border-color: color-mix(in srgb, var(--region-ink, var(--region, #c4a35a)) 75%, #111);
+  border-color: #2a241c;
+  box-shadow: inset 0 3px 0 var(--region-ink, var(--region, #c4a35a));
 }
 .rs-panel.region-card .site-title {
-  color: var(--region-ink, var(--region, #c4a35a));
+  color: var(--color-fg);
+  text-shadow: none;
 }
 .town-card:hover,
 .town-card:focus-within {
@@ -537,8 +539,8 @@ a.rs-chip.god-chip[aria-current="page"] {
 }
 .rs-panel.region-card:hover,
 .rs-panel.region-card:focus-within {
-  border-color: var(--region-accent, var(--region));
-  box-shadow: 0 0 8px var(--region-accent, var(--region));
+  border-color: var(--region-ink, var(--region));
+  box-shadow: inset 0 3px 0 var(--region-ink, var(--region));
 }
 .town-card:hover .site-title,
 .town-card:focus-within .site-title {
@@ -547,9 +549,23 @@ a.rs-chip.god-chip[aria-current="page"] {
 }
 .rs-panel.region-card:hover .site-title,
 .rs-panel.region-card:focus-within .site-title {
-  color: var(--region-accent, #fff);
-  text-shadow: 0 0 10px var(--region-accent, transparent);
+  color: var(--region-ink, var(--region));
+  text-shadow: none;
   filter: none;
+}
+.region-band-title {
+  color: var(--color-fg);
+  text-align: center;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+}
+.region-band-title::after {
+  content: "";
+  display: block;
+  width: 4.5rem;
+  height: 2px;
+  margin: 0.45rem auto 0;
+  background: var(--region-ink, var(--region, #c4a35a));
 }
 
 .skill-card {
@@ -853,11 +869,6 @@ a.skill-link:focus-visible {
 .town-page h1.site-title,
 .town-page h1.site-title:hover {
   color: var(--region-ink, var(--region));
-}
-.town-page h2,
-.town-page .text-parchment,
-.town-page a.text-parchment {
-  color: var(--region-accent, #3d9e3d);
 }
 .town-page a.town-god,
 .town-page a.town-god:hover {

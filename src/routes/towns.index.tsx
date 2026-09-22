@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type { CSSProperties } from "react";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
@@ -92,8 +93,13 @@ function TownIndex() {
             const banner = bannerFor(region);
             const label = region === "Burtrope" ? "Burthorpe" : region;
             return (
-            <section key={region} id={regionAnchor(region)}>
-              <h2 className="mb-2 text-center text-[11px] tracking-[0.14em]" style={{ color: banner.ink }}>
+            <section
+              key={region}
+              id={regionAnchor(region)}
+              className="region-band"
+              style={{ "--region": banner.primary, "--region-ink": banner.ink, "--region-accent": banner.accent } as CSSProperties}
+            >
+              <h2 className="region-band-title mb-3">
                 <img src={`/banners/${banner.slug}.png`} alt="" width={24} height={16} className="region-flag" />
                 {label}
               </h2>
