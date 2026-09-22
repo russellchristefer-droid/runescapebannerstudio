@@ -2673,6 +2673,32 @@ export function Studio() {
             <Link to="/edit">Clip Editor is the other half of this desk.</Link>
           </p>
         </article>
+        <figure className="rs-panel mx-auto mt-4 w-full max-w-sm overflow-hidden">
+          <figcaption className="px-3 pt-3 text-center">
+            <p className="section-h2">A plate, on a clip</p>
+            <p className="mt-1 text-[11px] text-muted">Yanille. Wizards’ Guild basement. Christefer_1.</p>
+          </figcaption>
+          <div className="mx-auto mt-2 w-full max-w-[340px] bg-black">
+            <iframe
+              title="Christefer_1. Yanille Wizards’ Guild basement."
+              src="https://www.tiktok.com/embed/v2/7688221732364176654"
+              className="block h-[640px] w-full border-0"
+              allow="fullscreen; encrypted-media; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          </div>
+          <p className="px-3 py-3 text-center text-[11px] text-parchment">
+            <a
+              href="https://www.tiktok.com/@christefer_1/video/7688221732364176654"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open on TikTok
+            </a>
+          </p>
+        </figure>
         <figure className="mt-4 flex flex-col items-center gap-2">
           <img
             src="/brand/postie-pete.png"
