@@ -20,7 +20,7 @@ export function StudioNavLinks({ onPick, stacked }: { onPick?: () => void; stack
           {!stacked && i ? " · " : null}
           <Link
             to={to}
-            preload={to === "/streamers" || to === "/youtubers" ? "intent" : false}
+            preload={false}
             aria-current={navActive(path, to) ? "page" : undefined}
             className={`${stacked ? "flex min-h-11 items-center px-2 [touch-action:manipulation] " : ""}${
               navActive(path, to) ? "font-semibold text-parchment underline decoration-parchment/60 underline-offset-4" : ""

@@ -1311,7 +1311,7 @@ export function Studio() {
           return;
         }
         void saveClipBanner(blob, out.width, out.height).then(() => {
-          setSaveNote(`Saved for clips · ${out.width}×${out.height}. Video editor → Desk banner.`);
+          setSaveNote(`Saved for clips · ${out.width}×${out.height}. Clips → Desk banner.`);
         });
       },
       "image/jpeg",
@@ -2656,10 +2656,10 @@ export function Studio() {
             <li>Wheel to scale. Drag the pack. The name sits over the iron you placed.</li>
             <li>Pixels are the platform’s. Match the chip before you title the stream.</li>
             <li>Pete writes the JPEG. That is the work. The wiki keeps the hour.</li>
-            <li>Save for clips. Then Video editor → Desk banner → Top or Bottom.</li>
+            <li>Save for clips. Then Clips → Desk banner → Top or Bottom.</li>
           </ol>
           <p className="mt-2 text-[11px] text-faint">
-            <Link to="/edit">Clips are on the Video editor page.</Link>
+            <Link to="/edit">Clips are on the Clips page.</Link>
           </p>
         </article>
         <figure className="mt-4 flex flex-col items-center gap-2">

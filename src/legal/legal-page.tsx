@@ -60,7 +60,7 @@ export function LegalPage() {
             </Fact>
           </dl>
           <p className="mt-3 text-xs text-faint">
-            Who runs the desk. Tips are optional and not a purchase of Jagex property.
+            Who runs the desk. Takedown and operator mail is russell.christefer@gmail.com only. Tips are optional and not a purchase of Jagex property.
           </p>
         </Notice>
 

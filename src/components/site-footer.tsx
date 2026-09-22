@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { STUDIO_INDEX } from "@/places/nav";
 
 export const FAN_POLICY =
   "Created using intellectual property belonging to Jagex Limited under the terms of Jagex's Fan Content Policy. This content is not endorsed by or affiliated with Jagex.";
@@ -27,6 +28,14 @@ export function SiteFooter() {
         >
           RuneScape: Dragonwilds™
         </a>
+      </nav>
+      <nav aria-label="Index" className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-parchment">
+        <span className="text-faint">Index</span>
+        {STUDIO_INDEX.map(([to, label]) => (
+          <Link key={to} to={to}>
+            {label}
+          </Link>
+        ))}
       </nav>
     </footer>
   );

@@ -1401,8 +1401,7 @@ export function ClipBench() {
     ctxTick();
     const processed = soundTracks();
     const onPct = (n: number) => {
-      setExportPct(n);
-      if (n >= 100) setEncLine("Saving");
+      setExportPct(Math.min(99, n));
     };
     const onLine = (msg: string) => {
       setEncLine(msg.replace(/\s*\d+\s*%/g, "").replace(/[.…]+$/g, "").trim() || "Encoding");
@@ -1685,7 +1684,7 @@ export function ClipBench() {
           <div className="min-w-0">
             <div
               className="relative mx-auto w-full overflow-hidden bg-[#120f0c]"
-              style={{ aspectRatio: `${size.w} / ${size.h}` }}
+              style={{ aspectRatio: `${size.w} / ${size.h}`, maxHeight: 360 }}
               data-state={ready}
             >
               {ready === "empty" || ready === "loading" || ready === "error" ? (
@@ -1709,7 +1708,7 @@ export function ClipBench() {
               <video
                 id="preview-video"
                 ref={videoRef}
-                className="pointer-events-none absolute h-px w-px opacity-0"
+                className="pointer-events-none absolute inset-0 z-0 h-full w-full object-contain opacity-0"
                 playsInline
                 preload="metadata"
                 muted

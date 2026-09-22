@@ -1,24 +1,30 @@
+/** Top rail — the desk, not a wiki sitemap. */
 export const STUDIO_NAV = [
   ["/", "Banner Studio"],
-  ["/edit", "Video editor"],
-  ["/classic", "Classic"],
+  ["/edit", "Clips"],
+  ["/towns", "Towns"],
   ["/gods", "Gods"],
   ["/bosses", "Bosses"],
+  ["/brief", "Brief"],
+  ["/legal", "Legal"],
+] as const;
+
+/** Everything else stays. Footer Index. */
+export const STUDIO_INDEX = [
+  ["/classic", "Classic"],
   ["/pvp", "PvP"],
   ["/clan-wars", "Clan Wars"],
   ["/monsters", "Bestiary"],
   ["/skills", "Skills"],
-  ["/towns", "Towns"],
   ["/knowledge", "Sites"],
   ["/jmods", "Jagex directory"],
-  ["/brief", "Brief"],
   ["/history", "History"],
   ["/chronicle", "Chronicle"],
   ["/streamers", "Twitch Streamers"],
   ["/youtubers", "YouTube"],
   ["/x-live", "X live"],
   ["/discord", "Discord"],
-  ["/legal", "Legal"],
+  ["/stream", "How to go live"],
 ] as const;
 
 export type PlaceSection = "towns" | "gods" | "bosses" | "pvp" | "clan-wars";
