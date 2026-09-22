@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { UtcClock } from "@/components/utc-clock";
 import { eggToast } from "@/lib/eggs";
@@ -56,6 +56,34 @@ export function StudioNavLinks({ onPick, stacked }: { onPick?: () => void; stack
   );
 }
 
+const MARK = "RuneScape Banner Studio";
+const DRIPS = [18, 0, 11, 0, 30, 6, 0, 36, 9, 0, 16, 0, 8, 24, 0, 13, 0, 28, 0, 7, 0, 15, 22];
+
+function StudioMark({ bleed }: { bleed: boolean }) {
+  if (!bleed) return <>{MARK}</>;
+  return (
+    <>
+      {MARK.split("").map((ch, i) =>
+        ch === " " ? (
+          <span key={i} className="bleed-gap">
+            {"\u00a0"}
+          </span>
+        ) : (
+          <span
+            key={i}
+            className="bleed-ch"
+            data-drip={DRIPS[i] ? "1" : "0"}
+            data-k={i % 5}
+            style={{ "--drip": `${DRIPS[i]}px` } as CSSProperties}
+          >
+            {ch}
+          </span>
+        ),
+      )}
+    </>
+  );
+}
+
 export function SiteHeader({
   onMarkClick,
   children,
@@ -67,6 +95,8 @@ export function SiteHeader({
   skip?: { href: string; label: string };
   asHeading?: boolean;
 }) {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const bleed = path === "/clan-wars";
   const pete = useRef({ n: 0, t: 0 });
   const [menu, setMenu] = useState(false);
   useEffect(() => {
@@ -106,14 +136,14 @@ export function SiteHeader({
           </p>
           {asHeading ? (
             <h1 className="studio-wordmark">
-              <Link to="/" className="site-title">
-                RuneScape Banner Studio
+              <Link to="/" className={`site-title${bleed ? " site-title-bleed" : ""}`}>
+                <StudioMark bleed={bleed} />
               </Link>
             </h1>
           ) : (
             <p className="studio-wordmark">
-              <Link to="/" className="site-title">
-                RuneScape Banner Studio
+              <Link to="/" className={`site-title${bleed ? " site-title-bleed" : ""}`}>
+                <StudioMark bleed={bleed} />
               </Link>
             </p>
           )}
