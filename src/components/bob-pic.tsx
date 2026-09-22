@@ -9,7 +9,7 @@ export function BobPic({
   edition: "osrs" | "rs3";
   id?: string;
 }) {
-  const gif = edition === "rs3" ? "/bob/bob-rs3.gif" : "/bob/bob-osrs.gif";
+  const gif = edition === "rs3" ? "/bob/bob-rs3.gif?v=2" : "/bob/bob-osrs.gif?v=2";
   const [src, setSrc] = useState(gif);
 
   useEffect(() => {
@@ -28,8 +28,10 @@ export function BobPic({
       height={96}
       src={src}
       onError={(e) => {
-        e.currentTarget.onerror = null;
-        e.currentTarget.src = STILL;
+        if (!e.currentTarget.src.includes("bob-still.png")) {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = STILL;
+        }
       }}
     />
   );
