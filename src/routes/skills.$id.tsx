@@ -24,7 +24,12 @@ function SkillPage() {
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <p className="eyebrow text-center text-[10px] uppercase tracking-[0.18em] text-muted">Skills · {game}</p>
-        <h1 className="page-h1 site-title mt-1">{row.skill.name}</h1>
+        <h1
+          className="page-h1 site-title skill-page-title mt-1"
+          style={{ "--cape": capeNeon(row.skill.name) } as CSSProperties}
+        >
+          {row.skill.name}
+        </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-sm leading-relaxed text-muted">{row.deck}</p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
       </header>

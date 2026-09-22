@@ -90,8 +90,8 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
             className="max-h-14 max-w-14 object-contain"
           />
         </span>
-        <span className="site-title block w-full text-center text-sm leading-tight">{row.skill.name}</span>
-        <span className="px-1 text-[10px] leading-snug text-muted">{row.tagline}</span>
+        <span className="site-title">{row.skill.name}</span>
+        <span className="skill-hook px-1 text-[10px] leading-snug text-muted">{row.tagline}</span>
         <span className="skill-open mt-1 rounded-md border border-line px-2 py-1 text-[10px] text-parchment">Open guide</span>
       </AppLink>
     </li>
