@@ -60,10 +60,12 @@ export function SiteHeader({
   onMarkClick,
   children,
   skip,
+  asHeading = false,
 }: {
   onMarkClick?: () => void;
   children?: ReactNode;
   skip?: { href: string; label: string };
+  asHeading?: boolean;
 }) {
   const pete = useRef({ n: 0, t: 0 });
   const [menu, setMenu] = useState(false);
@@ -102,11 +104,19 @@ export function SiteHeader({
           >
             Independent studio
           </p>
-          <p className="studio-wordmark">
-            <Link to="/" className="site-title">
-              RuneScape Banner Studio
-            </Link>
-          </p>
+          {asHeading ? (
+            <h1 className="studio-wordmark">
+              <Link to="/" className="site-title">
+                RuneScape Banner Studio
+              </Link>
+            </h1>
+          ) : (
+            <p className="studio-wordmark">
+              <Link to="/" className="site-title">
+                RuneScape Banner Studio
+              </Link>
+            </p>
+          )}
           <div className="phat-row" aria-hidden="true">
             {["white", "yellow", "blue", "purple", "red", "green", "black"].map((hat) => (
               <img key={hat} src={`/hats/${hat}-partyhat.png`} alt="" width={18} height={18} />

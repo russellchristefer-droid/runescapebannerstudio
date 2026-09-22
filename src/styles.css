@@ -230,8 +230,11 @@
   background: linear-gradient(90deg, var(--color-line), transparent);
 }
 
-.studio-wordmark {
+.studio-wordmark,
+h1.studio-wordmark {
   margin: 0.28rem 0 0;
+  font-size: inherit;
+  font-weight: inherit;
 }
 
 .site-title {

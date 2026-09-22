@@ -523,6 +523,19 @@ export function Studio() {
     return { id: item.id, x: item.x, y: item.y, w: mark + extra, h: mark };
   }
 
+  function platePoint(canvas: HTMLCanvasElement, clientX: number, clientY: number) {
+    const rect = canvas.getBoundingClientRect();
+    const w = canvas.width || size.width;
+    const h = canvas.height || size.height;
+    return {
+      x: ((clientX - rect.left) / Math.max(1, rect.width)) * w,
+      y: ((clientY - rect.top) / Math.max(1, rect.height)) * h,
+      w,
+      h,
+      rect,
+    };
+  }
+
   function stampHit(x: number, y: number, slop: number) {
     for (let i = skillPicksRef.current.length - 1; i >= 0; i--) {
       const item = skillPicksRef.current[i];
@@ -762,12 +775,10 @@ export function Studio() {
         setStatus("Sixteen marks on this banner.");
         return cur;
       }
-      const n = cur.length;
-      const scale = packScale(n + 1);
+      const scale = packScale(cur.length + 1);
       const mark = skillSize * scale;
-      const left = Math.round(size.width * 0.04);
-      const x = skillPlace === "name" ? left + n * (mark + 6) : Math.round(size.width * 0.06 + (n % 8) * (mark + 8));
-      const y = skillPlace === "name" ? Math.round(size.height * 0.28) : Math.round(size.height * 0.52 + Math.floor(n / 8) * (mark + 8));
+      const x = Math.round((size.width - mark) / 2);
+      const y = Math.round((size.height - mark) / 2);
       const next = [...cur, { id, game: skillPack, level: boardLevels[skillPack][id] ?? "", x, y, size: skillSize, scale }];
       skillPicksRef.current = next;
       return next;
@@ -1433,7 +1444,7 @@ export function Studio() {
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <EggToast />
-      <SiteHeader skip={{ href: "#desk", label: "Skip to desk" }} />
+      <SiteHeader asHeading skip={{ href: "#desk", label: "Skip to desk" }} />
       <TownHero onTown={(name, ed) => setHeroTown({ name, edition: ed })} />
       <OracleLine place={heroTown.name} edition={heroTown.edition} />
       <TodayDesk />
@@ -1573,81 +1584,55 @@ export function Studio() {
             onWheel={(e) => {
               const canvas = canvasRef.current;
               if (!canvas) return;
-              const rect = canvas.getBoundingClientRect();
-              const x = ((e.clientX - rect.left) / rect.width) * size.width;
-              const y = ((e.clientY - rect.top) / rect.height) * size.height;
+              const { x, y } = platePoint(canvas, e.clientX, e.clientY);
               const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 120 : 1;
               const factor = Math.exp(-e.deltaY * unit * 0.0024);
               const textOver = [...boxesRef.current].reverse().find((box) => {
                 if (skillPicksRef.current.some((item) => item.id === box.id)) return false;
                 return x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
               });
-              if (textOver || pickedText) {
-                const textId = textOver?.id ?? pickedText;
-                if (textId && (!pickedSkill || textOver)) {
-                  e.preventDefault();
-                  setPickedText(textId);
-                  setPickedSkill(null);
-                  const old = textScaleRef.current[textId] ?? 1;
-                  const next = e.shiftKey
-                    ? Math.min(3, Math.max(0.5, old + (e.deltaY > 0 ? -0.25 : 0.25)))
-                    : Math.min(3, Math.max(0.5, old * factor));
-                  const box = boxesRef.current.find((row) => row.id === textId);
-                  if (box) {
-                    const ratio = next / Math.max(0.01, old);
-                    textPosRef.current = {
-                      ...textPosRef.current,
-                      [textId]: {
-                        x: box.x + box.w / 2 - (box.w * ratio) / 2,
-                        y: box.y + box.h / 2 - (box.h * ratio) / 2,
-                      },
-                    };
-                    setTextPos(textPosRef.current);
-                  }
-                  textScaleRef.current = { ...textScaleRef.current, [textId]: next };
-                  setTextScale({ ...textScaleRef.current });
-                  requestPaint();
-                  return;
-                }
-              }
-              let skillId = pickedSkill;
-              if (!skillId) {
-                const hit = [...skillPicksRef.current].reverse().find((item) => {
-                  if (item.x == null || item.y == null) return false;
-                  const mark = Math.max(28, (item.size ?? skillSize) * (item.scale ?? 1));
-                  return x >= item.x && x <= item.x + mark && y >= item.y && y <= item.y + mark;
-                });
-                if (hit) {
-                  skillId = hit.id;
-                  setPickedSkill(hit.id);
-                  setPickedText(null);
-                }
-              }
-              if (skillId) {
+              if (textOver) {
                 e.preventDefault();
-                const lead = skillPicksRef.current.find((item) => item.id === skillId);
-                const old = lead?.scale ?? 1;
+                const textId = textOver.id;
+                setPickedText(textId);
+                setPickedSkill(null);
+                const old = textScaleRef.current[textId] ?? 1;
                 const next = e.shiftKey
-                  ? Math.min(3, Math.max(0.4, old + (e.deltaY > 0 ? -0.12 : 0.12)))
-                  : Math.min(3, Math.max(0.4, old * factor));
-                applyStampScale(skillId, next);
+                  ? Math.min(3, Math.max(0.5, old + (e.deltaY > 0 ? -0.25 : 0.25)))
+                  : Math.min(3, Math.max(0.5, old * factor));
+                const box = boxesRef.current.find((row) => row.id === textId);
+                if (box) {
+                  const ratio = next / Math.max(0.01, old);
+                  textPosRef.current = {
+                    ...textPosRef.current,
+                    [textId]: {
+                      x: box.x + box.w / 2 - (box.w * ratio) / 2,
+                      y: box.y + box.h / 2 - (box.h * ratio) / 2,
+                    },
+                  };
+                  setTextPos(textPosRef.current);
+                }
+                textScaleRef.current = { ...textScaleRef.current, [textId]: next };
+                setTextScale({ ...textScaleRef.current });
+                requestPaint();
                 return;
               }
+              const hit = stampHit(x, y, 0);
+              if (!hit) return;
               e.preventDefault();
-              setStillZoom((z) => {
-                const next = e.shiftKey
-                  ? Math.min(3, Math.max(1, z + (e.deltaY > 0 ? -0.1 : 0.1)))
-                  : Math.min(3, Math.max(1, z * factor));
-                return Math.round(next * 100) / 100;
-              });
+              setPickedSkill(hit.id);
+              setPickedText(null);
+              const old = hit.scale ?? 1;
+              const next = e.shiftKey
+                ? Math.min(3, Math.max(0.4, old + (e.deltaY > 0 ? -0.12 : 0.12)))
+                : Math.min(3, Math.max(0.4, old * factor));
+              applyStampScale(hit.id, next);
             }}
             onPointerDown={(e) => {
               const canvas = canvasRef.current;
               if (!canvas) return;
               pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-              const rect = canvas.getBoundingClientRect();
-              const x = ((e.clientX - rect.left) / rect.width) * size.width;
-              const y = ((e.clientY - rect.top) / rect.height) * size.height;
+              const { x, y, rect } = platePoint(canvas, e.clientX, e.clientY);
               const slop =
                 e.pointerType === "touch"
                   ? Math.max(16, (44 * size.width) / Math.max(1, rect.width))
@@ -1788,17 +1773,6 @@ export function Studio() {
               setPickedText(null);
               pickedTextRef.current = null;
               requestPaint();
-              setGrabbing(true);
-              draggingRef.current = true;
-              dragRef.current = {
-                id: "still",
-                x0: stillPan.x,
-                y0: stillPan.y,
-                px: e.clientX,
-                py: e.clientY,
-                kind: "still",
-              };
-              (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
             }}
             onPointerMove={(e) => {
               const canvas = canvasRef.current;
@@ -1819,9 +1793,7 @@ export function Studio() {
                 scaleSelected(next - current, target);
                 return;
               }
-              const rect = canvas.getBoundingClientRect();
-              const x = ((e.clientX - rect.left) / rect.width) * size.width;
-              const y = ((e.clientY - rect.top) / rect.height) * size.height;
+              const { x, y, w: plateW, h: plateH, rect } = platePoint(canvas, e.clientX, e.clientY);
               const handleHover = !dragRef.current ? hitHandle(x, y) : null;
               setOverHandle(
                 handleHover
@@ -1843,8 +1815,8 @@ export function Studio() {
               const drag = dragRef.current;
               if (!drag) return;
               e.preventDefault();
-              const rectScaleX = size.width / Math.max(1, rect.width);
-              const rectScaleY = size.height / Math.max(1, rect.height);
+              const rectScaleX = plateW / Math.max(1, rect.width);
+              const rectScaleY = plateH / Math.max(1, rect.height);
               const nx = drag.x0 + (e.clientX - drag.px) * rectScaleX;
               const ny = drag.y0 + (e.clientY - drag.py) * rectScaleY;
               if (drag.kind === "scale") {
@@ -1870,18 +1842,6 @@ export function Studio() {
                   return;
                 }
                 applyStampScale(drag.id, next);
-                return;
-              }
-              if (drag.kind === "still") {
-                const z = Math.max(1, stillZoom);
-                const maxX = (size.width * (1 - 1 / z)) / 2;
-                const maxY = (size.height * (1 - 1 / z)) / 2;
-                const nx = drag.x0 + (e.clientX - drag.px) * (size.width / Math.max(1, rect.width));
-                const ny = drag.y0 + (e.clientY - drag.py) * (size.height / Math.max(1, rect.height));
-                setStillPan({
-                  x: Math.max(-maxX, Math.min(maxX, nx)),
-                  y: Math.max(-maxY, Math.min(maxY, ny)),
-                });
                 return;
               }
               if (drag.kind === "text") {
@@ -2365,18 +2325,16 @@ export function Studio() {
                             return mapped;
                           }
                           if (!next) return cur;
-                          const n = cur.length;
-                          const scale = packScale(n + 1);
+                          const scale = packScale(cur.length + 1);
                           const mark = skillSize * scale;
-                          const left = Math.round(size.width * 0.04);
                           const row = [
                             ...cur,
                             {
                               id: skill.id,
                               game: skillPack,
                               level: next,
-                              x: skillPlace === "name" ? left + n * (mark + 6) : Math.round(size.width * 0.06 + (n % 8) * (mark + 8)),
-                              y: skillPlace === "name" ? Math.round(size.height * 0.28) : Math.round(size.height * 0.52 + Math.floor(n / 8) * (mark + 8)),
+                              x: Math.round((size.width - mark) / 2),
+                              y: Math.round((size.height - mark) / 2),
                               size: skillSize,
                               scale,
                             },
@@ -2493,15 +2451,14 @@ export function Studio() {
                         const n = cur.length;
                         const scale = packScale(n + 1);
                         const mark = skillSize * scale;
-                        const left = Math.round(size.width * 0.04);
                         return [
                           ...cur,
                           {
                             id,
                             game: skillPack,
                             level: "",
-                            x: left + (n % 8) * (mark + 8),
-                            y: Math.round(size.height * 0.52 + Math.floor(n / 8) * (mark + 8)),
+                            x: Math.round((size.width - mark) / 2),
+                            y: Math.round((size.height - mark) / 2),
                             size: skillSize,
                             scale,
                           },

@@ -19,11 +19,10 @@ function publicAppHost() {
 export const Route = createRootRoute({
   head: () => {
     const host = publicAppHost();
-    const origin = host ? `https://${host}` : "";
-    const xBanner = origin ? `${origin}/x-banner.jpg?v=20260922h` : "";
-    const ogImage = origin ? `${origin}/og.jpg?v=20260922h` : "";
-    const desc =
-      "RuneScape Banner Studio. Independent fan desk for Old School RuneScape and RuneScape banners. Not a Jagex product.";
+    const origin = host ? `https://${host}` : "https://runescapebannerstudio.grok.me";
+    const xBanner = `${origin}/x-banner.jpg?v=20260922h`;
+    const ogImage = `${origin}/og.jpg?v=20260922h`;
+    const desc = "Fan desk for Twitch 1200×480 plates and local 9:16 clips. Not a Jagex product.";
     return {
     meta: [
       { charSet: "utf-8" },
@@ -62,7 +61,7 @@ export const Route = createRootRoute({
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
       { rel: "dns-prefetch", href: "https://secure.runescape.com" },
-      ...(origin ? [{ rel: "canonical", href: `${origin}/` }] : []),
+      { rel: "canonical", href: "https://runescapebannerstudio.grok.me/" },
     ],
   };
   },
