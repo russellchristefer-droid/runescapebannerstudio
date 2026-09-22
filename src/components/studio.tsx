@@ -2674,13 +2674,9 @@ export function Studio() {
           </p>
         </article>
         <figure className="rs-panel mx-auto mt-4 w-full max-w-sm overflow-hidden">
-          <figcaption className="px-3 pt-3 text-center">
-            <p className="section-h2">A plate, on a clip</p>
-            <p className="mt-1 text-[11px] text-muted">Yanille. Wizards’ Guild basement. Christefer_1.</p>
-          </figcaption>
-          <div className="mx-auto mt-2 w-full max-w-[340px] bg-black">
+          <div className="mx-auto w-full max-w-[340px] bg-black">
             <iframe
-              title="Christefer_1. Yanille Wizards’ Guild basement."
+              title="Christefer_1 on TikTok"
               src="https://www.tiktok.com/embed/v2/7688221732364176654"
               className="block h-[640px] w-full border-0"
               allow="fullscreen; encrypted-media; picture-in-picture"
@@ -2695,7 +2691,7 @@ export function Studio() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open on TikTok
+              TikTok
             </a>
           </p>
         </figure>
