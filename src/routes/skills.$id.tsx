@@ -1,8 +1,9 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import type { CSSProperties } from "react";
 import { BackLink } from "@/components/back-link";
 import { OfficialPulse } from "@/components/official-pulse";
 import { pageMeta } from "@/lib/page-title";
-import { sisterSkill, skillGuideById, type SkillBand } from "@/lib/skill-guides";
+import { sisterSkill, skillGuideById, capeNeon, type SkillBand } from "@/lib/skill-guides";
 
 export const Route = createFileRoute("/skills/$id")({
   head: ({ params }) => {
@@ -92,7 +93,12 @@ function SkillPage() {
           {sister ? (
             <>
               {" · "}
-              <Link to="/skills/$id" params={{ id: sister.slug }} className="text-parchment">
+              <Link
+                to="/skills/$id"
+                params={{ id: sister.slug }}
+                className="skill-link text-parchment"
+                style={{ "--cape": capeNeon(sister.skill.name) } as CSSProperties}
+              >
                 {sister.skill.editions.includes("OSRS") ? "Old School" : "RuneScape"}
               </Link>
             </>

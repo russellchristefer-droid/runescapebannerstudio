@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { AppLink } from "@/places/place-chip";
-import { SKILL_GUIDES, type SkillGuide } from "@/lib/skill-guides";
+import { SKILL_GUIDES, capeNeon, type SkillGuide } from "@/lib/skill-guides";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/skills/")({
@@ -76,7 +76,8 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
     <li className="w-full max-w-[11rem]">
       <AppLink
         href={`/skills/${row.slug}`}
-        className="rs-panel flex h-full min-h-[12rem] flex-col items-center justify-center gap-2 rounded-md px-3 py-4 text-center hover:border-line"
+        className="skill-card rs-panel flex h-full min-h-[12rem] flex-col items-center justify-center gap-2 rounded-md px-3 py-4 text-center"
+        style={{ "--cape": capeNeon(row.skill.name) } as CSSProperties}
       >
         <span className="flex h-16 w-16 items-center justify-center">
           <img
@@ -91,7 +92,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
         </span>
         <span className="site-title block w-full text-center text-sm leading-tight">{row.skill.name}</span>
         <span className="px-1 text-[10px] leading-snug text-muted">{row.tagline}</span>
-        <span className="mt-1 rounded-md border border-line px-2 py-1 text-[10px] text-parchment">Open guide</span>
+        <span className="skill-open mt-1 rounded-md border border-line px-2 py-1 text-[10px] text-parchment">Open guide</span>
       </AppLink>
     </li>
   );

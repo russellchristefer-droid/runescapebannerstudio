@@ -535,6 +535,32 @@ a.rs-chip.god-chip[aria-current="page"] {
   filter: brightness(1.12);
 }
 
+.skill-card {
+  --cape: #e6d000;
+}
+.skill-card:hover,
+.skill-card:focus-visible {
+  border-color: var(--cape);
+  box-shadow: 0 0 8px var(--cape), inset 0 0 10px rgba(255, 255, 255, 0.08);
+}
+.skill-card:hover .site-title,
+.skill-card:focus-visible .site-title,
+.skill-card:hover .skill-open,
+.skill-card:focus-visible .skill-open {
+  color: #fff;
+  text-shadow: 0 0 10px var(--cape);
+}
+.skill-card:hover .skill-open,
+.skill-card:focus-visible .skill-open {
+  border-color: var(--cape);
+  box-shadow: 0 0 8px var(--cape);
+}
+a.skill-link:hover,
+a.skill-link:focus-visible {
+  color: var(--cape, #e6d000);
+  text-shadow: 0 0 8px var(--cape, #e6d000);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .god-chip,
   a.rs-chip.god-chip,
@@ -542,11 +568,19 @@ a.rs-chip.god-chip[aria-current="page"] {
   a.rs-chip.god-chip.rs-chip-on,
   .rs-panel.god-chip,
   .town-card:hover,
-  .town-card:focus-within {
+  .town-card:focus-within,
+  .skill-card:hover,
+  .skill-card:focus-visible {
     box-shadow: none;
   }
   .town-card:hover .site-title,
-  .town-card:focus-within .site-title {
+  .town-card:focus-within .site-title,
+  .skill-card:hover .site-title,
+  .skill-card:focus-visible .site-title,
+  .skill-card:hover .skill-open,
+  .skill-card:focus-visible .skill-open,
+  a.skill-link:hover,
+  a.skill-link:focus-visible {
     text-shadow: none;
     filter: none;
   }

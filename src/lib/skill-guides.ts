@@ -903,6 +903,45 @@ const RS3_NOTE: Record<string, Note> = {
   },
 };
 
+/** Skillcape cloth, bright enough to glow on black the way a god chip does. */
+const CAPE_NEON: Record<string, string> = {
+  Attack: "#ff3b3b",
+  Strength: "#f4fff8",
+  Defence: "#b7c4d4",
+  Ranged: "#39ff6a",
+  Prayer: "#ffe9a8",
+  Magic: "#4da3ff",
+  Runecraft: "#ffd24a",
+  Construction: "#ffe14a",
+  Hitpoints: "#ff4d5a",
+  Constitution: "#ff4d5a",
+  Agility: "#6aa6ff",
+  Herblore: "#2db85a",
+  Thieving: "#c46cff",
+  Crafting: "#e39a3c",
+  Fletching: "#8fd18a",
+  Slayer: "#ff6b6b",
+  Hunter: "#e39a3c",
+  Mining: "#d7a15a",
+  Smithing: "#d5dde6",
+  Fishing: "#4da3ff",
+  Cooking: "#fff6ea",
+  Firemaking: "#ff7a2a",
+  Woodcutting: "#c4844a",
+  Farming: "#b6e36a",
+  Sailing: "#5ec8ff",
+  Summoning: "#3fd0c9",
+  Dungeoneering: "#e07a4a",
+  Divination: "#7ef0ff",
+  Invention: "#7dff4a",
+  Archaeology: "#ffd24a",
+  Necromancy: "#c6ffb0",
+};
+
+export function capeNeon(name: string) {
+  return CAPE_NEON[name] ?? "#e6d000";
+}
+
 function keyOf(skill: Skill) {
   return skill.name.toLowerCase().replace(/[^a-z]/g, "");
 }
