@@ -14,7 +14,7 @@ import { stillIndex } from "@/lib/still-clock";
 import { safeZoneRects, zoneForPlate, type SafeZone } from "@/lib/bannerFeatures";
 import { MARKS, MARK_SIDE, markContainRect } from "@/lib/marks";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
-import { godInk } from "@/lib/gods";
+import { godNeon } from "@/lib/gods";
 import { sanitizeSkillLevel, skillIdForHiscore, skillLevelCap, SKILLS } from "@/lib/skills";
 import {
   BANNER_SIZES,
@@ -1450,7 +1450,7 @@ export function Studio() {
             const src = stillAllowed(raw, loc.edition) ? raw : loc.viewA;
             const href = loc.kind === "boss" ? bossPath(loc.id) : townPath(loc.id);
             return (
-              <div key={loc.id} className="overflow-hidden rounded-md border border-line hover:border-[#F5C400]" data-place-card data-slug={loc.id}>
+              <div key={loc.id} className="rs-panel overflow-hidden rounded-md hover:border-[#e2c37a]" data-place-card data-slug={loc.id}>
                 <AppLink href={href} className="block [touch-action:manipulation]">
                   <StillPhoto
                     src={src}
@@ -1458,14 +1458,19 @@ export function Studio() {
                     priority={i < 2}
                     className="aspect-video w-full object-cover [content-visibility:auto]"
                   />
+                  <span
+                    className="site-title mx-auto block w-full px-2 pt-1.5 text-center text-sm no-underline"
+                    style={{ color: godNeon(loc.god), display: "block", width: "100%", textAlign: "center" }}
+                  >
+                    {loc.name}
+                  </span>
+                  <p
+                    className="w-full px-2 pb-2 text-center text-[10px]"
+                    style={{ color: godNeon(loc.god), opacity: 0.7 }}
+                  >
+                    {loc.region.replace(/\s·\sOSRS$/, "")} · {loc.god}
+                  </p>
                 </AppLink>
-                <AppLink href={href} className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline">
-                  {loc.name}
-                </AppLink>
-                <p className="px-2 pb-2 text-center text-[10px] text-faint">
-                  {loc.region.replace(/\s·\sOSRS$/, "")} ·{" "}
-                  <span style={{ color: godInk(loc.god) }}>{loc.god}</span>
-                </p>
               </div>
             );
           })}

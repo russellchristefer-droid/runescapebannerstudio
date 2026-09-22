@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StillPhoto } from "@/components/still-photo";
 import { UseOnBanner } from "@/desk/use-on-banner";
-import { godChipClass, godInk } from "@/lib/gods";
+import { godChipClass, godInk, godNeon } from "@/lib/gods";
 import type { Edition } from "@/lib/locations";
 import { AppLink, bossPath, townPath } from "./place-chip";
 
@@ -26,6 +26,8 @@ export function PlaceCard({
   field,
   edition,
   placeId,
+  god,
+  region,
 }: {
   to: PlaceTo;
   params: { id: string } | { god: string };
@@ -34,12 +36,14 @@ export function PlaceCard({
   kind: "Town" | "Boss" | "God" | "Monster" | "Slayer";
   game: string;
   god?: string;
+  region?: string;
   caption?: string;
   wash?: string;
   field?: boolean;
   edition?: Edition;
   placeId?: string;
 }) {
+  const hue = kind === "Town" && god ? godNeon(god) : kind === "God" ? godInk(name) : undefined;
   const alt = `${name} in ${game}`;
   const href = hrefFor(to, params);
   const [gone, setGone] = useState(false);
@@ -68,16 +72,22 @@ export function PlaceCard({
             />
           )}
           <span
-            className="site-title block truncate px-2 pt-1.5 text-center text-sm no-underline"
-            style={kind === "God" ? { color: godInk(name) } : undefined}
+            className="site-title mx-auto block w-full px-2 pt-1.5 text-center text-sm no-underline"
+            style={hue ? { color: hue, display: "block", width: "100%", textAlign: "center" } : { display: "block", width: "100%", textAlign: "center" }}
           >
             {name}
           </span>
         </AppLink>
-        {caption ? (
-          <p className="px-2 pb-1 text-center text-[10px] text-muted">{caption}</p>
+        {kind === "Town" && god ? (
+          <p className="w-full px-2 pb-1 text-center text-[10px]" style={{ color: hue, opacity: 0.7 }}>
+            {(region ?? "").replace(/\s·\sOSRS$/, "")}
+            {region ? " · " : ""}
+            {god}
+          </p>
+        ) : caption ? (
+          <p className="w-full px-2 pb-1 text-center text-[10px] text-muted">{caption}</p>
         ) : (
-          <p className="px-2 pb-1 text-center text-[10px] text-faint">
+          <p className="w-full px-2 pb-1 text-center text-[10px] text-faint">
             {kind} · {game}
           </p>
         )}

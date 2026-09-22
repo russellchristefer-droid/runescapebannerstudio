@@ -100,6 +100,8 @@ function TownIndex() {
                     name={loc.name === "Burtrope" ? "Burthorpe" : loc.name}
                     kind="Town"
                     game={game}
+                    god={loc.god}
+                    region={townRegionHead(loc.region)}
                     caption={townStillLine(loc.id)}
                     edition={loc.edition}
                     placeId={loc.id}
