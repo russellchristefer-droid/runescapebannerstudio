@@ -2673,19 +2673,19 @@ export function Studio() {
             <Link to="/edit">Clip Editor is the other half of this desk.</Link>
           </p>
         </article>
-        <figure className="rs-panel mx-auto mt-4 w-full max-w-sm overflow-hidden">
-          <div className="mx-auto w-full max-w-[340px] bg-black">
+        <figure className="mx-auto mt-4 w-full max-w-[280px]">
+          <div className="aspect-[9/16] w-full overflow-hidden bg-black">
             <iframe
               title="Christefer_1 on TikTok"
-              src="https://www.tiktok.com/embed/v2/7688221732364176654"
-              className="block h-[640px] w-full border-0"
+              src="https://www.tiktok.com/player/v1/7688221732364176654?music_info=0&description=0&rel=0&closed_caption=0"
+              className="block h-full w-full border-0"
               allow="fullscreen; encrypted-media; picture-in-picture"
               allowFullScreen
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
             />
           </div>
-          <p className="px-3 py-3 text-center text-[11px] text-parchment">
+          <p className="py-2 text-center text-[11px] text-parchment">
             <a
               href="https://www.tiktok.com/@christefer_1/video/7688221732364176654"
               target="_blank"
