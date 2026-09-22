@@ -28,7 +28,7 @@ export function OracleLine({
   return (
     <div className="page-band py-6">
       <figure className="bob mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3">
-        <BobPic id="bob-pic" edition={game} />
+        <BobPic id="bob-wotd" edition={game} />
         <div className="min-w-[12rem] flex-1 text-center">
           <p className="bob-word text-sm leading-snug text-parchment/80">
             <span className="mr-1 text-[11px] text-muted">Bob teaches</span>

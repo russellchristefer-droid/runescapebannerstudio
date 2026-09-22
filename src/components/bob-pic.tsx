@@ -4,29 +4,32 @@ const STILL = "/bob/bob-still.png";
 
 export function BobPic({
   edition,
-  id,
+  id = "bob-wotd",
 }: {
-  edition: "osrs" | "rs3" | "rsc";
+  edition: "osrs" | "rs3";
   id?: string;
 }) {
-  const gif = edition === "rs3" ? "/bob/bob-rs3.gif" : edition === "osrs" ? "/bob/bob-osrs.gif" : STILL;
-  const [src, setSrc] = useState(STILL);
+  const gif = edition === "rs3" ? "/bob/bob-rs3.gif" : "/bob/bob-osrs.gif";
+  const [src, setSrc] = useState(gif);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setSrc(reduce || edition === "rsc" ? STILL : gif);
-  }, [edition, gif]);
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setSrc(mq.matches ? STILL : gif);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, [gif]);
 
   return (
     <img
       id={id}
-      className="bob-pic h-24 w-24 shrink-0 object-contain object-bottom"
       alt="Bob the Cat"
-      src={src}
       width={96}
       height={96}
+      src={src}
       onError={(e) => {
-        if (!e.currentTarget.src.includes("bob-still.png")) e.currentTarget.src = STILL;
+        e.currentTarget.onerror = null;
+        e.currentTarget.src = STILL;
       }}
     />
   );
