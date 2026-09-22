@@ -38,11 +38,16 @@ export const HERO_RS3: HeroShot[] = [
 ];
 
 export const HERO_RSC: HeroShot[] = [
-  { src: "/stills/rsc/rsc-lumbridge.jpg", name: "Lumbridge", game: "RSC" },
-  { src: "/stills/rsc/rsc-varrock.jpg", name: "Varrock", game: "RSC" },
-  { src: "/stills/rsc/rsc-draynor.jpg", name: "Draynor", game: "RSC" },
+  { src: "/classic/lumbridge.png", name: "Lumbridge", game: "RSC" },
+  { src: "/classic/varrock.png", name: "Varrock", game: "RSC" },
+  { src: "/classic/draynor.png", name: "Draynor", game: "RSC" },
+  { src: "/classic/wilderness.png", name: "Wilderness", game: "RSC" },
   { src: "/stills/rsc/rsc-edgeville.jpg", name: "Edgeville", game: "RSC" },
-  { src: "/stills/rsc/rsc-wilderness.jpg", name: "Wilderness", game: "RSC" },
+  { src: "/stills/rsc/rsc-fishing.jpg", name: "Fishing", game: "RSC" },
+  { src: "/stills/rsc/rsc-mining.jpg", name: "Mining", game: "RSC" },
+  { src: "/stills/rsc/rsc-ranging.jpg", name: "Ranging", game: "RSC" },
+  { src: "/stills/rsc/rsc-smithing.jpg", name: "Smithing", game: "RSC" },
+  { src: "/stills/rsc/rsc-woodcutting.jpg", name: "Woodcutting", game: "RSC" },
 ];
 
 export function heroPool(chip: HeroChip): HeroShot[] {

@@ -22,8 +22,8 @@ function DeskFallback() {
       <figure className="mx-auto mt-4 max-w-[1200px]">
         <img
           id="still"
-          src="/Falador.png"
-          alt="Falador"
+          src="/classic/lumbridge.png"
+          alt="Lumbridge, RuneScape Classic"
           width={1200}
           height={480}
           decoding="async"

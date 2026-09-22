@@ -52,11 +52,11 @@ function HallChip({
 }
 
 function heroFromSearch(): HeroChip {
-  if (typeof window === "undefined") return "OSRS";
+  if (typeof window === "undefined") return "RSC";
   const hero = new URLSearchParams(window.location.search).get("hero")?.toLowerCase();
-  if (hero === "classic" || hero === "rsc") return "RSC";
+  if (hero === "osrs") return "OSRS";
   if (hero === "rs3") return "RS3";
-  return "OSRS";
+  return "RSC";
 }
 
 export function TownHero({
@@ -67,15 +67,24 @@ export function TownHero({
   const [edition, setEdition] = useState<HeroChip>(heroFromSearch);
   const [origin, setOrigin] = useState(() => Date.now());
   const [skip, setSkip] = useState(0);
+  const [reduce, setReduce] = useState(false);
   const pool = heroPool(edition);
   const now = useVisibleNow();
   const clock = Math.max(0, now - origin);
   const n = pool.length;
-  const idx = n ? (heroStillIndex(n, clock) + skip) % n : 0;
+  const idx = reduce || n <= 1 ? 0 : (heroStillIndex(n, clock) + skip) % n;
   const shot = pool[idx] ?? pool[0];
-  const next = n ? pool[(idx + 1) % n] : undefined;
-  const [shown, setShown] = useState(shot?.src);
+  const next = !reduce && n > 1 ? pool[(idx + 1) % n] : undefined;
+  const [shown, setShown] = useState(() => heroPool("RSC")[0]?.src);
   const remain = HERO_PERIOD_MS - (clock % HERO_PERIOD_MS);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReduce(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
   const gameKey = edition === "RS3" ? "rs3" : edition === "RSC" ? "rsc" : "osrs";
   const quote = bobLine(gameKey, placeSlug(shot?.name || ""), now);
 
@@ -89,7 +98,7 @@ export function TownHero({
       setCaption(shot.name);
       if (edition !== "RSC") onTown?.(shot.name, edition);
     };
-    img.onerror = () => setSkip((count) => count + 1);
+    img.onerror = () => setSkip((count) => (count + 1) % Math.max(1, n));
     img.src = shot.src;
   }, [shot?.src, shot?.name, edition]);
 
@@ -143,6 +152,7 @@ export function TownHero({
               key={id}
               type="button"
               aria-pressed={edition === id}
+              aria-current={edition === id ? "true" : undefined}
               className={`rs-chip min-h-11 text-xs ${edition === id ? "rs-chip-on" : ""}`}
               onClick={() => pick(id)}
             >

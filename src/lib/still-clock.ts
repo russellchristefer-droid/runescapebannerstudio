@@ -1,6 +1,6 @@
 export const PERIOD_MS = 5 * 60 * 1000;
 /** Town hero cycle. Street lines stay on PERIOD_MS. */
-export const HERO_PERIOD_MS = (2 * 60 + 3) * 1000;
+export const HERO_PERIOD_MS = 12_000;
 
 export function stillIndex(length: number, now = Date.now()) {
   if (length <= 0) return 0;
