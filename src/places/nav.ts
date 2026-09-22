@@ -5,6 +5,7 @@ export const GAME_NAV = [
   ["/bosses", "Bosses"],
   ["/pvp", "PvP"],
   ["/monsters", "Bestiary"],
+  ["/skills", "Skills"],
 ] as const;
 
 /** The product. Legal lives in the footer. */
