@@ -50,7 +50,7 @@ function SkillsPage() {
           <button
             type="button"
             aria-pressed={canon === "OSRS"}
-            className={`min-h-11 rounded-md border px-3 text-xs ${canon === "OSRS" ? "border-parchment bg-surface text-parchment" : "border-line text-muted"}`}
+            className={`rs-chip min-h-11 text-xs ${canon === "OSRS" ? "rs-chip-on" : ""}`}
             onClick={() => pickCanon("OSRS")}
           >
             Old School
@@ -58,7 +58,7 @@ function SkillsPage() {
           <button
             type="button"
             aria-pressed={canon === "RS3"}
-            className={`min-h-11 rounded-md border px-3 text-xs ${canon === "RS3" ? "border-parchment bg-surface text-parchment" : "border-line text-muted"}`}
+            className={`rs-chip min-h-11 text-xs ${canon === "RS3" ? "rs-chip-on" : ""}`}
             onClick={() => pickCanon("RS3")}
           >
             RuneScape
@@ -97,7 +97,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
     <li className="w-full max-w-[11rem]">
       <AppLink
         href={`/skills/${row.slug}`}
-        className="flex h-full min-h-[10.5rem] flex-col items-center justify-center gap-2 rounded-md border border-line bg-raised px-3 py-4 text-center hover:border-[#F5C400]"
+        className="rs-panel flex h-full min-h-[10.5rem] flex-col items-center justify-center gap-2 rounded-md px-3 py-4 text-center hover:border-[#e2c37a]"
       >
         <span className="flex h-16 w-16 items-center justify-center">
           <img
@@ -110,7 +110,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
             className="max-h-14 max-w-14 object-contain"
           />
         </span>
-        <span className="site-title text-sm leading-tight">{row.skill.name}</span>
+        <span className="site-title block w-full text-center text-sm leading-tight">{row.skill.name}</span>
         <span className="px-1 text-[10px] leading-snug text-muted">{row.tagline}</span>
       </AppLink>
     </li>

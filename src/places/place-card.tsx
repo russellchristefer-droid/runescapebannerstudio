@@ -43,16 +43,21 @@ export function PlaceCard({
   edition?: Edition;
   placeId?: string;
 }) {
-  const hue = kind === "Town" && god ? godNeon(god) : kind === "God" ? godInk(name) : undefined;
+  const hue = (kind === "Town" || kind === "Boss") && god ? godNeon(god) : kind === "God" ? godInk(name) : undefined;
   const alt = `${name} in ${game}`;
   const href = hrefFor(to, params);
   const [gone, setGone] = useState(false);
+  const canBanner = Boolean(src && edition && placeId);
   if (!src) return null;
   return (
     <li className="[content-visibility:auto] [contain-intrinsic-size:auto_220px]">
       <div
         className={`rs-panel overflow-hidden rounded-md ${
-          kind === "God" ? godChipClass(name) : kind === "Town" && god ? `town-card ${godHueClass(god)}` : "hover:border-[#e2c37a]"
+          kind === "God"
+            ? godChipClass(name)
+            : (kind === "Town" || kind === "Boss") && god
+              ? `town-card ${godHueClass(god)}`
+              : "hover:border-[#e2c37a]"
         }`}
       >
         <AppLink href={href} className="block [touch-action:manipulation]">
@@ -77,7 +82,7 @@ export function PlaceCard({
           )}
           <span
             className="site-title mx-auto block w-full px-2 pt-1.5 text-center text-sm no-underline"
-            style={hue ? { color: hue, display: "block", width: "100%", textAlign: "center" } : { display: "block", width: "100%", textAlign: "center" }}
+            style={{ color: hue, display: "block", width: "100%", textAlign: "center" }}
           >
             {name}
           </span>
@@ -95,12 +100,12 @@ export function PlaceCard({
             {kind} · {game}
           </p>
         )}
-        {kind === "Town" && edition && placeId ? (
+        {canBanner ? (
           <div className="flex flex-wrap justify-center gap-1 px-2 pb-2">
             <AppLink href={href} className="rs-chip min-h-11 text-xs">
               Open
             </AppLink>
-            <UseOnBanner src={src} edition={edition} placeId={placeId} />
+            <UseOnBanner src={src} edition={edition!} placeId={placeId!} />
           </div>
         ) : (
           <div className="pb-1" />

@@ -12,10 +12,9 @@ export function SiteFooter() {
       <p>Independent desk. If a plate or clip saved you ten minutes — Cash App.</p>
       <nav className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-parchment" aria-label="Studio">
         <a href={CASH_APP} target="_blank" rel="noopener noreferrer">
-          Support · Cash App {CASH_HANDLE}
+          Support
         </a>
         <Link to="/legal">Legal</Link>
-        <a href="mailto:russell.christefer@gmail.com">russell.christefer@gmail.com</a>
       </nav>
     </footer>
   );

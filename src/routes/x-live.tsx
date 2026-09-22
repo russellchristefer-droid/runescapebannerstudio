@@ -44,7 +44,7 @@ function Row({
   const count = viewers?.[key.toLowerCase()] ?? viewers?.[row.id];
   const title = titles?.[key.toLowerCase()] ?? titles?.[row.id];
   return (
-    <li className="flex flex-col gap-1 px-1 py-2 sm:flex-row sm:items-start sm:justify-between">
+    <li className="rs-panel flex flex-col gap-1 px-3 py-2 sm:flex-row sm:items-start sm:justify-between">
       <span className="text-sm">
         <a href={href} target="_blank" rel="noopener noreferrer" className="text-parchment">
           {row.name}

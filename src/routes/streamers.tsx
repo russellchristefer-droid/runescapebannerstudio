@@ -37,7 +37,7 @@ function Row({
   const count = key ? viewers?.[key] : undefined;
   const title = key ? titles?.[key] : undefined;
   return (
-    <li className="flex flex-col gap-1 px-1 py-2 sm:flex-row sm:items-start sm:justify-between">
+    <li className="rs-panel flex flex-col gap-1 px-3 py-2 sm:flex-row sm:items-start sm:justify-between">
       <span className="text-sm">
         {row.name}
         {row.official ? <span className="ml-2 text-[10px] text-faint">Official</span> : null}

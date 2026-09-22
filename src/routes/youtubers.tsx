@@ -30,7 +30,7 @@ function Row({
   const count = viewers?.[key] ?? viewers?.[row.id];
   const title = titles?.[key] ?? titles?.[row.id];
   return (
-    <li className="flex flex-col gap-1 px-1 py-2 sm:flex-row sm:items-start sm:justify-between">
+    <li className="rs-panel flex flex-col gap-1 px-3 py-2 sm:flex-row sm:items-start sm:justify-between">
       <span className="text-sm">
         {row.name}
         {row.official || row.era === "official" ? (

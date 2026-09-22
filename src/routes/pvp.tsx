@@ -63,7 +63,7 @@ function PvpPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex max-w-3xl flex-col gap-7 px-5 py-6 md:px-8">
+      <main className="rs-panel mx-auto mt-6 mb-8 flex max-w-3xl flex-col gap-7 px-5 py-6 md:px-8">
         <section>
           <h2 className="mb-3 text-sm tracking-[0.16em] text-parchment">Old School · in the fight</h2>
           <ol className="space-y-3">

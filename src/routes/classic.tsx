@@ -67,7 +67,7 @@ function ClassicGrid({ cards }: { cards: HeroStill[] }) {
   return (
     <ul className="grid list-none gap-4 p-0 sm:grid-cols-2">
       {cards.map((card) => (
-        <li key={card.src + card.name} className="overflow-hidden rounded-md border border-line bg-raised">
+        <li key={card.src + card.name} className="rs-panel overflow-hidden rounded-md">
           <img
             src={card.src}
             alt={`${card.name}, ${card.kind}, RuneScape Classic`}
@@ -90,7 +90,7 @@ function ClassicGrid({ cards }: { cards: HeroStill[] }) {
               if (sessionOnce(`rs-classic-${card.name}`)) eggToast(whisper);
             }}
           />
-          <p className="site-title px-2 pt-1.5 text-center text-sm">{card.name}</p>
+          <p className="site-title mx-auto block w-full px-2 pt-1.5 text-center text-sm">{card.name}</p>
           <p className="px-2 text-center text-[10px] text-faint">
             {card.name} · {card.kind} · RuneScape Classic
           </p>

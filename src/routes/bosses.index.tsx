@@ -50,7 +50,12 @@ function BossIndex() {
                   name={note.title}
                   kind="Boss"
                   game={game}
+                  god={loc?.god}
+                  region={loc?.region}
+                  caption={note.wipe ?? note.role}
                   wash={bossWash(note.id, loc?.god)}
+                  edition={loc?.edition}
+                  placeId={loc?.id}
                 />
               );
             })}

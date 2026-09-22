@@ -20,11 +20,15 @@ function BriefPage() {
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
-        <h1 className="page-h1 site-title mt-1">Brief</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted">What this desk is. What it stamps. What it will not pretend to be.</p>
+        <h1 className="page-h1 site-title mt-1 text-center">Brief</h1>
+        <p className="mt-2 text-center text-sm text-muted">What this desk is. What it stamps. What it will not pretend to be.</p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
-      <main id="content" className="prose-desk mx-auto flex max-w-3xl flex-col gap-6 px-5 py-6 text-sm text-muted md:px-8">
+      <main
+        id="content"
+        className="prose-desk mx-auto mt-6 mb-8 flex max-w-[42rem] flex-col gap-6 border border-[#c4a35a] bg-[#1a1510] px-5 py-8 text-sm leading-[1.55] text-muted md:px-9"
+        style={{ boxShadow: "inset 0 0 0 1px #0b0a08, 0 8px 24px rgba(0,0,0,.35)" }}
+      >
         <ul className="list-disc space-y-2 pl-5 text-fg">
           <li>Twitch / YouTube / 9:16 plates from a town still</li>
           <li>Local clip bench · file stays on this machine</li>

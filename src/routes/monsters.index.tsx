@@ -89,8 +89,8 @@ function BestiaryPage() {
           <button
             type="button"
             aria-pressed={slayerOnly}
-            className={`min-h-11 rounded-md border px-3 text-xs ${
-              slayerOnly ? "border-parchment bg-surface text-parchment" : "border-line text-muted"
+            className={`rs-chip min-h-11 text-xs ${
+              slayerOnly ? "rs-chip-on" : ""
             }`}
             onClick={() => setSlayerOnly((on) => !on)}
           >
@@ -132,7 +132,7 @@ function CanonChip({
     <button
       type="button"
       aria-pressed={on}
-      className={`min-h-11 rounded-md border px-3 text-xs ${on ? "border-parchment bg-surface text-parchment" : "border-line text-muted"}`}
+      className={`rs-chip min-h-11 text-xs ${on ? "rs-chip-on" : ""}`}
       onClick={() => onClick(value)}
     >
       {label}
@@ -170,6 +170,8 @@ function GameBlock({ id, title, edition, rows }: { id: string; title: string; ed
                   game={title}
                   caption={monsterStillLine(row)}
                   wash={monsterWash(row)}
+                  edition={row.edition}
+                  placeId={row.placeId ?? row.id}
                 />
               ))}
             </PlaceGrid>
