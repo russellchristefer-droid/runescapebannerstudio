@@ -125,7 +125,7 @@ export function TownHero({
   const name = caption || shot?.name || "Town";
 
   return (
-    <section id="hero" className="border-b border-line bg-raised">
+    <section id="hero" className="page-band pb-4 pt-1">
       <nav aria-label="Stream halls" className="flex flex-wrap justify-center gap-2 px-3 py-3 md:px-8">
         {HALLS.map((hall) => (
           <HallChip key={hall.to} {...hall} />

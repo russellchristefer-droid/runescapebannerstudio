@@ -1444,7 +1444,7 @@ export function Studio() {
             }}
           />
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {visible.slice(0, placeCap).map((loc, i) => {
             const raw = loc.stills?.length ? loc.stills[stillIndex(loc.stills.length, peteNow)] : loc.viewA;
             const src = stillAllowed(raw, loc.edition) ? raw : loc.viewA;
@@ -1493,15 +1493,7 @@ export function Studio() {
       </section>
 
       <section id="desk" className="page-band scroll-mt-24 py-6">
-        <div
-          className="p-2 [contain:layout]"
-          style={{
-            background: "#111111",
-            border: "2px solid #c4a35a",
-            borderRadius: 6,
-            boxShadow: "inset 0 2px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(198,164,90,0.18)",
-          }}
-        >
+        <div className="rs-panel p-2 [contain:layout]">
         <div
           id="plate"
           className="desk-preview-well relative mx-auto w-full overflow-hidden"
