@@ -30,7 +30,7 @@ export function SiteFooter() {
         </a>
       </nav>
       <nav aria-label="Index" className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-parchment">
-        <span className="text-faint">Index</span>
+        <span className="text-faint">Studio</span>
         {STUDIO_INDEX.map(([to, label]) => (
           <Link key={to} to={to}>
             {label}

@@ -1,27 +1,27 @@
-/** Top rail — the desk, not a wiki sitemap. */
-export const STUDIO_NAV = [
-  ["/", "Banner Studio"],
-  ["/edit", "Clip Bench"],
+/** Gielinor first. */
+export const GAME_NAV = [
   ["/towns", "Towns"],
   ["/gods", "Gods"],
   ["/bosses", "Bosses"],
+  ["/pvp", "PvP"],
+  ["/classic", "Classic"],
+] as const;
+
+/** The product. */
+export const STUDIO_NAV = [
+  ["/", "Banner desk"],
+  ["/edit", "Clip bench"],
   ["/brief", "Brief"],
   ["/legal", "Legal"],
 ] as const;
 
-/** Everything else stays. Footer Index. */
+/** Footer product only. Atlas stays in GAME_NAV. */
 export const STUDIO_INDEX = [
-  ["/classic", "Classic"],
-  ["/pvp", "PvP"],
-  ["/clan-wars", "Clan Wars"],
-  ["/monsters", "Bestiary"],
-  ["/skills", "Skills"],
-  ["/knowledge", "Sites"],
-  ["/jmods", "Jagex directory"],
-  ["/history", "History"],
-  ["/chronicle", "Chronicle"],
-  ["/discord", "Discord"],
-  ["/stream", "How to go live"],
+  ["/", "Banner desk"],
+  ["/edit", "Clip bench"],
+  ["/brief", "Brief"],
+  ["/legal", "Legal"],
+  ["/donate", "Donate"],
 ] as const;
 
 export type PlaceSection = "towns" | "gods" | "bosses" | "pvp" | "clan-wars";

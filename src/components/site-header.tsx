@@ -4,34 +4,55 @@ import { UtcClock } from "@/components/utc-clock";
 import { eggToast } from "@/lib/eggs";
 import { useEffect, useRef, useState } from "react";
 
-import { STUDIO_NAV } from "@/places/nav";
+import { GAME_NAV, STUDIO_NAV } from "@/places/nav";
 
 function navActive(path: string, to: string) {
   if (to === "/") return path === "/";
   return path === to || path.startsWith(`${to}/`);
 }
 
-export function StudioNavLinks({ onPick, stacked }: { onPick?: () => void; stacked?: boolean }) {
+function ChipRow({
+  items,
+  label,
+  tracking,
+  onPick,
+  stacked,
+}: {
+  items: readonly (readonly [string, string])[];
+  label: string;
+  tracking?: string;
+  onPick?: () => void;
+  stacked?: boolean;
+}) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <>
-      {STUDIO_NAV.map(([to, label], i) => (
-        <span key={to} className={stacked ? "block" : undefined}>
-          {!stacked && i ? " · " : null}
+    <nav aria-label={label} className={stacked ? "flex flex-col gap-1" : `flex flex-wrap items-center justify-center gap-2 ${tracking ?? ""}`}>
+      {stacked ? <p className="px-2 pt-1 text-[10px] uppercase tracking-widest text-faint">{label}</p> : null}
+      {items.map(([to, name]) => {
+        const on = navActive(path, to);
+        return (
           <Link
+            key={to}
             to={to}
             preload={false}
-            aria-current={navActive(path, to) ? "page" : undefined}
-            className={`${stacked ? "flex min-h-11 items-center px-2 [touch-action:manipulation] " : ""}${
-              navActive(path, to) ? "font-semibold text-parchment underline decoration-parchment/60 underline-offset-4" : ""
-            }`}
+            aria-current={on ? "page" : undefined}
+            className={`rs-chip min-h-11 text-xs [touch-action:manipulation] ${on ? "rs-chip-on" : ""} ${stacked ? "w-full" : ""}`}
             onClick={() => onPick?.()}
           >
-            {label}
+            {name}
           </Link>
-        </span>
-      ))}
-    </>
+        );
+      })}
+    </nav>
+  );
+}
+
+export function StudioNavLinks({ onPick, stacked }: { onPick?: () => void; stacked?: boolean }) {
+  return (
+    <div className={stacked ? "flex flex-col gap-3" : "flex w-full flex-col items-center gap-2"}>
+      <ChipRow items={GAME_NAV} label="Game" onPick={onPick} stacked={stacked} />
+      <ChipRow items={STUDIO_NAV} label="Studio" tracking="tracking-tight" onPick={onPick} stacked={stacked} />
+    </div>
   );
 }
 
@@ -89,23 +110,20 @@ export function SiteHeader({
           <p className="studio-legal">Not a Jagex product</p>
         </div>
         <UtcClock />
-        <nav
-          aria-label="Studio"
-          className="mt-1.5 hidden flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-parchment md:flex"
-        >
+        <div className="mt-2 hidden md:block">
           <StudioNavLinks />
-        </nav>
+        </div>
         <div className="mt-2 md:hidden">
           <button
             type="button"
-            className="min-h-11 min-w-11 rounded-md border border-line px-3 text-sm text-parchment"
+            className="rs-chip min-h-11 min-w-11 text-sm"
             aria-expanded={menu}
             onClick={() => setMenu((v) => !v)}
           >
             Menu
           </button>
           {menu ? (
-            <div className="mt-2 flex flex-col gap-1 border border-line bg-[#1a1610] p-2 text-sm text-parchment">
+            <div className="mt-2 border border-[#c4a35a] bg-[#1a1510] p-2 text-sm text-parchment">
               <StudioNavLinks stacked onPick={() => setMenu(false)} />
             </div>
           ) : null}
