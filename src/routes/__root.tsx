@@ -20,8 +20,8 @@ export const Route = createRootRoute({
   head: () => {
     const host = publicAppHost();
     const origin = host ? `https://${host}` : "";
-    const xBanner = origin ? `${origin}/x-banner.jpg?v=20260922g` : "";
-    const ogImage = origin ? `${origin}/og.jpg?v=20260922g` : "";
+    const xBanner = origin ? `${origin}/x-banner.jpg?v=20260922h` : "";
+    const ogImage = origin ? `${origin}/og.jpg?v=20260922h` : "";
     const desc =
       "RuneScape Banner Studio. Independent fan desk for Old School RuneScape and RuneScape banners. Not a Jagex product.";
     return {
