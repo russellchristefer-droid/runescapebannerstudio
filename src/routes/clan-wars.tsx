@@ -14,15 +14,15 @@ export const Route = createFileRoute("/clan-wars")({
 const PLACES = [
   { href: "/pvp", label: "PvP" },
   { href: "/towns/osrsedge", label: "Edgeville" },
-  { href: "#osrs", label: "Ferox notes" },
-  { href: "#rs3", label: "Grotto notes" },
+  { href: "https://oldschool.runescape.wiki/w/Ferox_Enclave", label: "Ferox" },
+  { href: "https://runescape.wiki/w/Gamers%27_Grotto", label: "Grotto" },
 ] as const;
 
 function Chip({ href, label }: { href: string; label: string }) {
   const cls = "rs-chip min-h-11 text-xs";
-  if (href.startsWith("#")) {
+  if (href.startsWith("http")) {
     return (
-      <a href={href} className={cls}>
+      <a href={href} className={cls} target="_blank" rel="noopener noreferrer">
         {label}
       </a>
     );
@@ -36,11 +36,11 @@ function Chip({ href, label }: { href: string; label: string }) {
 
 function ClanWarsPage() {
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className="cw-page min-h-dvh">
       <header className="page-band px-5 py-5">
         <BackLink />
         <h1 className="page-h1 mt-1">Clan Wars</h1>
-        <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
+        <p className="cw-deck mx-auto mt-2 max-w-2xl text-center text-sm">
           The portal is the law. The money fights are usually somewhere else.
         </p>
         <nav className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Places to visit">
@@ -64,16 +64,11 @@ function ClanWarsPage() {
             />
             <h2 className="site-title mx-auto block w-full px-3 pt-2 text-center text-sm no-underline">Ferox Enclave</h2>
             <p className="px-3 pb-1 text-center text-[10px] text-muted">Old School</p>
-            <ul className="space-y-1 px-3 pb-3 text-center text-sm text-muted">
+            <ul className="space-y-1 px-3 pb-4 text-center text-sm text-muted">
               <li>Safe pocket in the Wilderness.</li>
               <li>Chat-channel sides. Captain sets the terms.</li>
               <li>Purple is the contract. White is practice.</li>
             </ul>
-            <p className="px-3 pb-3 text-center">
-              <a href="#called" className="rs-chip min-h-11 text-xs">
-                Open Ferox notes
-              </a>
-            </p>
           </article>
           <article id="rs3" className="rs-panel scroll-mt-20 overflow-hidden">
             <img
@@ -87,23 +82,18 @@ function ClanWarsPage() {
             />
             <h2 className="site-title mx-auto block w-full px-3 pt-2 text-center text-sm no-underline">Gamers’ Grotto</h2>
             <p className="px-3 pb-1 text-center text-[10px] text-muted">RuneScape</p>
-            <ul className="space-y-1 px-3 pb-3 text-center text-sm text-muted">
+            <ul className="space-y-1 px-3 pb-4 text-center text-sm text-muted">
               <li>North of Falador.</li>
               <li>Friends Chat sides. Captain sets the terms.</li>
               <li>Purple is the war. Red is dangerous FFA.</li>
             </ul>
-            <p className="px-3 pb-3 text-center">
-              <a href="#called" className="rs-chip min-h-11 text-xs">
-                Open Grotto notes
-              </a>
-            </p>
           </article>
         </section>
 
         <section className="rs-panel p-4">
           <h2 className="section-h2">Doors</h2>
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[28rem] text-left text-sm">
+            <table className="cw-table w-full text-center text-sm">
               <thead>
                 <tr className="text-parchment">
                   <th className="py-2 pr-3 font-normal">Colour</th>
@@ -246,110 +236,48 @@ function ClanWarsPage() {
           </div>
         </section>
 
-        <section id="called" className="rs-panel scroll-mt-20 p-4">
+        <section id="called" className="rs-panel scroll-mt-20 p-4 text-center">
           <h2 className="section-h2">How a fight is called</h2>
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
-            <li>A captain (or higher) sends the challenge. If you cannot open the sheet, you are not the captain.</li>
-            <li>Old School: chat-channel rank. RuneScape: Friends Chat.</li>
-            <li>Read every box. Food off is a different fight than food on.</li>
+          <ul className="cw-notes mt-3 space-y-2 text-sm text-muted">
+            <li>A captain sends the challenge. If you cannot open the sheet, you are not the captain.</li>
+            <li>Old School uses a chat-channel rank. RuneScape uses Friends Chat.</li>
+            <li>Read every box. Food off is a different fight.</li>
             <li>Two-minute wall. Late is a spectator.</li>
             <li>One caller. One name. The pile clicks that name.</li>
           </ul>
-          <h3 className="mt-5 text-center text-sm text-parchment">Old School — Ferox</h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
+          <h3 className="mt-5 text-sm">Old School — Ferox</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
             Ring of dueling, minigame teleport, or a waka canoe. Pool first. Purple when
-            the terms are agreed. White is practice — stats restore. Mage and range can
-            fire while the wall is up; melee waits. LMS, Bounty Hunter, and Castle Wars
-            are other doors in the same pocket. They are not this match.
+            the terms are agreed. White is practice. Mage and range can fire while the
+            wall is up. Melee waits.
           </p>
-          <h3 className="mt-5 text-center text-sm text-parchment">RuneScape — Grotto</h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            North of Falador. Friends Chat. Purple is the war. White is safe FFA. Red
-            drops the bag — Protect Item. Play the bar or Legacy as the chat called; do
-            not mix those two grammars in one pile. Rated, if the lobby is up, is Clan
-            Camp. Citadels are a skill. This cave is a fight.
+          <h3 className="mt-5 text-sm">RuneScape — Grotto</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            North of Falador. Purple is the war. White keeps the bag. Red drops it, so
+            turn Protect Item on. Do not mix the ability bar and Legacy in one pile.
+          </p>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted">
+            Fight Pits is a different game. Last one standing, no captain, no wall.
+            Old School is the TzHaar bowl at Mor Ul Rek. RuneScape is the same bowl in TzHaar City.
           </p>
         </section>
 
-        <section>
-          <h2 className="section-h2">Fight Pits</h2>
-          <p className="mb-3 text-center text-sm text-muted">A different game. Last one standing. No captain. No wall.</p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <article className="rs-panel overflow-hidden">
-              <img
-                src="/clan-wars/pits/osrs-champion.png"
-                alt="Fight Pit champion, Old School"
-                loading="lazy"
-                decoding="async"
-                className="aspect-video w-full object-cover"
-              />
-              <h3 className="site-title mx-auto block w-full px-3 pt-2 text-center text-sm no-underline">Mor Ul Rek</h3>
-              <p className="px-3 pb-3 text-center text-sm text-muted">
-                Old School. TzHaar Fight Pit. Fairy ring BLP. The bag stays. Tokkul for
-                the champion. LMS in Ferox is a different building.
-              </p>
-            </article>
-            <article className="rs-panel overflow-hidden">
-              <img
-                src="/clan-wars/pits/rs3-pits.jpg"
-                alt="Fight Pit bowl, RuneScape"
-                loading="lazy"
-                decoding="async"
-                className="aspect-video w-full object-cover"
-              />
-              <h3 className="site-title mx-auto block w-full px-3 pt-2 text-center text-sm no-underline">TzHaar City</h3>
-              <p className="px-3 pb-3 text-center text-sm text-muted">
-                RuneScape. Same bowl. TokKul-Zo is the fast door. 13 May 2008 waiting
-                room was not safe; that hour is history, not the current rule.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section className="rs-panel p-4">
-          <h2 className="section-h2">History</h2>
-          <ol className="mt-3 space-y-3 text-sm text-muted">
-            <li>
-              <span className="text-parchment">4 Jan 2001.</span> Classic. No Wilderness.
-              PK mode on a character. Clans picked a tile and a world.
-            </li>
-            <li>
-              <span className="text-parchment">13 Aug 2001.</span> The ditch. PvP became a
-              place. Skull is the tax.
-            </li>
-            <li>
-              <span className="text-parchment">13 Dec 2004.</span> Castle Wars. Flag game
-              west of Yanille. Not this minigame.
-            </li>
-            <li>
-              <span className="text-parchment">19 Sep 2005.</span> Fight Pit. TzHaar bowl.
-            </li>
-            <li>
-              <span className="text-parchment">10 Dec 2007.</span> Clan Wars named. Captains,
-              terms, purple portal, two-minute wall.
-            </li>
-            <li>
-              <span className="text-parchment">1 Feb 2011.</span> Main client: Grotto north of
-              Falador. Wild comes home. The hall leaves it.
-            </li>
-            <li>
-              <span className="text-parchment">19 Jun 2014.</span> Old School names the room.
-              Giants’ Plateau first. Ferox takes it on 16 Jul 2020.
-            </li>
-            <li>
-              <span className="text-parchment">Now.</span> Ferox on Old School. Grotto on
-              RuneScape. Two chats on a wild tile is still the tax — that is{" "}
-              <Link to="/pvp" className="text-parchment">
-                PvP
-              </Link>
-              , not these doors.
-            </li>
-          </ol>
-          <p className="mt-4 text-center text-sm text-muted">
+        <section className="rs-panel p-4 text-center">
+          <h2 className="section-h2">Official notes</h2>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-muted">
             Wiki for the current portals. This desk does not run a prize pool and does not
-            rank clans. The names above are identification from public wars and streams.
+            rank clans. The names above are from public wars and streams.
           </p>
-          <p className="mt-3 text-center text-sm">
+          <ol className="cw-notes mx-auto mt-4 max-w-xl space-y-2 text-sm text-muted">
+            <li><span className="text-parchment">4 Jan 2001.</span> Classic. No Wilderness. Clans picked a world.</li>
+            <li><span className="text-parchment">13 Aug 2001.</span> The ditch. PvP became a place.</li>
+            <li><span className="text-parchment">13 Dec 2004.</span> Castle Wars. A flag game. Not this door.</li>
+            <li><span className="text-parchment">19 Sep 2005.</span> Fight Pit. The TzHaar bowl.</li>
+            <li><span className="text-parchment">10 Dec 2007.</span> Clan Wars named. Purple portal. Two-minute wall.</li>
+            <li><span className="text-parchment">1 Feb 2011.</span> Grotto, north of Falador.</li>
+            <li><span className="text-parchment">16 Jul 2020.</span> Old School moves the room to Ferox.</li>
+          </ol>
+          <p className="mt-4 text-sm">
             <a
               className="text-parchment"
               href="https://oldschool.runescape.wiki/w/Clan_Wars"
@@ -367,6 +295,10 @@ function ClanWarsPage() {
             >
               RuneScape wiki
             </a>
+            {" · "}
+            <Link to="/pvp" className="text-parchment">
+              PvP
+            </Link>
           </p>
         </section>
       </main>
