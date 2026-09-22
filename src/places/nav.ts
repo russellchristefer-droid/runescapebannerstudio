@@ -14,10 +14,9 @@ export const STUDIO_NAV = [
   ["/brief", "Brief"],
 ] as const;
 
-/** Footer: Legal · Donate. */
+/** Footer ask is Cash App. Keep /donate as the same line. */
 export const STUDIO_INDEX = [
   ["/legal", "Legal"],
-  ["/donate", "Donate"],
 ] as const;
 
 export type PlaceSection = "towns" | "gods" | "bosses" | "pvp" | "clan-wars";

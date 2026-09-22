@@ -2687,6 +2687,10 @@ export function Studio() {
           <p className="max-w-md text-center text-xs text-muted">
             One JPEG per crop. Size is the chip you pick, or the download under it.
           </p>
+          <p className="text-center text-xs text-parchment">
+            <Link to="/edit">Clip Editor</Link>
+            {" · 9:16 for TikTok"}
+          </p>
           <div className="flex flex-wrap justify-center gap-1">
             {BANNER_SIZES.map((box) => (
               <button

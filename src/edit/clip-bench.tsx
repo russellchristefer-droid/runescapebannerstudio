@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent as PtrEvent } from "react";
+import { Link } from "@tanstack/react-router";
 import { readDesk } from "@/desk/store";
 import { CLIP_BANNER_EVENT, CLIP_BANNER_LS, saveClipBanner } from "@/desk/clip-banner";
 import { layoutFromStrip, renderDeskBanner, type BannerLayout } from "@/desk/render-banner";
@@ -2121,6 +2122,12 @@ export function ClipBench() {
           {busy ? "Do not leave." : status}
           {fileLabel && !busy ? ` · ${fileLabel}` : ""}
         </p>
+        {status.startsWith("Saved") && !busy ? (
+          <p className="px-3 pb-2 text-[11px] text-parchment">
+            <Link to="/">Banner Studio</Link>
+            {" · Twitch plate"}
+          </p>
+        ) : null}
         {busy ? (
           <div className="h-1 overflow-hidden bg-[#120f0c]" role="progressbar" aria-valuenow={Math.round(exportPct)} aria-valuemin={0} aria-valuemax={100}>
             <div className="h-full bg-play" style={{ width: `${exportPct}%` }} />

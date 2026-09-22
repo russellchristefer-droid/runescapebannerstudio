@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
+import { CASH_APP, CASH_HANDLE } from "@/components/site-footer";
 
 export const Route = createFileRoute("/donate")({
   component: DonatePage,
@@ -14,6 +15,9 @@ function DonatePage() {
       </header>
       <main id="content" className="mx-auto flex max-w-2xl flex-col gap-4 px-5 py-8 md:px-8">
         <p className="text-sm text-muted">
+          Independent desk. If a plate or clip saved you ten minutes — Cash App.
+        </p>
+        <p className="text-sm text-muted">
           Christefer Lee Russell-Barnett. Optional tip for the person who built this fan studio. Not Jagex. Not a purchase of game art.
           Not a guild bank.
         </p>
@@ -23,12 +27,12 @@ function DonatePage() {
           </a>
         </p>
         <a
-          href="https://cash.app/$takemymoneypleaseok"
+          href={CASH_APP}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-md bg-parchment px-4 py-3 text-center font-medium text-ink"
+          className="rs-chip min-h-11 justify-center text-center text-sm"
         >
-          $takemymoneypleaseok
+          Support the desk · Cash App {CASH_HANDLE}
         </a>
         <p className="text-xs text-faint">
           Opens Cash App. Send only what you mean to send.
