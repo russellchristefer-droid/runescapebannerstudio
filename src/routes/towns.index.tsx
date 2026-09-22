@@ -3,6 +3,7 @@ import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
 import { LOCATIONS, townHasStill, townRegionHead, townStillLine, type Location } from "@/lib/locations";
+import { bannerFor } from "@/lib/region-banners";
 import { regionAnchor } from "@/lib/town-doors";
 import { townNote } from "@/lib/town-notes";
 import { pageMeta } from "@/lib/page-title";
@@ -87,9 +88,15 @@ function TownIndex() {
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
         {groups.length ? (
-          groups.map(([region, rows]) => (
+          groups.map(([region, rows]) => {
+            const banner = bannerFor(region);
+            const label = region === "Burtrope" ? "Burthorpe" : region;
+            return (
             <section key={region} id={regionAnchor(region)}>
-              <h2 className="mb-2 text-[11px] tracking-[0.14em] text-faint">{region === "Burtrope" ? "Burthorpe" : region}</h2>
+              <h2 className="mb-2 text-center text-[11px] tracking-[0.14em]" style={{ color: banner.ink }}>
+                <img src={`/banners/${banner.slug}.png`} alt="" width={24} height={16} className="region-flag" />
+                {label}
+              </h2>
               <PlaceGrid>
                 {rows.map((loc) => (
                   <PlaceCard
@@ -109,7 +116,8 @@ function TownIndex() {
                 ))}
               </PlaceGrid>
             </section>
-          ))
+            );
+          })
         ) : (
           <p className="text-center text-sm text-muted">Nothing on that filter.</p>
         )}

@@ -524,15 +524,32 @@ a.rs-chip.god-chip[aria-current="page"] {
 .town-card {
   --god: #c4a35a;
 }
+.rs-panel.region-card {
+  border-color: color-mix(in srgb, var(--region-ink, var(--region, #c4a35a)) 75%, #111);
+}
+.rs-panel.region-card .site-title {
+  color: var(--region-ink, var(--region, #c4a35a));
+}
 .town-card:hover,
 .town-card:focus-within {
   border-color: var(--god);
   box-shadow: 0 0 8px var(--god), inset 0 0 10px rgba(255, 255, 255, 0.08);
 }
+.rs-panel.region-card:hover,
+.rs-panel.region-card:focus-within {
+  border-color: var(--region-accent, var(--region));
+  box-shadow: 0 0 8px var(--region-accent, var(--region));
+}
 .town-card:hover .site-title,
 .town-card:focus-within .site-title {
   text-shadow: 0 0 10px var(--god);
   filter: brightness(1.12);
+}
+.rs-panel.region-card:hover .site-title,
+.rs-panel.region-card:focus-within .site-title {
+  color: var(--region-accent, #fff);
+  text-shadow: 0 0 10px var(--region-accent, transparent);
+  filter: none;
 }
 
 .skill-card {
@@ -819,6 +836,47 @@ a.skill-link:focus-visible {
 .skill-page main dt,
 .skill-page .skill-links {
   text-align: center;
+}
+.town-page {
+  background: color-mix(in srgb, var(--region, #5c2d7a) 16%, #050505);
+  color: #f4f0e4;
+}
+.town-page > header {
+  border-color: color-mix(in srgb, var(--region, #5c2d7a) 55%, #050505);
+  background: color-mix(in srgb, var(--region, #5c2d7a) 14%, #050505);
+}
+.town-page-well {
+  background: color-mix(in srgb, var(--region, #5c2d7a) 10%, #0b0b0b);
+  border: 1px solid color-mix(in srgb, var(--region-ink, var(--region, #5c2d7a)) 70%, #111);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--region-accent, #3d9e3d) 22%, transparent);
+}
+.town-page h1.site-title,
+.town-page h1.site-title:hover {
+  color: var(--region-ink, var(--region));
+}
+.town-page h2,
+.town-page .text-parchment,
+.town-page a.text-parchment {
+  color: var(--region-accent, #3d9e3d);
+}
+.town-page a.town-god,
+.town-page a.town-god:hover {
+  color: var(--god-ink, #fff);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--god-ink, #fff) 55%, transparent);
+}
+.town-page .rs-chip:hover:not(.god-chip) {
+  border-color: var(--region-accent);
+  background: color-mix(in srgb, var(--region-accent) 18%, #111);
+  color: #fff;
+}
+.region-flag {
+  display: inline-block;
+  width: 24px;
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: -2px;
+  object-fit: cover;
+  border-radius: 1px;
 }
 .god-page {
   background: var(--god-page-bg, #0c0a08);

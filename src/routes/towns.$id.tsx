@@ -4,7 +4,8 @@ import { BackLink } from "@/components/back-link";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { townNote } from "@/lib/town-notes";
 import { LOCATIONS, townStillLine, type Location } from "@/lib/locations";
-import { godInk, godNeon, godPageStyle } from "@/lib/gods";
+import { godNeon } from "@/lib/gods";
+import { bannerFor, regionPageStyle } from "@/lib/region-banners";
 import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
 import { citizenForSpeaker } from "@/data/citizens";
@@ -34,21 +35,27 @@ function TownNotePage() {
   const note = townNote(id);
   const loc = LOCATIONS.find((item) => item.id === id) ?? LOCATIONS.find((item) => item.name === note?.title);
   if (!note) throw notFound();
-  const sheet = loc ? godPageStyle(loc.god) : undefined;
+  const sheet = loc ? regionPageStyle(loc.region, godNeon(loc.god)) : undefined;
+  const banner = loc ? bannerFor(loc.region) : null;
   return (
-    <div className={loc ? "god-page min-h-dvh" : "min-h-dvh bg-bg text-fg"} style={sheet}>
+    <div className={loc ? "town-page min-h-dvh" : "min-h-dvh bg-bg text-fg"} style={sheet}>
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
-        <h1
-          className="page-h1 site-title mt-1"
-          style={loc ? { color: godInk(loc.god) } : undefined}
-        >
+        <h1 className="page-h1 site-title mt-1">
           {note.title}
         </h1>
-        {loc ? (
+        {loc && banner ? (
           <p className="mt-1 text-center text-sm text-muted">
-            {loc.region.replace(/\s·\sOSRS$/, "")} ·{" "}
-            <AppLink href={godPath(loc.god)} className="no-underline" style={{ color: godNeon(loc.god) }}>
+            <img
+              src={`/banners/${banner.slug}.png`}
+              alt=""
+              width={24}
+              height={16}
+              className="region-flag"
+            />
+            <span style={{ color: banner.ink }}>{loc.region.replace(/\s·\sOSRS$/, "").replace(/\s·\sRuneScape$/, "")}</span>
+            {" · "}
+            <AppLink href={godPath(loc.god)} className="town-god no-underline">
               {loc.god}
             </AppLink>
           </p>
@@ -56,8 +63,8 @@ function TownNotePage() {
           <p className="mt-1 text-sm text-muted">{note.region}</p>
         )}
         <span
-          className="mt-2 block h-px w-24"
-          style={{ background: loc ? godNeon(loc.god) : "#c4a35a" }}
+          className="mx-auto mt-2 block h-px w-24"
+          style={{ background: banner ? banner.ink : "#c4a35a" }}
           aria-hidden="true"
         />
         <div className="mt-3">
@@ -68,7 +75,7 @@ function TownNotePage() {
         id="content"
         className={
           loc
-            ? "god-page-well mx-auto mt-6 mb-8 flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8"
+            ? "town-page-well mx-auto mt-6 mb-8 flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8"
             : "mx-auto flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8"
         }
       >

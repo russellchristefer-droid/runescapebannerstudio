@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { StillPhoto } from "@/components/still-photo";
 import { UseOnBanner } from "@/desk/use-on-banner";
 import { godChipClass, godHueClass, godInk, godNeon } from "@/lib/gods";
+import { bannerFor } from "@/lib/region-banners";
 import type { Edition } from "@/lib/locations";
 import { AppLink, bossPath, townPath } from "./place-chip";
 
@@ -43,7 +44,14 @@ export function PlaceCard({
   edition?: Edition;
   placeId?: string;
 }) {
-  const hue = (kind === "Town" || kind === "Boss") && god ? godNeon(god) : kind === "God" ? godInk(name) : undefined;
+  const banner = kind === "Town" ? bannerFor(region) : null;
+  const hue = banner
+    ? banner.ink
+    : (kind === "Town" || kind === "Boss") && god
+      ? godNeon(god)
+      : kind === "God"
+        ? godInk(name)
+        : undefined;
   const alt = `${name} in ${game}`;
   const href = hrefFor(to, params);
   const [gone, setGone] = useState(false);
@@ -55,10 +63,21 @@ export function PlaceCard({
         className={`rs-panel overflow-hidden rounded-md ${
           kind === "God"
             ? godChipClass(name)
-            : (kind === "Town" || kind === "Boss") && god
-              ? `town-card ${godHueClass(god)}`
-              : "hover:border-line"
+            : kind === "Town"
+              ? "town-card region-card"
+              : kind === "Boss" && god
+                ? `town-card ${godHueClass(god)}`
+                : "hover:border-line"
         }`}
+        style={
+          banner
+            ? ({
+                "--region": banner.primary,
+                "--region-accent": banner.accent,
+                "--region-ink": banner.ink,
+              } as CSSProperties)
+            : undefined
+        }
       >
         <AppLink href={href} className="block [touch-action:manipulation]">
           {gone ? (
@@ -88,10 +107,10 @@ export function PlaceCard({
           </span>
         </AppLink>
         {kind === "Town" && god ? (
-          <p className="w-full px-2 pb-1 text-center text-[10px]" style={{ color: hue, opacity: 0.7 }}>
-            {(region ?? "").replace(/\s·\sOSRS$/, "")}
+          <p className="w-full px-2 pb-1 text-center text-[10px]">
+            <span style={{ color: banner?.ink }}>{(region ?? "").replace(/\s·\sOSRS$/, "")}</span>
             {region ? " · " : ""}
-            {god}
+            <span style={{ color: godNeon(god) }}>{god}</span>
           </p>
         ) : caption ? (
           <p className="w-full px-2 pb-1 text-center text-[10px] text-muted">{caption}</p>
