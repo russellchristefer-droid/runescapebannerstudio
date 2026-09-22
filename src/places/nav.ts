@@ -9,16 +9,16 @@ export const GAME_NAV = [
 
 /** The product. */
 export const STUDIO_NAV = [
-  ["/", "Banner desk"],
-  ["/edit", "Clip bench"],
+  ["/", "Banner Studio"],
+  ["/edit", "Clip Editor"],
   ["/brief", "Brief"],
   ["/legal", "Legal"],
 ] as const;
 
 /** Footer product only. Atlas stays in GAME_NAV. */
 export const STUDIO_INDEX = [
-  ["/", "Banner desk"],
-  ["/edit", "Clip bench"],
+  ["/", "Banner Studio"],
+  ["/edit", "Clip Editor"],
   ["/brief", "Brief"],
   ["/legal", "Legal"],
   ["/donate", "Donate"],

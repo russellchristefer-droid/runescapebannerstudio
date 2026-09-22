@@ -51,7 +51,7 @@ function ClassicPage() {
           <Link to="/history">History</Link>
         </p>
         <p className="mt-3 text-sm text-parchment">
-          <Link to="/">Banner desk</Link>
+          <Link to="/">Banner Studio</Link>
           {" · "}
           <Link to="/egg" className="text-faint">
             There is a box here

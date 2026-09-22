@@ -2656,10 +2656,10 @@ export function Studio() {
             <li>Wheel to scale. Drag the pack. The name sits over the iron you placed.</li>
             <li>Pixels are the platform’s. Match the chip before you title the stream.</li>
             <li>Pete writes the JPEG. That is the work. The wiki keeps the hour.</li>
-            <li>Save for clips. Then Clip Bench → Desk banner → Top or Bottom.</li>
+            <li>Save for clips. Then Clip Editor → Desk banner → Top or Bottom.</li>
           </ol>
           <p className="mt-2 text-[11px] text-faint">
-            <Link to="/edit">Clip Bench is the other half of this desk.</Link>
+            <Link to="/edit">Clip Editor is the other half of this desk.</Link>
           </p>
         </article>
         <figure className="mt-4 flex flex-col items-center gap-2">

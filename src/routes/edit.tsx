@@ -6,7 +6,7 @@ import { pageMeta } from "@/lib/page-title";
 export const Route = createFileRoute("/edit")({
   head: () =>
     pageMeta(
-      "Clip Bench",
+      "Clip Editor",
       "Banner Studio clip bench. Local trim, desk banner on the file, Save MP4. This page does not go live.",
     ),
   component: EditPage,
@@ -15,11 +15,11 @@ export const Route = createFileRoute("/edit")({
 function EditPage() {
   return (
     <div className="min-h-dvh bg-bg text-fg">
-      <SiteHeader skip={{ href: "#content", label: "Skip to clip bench" }} />
+      <SiteHeader skip={{ href: "#content", label: "Skip to clip editor" }} />
       <main id="content" className="mx-auto max-w-[90rem] px-3 py-6 md:px-8">
         <div className="overflow-hidden rounded-md border border-[#c6a45a] bg-[#1a1610] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
           <div className="flex flex-wrap items-baseline justify-between gap-3 px-4 py-3">
-            <h1 className="page-h1 m-0 text-left">Clip Bench</h1>
+            <h1 className="page-h1 m-0 text-left">Clip Editor</h1>
             <p className="text-[11px] tracking-wide text-muted">Same studio as the banner desk. Local files. Not live.</p>
           </div>
           <div className="h-px bg-[#c6a45a]/80" aria-hidden="true" />
