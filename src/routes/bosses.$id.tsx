@@ -46,7 +46,7 @@ function BossNotePage() {
             </a>
           ))}
         </p>
-        <span className="mt-2 mx-auto block h-px w-24 bg-[#2db85a]/80" aria-hidden="true" />
+        <span className="mt-2 mx-auto block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
         <div className="mt-3">
           <PlaceRail section="bosses" />
         </div>

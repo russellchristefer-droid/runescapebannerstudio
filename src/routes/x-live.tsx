@@ -207,7 +207,7 @@ function XLivePage() {
             ? "Live check is off."
             : `${liveOsrs} live Old School · ${liveRs3} live RuneScape · ${liveDw} live Dragonwilds. Refresh every 45s while this tab is open.`}
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#2db85a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
         <label className="mx-auto mt-3 block max-w-sm text-[10px] text-muted">
           Search
           <input
@@ -283,14 +283,14 @@ function XLivePage() {
           </div>
         </section>
 
-        <div className="overflow-hidden rounded-md border border-[#2db85a] bg-[#0b0b0b] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
+        <div className="overflow-hidden rounded-md border border-[#c4a35a] bg-[#0b0b0b] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
           <div className="px-4 py-3">
             <h2 className="page-h1 m-0 text-left">Put that window on X</h2>
             <p className="mt-2 text-sm text-muted">
               Same steps for both games. You already have one client open. OBS encodes it. Live Studio is the door. Desktop RTMP needs X Premium — confirm the current tier on X help.
             </p>
           </div>
-          <div className="h-px bg-[#2db85a]/80" aria-hidden="true" />
+          <div className="h-px bg-[#c4a35a]/80" aria-hidden="true" />
           <ol className="list-decimal space-y-2.5 px-4 py-4 pl-9 text-sm leading-relaxed text-muted">
             <li>Plug into wired ethernet if you can. Wifi will drop an ice barrage. Close other uploads.</li>
             <li>
@@ -323,14 +323,14 @@ function XLivePage() {
           </ol>
         </div>
 
-        <div className="overflow-hidden rounded-md border border-[#2db85a] bg-[#0b0b0b] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
+        <div className="overflow-hidden rounded-md border border-[#c4a35a] bg-[#0b0b0b] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
           <div className="px-4 py-3">
             <h2 className="page-h1 m-0 text-left">Phone</h2>
             <p className="mt-2 text-sm text-muted">
               Talking about the game, not encoding the client. Say which grammar. Public account. No stream key.
             </p>
           </div>
-          <div className="h-px bg-[#2db85a]/80" aria-hidden="true" />
+          <div className="h-px bg-[#c4a35a]/80" aria-hidden="true" />
           <ol className="list-decimal space-y-2.5 px-4 py-4 pl-9 text-sm leading-relaxed text-muted">
             <li>Open the X app on the account people already follow for RuneScape. Public, not locked.</li>
             <li>Composer → Live. Allow camera and mic if the phone asks.</li>

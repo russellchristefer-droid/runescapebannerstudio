@@ -201,7 +201,7 @@ function StreamersPage() {
             ? "Live check is off."
             : `${liveNow.filter((row) => row.game === "osrs").length} live Old School · ${liveNow.filter((row) => row.game === "rs3").length} live RuneScape · ${liveNow.filter((row) => row.game === "dw").length} live Dragonwilds. Refresh every 45s while this tab is open.`}
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#2db85a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
         <label className="mx-auto mt-3 block max-w-sm text-[10px] text-muted">
           Search
           <input

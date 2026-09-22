@@ -27,7 +27,7 @@ function SkillPage() {
         </p>
         <h1 className="page-h1 site-title mt-1">{row.skill.name}</h1>
         <p className="mt-2 text-center text-sm text-muted">{row.tagline}</p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#2db85a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto max-w-3xl px-5 py-6 md:px-8">
         <img

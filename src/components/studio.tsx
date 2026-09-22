@@ -1497,7 +1497,7 @@ export function Studio() {
           className="p-2 [contain:layout]"
           style={{
             background: "#111111",
-            border: "2px solid #2db85a",
+            border: "2px solid #c4a35a",
             borderRadius: 6,
             boxShadow: "inset 0 2px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(198,164,90,0.18)",
           }}
@@ -1543,7 +1543,7 @@ export function Studio() {
           {goldStar ? (
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute right-2 top-2 text-[10px] leading-none text-[#2db85a]"
+              className="pointer-events-none absolute right-2 top-2 text-[10px] leading-none text-[#c4a35a]"
             >
               ★
             </span>
@@ -2196,7 +2196,7 @@ export function Studio() {
               <input
                 value={skillPicks.find((item) => item.id === pickedSkill)?.level ?? ""}
                 inputMode="numeric"
-                className="h-8 w-12 rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-1 text-sm text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+                className="h-8 w-12 rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-sm text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
                 onChange={(e) => {
                   const cap = skillLevelCap(pickedSkill, skillPack);
                   const next = sanitizeSkillLevel(e.target.value, cap);
@@ -2210,7 +2210,7 @@ export function Studio() {
         </div>
 
         <div className="mt-2 grid gap-2 lg:grid-cols-2" style={{ borderTop: "1px solid rgba(198,164,90,0.2)" }}>
-        <div className="lg:border-r lg:border-[#2db85a]/20">
+        <div className="lg:border-r lg:border-[#c4a35a]/20">
           <p className="px-1 pt-2 text-[10px] text-muted">Skills</p>
           <div className="flex flex-col gap-1 p-1">
             <div className="flex flex-wrap gap-1">
@@ -2312,7 +2312,7 @@ export function Studio() {
                       value={pick?.level ?? boardLevels[skillPack][skill.id] ?? ""}
                       placeholder="—"
                       maxLength={3}
-                      className="h-6 w-8 rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-0 text-center text-[10px] tabular-nums text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+                      className="h-6 w-8 rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-0 text-center text-[10px] tabular-nums text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
                       onChange={(e) => {
                         const next = sanitizeSkillLevel(e.target.value, cap);
                         setSkillPicks((cur) => {
@@ -2380,7 +2380,7 @@ export function Studio() {
                     const pic = (ev.currentTarget as HTMLButtonElement).querySelector("img");
                     placeStamp(mark.id, pic);
                   }}
-                  className={`flex size-12 items-center justify-center rounded-none bg-transparent p-0 [touch-action:manipulation] ${on ? "outline outline-1 outline-[#2db85a]" : ""}`}
+                  className={`flex size-12 items-center justify-center rounded-none bg-transparent p-0 [touch-action:manipulation] ${on ? "outline outline-1 outline-[#c4a35a]" : ""}`}
                 >
                   <img src={mark.src} alt="" className={`size-8 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
                 </button>
@@ -2496,7 +2496,7 @@ export function Studio() {
                     aria-label={`Place ${mark.name}`}
                     aria-pressed={on}
                     onClick={() => placeStamp(mark.id)}
-                    className={`flex size-12 items-center justify-center bg-transparent p-0 ${on ? "outline outline-1 outline-[#2db85a]" : ""}`}
+                    className={`flex size-12 items-center justify-center bg-transparent p-0 ${on ? "outline outline-1 outline-[#c4a35a]" : ""}`}
                   >
                     <img src={mark.src} alt="" className="size-8 object-contain" />
                   </button>
@@ -2527,7 +2527,7 @@ export function Studio() {
               maxLength={12}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2539,7 +2539,7 @@ export function Studio() {
               maxLength={24}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2551,7 +2551,7 @@ export function Studio() {
               maxLength={32}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2563,7 +2563,7 @@ export function Studio() {
               maxLength={48}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2575,7 +2575,7 @@ export function Studio() {
               maxLength={40}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2587,7 +2587,7 @@ export function Studio() {
               maxLength={36}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2600,7 +2600,7 @@ export function Studio() {
               maxLength={3}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#2db85a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#2db85a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
             />
           </label>
         </div>
@@ -2617,7 +2617,7 @@ export function Studio() {
             className={`box-border size-11 shrink-0 rounded-full border p-0 text-[10px] leading-none ${
               bannerCaps
                 ? "border-parchment bg-[#111111] text-parchment"
-                : "border-[#2db85a]/55 bg-[#0b0b0b] text-muted"
+                : "border-[#c4a35a]/55 bg-[#0b0b0b] text-muted"
             }`}
           >
             Caps

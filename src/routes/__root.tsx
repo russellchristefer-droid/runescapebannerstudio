@@ -30,7 +30,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: APP_NAME },
       { name: "description", content: desc },
-      { name: "theme-color", content: "#06140c" },
+      { name: "theme-color", content: "#050505" },
       { name: "color-scheme", content: "dark" },
       { name: "robots", content: "index,follow" },
       { name: "referrer", content: "strict-origin-when-cross-origin" },

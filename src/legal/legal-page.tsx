@@ -13,11 +13,11 @@ export function LegalPage() {
       </header>
       <main id="content" className="px-4 py-8 md:px-8">
         <article
-          className="mx-auto max-w-[42rem] border border-[#2db85a] bg-[#0b0b0b] px-5 py-8 text-sm leading-[1.55] text-[#e8d9a8] md:px-9"
+          className="mx-auto max-w-[42rem] border border-[#c4a35a] bg-[#0b0b0b] px-5 py-8 text-sm leading-[1.55] text-[#e8d9a8] md:px-9"
           style={{ boxShadow: "inset 0 0 0 1px #0b0a08, 0 8px 24px rgba(0,0,0,.35)" }}
         >
           <h1 className="page-h1 m-0 text-left">Legal</h1>
-          <p className="mt-2 text-xs tracking-[0.08em] text-[#2db85a]">
+          <p className="mt-2 text-xs tracking-[0.08em] text-[#c4a35a]">
             RuneScape Banner Studio · runescapebannerstudio.grok.me
           </p>
           <p className="mt-1 text-xs text-faint">Effective 22 September 2026</p>
@@ -161,9 +161,9 @@ export function LegalPage() {
             </p>
           </Clause>
 
-          <section id="record" className="mt-8 border-t border-[#2db85a]/40 pt-6">
+          <section id="record" className="mt-8 border-t border-[#c4a35a]/40 pt-6">
             <h2 className="mb-1 font-serif text-lg tracking-wide text-fg">
-              <span className="mr-2 font-serif text-sm text-[#2db85a]">9.</span>
+              <span className="mr-2 font-serif text-sm text-[#c4a35a]">9.</span>
               Operator exhibits
             </h2>
             <p className="mb-4 text-xs uppercase tracking-[0.14em] text-faint">
@@ -349,9 +349,9 @@ function Clause({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="mt-8 border-t border-[#2db85a]/25 pt-6">
+    <section id={id} className="mt-8 border-t border-[#c4a35a]/25 pt-6">
       <h2 className="mb-3 font-serif text-lg tracking-wide text-fg">
-        <span className="mr-2 font-serif text-sm text-[#2db85a]">{n}.</span>
+        <span className="mr-2 font-serif text-sm text-[#c4a35a]">{n}.</span>
         {title}
       </h2>
       {children}
