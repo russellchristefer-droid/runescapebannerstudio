@@ -331,12 +331,7 @@ export function ClipBench() {
   }, []);
 
   function previewSize(exportW: number, exportH: number) {
-    const cap = 960;
-    const scale = Math.min(1, cap / Math.max(exportW, exportH));
-    return {
-      w: Math.max(320, Math.round(exportW * scale)),
-      h: Math.max(180, Math.round(exportH * scale)),
-    };
+    return { w: exportW, h: exportH };
   }
 
   function paint(
@@ -1684,7 +1679,7 @@ export function ClipBench() {
           <div className="min-w-0">
             <div
               className="rs-panel relative mx-auto w-full overflow-hidden bg-[#0b0b0b]"
-              style={{ aspectRatio: `${size.w} / ${size.h}`, maxHeight: 480 }}
+              style={{ aspectRatio: `${size.w} / ${size.h}`, maxHeight: 420 }}
               data-state={ready}
               data-export={`${size.w}x${size.h}`}
             >
@@ -1717,6 +1712,9 @@ export function ClipBench() {
               />
               <canvas
                 ref={canvasRef}
+                width={size.w}
+                height={size.h}
+                data-export={`${size.w}x${size.h}`}
                 className={`relative z-[1] block h-full w-full touch-none object-contain ${
                   ready === "empty" || ready === "loading" || ready === "error" ? "invisible" : ""
                 }`}
