@@ -215,7 +215,7 @@ function ProtectItemBox() {
       spellCheck={false}
       autoComplete="off"
       aria-label=" "
-      className="mt-10 min-h-11 w-40 border border-transparent bg-transparent px-1 text-[11px] text-faint/30 outline-none focus:border-line/30"
+      className="sr-only"
       onChange={(event) => {
         const next = event.target.value.slice(0, 12);
         setValue(next);
