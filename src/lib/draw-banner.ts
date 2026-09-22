@@ -295,15 +295,15 @@ function drawIdentityPlate(
       lines.push({ id: i ? `tagline-${i}` : "tagline", text: cap(text), size: chip.line ?? 15 });
     });
   }
+  if (world) lines.push({ id: "world", text: cap(world), size: chip.line ?? 15 });
+  if (grind) lines.push({ id: "grind", text: cap(grind), size: chip.line ?? 15 });
+  if (discord) lines.push({ id: "discord", text: cap(discord), size: chip.line ?? 15 });
   const extras = [
-    world,
-    grind,
     options.maxed ? "Maxed" : "",
     options.mode,
     options.focus,
     options.style,
     options.cape,
-    discord,
     options.learners ? "Learners welcome" : "",
   ].filter((item) => item && item !== "Not shown");
   extras.forEach((text, i) => lines.push({ id: `extra-${i}`, text: cap(text), size: chip.line ?? 15 }));

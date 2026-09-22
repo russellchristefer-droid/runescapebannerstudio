@@ -41,6 +41,15 @@ test("clan live keeps space and numbers", () => {
   assert.equal(typeClan("Exiled Island 99"), "Exiled Island 99");
 });
 
+test("clan live keeps the space you just typed", () => {
+  assert.equal(typeClan("Exiled "), "Exiled ");
+  assert.equal(sanitizeClan("Exiled "), "Exiled");
+});
+
+test("handle live keeps a space", () => {
+  assert.equal(typeHandle("Christefer 1"), "Christefer 1");
+});
+
 test("handle live keeps underscore and numbers", () => {
   assert.equal(typeHandle("Christefer_1"), "Christefer_1");
 });

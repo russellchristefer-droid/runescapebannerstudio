@@ -41,12 +41,20 @@ import { townNote } from "@/lib/town-notes";
 import {
   looksLikeStaffName,
   sanitizeClan,
-  sanitizeDiscordLive,
+  sanitizeDiscord,
   sanitizeDisplayName,
   sanitizeGrind,
   sanitizeHandle,
   sanitizeTagline,
   sanitizeWorld,
+  typeClan,
+  typeDiscord,
+  typeDisplayName,
+  typeGrind,
+  typeHandle,
+  typeTagline,
+  typeWorld,
+  worldLabel,
 } from "@/lib/rsText";
 
 const HiscoresLookup = lazy(() =>
@@ -765,6 +773,9 @@ export function Studio() {
           else if (textId === "clan") setClan("");
           else if (textId === "handle") setHandle("");
           else if (textId.startsWith("tagline")) setTagline("");
+          else if (textId === "discord") setDiscord("");
+          else if (textId === "grind") setGrind("");
+          else if (textId === "world") setWorld("");
           else if (textId.startsWith("extra")) {
             setWorld("");
             setGrind("");
@@ -910,21 +921,42 @@ export function Studio() {
       }
     }
     const copy = copyRef.current;
-    const name = sanitizeDisplayName(copy.streamer);
+    const cap = (s: string) => (copy.caps ? s.toUpperCase() : s);
     const chip = plateMetrics(w, h);
     const pos = textPosRef.current.streamer;
+    const ns = Math.max(18, Math.round(chip.name * (textScaleRef.current.streamer ?? 1)));
     let nx = (pos?.x ?? 36) * sx;
     let ny = (pos?.y ?? 24) * sy;
-    const ns = Math.max(18, Math.round(chip.name * (textScaleRef.current.streamer ?? 1)));
-    if (name) {
-      paintRSYellow(ctx, copy.caps ? name.toUpperCase() : name, nx, ny, ns);
-      boxes.push({ id: "streamer", x: nx, y: ny, w: Math.max(80, name.length * ns * 0.6), h: ns + 8 });
-      ny += ns + 6;
-    }
-    for (const line of [copy.clan, copy.handle, copy.tagline].filter(Boolean)) {
-      const sz = Math.max(12, Math.round(ns * 0.42));
-      paintRSYellow(ctx, line, nx, ny, sz);
-      ny += sz + 4;
+    const name = sanitizeDisplayName(copy.streamer);
+    const extras: { id: string; text: string; size: number }[] = [];
+    if (name) extras.push({ id: "streamer", text: cap(name), size: ns });
+    const clan = typeClan(copy.clan).trim();
+    if (clan) extras.push({ id: "clan", text: cap(clan), size: Math.max(12, Math.round(ns * 0.44)) });
+    const handle = typeHandle(copy.handle).trim();
+    if (handle) extras.push({ id: "handle", text: cap(handle), size: Math.max(12, Math.round(ns * 0.4)) });
+    const tagline = typeTagline(copy.tagline).trim();
+    if (tagline) extras.push({ id: "tagline", text: cap(tagline), size: Math.max(12, Math.round(ns * 0.38)) });
+    const discord = typeDiscord(copy.discord).trim();
+    if (discord) extras.push({ id: "discord", text: cap(discord), size: Math.max(12, Math.round(ns * 0.36)) });
+    const grind = typeGrind(copy.grind).trim();
+    if (grind) extras.push({ id: "grind", text: cap(grind), size: Math.max(12, Math.round(ns * 0.36)) });
+    const world = worldLabel(typeWorld(copy.world));
+    if (world) extras.push({ id: "world", text: cap(world), size: Math.max(12, Math.round(ns * 0.36)) });
+    for (const line of extras) {
+      const scale = Math.min(2.5, Math.max(0.5, textScaleRef.current[line.id] ?? 1));
+      const size = Math.max(10, Math.round(line.size * (line.id === "streamer" ? 1 : scale)));
+      const placed = textPosRef.current[line.id];
+      const x = placed ? placed.x * sx : nx;
+      const y = placed ? placed.y * sy : ny;
+      paintRSYellow(ctx, line.text, x, y, size);
+      ctx.font = `700 ${size}px "RS Chat Bold"`;
+      const hitW = Math.max(48, Math.ceil(ctx.measureText(line.text).width) + 8);
+      boxes.push({ id: line.id, x, y, w: hitW, h: size + 8 });
+      if (!placed) ny = y + size + 6;
+      else if (line.id === "streamer") {
+        nx = x;
+        ny = y + size + 6;
+      }
     }
     return boxes;
   }
@@ -2416,11 +2448,12 @@ export function Studio() {
             Display name
             <input
               value={streamer}
-              onChange={(e) => setStreamer(sanitizeDisplayName(e.target.value))}
+              onChange={(e) => setStreamer(typeDisplayName(e.target.value))}
+              onBlur={(e) => setStreamer(sanitizeDisplayName(e.target.value))}
               onPaste={(e) => {
                 e.preventDefault();
                 const text = e.clipboardData.getData("text/plain");
-                setStreamer(sanitizeDisplayName(text));
+                setStreamer(typeDisplayName(text));
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -2436,27 +2469,76 @@ export function Studio() {
           </label>
           <label className="text-[10px] text-muted">
             Clan
-            <input value={clan} onChange={(e) => setClan(sanitizeClan(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
+            <input
+              value={clan}
+              onChange={(e) => setClan(typeClan(e.target.value))}
+              onBlur={(e) => setClan(sanitizeClan(e.target.value))}
+              maxLength={24}
+              spellCheck={false}
+              autoComplete="off"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+            />
           </label>
           <label className="text-[10px] text-muted">
             Handle
-            <input value={handle} onChange={(e) => setHandle(sanitizeHandle(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
+            <input
+              value={handle}
+              onChange={(e) => setHandle(typeHandle(e.target.value))}
+              onBlur={(e) => setHandle(sanitizeHandle(e.target.value))}
+              maxLength={32}
+              spellCheck={false}
+              autoComplete="off"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+            />
           </label>
           <label className="text-[10px] text-muted">
             Tagline
-            <input value={tagline} onChange={(e) => setTagline(sanitizeTagline(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
+            <input
+              value={tagline}
+              onChange={(e) => setTagline(typeTagline(e.target.value))}
+              onBlur={(e) => setTagline(sanitizeTagline(e.target.value))}
+              maxLength={48}
+              spellCheck={false}
+              autoComplete="off"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+            />
           </label>
           <label className="text-[10px] text-muted">
             Discord
-            <input value={discord} onChange={(e) => setDiscord(sanitizeDiscordLive(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
+            <input
+              value={discord}
+              onChange={(e) => setDiscord(typeDiscord(e.target.value))}
+              onBlur={(e) => setDiscord(sanitizeDiscord(e.target.value))}
+              maxLength={40}
+              spellCheck={false}
+              autoComplete="off"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+            />
           </label>
           <label className="text-[10px] text-muted">
             Grind
-            <input value={grind} onChange={(e) => setGrind(sanitizeGrind(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
+            <input
+              value={grind}
+              onChange={(e) => setGrind(typeGrind(e.target.value))}
+              onBlur={(e) => setGrind(sanitizeGrind(e.target.value))}
+              maxLength={36}
+              spellCheck={false}
+              autoComplete="off"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+            />
           </label>
           <label className="text-[10px] text-muted">
             World
-            <input value={world} onChange={(e) => setWorld(sanitizeWorld(e.target.value))} className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]" />
+            <input
+              value={world}
+              onChange={(e) => setWorld(typeWorld(e.target.value))}
+              onBlur={(e) => setWorld(sanitizeWorld(e.target.value))}
+              inputMode="numeric"
+              maxLength={3}
+              spellCheck={false}
+              autoComplete="off"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+            />
           </label>
         </div>
         <div className="flex items-center gap-3 overflow-visible px-1 pb-1">
