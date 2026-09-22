@@ -632,14 +632,22 @@ a.skill-link:focus-visible {
 }
 
 .cw-page {
-  background:
-    radial-gradient(ellipse at 50% 115%, rgba(255, 106, 26, 0.22), transparent 52%),
-    #070303;
+  background-color: #070303;
+  background-image:
+    linear-gradient(180deg, rgba(7, 3, 3, 0.78), rgba(7, 3, 3, 0.42) 12%, rgba(7, 3, 3, 0.5) 78%, rgba(7, 3, 3, 0.86)),
+    url("/ui/lava-crackle.jpg");
+  background-size: auto, 640px;
+  background-repeat: no-repeat, repeat;
   color: #f3d7b0;
+}
+@media (min-width: 900px) {
+  .cw-page {
+    background-attachment: scroll, fixed;
+  }
 }
 .cw-page > header {
   border-bottom: 1px solid color-mix(in srgb, #ff6a1a 55%, #070303);
-  background: color-mix(in srgb, #070303 88%, #120808);
+  background: rgba(7, 3, 3, 0.62);
 }
 .cw-page h1 {
   color: #ff6a1a;
@@ -677,11 +685,57 @@ a.skill-link:focus-visible {
   border-color: #ff6a1a;
 }
 .cw-page .rs-panel {
-  background: #120808;
+  background: rgba(8, 4, 3, 0.9);
   border: 1px solid color-mix(in srgb, #ff6a1a 70%, transparent);
   box-shadow:
     0 0 16px color-mix(in srgb, #ff6a1a 16%, transparent),
     inset 0 0 0 1px #070303;
+}
+.cw-watch {
+  display: grid;
+  gap: 3px;
+  margin-top: 12px;
+  min-height: 44px;
+  padding: 12px 14px 13px;
+  text-align: center;
+  text-decoration: none;
+  background: linear-gradient(180deg, rgba(28, 10, 6, 0.96), rgba(7, 3, 3, 0.96));
+  border: 1px solid #ff6a1a;
+  border-radius: 6px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 180, 80, 0.18),
+    inset 0 0 0 1px #070303,
+    0 8px 18px rgba(0, 0, 0, 0.35);
+}
+.cw-watch-k {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #e2b84a;
+}
+.cw-watch-t {
+  font-family: Cinzel, "Source Serif 4", Palatino, serif;
+  font-size: 0.95rem;
+  color: #ff8a3d;
+}
+.cw-watch-l {
+  font-size: 12px;
+  line-height: 1.35;
+  color: #f3d7b0;
+}
+.cw-watch:hover {
+  background: #3a1408;
+  border-color: #ffb15a;
+}
+.cw-watch-row {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+@media (min-width: 720px) {
+  .cw-watch-row {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 .cw-page main > section + section::before {
   content: "";

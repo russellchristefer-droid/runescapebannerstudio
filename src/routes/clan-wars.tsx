@@ -19,6 +19,26 @@ const PLACES = [
   { href: "/pvp", label: "PvP" },
 ] as const;
 
+function Watch({
+  href,
+  kicker,
+  title,
+  line,
+}: {
+  href: string;
+  kicker: string;
+  title: string;
+  line: string;
+}) {
+  return (
+    <a className="cw-watch" href={href} target="_blank" rel="noopener noreferrer">
+      <span className="cw-watch-k">{kicker}</span>
+      <span className="cw-watch-t">{title}</span>
+      <span className="cw-watch-l">{line}</span>
+    </a>
+  );
+}
+
 function Chip({ href, label }: { href: string; label: string }) {
   const cls = "rs-chip min-h-11 text-xs";
   if (href.startsWith("http") || href.startsWith("#")) {
@@ -151,15 +171,98 @@ function ClanWarsPage() {
           <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
             One name at a time. Tokkul in the purse. No team flag.
           </p>
-          <p className="mt-4 text-sm">
-            <a className="text-parchment" href="https://oldschool.runescape.wiki/w/TzHaar_Fight_Pit" target="_blank" rel="noopener noreferrer">
-              Old School wiki
-            </a>
-            {" · "}
-            <a className="text-parchment" href="https://runescape.wiki/w/TzHaar_Fight_Pit" target="_blank" rel="noopener noreferrer">
-              RuneScape wiki
-            </a>
+          <div className="cw-watch-row">
+            <Watch
+              href="https://oldschool.runescape.wiki/w/TzHaar_Fight_Pit"
+              kicker="Old School"
+              title="Fight Pit"
+              line="Mor Ul Rek. The live clock is on the wiki."
+            />
+            <Watch
+              href="https://runescape.wiki/w/TzHaar_Fight_Pit"
+              kicker="RuneScape"
+              title="Fight Pit"
+              line="TzHaar City. Same bowl. Later grammar."
+            />
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="section-h2">The circle people watch</h2>
+          <p className="text-center text-sm text-muted">
+            Same heat as the bowl. Not this desk. Not a ranked door. Public record.
           </p>
+          <div className="grid gap-3 lg:grid-cols-3">
+            <article className="rs-panel p-4">
+              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Clan pile</h3>
+              <p className="mt-2 text-center text-[10px] text-muted">In the game. Scene names, not a ranking.</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Free-to-play and members piles still happen at Clan Wars and on the ditch.
+                Names that show up on public wars: Reign of Terror (ROT), Infliction, CWC, TF.
+                Whoever is calling the next world is the rest of the list.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Odablock hosted a public free-to-play spectacle against ROT, CWC, TF, and
+                Infliction. The title was 500 versus 500. The world filled and they restarted.
+                That is a show war. It is not the rated door.
+              </p>
+              <Watch
+                href="https://www.youtube.com/watch?v=rS_ob_TvQ4w"
+                kicker="Watch"
+                title="500 versus 500"
+                line="Public upload. F2P spectacle. Not Ferox."
+              />
+            </article>
+            <article className="rs-panel p-4">
+              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Creator payouts</h3>
+              <p className="mt-2 text-center text-[10px] text-muted">A purse on a stream. Not the pit. Not Ferox.</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Crusader Classic 2026. Public clips and posts said Odablock beat PetaOSRS
+                in the finale for $5,000.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                EVScape has run creator battle-royale fields with the prize in the title.
+                One public one was $20,000, with Odablock on the card.
+              </p>
+              <Watch
+                href="https://www.youtube.com/shorts/JFjapFMT0iw"
+                kicker="Watch"
+                title="Crusader Classic"
+                line="Finale. Public clip. Purse on the stream."
+              />
+              <Watch
+                href="https://www.youtube.com/watch?v=Gkyo8b34ljA"
+                kicker="Watch"
+                title="EVScape purse"
+                line="Creator field. The prize was in the title."
+              />
+            </article>
+            <article className="rs-panel p-4">
+              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Deadman All Stars</h3>
+              <p className="mt-2 text-center text-[10px] text-muted">A stage. Not your live world. Not the bowl.</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Jagex put Season 3 on a LAN at the Rosemont Theatre, Chicago, 20 June 2026.
+                Special instance. Not the world you log into.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Official result: Team Dino Nuggets. Dino, B0aty, 61M, Sick Nerd, MMORPG.
+                They beat Rhys Rhinos in the final. The rest of the official field was
+                Odablock Warriors, Framed Friends, Westham Weasels, and Purpp Rebels.
+              </p>
+              <Watch
+                href="https://www.jagex.com/news/dino-nuggets-takes-the-crown-in-an-epic-old-school-runescape-all-stars-live-final"
+                kicker="Official"
+                title="Dino Nuggets"
+                line="Jagex recap. Chicago. 20 June 2026."
+              />
+              <Watch
+                href="https://secure.runescape.com/m=news/deadman-all-stars-season-3-finale---live-now?oldschool=1"
+                kicker="Official"
+                title="All Stars news"
+                line="Old School news post. Not a world you can log."
+              />
+            </article>
+          </div>
         </section>
 
         <section id="doors" className="scroll-mt-20">
@@ -254,105 +357,6 @@ function ClanWarsPage() {
           </div>
         </section>
 
-        <section className="flex flex-col gap-3">
-          <h2 className="section-h2">Wars people actually watch</h2>
-          <p className="text-center text-sm text-muted">
-            Not this origin. Not Jagex Support. Public record.
-          </p>
-          <div className="grid gap-3 lg:grid-cols-3">
-            <article className="rs-panel p-4">
-              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Clan pile</h3>
-              <p className="mt-2 text-center text-[10px] text-muted">In the game. Scene names, not a ranking.</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Free-to-play and members piles still happen at Clan Wars and on the ditch.
-                Names that show up on public wars: Reign of Terror (ROT), Infliction, CWC, TF.
-                Whoever is calling the next world is the rest of the list.
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Odablock hosted a public free-to-play spectacle against ROT, CWC, TF, and
-                Infliction. The title was 500 versus 500. The world filled and they restarted.
-                That is a show war. It is not the rated door.
-              </p>
-              <p className="mt-3 text-center text-sm">
-                <a
-                  className="text-parchment"
-                  href="https://www.youtube.com/watch?v=rS_ob_TvQ4w"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Public upload
-                </a>
-              </p>
-            </article>
-            <article className="rs-panel p-4">
-              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Creator payouts</h3>
-              <p className="mt-2 text-center text-[10px] text-muted">A purse on a stream. Not Ferox.</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Crusader Classic 2026. Public clips and posts said Odablock beat PetaOSRS
-                in the finale for $5,000.
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                EVScape has run creator battle-royale fields with the prize in the title.
-                One public one was $20,000, with Odablock on the card.
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                These are staged fights with a purse. They are not the Ferox rated door.
-              </p>
-              <p className="mt-3 text-center text-sm">
-                <a
-                  className="text-parchment"
-                  href="https://www.youtube.com/shorts/JFjapFMT0iw"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Crusader finale
-                </a>
-                {" · "}
-                <a
-                  className="text-parchment"
-                  href="https://www.youtube.com/watch?v=Gkyo8b34ljA"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  EVScape purse
-                </a>
-              </p>
-            </article>
-            <article className="rs-panel p-4">
-              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Deadman All Stars</h3>
-              <p className="mt-2 text-center text-[10px] text-muted">A stage. Not your live world.</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Jagex put Season 3 on a LAN at the Rosemont Theatre, Chicago, 20 June 2026.
-                Special instance. Not the world you log into.
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Official result: Team Dino Nuggets. Dino, B0aty, 61M, Sick Nerd, MMORPG.
-                They beat Rhys Rhinos in the final. The rest of the official field was
-                Odablock Warriors, Framed Friends, Westham Weasels, and Purpp Rebels.
-              </p>
-              <p className="mt-3 text-center text-sm">
-                <a
-                  className="text-parchment"
-                  href="https://www.jagex.com/news/dino-nuggets-takes-the-crown-in-an-epic-old-school-runescape-all-stars-live-final"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Jagex recap
-                </a>
-                {" · "}
-                <a
-                  className="text-parchment"
-                  href="https://secure.runescape.com/m=news/deadman-all-stars-season-3-finale---live-now?oldschool=1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Official news
-                </a>
-              </p>
-            </article>
-          </div>
-        </section>
-
         <section id="called" className="rs-panel scroll-mt-20 p-4 text-center">
           <h2 className="section-h2">How a fight is called</h2>
           <ul className="cw-notes mt-3 space-y-2 text-sm text-muted">
@@ -393,29 +397,20 @@ function ClanWarsPage() {
             <li><span className="text-parchment">1 Feb 2011.</span> Grotto, north of Falador.</li>
             <li><span className="text-parchment">16 Jul 2020.</span> Old School moves the room to Ferox.</li>
           </ol>
-          <p className="mt-4 text-sm">
-            <a
-              className="text-parchment"
+          <div className="cw-watch-row">
+            <Watch
               href="https://oldschool.runescape.wiki/w/Clan_Wars"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Old School wiki
-            </a>
-            {" · "}
-            <a
-              className="text-parchment"
+              kicker="Portal"
+              title="Old School"
+              line="Ferox. Wiki for the current door."
+            />
+            <Watch
               href="https://runescape.wiki/w/Clan_Wars"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              RuneScape wiki
-            </a>
-            {" · "}
-            <Link to="/pvp" className="text-parchment">
-              PvP
-            </Link>
-          </p>
+              kicker="Portal"
+              title="RuneScape"
+              line="Grotto. Wiki for the current door."
+            />
+          </div>
         </section>
       </main>
     </div>
