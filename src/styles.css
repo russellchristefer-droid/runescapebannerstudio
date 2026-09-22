@@ -980,28 +980,66 @@ a.skill-link:focus-visible {
   text-align: center;
   text-shadow: 0 0 18px rgba(255, 106, 26, 0.35);
 }
+.cw-page .rs-stone-header {
+  position: relative;
+  isolation: isolate;
+  background-color: #120c0c;
+  background-image:
+    linear-gradient(180deg, rgba(40, 8, 10, 0.22), rgba(18, 6, 8, 0.5)),
+    url("/ui/rs-bricks.png?v=night");
+}
+.cw-page .studio-lockup {
+  position: relative;
+  z-index: 1;
+}
+.cw-page .studio-lockup::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 38%;
+  width: min(36rem, 112%);
+  height: 8.4rem;
+  transform: translate(-50%, -8%);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 58% 36% at 50% 40%, rgba(122, 14, 18, 0.78) 0%, rgba(72, 8, 10, 0.34) 48%, transparent 74%),
+    radial-gradient(ellipse 8% 86% at 31% 78%, rgba(148, 18, 22, 0.7), transparent 76%),
+    radial-gradient(ellipse 5% 100% at 57% 88%, rgba(96, 8, 12, 0.78), transparent 78%),
+    radial-gradient(ellipse 11% 42% at 74% 68%, rgba(110, 10, 14, 0.5), transparent 72%),
+    radial-gradient(ellipse 6% 34% at 20% 62%, rgba(130, 12, 16, 0.42), transparent 74%);
+}
 .cw-page .studio-wordmark a.site-title,
 .cw-page .studio-wordmark a.site-title:hover,
 .cw-page .studio-wordmark a.site-title:focus-visible {
-  color: #ffb15a;
-  background-image: linear-gradient(180deg, #ffe7c2 0%, #ff6a1a 34%, #9a1408 70%, #2a0604 100%);
+  color: #c8c0b4;
+  letter-spacing: 0.09em;
+  background-image: linear-gradient(
+    180deg,
+    #efe8dc 0%,
+    #b7b0a4 22%,
+    #6e6860 44%,
+    #4a1618 58%,
+    #8c161a 74%,
+    #3a1012 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   filter:
-    drop-shadow(0 1px 0 #140201)
-    drop-shadow(0 0 1px #ffd2a0)
-    drop-shadow(0 0 12px rgba(180, 20, 0, 0.85));
+    drop-shadow(0 1px 0 #1c1612)
+    drop-shadow(0 3px 0 #140808)
+    drop-shadow(0 10px 12px rgba(90, 8, 12, 0.55));
 }
 @media (prefers-reduced-motion: reduce) {
   .cw-page .studio-wordmark a.site-title,
   .cw-page .studio-wordmark a.site-title:hover,
   .cw-page .studio-wordmark a.site-title:focus-visible {
     filter: none;
-    color: #ff6a1a;
+    color: #c4bbb0;
     background: none;
-    -webkit-text-fill-color: #ff6a1a;
+    -webkit-text-fill-color: #c4bbb0;
   }
 }
 .cw-page h2,
