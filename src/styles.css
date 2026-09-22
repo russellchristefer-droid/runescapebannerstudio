@@ -458,3 +458,36 @@ a.rs-chip.god-chip[aria-current="page"] {
     content: url("/bob/bob-still.png");
   }
 }
+
+.god-page {
+  background: var(--god-page-bg, #0c0a08);
+  color: var(--god-page-fg, #e8d9a8);
+}
+.god-page > header {
+  border-color: color-mix(in srgb, var(--god-page-line, #c4a35a) 45%, #0b0a08);
+  background: color-mix(in srgb, var(--god-page-bg, #0c0a08) 88%, #000);
+}
+.god-page-well {
+  background: var(--god-page-well, #1a1510);
+  border: 1px solid var(--god-page-line, #c4a35a);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--god-page-line, #c4a35a) 28%, transparent),
+    inset 0 0 0 1px #0b0a08;
+}
+.god-page h2,
+.god-page .text-parchment,
+.god-page a.text-parchment {
+  color: var(--god-page-accent, #c4a35a);
+}
+.god-page .text-muted,
+.god-page .text-faint {
+  color: var(--god-page-muted, #8a7a55);
+}
+.god-page .text-fg {
+  color: var(--god-page-fg, #e8d9a8);
+}
+.god-page .border-line {
+  border-color: color-mix(in srgb, var(--god-page-line, #c4a35a) 55%, #0b0a08);
+}
+.god-page .rs-chip:not(.god-chip) {
+  /* studio / use-on-banner stay gold */
+}

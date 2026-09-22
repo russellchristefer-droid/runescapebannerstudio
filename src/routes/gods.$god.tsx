@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useRef } from "react";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
-import { GOD_BRIEFS, GOD_HOME, godFromSlug, godInk, godWash } from "@/lib/gods";
+import { GOD_BRIEFS, GOD_HOME, godFromSlug, godInk, godPageStyle, godWash } from "@/lib/gods";
 import { godStill, godStillLine } from "@/lib/god-stills";
 import { LOCATIONS } from "@/lib/locations";
 import { BackLink } from "@/components/back-link";
@@ -27,8 +27,8 @@ function GodPage() {
   const rs3Home = GOD_HOME[slug]?.rs3;
 
   return (
-    <div className="min-h-dvh bg-bg text-fg">
-      <header className="border-b border-line px-5 py-5 md:px-8">
+    <div className="god-page min-h-dvh" style={godPageStyle(god)}>
+      <header className="border-b px-5 py-5 md:px-8">
         <BackLink />
         <h1 className="page-h1 site-title mt-1" style={{ color: godInk(god) }}>
           {brief.god}
@@ -39,7 +39,7 @@ function GodPage() {
         </div>
       </header>
 
-      <main id="content" className="mx-auto flex max-w-3xl flex-col gap-6 px-5 py-6 md:px-8">
+      <main id="content" className="god-page-well mx-auto mt-6 mb-8 flex max-w-3xl flex-col gap-6 px-5 py-6 md:px-8">
         <OfficialPulse
           note="Official wiki for this god. Official news wins."
           links={[

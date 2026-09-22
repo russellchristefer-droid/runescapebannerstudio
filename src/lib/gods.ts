@@ -1,4 +1,5 @@
 import { GODS, type God } from "./locations";
+import type { CSSProperties } from "react";
 
 /** Prayer-book / God Wars colours from the live clients. */
 export const GOD_INK: Record<God, string> = {
@@ -60,6 +61,34 @@ export const GOD_WASH: Record<God, string> = {
 
 export function godWash(god: God | string) {
   return GOD_WASH[god as God] ?? "#1c1812";
+}
+
+/** Page well: as if this god laid the sheet. Chrome chips stay gold. */
+export const GOD_PAGE: Record<God, { bg: string; well: string; fg: string; muted: string }> = {
+  Saradomin: { bg: "#0c1628", well: "#121e34", fg: "#eef4ff", muted: "#9bb4d4" },
+  Zamorak: { bg: "#160808", well: "#241010", fg: "#ffeaea", muted: "#c48a8a" },
+  Guthix: { bg: "#0a1610", well: "#122016", fg: "#e8f8ec", muted: "#8ab894" },
+  Armadyl: { bg: "#101820", well: "#182430", fg: "#f4f8ff", muted: "#b7c8d8" },
+  Bandos: { bg: "#18140c", well: "#241c10", fg: "#f4e6c8", muted: "#c4a06a" },
+  Seren: { bg: "#081418", well: "#102428", fg: "#e8fbff", muted: "#8ec8d0" },
+  Zaros: { bg: "#100c18", well: "#181224", fg: "#f3e8ff", muted: "#b49ad0" },
+  Sliske: { bg: "#141018", well: "#1c1824", fg: "#f0ecff", muted: "#b8aed0" },
+  Tumeken: { bg: "#1c160a", well: "#2a2010", fg: "#fff6d8", muted: "#d4b878" },
+  Elidinis: { bg: "#0a1618", well: "#102422", fg: "#e4f8f6", muted: "#7eb8b4" },
+  Marimbo: { bg: "#1a1014", well: "#28141c", fg: "#ffe8f4", muted: "#d49ab8" },
+};
+
+export function godPageStyle(god: God): CSSProperties {
+  const page = GOD_PAGE[god];
+  const accent = GOD_NEON[god];
+  return {
+    "--god-page-bg": page.bg,
+    "--god-page-well": page.well,
+    "--god-page-fg": page.fg,
+    "--god-page-muted": page.muted,
+    "--god-page-accent": accent,
+    "--god-page-line": accent,
+  } as CSSProperties;
 }
 
 export const GOD_SLUGS: Record<God, string> = {
