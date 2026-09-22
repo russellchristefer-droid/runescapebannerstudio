@@ -57,7 +57,7 @@ function TownNotePage() {
         )}
         <span
           className="mt-2 block h-px w-24"
-          style={{ background: loc ? godNeon(loc.god) : "#e6d000" }}
+          style={{ background: loc ? godNeon(loc.god) : "#39ff6a" }}
           aria-hidden="true"
         />
         <div className="mt-3">

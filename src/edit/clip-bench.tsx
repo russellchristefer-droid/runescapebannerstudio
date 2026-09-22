@@ -438,10 +438,10 @@ export function ClipBench() {
         const hw = lay.w * w;
         const hh = lay.h * h;
         ctx.save();
-        ctx.strokeStyle = "#e6d000";
+        ctx.strokeStyle = "#39ff6a";
         ctx.lineWidth = 2;
         ctx.strokeRect(hx, hy, hw, hh);
-        ctx.fillStyle = "#ffff00";
+        ctx.fillStyle = "#39ff6a";
         const s = 12;
         const hx2 = hx + hw;
         const hy2 = hy + hh;
@@ -460,7 +460,7 @@ export function ClipBench() {
           ctx.fillRect(cx - s / 2, cy - s / 2, s, s);
           ctx.strokeStyle = "#120f0c";
           ctx.strokeRect(cx - s / 2, cy - s / 2, s, s);
-          ctx.strokeStyle = "#e6d000";
+          ctx.strokeStyle = "#39ff6a";
         }
         ctx.restore();
       };
@@ -1733,13 +1733,13 @@ export function ClipBench() {
                   </p>
                   <p
                     id="enc-pct"
-                    className="m-0 font-mono text-5xl tabular-nums leading-none text-[#ffff00]"
+                    className="m-0 font-mono text-5xl tabular-nums leading-none text-[#39ff6a]"
                     style={{ textShadow: "2px 2px 0 #000" }}
                   >
                     {Math.round(exportPct)}%
                   </p>
                   <div className="h-1.5 w-44 overflow-hidden rounded-sm border border-black bg-[#120f0c] ring-1 ring-line/40">
-                    <div className="h-full bg-[#ffff00]" style={{ width: `${Math.min(100, Math.max(0, exportPct))}%` }} />
+                    <div className="h-full bg-[#39ff6a]" style={{ width: `${Math.min(100, Math.max(0, exportPct))}%` }} />
                   </div>
                   <p className="m-0 text-[11px] tracking-wide text-faint">Do not leave</p>
                 </div>
@@ -1963,7 +1963,7 @@ export function ClipBench() {
                       setGainPct(next);
                       if (next >= 190) setStatus("Back off the gain.");
                     }}
-                    className="h-11 w-28 accent-[#ffff00]"
+                    className="h-11 w-28 accent-[#39ff6a]"
                     aria-label="Gain"
                   />
                   <span className="w-10 font-mono tabular-nums text-parchment">{gainPct}%</span>
@@ -1988,7 +1988,7 @@ export function ClipBench() {
                   <span className="relative h-2 w-24 overflow-hidden rounded-sm border border-black bg-[#120f0c]">
                     <span
                       id="pk"
-                      className="absolute inset-y-0 left-0 w-full origin-left bg-[#ffff00]"
+                      className="absolute inset-y-0 left-0 w-full origin-left bg-[#39ff6a]"
                       style={{ transform: `scaleX(${Math.min(1, peak)})` }}
                     />
                   </span>

@@ -205,7 +205,7 @@ function HistoryPage() {
 
         <aside
           id="guild-left"
-          className="mt-8 rounded-md border border-[#e6d000]/50 bg-[#0b0b0b] px-4 py-5 shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]"
+          className="mt-8 rounded-md border border-[#39ff6a]/50 bg-[#0b0b0b] px-4 py-5 shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]"
         >
           <p className="text-[10px] uppercase tracking-[0.18em] text-faint">Ardougne · Legends' Guild</p>
           <h2 className="mt-1 font-display text-lg text-parchment">First room on the left</h2>

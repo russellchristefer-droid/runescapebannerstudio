@@ -28,7 +28,7 @@ export function LedgerSheet({
         </p>
         <h1 className="page-h1 mt-1">{title}</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">{deck}</p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#39ff6a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto grid max-w-4xl gap-8 px-5 py-6 md:grid-cols-2 md:px-8">
         <Column heading="Free-to-play" rows={f2p} />

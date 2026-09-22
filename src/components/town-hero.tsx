@@ -133,7 +133,7 @@ export function TownHero({
       </nav>
       <div
         className="rs-panel relative w-full overflow-hidden bg-[#050505]"
-        style={{ aspectRatio: "1200 / 480", boxShadow: "inset 0 0 0 8px #000", borderColor: "#e6d000" }}
+        style={{ aspectRatio: "1200 / 480", boxShadow: "inset 0 0 0 8px #000", borderColor: "#39ff6a" }}
       >
         {shown ? (
           <img

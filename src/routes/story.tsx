@@ -16,7 +16,7 @@ function StoryPage() {
         <p className="mt-2 max-w-2xl text-sm text-muted">
           Notes on famous players and the feelings Gielinor taught. Not Jagex. Not a ranking.
         </p>
-        <span className="mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
+        <span className="mt-2 block h-px w-24 bg-[#39ff6a]/80" aria-hidden="true" />
       </header>
       <main id="content" className="mx-auto flex max-w-3xl flex-col gap-4 px-5 py-6 text-sm leading-relaxed text-muted md:px-8">
         <p>

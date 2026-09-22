@@ -23,7 +23,7 @@ export function StreamDesk() {
   const category = saved.edition === "RS3" ? "RuneScape" : "Old School RuneScape";
   const title = [name || "Display name", world ? `World ${world}` : "", category].filter(Boolean).join(" · ");
   return (
-    <div id="stream-desk" className="mt-8 overflow-hidden rounded-md border border-[#e6d000] bg-[#0b0b0b] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
+    <div id="stream-desk" className="mt-8 overflow-hidden rounded-md border border-[#39ff6a] bg-[#0b0b0b] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
       <div className="px-4 py-3">
         <h2 className="page-h1 m-0 text-left">Stream desk</h2>
         <p className="mt-2 max-w-3xl text-sm text-muted">
@@ -32,7 +32,7 @@ export function StreamDesk() {
           Cut a kill on the clip bench above (1080p, 720p, 9:16, 1:1, or Banner), then title and start from the notes below.
         </p>
       </div>
-      <div className="h-px bg-[#e6d000]/80" aria-hidden="true" />
+      <div className="h-px bg-[#39ff6a]/80" aria-hidden="true" />
 
       <div className="flex flex-col gap-8 px-4 py-5">
         <section>
