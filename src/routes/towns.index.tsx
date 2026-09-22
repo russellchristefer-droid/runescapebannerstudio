@@ -3,6 +3,7 @@ import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
 import { LOCATIONS, townHasStill, townRegionHead, townStillLine, type Location } from "@/lib/locations";
+import { regionAnchor } from "@/lib/town-doors";
 import { townNote } from "@/lib/town-notes";
 import { pageMeta } from "@/lib/page-title";
 
@@ -87,8 +88,8 @@ function TownIndex() {
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
         {groups.length ? (
           groups.map(([region, rows]) => (
-            <section key={region}>
-              <h2 className="mb-2 text-[11px] tracking-[0.14em] text-faint">{region}</h2>
+            <section key={region} id={regionAnchor(region)}>
+              <h2 className="mb-2 text-[11px] tracking-[0.14em] text-faint">{region === "Burtrope" ? "Burthorpe" : region}</h2>
               <PlaceGrid>
                 {rows.map((loc) => (
                   <PlaceCard
@@ -96,10 +97,12 @@ function TownIndex() {
                     to="/towns/$id"
                     params={{ id: loc.id }}
                     src={loc.viewA}
-                    name={loc.name}
+                    name={loc.name === "Burtrope" ? "Burthorpe" : loc.name}
                     kind="Town"
                     game={game}
                     caption={townStillLine(loc.id)}
+                    edition={loc.edition}
+                    placeId={loc.id}
                   />
                 ))}
               </PlaceGrid>

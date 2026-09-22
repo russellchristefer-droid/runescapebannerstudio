@@ -1,4 +1,4 @@
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { BackLink } from "@/components/back-link";
 import { useVisibleNow } from "@/hooks/use-visible-now";
@@ -11,9 +11,8 @@ import { citizenForSpeaker } from "@/data/citizens";
 import { streetFlipRemain, streetLine } from "@/data/streetTalk";
 import { OfficialPulse } from "@/components/official-pulse";
 import { PlaceRail } from "@/components/place-rail";
-import { UseOnBanner } from "@/components/use-on-banner";
-import { AppLink, VisitPlaces, godPath, townPath, bossPath } from "@/components/place-chip";
-import { noteFor } from "@/lib/boss-notes";
+import { AppLink, godPath } from "@/components/place-chip";
+import { TownVisit } from "@/places/town-visit";
 
 function townWikiLinks(title: string, loc?: Location) {
   const path = encodeURI(title.replace(/ /g, "_"));
@@ -91,34 +90,14 @@ function TownNotePage() {
           </p>
         ) : null}
         {loc ? (
-          <SisterPlace id={loc.id} name={loc.name} edition={loc.edition} />
-        ) : null}
-        {loc ? (
           <section>
             <h2 className="text-sm font-semibold text-parchment">Places to visit</h2>
-            <VisitPlaces
-              items={[
-                { href: godPath(loc.god), label: loc.god },
-                ...LOCATIONS.filter(
-                  (row) =>
-                    row.id !== loc.id &&
-                    row.kind === "town" &&
-                    row.god === loc.god &&
-                    townNote(row.id),
-                )
-                  .slice(0, 8)
-                  .map((row) => ({ href: townPath(row.id), label: row.name })),
-                ...LOCATIONS.filter((row) => row.kind === "boss" && row.god === loc.god && noteFor(row.id))
-                  .slice(0, 4)
-                  .map((row) => ({ href: bossPath(row.id), label: row.name })),
-              ]}
-            />
+            <TownVisit loc={loc} />
           </section>
         ) : null}
         <p className="text-xs text-faint">
           Fan desk notes. Live page: the official wiki for this game.
         </p>
-        {loc ? <UseOnBanner src={loc.viewA} edition={loc.edition} placeId={loc.id} /> : null}
       </main>
     </div>
   );
@@ -147,29 +126,6 @@ function TownCycle({
         {townStillLine(loc.id)}
       </figcaption>
     </figure>
-  );
-}
-
-function SisterPlace({
-  id,
-  name,
-  edition,
-}: {
-  id: string;
-  name: string;
-  edition: "OSRS" | "RS3";
-}) {
-  const sister =
-    edition === "OSRS"
-      ? LOCATIONS.find((item) => item.edition === "RS3" && item.name === name)
-      : LOCATIONS.find((item) => item.edition === "OSRS" && item.name === name);
-  if (!sister) return null;
-  return (
-    <p className="text-sm">
-      <Link to="/towns/$id" params={{ id: sister.id }} className="text-parchment">
-        {edition === "OSRS" ? "Same name in RuneScape" : "Same name in Old School RuneScape"}
-      </Link>
-    </p>
   );
 }
 

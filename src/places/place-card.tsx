@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { StillPhoto } from "@/components/still-photo";
+import { UseOnBanner } from "@/desk/use-on-banner";
 import { godInk } from "@/lib/gods";
+import type { Edition } from "@/lib/locations";
 import { AppLink, bossPath, townPath } from "./place-chip";
 
 type PlaceTo = "/towns/$id" | "/bosses/$id" | "/gods/$god" | "/monsters/$id";
@@ -22,6 +24,8 @@ export function PlaceCard({
   caption,
   wash,
   field,
+  edition,
+  placeId,
 }: {
   to: PlaceTo;
   params: { id: string } | { god: string };
@@ -33,6 +37,8 @@ export function PlaceCard({
   caption?: string;
   wash?: string;
   field?: boolean;
+  edition?: Edition;
+  placeId?: string;
 }) {
   const alt = `${name} in ${game}`;
   const href = hrefFor(to, params);
@@ -69,11 +75,21 @@ export function PlaceCard({
           </span>
         </AppLink>
         {caption ? (
-          <p className="px-2 pb-2 text-center text-[10px] text-muted">{caption}</p>
+          <p className="px-2 pb-1 text-center text-[10px] text-muted">{caption}</p>
         ) : (
-          <p className="px-2 pb-2 text-center text-[10px] text-faint">
+          <p className="px-2 pb-1 text-center text-[10px] text-faint">
             {kind} · {game}
           </p>
+        )}
+        {kind === "Town" && edition && placeId ? (
+          <div className="flex flex-wrap justify-center gap-1 px-2 pb-2">
+            <AppLink href={href} className="rs-chip min-h-11 text-xs">
+              Open
+            </AppLink>
+            <UseOnBanner src={src} edition={edition} placeId={placeId} />
+          </div>
+        ) : (
+          <div className="pb-1" />
         )}
       </div>
     </li>
