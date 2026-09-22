@@ -45,8 +45,8 @@ export function PlaceRail({
               type="button"
               aria-pressed={edition === id}
               onClick={() => onEdition(id)}
-              className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border px-3 text-xs [touch-action:manipulation] ${
-                edition === id ? "border-parchment bg-raised text-parchment" : "border-line text-muted"
+              className={`rs-chip min-h-11 min-w-11 text-xs [touch-action:manipulation] ${
+                edition === id ? "rs-chip-on" : ""
               }`}
             >
               {label}

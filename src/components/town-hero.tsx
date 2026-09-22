@@ -34,7 +34,7 @@ function HallChip({
     <Link
       to={to}
       aria-label={aria}
-      className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line bg-surface px-3 text-xs text-parchment"
+      className="rs-chip min-h-11 gap-2 text-xs"
     >
       {mark ? (
         <img
@@ -122,7 +122,7 @@ export function TownHero({
           <HallChip key={hall.to} {...hall} />
         ))}
       </nav>
-      <div className="relative w-full overflow-hidden border-y border-[#c6a45a] bg-[#1a1612]" style={{ aspectRatio: "1200 / 480" }}>
+      <div className="rs-panel relative w-full overflow-hidden bg-[#1a1612]" style={{ aspectRatio: "1200 / 480" }}>
         {shown ? (
           <img
             src={shown}
@@ -143,9 +143,7 @@ export function TownHero({
               key={id}
               type="button"
               aria-pressed={edition === id}
-              className={`min-h-11 rounded-md border px-3 text-xs ${
-                edition === id ? "border-parchment bg-surface text-parchment" : "border-line bg-surface/80 text-muted"
-              }`}
+              className={`rs-chip min-h-11 text-xs ${edition === id ? "rs-chip-on" : ""}`}
               onClick={() => pick(id)}
             >
               {label}

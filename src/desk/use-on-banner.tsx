@@ -17,7 +17,7 @@ export function UseOnBanner({
   return (
     <a
       href={still.deskHref(edition, placeId)}
-      className="min-h-11 text-sm text-parchment [touch-action:manipulation]"
+      className="rs-chip min-h-11 text-sm [touch-action:manipulation]"
       onClick={(event) => {
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
         event.preventDefault();

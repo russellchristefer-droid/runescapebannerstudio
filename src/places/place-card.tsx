@@ -40,7 +40,7 @@ export function PlaceCard({
   if (!src) return null;
   return (
     <li className="[content-visibility:auto] [contain-intrinsic-size:auto_220px]">
-      <div className="overflow-hidden rounded-md border border-line bg-raised hover:border-[#F5C400]">
+      <div className="rs-panel overflow-hidden rounded-md hover:border-[#e2c37a]">
         <AppLink href={href} className="block [touch-action:manipulation]">
           {gone ? (
             <span className="flex aspect-video w-full items-center justify-center bg-[#1a1610] text-[11px] text-faint">

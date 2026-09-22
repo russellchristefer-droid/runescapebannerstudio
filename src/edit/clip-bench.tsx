@@ -51,9 +51,9 @@ type OverlayPos = "off" | "top" | "lower";
 type BenchState = "empty" | "loading" | "ready" | "encoding" | "error";
 
 const CHIP =
-  "inline-flex min-h-11 items-center justify-center rounded-md border border-line/40 bg-surface px-3 text-[11px] text-parchment disabled:opacity-40";
+  "rs-chip text-[11px] disabled:opacity-40";
 const CHIP_ON =
-  "inline-flex min-h-11 items-center justify-center rounded-md border border-parchment bg-surface px-3 text-[11px] text-parchment";
+  "rs-chip rs-chip-on text-[11px]";
 
 export function ClipBench() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -1682,7 +1682,7 @@ export function ClipBench() {
         <div className="grid lg:grid-cols-[minmax(0,1fr)_17rem]">
           <div className="min-w-0">
             <div
-              className="relative mx-auto w-full overflow-hidden bg-[#120f0c]"
+              className="rs-panel relative mx-auto w-full overflow-hidden bg-[#1a1510]"
               style={{ aspectRatio: `${size.w} / ${size.h}`, maxHeight: 480 }}
               data-state={ready}
               data-export={`${size.w}x${size.h}`}

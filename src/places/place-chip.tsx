@@ -43,9 +43,7 @@ export function PlaceChip({
       href={href}
       current={current}
       style={style}
-      className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border px-3 text-xs [touch-action:manipulation] ${
-        current ? "border-parchment bg-raised" : "border-line"
-      } ${style?.color ? "" : current ? "text-parchment" : "text-muted"}`}
+      className={`rs-chip min-h-11 min-w-11 text-xs [touch-action:manipulation] ${current ? "rs-chip-on" : ""}`}
     >
       {children}
     </AppLink>
