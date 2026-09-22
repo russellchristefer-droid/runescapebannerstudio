@@ -41,6 +41,12 @@ function SkillPage() {
         {row.moving ? (
           <p className="mt-4 text-center text-sm text-parchment">Methods still moving. Wiki is the source.</p>
         ) : null}
+        {row.words ? (
+          <section className="mt-6">
+            <h2 className="section-h2">Words on this page</h2>
+            <p className="text-sm leading-relaxed text-muted">{row.words}</p>
+          </section>
+        ) : null}
         <section className="mt-6">
           <h2 className="section-h2">Unlock</h2>
           <p className="text-sm leading-relaxed text-muted">{row.unlock}</p>
