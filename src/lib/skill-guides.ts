@@ -933,7 +933,7 @@ const CAPE_NEON: Record<string, string> = {
   Summoning: "#3fd0c9",
   Dungeoneering: "#e07a4a",
   Divination: "#7ef0ff",
-  Invention: "#7dff4a",
+  Invention: "#ffc107",
   Archaeology: "#ffd24a",
   Necromancy: "#c6ffb0",
 };
