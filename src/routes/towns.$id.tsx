@@ -5,7 +5,7 @@ import { useVisibleNow } from "@/hooks/use-visible-now";
 import { townNote } from "@/lib/town-notes";
 import { LOCATIONS, townStillLine, type Location } from "@/lib/locations";
 import { godNeon } from "@/lib/gods";
-import { bannerFor, regionPageStyle } from "@/lib/region-banners";
+import { bannerFor, hasBanner, regionPageStyle } from "@/lib/region-banners";
 import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
 import { citizenForSpeaker } from "@/data/citizens";
@@ -41,18 +41,20 @@ function TownNotePage() {
     <div className={loc ? "town-page min-h-dvh" : "min-h-dvh bg-bg text-fg"} style={sheet}>
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
+        {loc && banner && hasBanner(loc.region) ? (
+          <img
+            src={`/banners/${banner.slug}.png`}
+            alt=""
+            className="region-banner"
+            width={140}
+            height={132}
+          />
+        ) : null}
         <h1 className="page-h1 site-title mt-1">
           {note.title}
         </h1>
         {loc && banner ? (
           <p className="mt-1 text-center text-sm text-muted">
-            <img
-              src={`/banners/${banner.slug}.png`}
-              alt=""
-              width={24}
-              height={16}
-              className="region-flag"
-            />
             <span style={{ color: banner.ink }}>{loc.region.replace(/\s·\sOSRS$/, "").replace(/\s·\sRuneScape$/, "")}</span>
             {" · "}
             <AppLink href={godPath(loc.god)} className="town-god no-underline">

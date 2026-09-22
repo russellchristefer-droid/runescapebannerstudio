@@ -575,8 +575,16 @@ a.rs-chip.god-chip[aria-current="page"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   min-height: 16px;
+}
+.region-banner {
+  display: block;
+  height: 148px;
+  width: auto;
+  max-width: 200px;
+  margin: 0 auto;
+  object-fit: contain;
+  object-position: center bottom;
 }
 .region-band-title::after {
   content: "";

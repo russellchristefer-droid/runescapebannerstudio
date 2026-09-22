@@ -4,7 +4,7 @@ import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
 import { LOCATIONS, townHasStill, townRegionHead, townStillLine, type Location } from "@/lib/locations";
-import { bannerFor } from "@/lib/region-banners";
+import { bannerFor, hasBanner } from "@/lib/region-banners";
 import { regionAnchor } from "@/lib/town-doors";
 import { townNote } from "@/lib/town-notes";
 import { pageMeta } from "@/lib/page-title";
@@ -100,10 +100,16 @@ function TownIndex() {
               style={{ "--region": banner.primary, "--region-ink": banner.ink, "--region-accent": banner.accent } as CSSProperties}
             >
               <h2 className="region-band-title">
-                <span>
-                  <img src={`/banners/${banner.slug}.png`} alt="" width={24} height={16} className="region-flag" />
-                  {label}
-                </span>
+                {hasBanner(region) ? (
+                  <img
+                    src={`/banners/${banner.slug}.png`}
+                    alt=""
+                    className="region-banner"
+                    width={160}
+                    height={148}
+                  />
+                ) : null}
+                <span>{label}</span>
               </h2>
               <PlaceGrid className="town-grid">
                 {rows.map((loc) => (

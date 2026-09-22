@@ -10,25 +10,44 @@ export type RegionBanner = {
 type Pair = { primary: string; accent: string; slug: string };
 
 const NAMED: Record<string, Pair> = {
-  Misthalin: { primary: "#5c2d7a", accent: "#3d9e3d", slug: "misthalin" },
-  "Lumbridge Swamp": { primary: "#5c2d7a", accent: "#3d9e3d", slug: "misthalin" },
-  Varrock: { primary: "#5c2d7a", accent: "#3d9e3d", slug: "misthalin" },
-  Asgarnia: { primary: "#3a7ca5", accent: "#f4f4f4", slug: "asgarnia" },
-  Burtrope: { primary: "#3a7ca5", accent: "#f4f4f4", slug: "asgarnia" },
-  Kandarin: { primary: "#2f6b3c", accent: "#d4b84a", slug: "kandarin" },
-  Morytania: { primary: "#1c1418", accent: "#6a8f3d", slug: "morytania" },
-  Kharidian: { primary: "#c9a227", accent: "#1a1a1a", slug: "kharidian" },
-  Tirannwn: { primary: "#1a3d40", accent: "#7ef0ff", slug: "tirannwn" },
-  Fremennik: { primary: "#4a5560", accent: "#c5d0da", slug: "fremennik" },
-  "Great Kourend": { primary: "#3a2a12", accent: "#c4a35a", slug: "kourend" },
-  Varlamore: { primary: "#6b3a24", accent: "#e8b86d", slug: "varlamore" },
-  "Southern Sea": { primary: "#4a2a18", accent: "#ff7ad9", slug: "southern-sea" },
-  "Lost City": { primary: "#3a2458", accent: "#e6a0ff", slug: "lost-city" },
-  Wilderness: { primary: "#2a1214", accent: "#c4473a", slug: "wilderness" },
-  Forinthry: { primary: "#2a1214", accent: "#c4473a", slug: "wilderness" },
+  Misthalin: { primary: "#8a3fd4", accent: "#3dcc3d", slug: "misthalin" },
+  "Lumbridge Swamp": { primary: "#8a3fd4", accent: "#3dcc3d", slug: "misthalin" },
+  Varrock: { primary: "#8a3fd4", accent: "#3dcc3d", slug: "misthalin" },
+  Asgarnia: { primary: "#3d63f0", accent: "#f2f2f2", slug: "asgarnia" },
+  Burtrope: { primary: "#3d63f0", accent: "#f2f2f2", slug: "asgarnia" },
+  Kandarin: { primary: "#e24b42", accent: "#f4f4f4", slug: "kandarin" },
+  Morytania: { primary: "#5f9a3c", accent: "#e6e2d8", slug: "morytania" },
+  Kharidian: { primary: "#e2b84a", accent: "#6a3a14", slug: "kharidian" },
+  Tirannwn: { primary: "#3ee0e8", accent: "#e8ffff", slug: "tirannwn" },
+  Fremennik: { primary: "#e2c56a", accent: "#6e6e78", slug: "fremennik" },
+  "Great Kourend": { primary: "#2fbf62", accent: "#f2f2f2", slug: "kourend" },
+  Varlamore: { primary: "#e6c25a", accent: "#d4897a", slug: "varlamore" },
+  "Southern Sea": { primary: "#c49a8c", accent: "#5c4038", slug: "southern-sea" },
+  "Lost City": { primary: "#e7b4c6", accent: "#f4f0e8", slug: "lost-city" },
+  Wilderness: { primary: "#d0d0d0", accent: "#3a3a3a", slug: "wilderness" },
+  Forinthry: { primary: "#d0d0d0", accent: "#3a3a3a", slug: "wilderness" },
 };
 
 const FALLBACK: Pair = { primary: "#2a241c", accent: "#c4a35a", slug: "other" };
+
+const REAL = new Set([
+  "misthalin",
+  "asgarnia",
+  "kandarin",
+  "morytania",
+  "kharidian",
+  "tirannwn",
+  "fremennik",
+  "kourend",
+  "varlamore",
+  "southern-sea",
+  "lost-city",
+  "wilderness",
+]);
+
+export function hasBanner(region: string | undefined) {
+  return REAL.has(bannerFor(region).slug);
+}
 
 function luma(hex: string) {
   const n = hex.replace("#", "");
