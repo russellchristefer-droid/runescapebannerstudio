@@ -149,11 +149,17 @@ function GodPage() {
           <h2 className="mb-3 text-sm font-medium text-muted">Towns</h2>
           <div className="grid gap-2 sm:grid-cols-2">
             {towns.map((loc) => (
-              <AppLink key={loc.id} href={townPath(loc.id)} className="min-h-11 px-1 py-2 text-sm [touch-action:manipulation]">
-                <div className="font-medium">{loc.name}</div>
-                <div className="text-xs text-faint">
-                  {loc.edition} · {loc.region.replace(/\s·\sOSRS$/, "")}
-                </div>
+              <AppLink
+                key={loc.id}
+                href={townPath(loc.id)}
+                className="god-town-door [touch-action:manipulation]"
+              >
+                <span className="block font-medium">{loc.name}</span>
+                <span className="mt-0.5 block text-xs text-faint">
+                  {loc.edition === "OSRS" ? "OSRS" : "RS3"}
+                  {" · "}
+                  {loc.region.replace(/\s·\sOSRS$/, "")}
+                </span>
               </AppLink>
             ))}
           </div>

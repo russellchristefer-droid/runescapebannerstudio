@@ -509,6 +509,21 @@ a.rs-chip.god-chip[aria-current="page"] {
 .god-page .border-line {
   border-color: color-mix(in srgb, var(--god-page-line, #c4a35a) 55%, #0b0a08);
 }
-.god-page .rs-chip:not(.god-chip) {
-  /* studio / use-on-banner stay gold */
+.god-page a.god-town-door {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 44px;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--god-page-line, #c4a35a) 55%, #0b0a08);
+  background: color-mix(in srgb, var(--god-page-well, #1a1510) 80%, #000);
+  color: var(--god-page-fg, #e8d9a8);
+  box-shadow: none;
+  text-align: left;
+}
+.god-page a.god-town-door:hover {
+  border-color: var(--god-page-line, #c4a35a);
+  box-shadow: 0 0 8px var(--god-page-line, #c4a35a);
 }
