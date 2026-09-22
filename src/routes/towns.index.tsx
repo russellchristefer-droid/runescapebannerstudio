@@ -80,7 +80,7 @@ function TownIndex() {
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
           Two grammars. Same name is not the same street. Pick a client first. The guard on the card talks for that game only.
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
         <div className="mt-3">
           <PlaceRail section="towns" edition={edition} onEdition={setEdition} />
         </div>

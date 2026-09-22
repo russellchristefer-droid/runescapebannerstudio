@@ -45,7 +45,7 @@ function DiscordPage() {
         <p className="mt-2 max-w-2xl text-sm text-muted">
           Official Jagex® servers first. Then the wiki and tools this desk already names. Not a clan dump. This origin does not host Discord®. Do not paste a Bank PIN, a stream key, or a Jagex account.
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
       </header>
       <main id="content" className="mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 md:px-8">
         <OfficialSites />

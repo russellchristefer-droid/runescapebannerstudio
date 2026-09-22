@@ -23,7 +23,7 @@ function GodsIndex() {
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
           Two sealed canons. Prayer book and God Wars on one client. Landfall and edicts on the other. Do not file a Sixth Age walk onto an Old School plate. Wiki keeps the hour.
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
         <div className="mt-3">
           <PlaceRail section="gods" edition={edition} onEdition={setEdition} />
         </div>

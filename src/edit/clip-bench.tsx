@@ -443,7 +443,7 @@ export function ClipBench() {
         const hw = lay.w * w;
         const hh = lay.h * h;
         ctx.save();
-        ctx.strokeStyle = "#c4a35a";
+        ctx.strokeStyle = "#e6d000";
         ctx.lineWidth = 2;
         ctx.strokeRect(hx, hy, hw, hh);
         ctx.fillStyle = "#ffff00";
@@ -465,7 +465,7 @@ export function ClipBench() {
           ctx.fillRect(cx - s / 2, cy - s / 2, s, s);
           ctx.strokeStyle = "#120f0c";
           ctx.strokeRect(cx - s / 2, cy - s / 2, s, s);
-          ctx.strokeStyle = "#c4a35a";
+          ctx.strokeStyle = "#e6d000";
         }
         ctx.restore();
       };
@@ -1683,7 +1683,7 @@ export function ClipBench() {
         <div className="grid lg:grid-cols-[minmax(0,1fr)_17rem]">
           <div className="min-w-0">
             <div
-              className="rs-panel relative mx-auto w-full overflow-hidden bg-[#1a1510]"
+              className="rs-panel relative mx-auto w-full overflow-hidden bg-[#0b0b0b]"
               style={{ aspectRatio: `${size.w} / ${size.h}`, maxHeight: 480 }}
               data-state={ready}
               data-export={`${size.w}x${size.h}`}

@@ -45,7 +45,7 @@ function SkillsPage() {
             PvP
           </Link>
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
         <div className="mt-3 flex flex-wrap justify-center gap-2">
           <button
             type="button"
@@ -97,7 +97,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
     <li className="w-full max-w-[11rem]">
       <AppLink
         href={`/skills/${row.slug}`}
-        className="rs-panel flex h-full min-h-[10.5rem] flex-col items-center justify-center gap-2 rounded-md px-3 py-4 text-center hover:border-[#e2c37a]"
+        className="rs-panel flex h-full min-h-[10.5rem] flex-col items-center justify-center gap-2 rounded-md px-3 py-4 text-center hover:border-line"
       >
         <span className="flex h-16 w-16 items-center justify-center">
           <img

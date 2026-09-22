@@ -57,12 +57,12 @@ export function PlaceCard({
             ? godChipClass(name)
             : (kind === "Town" || kind === "Boss") && god
               ? `town-card ${godHueClass(god)}`
-              : "hover:border-[#e2c37a]"
+              : "hover:border-line"
         }`}
       >
         <AppLink href={href} className="block [touch-action:manipulation]">
           {gone ? (
-            <span className="flex aspect-video w-full items-center justify-center bg-[#1a1610] text-[11px] text-faint">
+            <span className="flex aspect-video w-full items-center justify-center bg-[#0b0b0b] text-[11px] text-faint">
               Still needed
             </span>
           ) : (

@@ -30,7 +30,7 @@ function ChroniclePage() {
         <p className="mt-2 max-w-2xl text-sm text-muted">
           Ages and doors. Two live games. A third title in the same house. Not Jagex.
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
       </header>
       <main id="content" className="chronicle prose-desk mx-auto flex max-w-3xl flex-col gap-8 px-5 py-6 text-sm text-muted md:px-8">
         <p className="text-parchment">

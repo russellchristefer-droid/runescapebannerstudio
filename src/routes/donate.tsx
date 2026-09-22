@@ -38,7 +38,7 @@ function DonatePage() {
           Opens Cash App. Send only what you mean to send.
         </p>
 
-        <figure className="overflow-hidden rounded-md border-4 border-[#c8a24a] bg-[#1a140c] shadow-[inset_0_0_0_2px_#5a3e16]">
+        <figure className="overflow-hidden rounded-md border-4 border-[#c8a24a] bg-[#0b0b0b] shadow-[inset_0_0_0_2px_#5a3e16]">
           <div className="flex items-center justify-between border-b border-[#5a3e16] bg-[#2a2114] px-3 py-1.5">
             <span className="text-[11px] tracking-[0.16em] text-[#e8d5a3] uppercase">
               Player-owned house

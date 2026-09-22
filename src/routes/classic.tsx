@@ -22,7 +22,7 @@ function ClassicPage() {
         <p className="mt-2 max-w-2xl text-sm text-muted">
           Memory lives here. The worlds do not.
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
       </header>
       <main id="content" className="mx-auto max-w-5xl px-5 py-6 md:px-8">
         <h2 className="mb-3 text-sm font-semibold text-parchment">Places</h2>

@@ -97,8 +97,8 @@ function doorInk(label: string) {
   if (t.includes("teal")) return "#3aa8a8";
   if (t.includes("saradomin") || t.includes("blue")) return "#4a7ec8";
   if (t.includes("zamorak") || (t.includes("red") && !t.includes("rated"))) return "#9b1b1b";
-  if (t.includes("rated") || t.includes("gold") || t.includes("exit")) return "#c6a45a";
-  return "#c6a45a";
+  if (t.includes("rated") || t.includes("gold") || t.includes("exit")) return "#e6d000";
+  return "#e6d000";
 }
 
 function ShotStrip({ items }: { items: readonly { src: string; name: string }[] }) {
@@ -110,7 +110,7 @@ function ShotStrip({ items }: { items: readonly { src: string; name: string }[] 
           className="w-[240px] shrink-0 snap-start overflow-hidden rounded-md border bg-[#120e0a]"
           style={{ borderColor: "rgba(198,164,90,0.55)" }}
         >
-          <div className="h-0.5 bg-[#c6a45a]" aria-hidden="true" />
+          <div className="h-0.5 bg-[#e6d000]" aria-hidden="true" />
           <div className="flex h-44 items-center justify-center bg-[#0c0a08] px-2">
             <img
               src={item.src}
@@ -120,7 +120,7 @@ function ShotStrip({ items }: { items: readonly { src: string; name: string }[] 
               className="max-h-40 w-full object-contain"
             />
           </div>
-          <figcaption className="px-2 py-1.5 text-[11px] tracking-[0.08em] text-[#c6a45a] uppercase">{item.name}</figcaption>
+          <figcaption className="px-2 py-1.5 text-[11px] tracking-[0.08em] text-[#e6d000] uppercase">{item.name}</figcaption>
         </figure>
       ))}
     </div>
@@ -150,10 +150,10 @@ function StillGrid({
               className="max-h-36 w-full object-contain md:max-h-44"
             />
           </div>
-          <figcaption className="border-t border-[#c6a45a]/20 px-2 py-1.5">
+          <figcaption className="border-t border-[#e6d000]/20 px-2 py-1.5">
             <p className="text-[12px] text-[#efe4c8]">{item.name}</p>
             {item.era ? (
-              <p className="text-[11px] tracking-[0.12em] text-[#c6a45a] uppercase">{item.era}</p>
+              <p className="text-[11px] tracking-[0.12em] text-[#e6d000] uppercase">{item.era}</p>
             ) : null}
             {item.note ? <p className="mt-0.5 text-[11px] text-[#b7a989]">{item.note}</p> : null}
           </figcaption>
@@ -173,15 +173,15 @@ function RoomDeck({
   const src = srcs[i] ?? srcs[0];
   const n = srcs.length;
   return (
-    <figure className="overflow-hidden rounded-md border border-[#c6a45a]/70 bg-[#120e0a] shadow-[inset_0_0_0_1px_rgba(198,164,90,0.15)]">
-      <div className="h-0.5 bg-[#c6a45a]" aria-hidden="true" />
+    <figure className="overflow-hidden rounded-md border border-[#e6d000]/70 bg-[#120e0a] shadow-[inset_0_0_0_1px_rgba(198,164,90,0.15)]">
+      <div className="h-0.5 bg-[#e6d000]" aria-hidden="true" />
       <div className="relative flex min-h-[280px] items-center justify-center bg-[#0c0a08] md:min-h-[340px]">
         <img src={src} alt={`${place}, ${era}`} className="max-h-[340px] w-full object-contain md:max-h-[400px]" />
         {n > 1 ? (
           <>
             <button
               type="button"
-              className="absolute left-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 rounded-md border border-[#c6a45a]/60 bg-[#120e0a]/80 text-[#efe4c8]"
+              className="absolute left-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 rounded-md border border-[#e6d000]/60 bg-[#120e0a]/80 text-[#efe4c8]"
               aria-label={`Previous still, ${place}`}
               onClick={() => setI((n + i - 1) % n)}
             >
@@ -189,7 +189,7 @@ function RoomDeck({
             </button>
             <button
               type="button"
-              className="absolute right-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 rounded-md border border-[#c6a45a]/60 bg-[#120e0a]/80 text-[#efe4c8]"
+              className="absolute right-2 top-1/2 min-h-11 min-w-11 -translate-y-1/2 rounded-md border border-[#e6d000]/60 bg-[#120e0a]/80 text-[#efe4c8]"
               aria-label={`Next still, ${place}`}
               onClick={() => setI((i + 1) % n)}
             >
@@ -198,9 +198,9 @@ function RoomDeck({
           </>
         ) : null}
       </div>
-      <figcaption className="border-t border-[#c6a45a]/25 px-3 py-2">
+      <figcaption className="border-t border-[#e6d000]/25 px-3 py-2">
         <p className="text-sm text-[#efe4c8]">{place}</p>
-        <p className="text-[11px] tracking-[0.12em] text-[#c6a45a] uppercase">{era}</p>
+        <p className="text-[11px] tracking-[0.12em] text-[#e6d000] uppercase">{era}</p>
         <p className="mt-1 text-[12px] text-[#b7a989]">{note}</p>
         {n > 1 ? (
           <p className="mt-1 text-[11px] text-[#8a7a5a]">
@@ -218,7 +218,7 @@ function ClanWarsPage() {
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <h1 className="page-h1 mt-1">Clan Wars</h1>
-        <p className="mt-2 mx-auto max-w-2xl text-center text-[11px] tracking-[0.22em] text-[#c6a45a] uppercase">
+        <p className="mt-2 mx-auto max-w-2xl text-center text-[11px] tracking-[0.22em] text-[#e6d000] uppercase">
           The hall
         </p>
         <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
@@ -248,7 +248,7 @@ function ClanWarsPage() {
             How to win
           </a>
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
         <div className="mt-3">
           <PlaceRail section="clan-wars" />
         </div>
@@ -315,7 +315,7 @@ function ClanWarsPage() {
             cite. If a lobby went quiet, the wiki is the verdict.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">4 January 2001 — fight almost anywhere</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">4 January 2001 — fight almost anywhere</h3>
           <p className="text-sm leading-relaxed text-muted">
             RuneScape Classic launched. There was no Wilderness. A character was Player
             Killer or not. PK mode put an Attack option on other players in most of the
@@ -328,7 +328,7 @@ function ClanWarsPage() {
             player killing, before 13 August 2001.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 August 2001 — the ditch is born</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">13 August 2001 — the ditch is born</h3>
           <p className="text-sm leading-relaxed text-muted">
             Update: Wilderness system online. Forinthry on the map. The world roughly
             doubled. PK / non-PK modes left with that patch. PvP became a place, not a
@@ -341,7 +341,7 @@ function ClanWarsPage() {
             walked. Worlds are closed on Classic. The letters still remember that walk.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 December 2004 — the flag</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">13 December 2004 — the flag</h3>
           <p className="text-sm leading-relaxed text-muted">
             Castle Wars is capture the flag. Saradomin and Zamorak west of Yanille.
             Twenty minutes. Bandages, not food. Tickets at the exchange. It taught
@@ -350,7 +350,7 @@ function ClanWarsPage() {
           </p>
           <StillGrid items={CASTLE_DOORS} />
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">19 September 2005 — the pit</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">19 September 2005 — the pit</h3>
           <p className="text-sm leading-relaxed text-muted">
             TzHaar Fight Pit. Last player standing under Karamja. Not a clan room. Not
             the Cave. Not the Kiln. Tokkul for the champion. Safe PvP on both live
@@ -358,14 +358,14 @@ function ClanWarsPage() {
             client, fixed the same day. The live sheet sits under Fight Pits below.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">18 April 2007 — the ditch you have to confirm</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">18 April 2007 — the ditch you have to confirm</h3>
           <p className="text-sm leading-relaxed text-muted">
             The Wilderness ditch went in so a lure could not walk you over the line
             without a click. Old School still wears that fence. The Doomsayer can
             quiet the warning. The line is still the line.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">10 December 2007 — the law breaks and the room is named</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">10 December 2007 — the law breaks and the room is named</h3>
           <p className="text-sm leading-relaxed text-muted">
             Official post: Wilderness Changes, Bounty Hunter and Clan Wars. Free trade
             and open Wilderness PvP left the main client in a fight about real-world
@@ -376,14 +376,14 @@ function ClanWarsPage() {
             could stay. That is why the minigame still exists.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">9 September 2008 — white and red</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">9 September 2008 — white and red</h3>
           <p className="text-sm leading-relaxed text-muted">
             Clan Wars Update on the main client. White portal: safe free-for-all.
             Red portal: dangerous free-for-all, items drop. Purple stayed the arranged
             war. People still mix those three colours. Read the door.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">2008–2009 — PvP worlds and bounty worlds</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">2008–2009 — PvP worlds and bounty worlds</h3>
           <p className="text-sm leading-relaxed text-muted">
             15 October 2008: PvP worlds, so the tax could live on a server instead of
             only on a crater. 6 May 2009: Bounty Hunter worlds put target PvP across
@@ -392,14 +392,14 @@ function ClanWarsPage() {
             current.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Winter 2010 — the vote</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">Winter 2010 — the vote</h3>
           <p className="text-sm leading-relaxed text-muted">
             24 December 2010 to 14 January 2011: a referendum to bring back the old
             Wilderness and free trade. Ninety-one percent said yes. That number is why
             the next date exists.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">1 February 2011 — the wild comes home, the hall leaves</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">1 February 2011 — the wild comes home, the hall leaves</h3>
           <p className="text-sm leading-relaxed text-muted">
             Open PvP and free trade returned on the main client. Revenants were pushed
             into Forinthry Dungeon. Clan Wars, Fist of Guthix, and Stealing Creation
@@ -408,14 +408,14 @@ function ClanWarsPage() {
             ditch was a ditch again. The named room kept the ceiling in a cave.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">22 February 2013 — two grammars</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">22 February 2013 — two grammars</h3>
           <p className="text-sm leading-relaxed text-muted">
             Old School RuneScape is the 2007-era client voted back. It inherits the
             ditch, the skull, and the combat bracket. It does not inherit the 2011
             Grotto as its first Clan Wars house. That comes later, by poll.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">19 June 2014 — Old School names the room</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">19 June 2014 — Old School names the room</h3>
           <p className="text-sm leading-relaxed text-muted">
             A priority poll put Clan Wars on the 2007-era client. First house: Giants’
             Plateau. 26 June added Soggy Swamp as a free-to-play arena. 6 November added
@@ -424,7 +424,7 @@ function ClanWarsPage() {
             Wilderness outside that house stayed the tax.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The main client after the split</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">The main client after the split</h3>
           <p className="text-sm leading-relaxed text-muted">
             RuneScape kept the Grotto. Deep Wilderness opened to free players on 9
             October 2017. PvP on that client is opt-in now — Vala in Edgeville is the
@@ -433,7 +433,7 @@ function ClanWarsPage() {
             on the RuneScape wiki. Do not paste an Old School skull onto that well.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">16 July 2020 — Ferox</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">16 July 2020 — Ferox</h3>
           <p className="text-sm leading-relaxed text-muted">
             Official Old School news: Ferox Enclave. Carrallanger’s old stone, a safe
             pocket in Wilderness 13–16. Bank. Pool of Refreshment. Clan Wars and Last
@@ -447,20 +447,20 @@ function ClanWarsPage() {
           </p>
           <StillGrid items={CURRENT_DOORS} />
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">23 May 2024 — Classic F2P magic</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">23 May 2024 — Classic F2P magic</h3>
           <p className="text-sm leading-relaxed text-muted">
             Official Old School patch: a Magic dropdown option so Bind is the only freeze
             if that box is ticked. Captains who want 2007 F2P grammar use that switch.
             Food, overheads, specs, and the team cap are still the other boxes. Read them.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">13 November 2024 — blighted in the pocket</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">13 November 2024 — blighted in the pocket</h3>
           <p className="text-sm leading-relaxed text-muted">
             Blighted supplies may be eaten inside Ferox. The pocket is still a pocket.
             The ditch outside is still the tax.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">2025 — Bounty Hunter is a crater</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">2025 — Bounty Hunter is a crater</h3>
           <p className="text-sm leading-relaxed text-muted">
             On the live Old School wiki, Bounty Hunter is Daimon’s Crater, not Clan Wars.
             You walk from a Ferox portal, put coins in a coffer, and take a target. The
@@ -469,7 +469,7 @@ function ClanWarsPage() {
             tattoo a world number on this page.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">28 January 2026 — Oddskull still a mode</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">28 January 2026 — Oddskull still a mode</h3>
           <p className="text-sm leading-relaxed text-muted">
             Official Old School patch: the opposing team can pick up a dropped Oddskull
             again. Last team standing, first to X kills, king of the hill, most kills,
@@ -478,7 +478,7 @@ function ClanWarsPage() {
             death is the same proof on the other client: the Grotto is still live.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">27 May 2026 — thirty seconds</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">27 May 2026 — thirty seconds</h3>
           <p className="text-sm leading-relaxed text-muted">
             Old School Wilderness: if you die without another player in combat for the
             last thirty seconds, that death is PvM, not PvP — even if someone tagged you
@@ -487,7 +487,7 @@ function ClanWarsPage() {
             Ferox terms.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The current hour</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">The current hour</h3>
           <p className="text-sm leading-relaxed text-muted">
             Old School Clan Wars still lives in Ferox. Official FFA world is printed on
             the wiki. LMS Competitive is a different building in the same enclave.
@@ -500,7 +500,7 @@ function ClanWarsPage() {
             posted hour, not a live room until the post says it is.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">How the piles actually worked</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">How the piles actually worked</h3>
           <p className="text-sm leading-relaxed text-muted">
             Classic, before the ditch: call a world, stand on a road people already
             used, hope the non-PK flag was off. After August 2001: call a wilderness
@@ -516,7 +516,7 @@ function ClanWarsPage() {
             rooms.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The ditch after the portal</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">The ditch after the portal</h3>
           <p className="text-sm leading-relaxed text-muted">
             Wilderness clan wars after the minigame still happen: two chats pick a
             multi tile and a world. That is not Ferox. That is not the Grotto. That is
@@ -574,7 +574,7 @@ function ClanWarsPage() {
             Leave early and you do not count.
           </p>
 
-          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Old School — Mor Ul Rek</h3>
+          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">Old School — Mor Ul Rek</h3>
           <p className="text-sm leading-relaxed text-muted">
             West of the inner city, under the volcano. Members. Minigame teleport:
             TzHaar Fight Pit. Fairy ring BLP, then north and west. Official world is
@@ -595,7 +595,7 @@ function ClanWarsPage() {
             desk drifts.
           </p>
 
-          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">RuneScape — TzHaar City</h3>
+          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">RuneScape — TzHaar City</h3>
           <p className="text-sm leading-relaxed text-muted">
             Same bowl, later grammar. TokKul-Zo is the fast door. Official world is
             printed on the wiki when the city is quiet. The waiting room still has the
@@ -616,7 +616,7 @@ function ClanWarsPage() {
             doors under the same mountain. They are not this minigame.
           </p>
 
-          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">How the pit is won</h3>
+          <h3 className="mt-4 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">How the pit is won</h3>
           <ol className="mt-3 space-y-2 text-sm text-muted">
             <li>1. Stand in the waiting room. Two names or the last champion ends the last round.</li>
             <li>2. The orb is for watching. Walking in is for fighting.</li>
@@ -636,7 +636,7 @@ function ClanWarsPage() {
             keeps the living options.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The terms — the actual fight</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">The terms — the actual fight</h3>
           <p className="text-sm leading-relaxed text-muted">
             Only a captain or higher can send the challenge. On Old School that is
             chat-channel rank. On RuneScape that is Friends Chat. If you cannot open
@@ -691,7 +691,7 @@ function ClanWarsPage() {
             </li>
           </ul>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">Old School — Ferox</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">Old School — Ferox</h3>
           <p className="text-sm leading-relaxed text-muted">
             Ring, minigame teleport, or canoe. Pool first. Purple when the terms are
             agreed. White is practice — stats restore, no sheet. Official FFA world is
@@ -708,7 +708,7 @@ function ClanWarsPage() {
             <li>7. LMS, Bounty Hunter, and Castle Wars are other doors in the same pocket. They are not this match.</li>
           </ol>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">RuneScape — Grotto</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">RuneScape — Grotto</h3>
           <p className="text-sm leading-relaxed text-muted">
             North of Falador. Friends Chat. Purple is the war. White is safe FFA. Red
             drops the bag. Play the bar or Legacy as the chat called — do not mix those
@@ -723,7 +723,7 @@ function ClanWarsPage() {
             <li>5. Citadels are a skill. This cave is a fight. Do not mix them.</li>
           </ol>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">The ditch after the portal</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">The ditch after the portal</h3>
           <p className="text-sm leading-relaxed text-muted">
             Two chats and a multi tile is still a clan war. It is not Ferox. It is not
             the Grotto. Skull, bracket, Protect Item. File that on{" "}
@@ -733,7 +733,7 @@ function ClanWarsPage() {
             . This page keeps the ceiling.
           </p>
 
-          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#c6a45a] uppercase">How to not donate the hour</h3>
+          <h3 className="mt-5 mb-1 text-sm tracking-[0.14em] text-[#e6d000] uppercase">How to not donate the hour</h3>
           <ol className="mt-3 space-y-2 text-sm text-muted">
             <li>1. Read the terms. Food off is a different fight than food on.</li>
             <li>2. Enter before the wall drops. Late is a spectator.</li>

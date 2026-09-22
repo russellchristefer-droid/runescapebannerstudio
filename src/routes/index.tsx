@@ -27,7 +27,7 @@ function DeskFallback() {
           width={1200}
           height={480}
           decoding="async"
-          className="block h-auto w-full bg-[#1a1610]"
+          className="block h-auto w-full bg-[#0b0b0b]"
         />
       </figure>
     </main>

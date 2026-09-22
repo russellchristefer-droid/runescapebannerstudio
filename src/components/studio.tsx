@@ -1012,7 +1012,7 @@ export function Studio() {
         ctx.setLineDash([]);
         const hs = Math.max(10, w * 0.012);
         ctx.fillStyle = "#ffe9b0";
-        ctx.strokeStyle = "#1a140c";
+        ctx.strokeStyle = "#0b0b0b";
         ctx.lineWidth = 1;
         for (const [hx, hy] of [
           [sel.x, sel.y],
@@ -1161,7 +1161,7 @@ export function Studio() {
       cache.height = size.height;
       const c = cache.getContext("2d", { alpha: false });
       if (c) {
-        c.fillStyle = "#1a1610";
+        c.fillStyle = "#0b0b0b";
         c.fillRect(0, 0, size.width, size.height);
       }
       stillCacheRef.current = cache;
@@ -1255,7 +1255,7 @@ export function Studio() {
     out.height = h;
     const ctx = out.getContext("2d", { alpha: false });
     if (!ctx) return null;
-    ctx.fillStyle = "#1a1610";
+    ctx.fillStyle = "#0b0b0b";
     ctx.fillRect(0, 0, out.width, out.height);
     paintOnto(ctx, still, w, h, w, h);
     return out;
@@ -1328,7 +1328,7 @@ export function Studio() {
     layoutH = size.height,
   ) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.fillStyle = "#1a1610";
+    ctx.fillStyle = "#0b0b0b";
     ctx.fillRect(0, 0, w, h);
     if (still && still !== ctx.canvas) {
       try {
@@ -1453,7 +1453,7 @@ export function Studio() {
               <div
                 key={loc.id}
                 className={`rs-panel overflow-hidden rounded-md ${
-                  loc.kind === "town" ? `town-card ${godHueClass(loc.god)}` : "hover:border-[#e2c37a]"
+                  loc.kind === "town" ? `town-card ${godHueClass(loc.god)}` : "hover:border-line"
                 }`}
                 data-place-card
                 data-slug={loc.id}
@@ -1496,8 +1496,8 @@ export function Studio() {
         <div
           className="p-2 [contain:layout]"
           style={{
-            background: "#241e16",
-            border: "2px solid #c6a45a",
+            background: "#111111",
+            border: "2px solid #e6d000",
             borderRadius: 6,
             boxShadow: "inset 0 2px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(198,164,90,0.18)",
           }}
@@ -1511,7 +1511,7 @@ export function Studio() {
             maxWidth: size.height > size.width ? "24rem" : "min(100%, 80rem)",
             width: "100%",
             aspectRatio: `${size.width} / ${size.height}`,
-            background: "#1a1610",
+            background: "#0b0b0b",
             boxShadow: "inset 0 8px 18px rgba(0,0,0,0.35)",
           }}
         >
@@ -1543,7 +1543,7 @@ export function Studio() {
           {goldStar ? (
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute right-2 top-2 text-[10px] leading-none text-[#c6a45a]"
+              className="pointer-events-none absolute right-2 top-2 text-[10px] leading-none text-[#e6d000]"
             >
               ★
             </span>
@@ -2196,7 +2196,7 @@ export function Studio() {
               <input
                 value={skillPicks.find((item) => item.id === pickedSkill)?.level ?? ""}
                 inputMode="numeric"
-                className="h-8 w-12 rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-sm text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+                className="h-8 w-12 rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-1 text-sm text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
                 onChange={(e) => {
                   const cap = skillLevelCap(pickedSkill, skillPack);
                   const next = sanitizeSkillLevel(e.target.value, cap);
@@ -2210,7 +2210,7 @@ export function Studio() {
         </div>
 
         <div className="mt-2 grid gap-2 lg:grid-cols-2" style={{ borderTop: "1px solid rgba(198,164,90,0.2)" }}>
-        <div className="lg:border-r lg:border-[#c6a45a]/20">
+        <div className="lg:border-r lg:border-[#e6d000]/20">
           <p className="px-1 pt-2 text-[10px] text-muted">Skills</p>
           <div className="flex flex-col gap-1 p-1">
             <div className="flex flex-wrap gap-1">
@@ -2222,7 +2222,7 @@ export function Studio() {
                     setSkillPack(pack);
                     dropIllegal(pack);
                   }}
-                  className={`h-7 rounded-md border px-2 text-[10px] ${skillPack === pack ? "border-parchment bg-[#241e16]" : "border-line"}`}
+                  className={`h-7 rounded-md border px-2 text-[10px] ${skillPack === pack ? "border-parchment bg-[#111111]" : "border-line"}`}
                 >
                   {pack === "OSRS" ? "Old School" : "RuneScape"}
                 </button>
@@ -2302,7 +2302,7 @@ export function Studio() {
                         const pic = (ev.currentTarget as HTMLButtonElement).querySelector("img");
                         placeStamp(skill.id, pic);
                       }}
-                      className={`flex size-10 shrink-0 items-center justify-center rounded-sm p-0 [touch-action:manipulation] ${on ? "bg-[#241e16]" : "bg-[#1a140c]"}`}
+                      className={`flex size-10 shrink-0 items-center justify-center rounded-sm p-0 [touch-action:manipulation] ${on ? "bg-[#111111]" : "bg-[#0b0b0b]"}`}
                     >
                       <img src={skill.src} alt="" className={`size-7 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
                     </button>
@@ -2312,7 +2312,7 @@ export function Studio() {
                       value={pick?.level ?? boardLevels[skillPack][skill.id] ?? ""}
                       placeholder="—"
                       maxLength={3}
-                      className="h-6 w-8 rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-0 text-center text-[10px] tabular-nums text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+                      className="h-6 w-8 rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-0 text-center text-[10px] tabular-nums text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
                       onChange={(e) => {
                         const next = sanitizeSkillLevel(e.target.value, cap);
                         setSkillPicks((cur) => {
@@ -2380,7 +2380,7 @@ export function Studio() {
                     const pic = (ev.currentTarget as HTMLButtonElement).querySelector("img");
                     placeStamp(mark.id, pic);
                   }}
-                  className={`flex size-12 items-center justify-center rounded-none bg-transparent p-0 [touch-action:manipulation] ${on ? "outline outline-1 outline-[#F5C400]" : ""}`}
+                  className={`flex size-12 items-center justify-center rounded-none bg-transparent p-0 [touch-action:manipulation] ${on ? "outline outline-1 outline-[#e6d000]" : ""}`}
                 >
                   <img src={mark.src} alt="" className={`size-8 object-contain ${skillPack === "OSRS" ? "[image-rendering:pixelated]" : ""}`} />
                 </button>
@@ -2496,7 +2496,7 @@ export function Studio() {
                     aria-label={`Place ${mark.name}`}
                     aria-pressed={on}
                     onClick={() => placeStamp(mark.id)}
-                    className={`flex size-12 items-center justify-center bg-transparent p-0 ${on ? "outline outline-1 outline-[#F5C400]" : ""}`}
+                    className={`flex size-12 items-center justify-center bg-transparent p-0 ${on ? "outline outline-1 outline-[#e6d000]" : ""}`}
                   >
                     <img src={mark.src} alt="" className="size-8 object-contain" />
                   </button>
@@ -2527,7 +2527,7 @@ export function Studio() {
               maxLength={12}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2539,7 +2539,7 @@ export function Studio() {
               maxLength={24}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2551,7 +2551,7 @@ export function Studio() {
               maxLength={32}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2563,7 +2563,7 @@ export function Studio() {
               maxLength={48}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2575,7 +2575,7 @@ export function Studio() {
               maxLength={40}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2587,7 +2587,7 @@ export function Studio() {
               maxLength={36}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
             />
           </label>
           <label className="text-[10px] text-muted">
@@ -2600,7 +2600,7 @@ export function Studio() {
               maxLength={3}
               spellCheck={false}
               autoComplete="off"
-              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#c6a45a]/35 bg-[#1a1610] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#c6a45a]"
+              className="mt-0.5 min-h-11 w-full rounded-sm border border-[#e6d000]/35 bg-[#0b0b0b] px-1 text-base text-parchment outline-none ring-0 focus-visible:border-[#e6d000]"
             />
           </label>
         </div>
@@ -2616,8 +2616,8 @@ export function Studio() {
             onClick={() => setBannerCaps((on) => !on)}
             className={`box-border size-11 shrink-0 rounded-full border p-0 text-[10px] leading-none ${
               bannerCaps
-                ? "border-parchment bg-[#241e16] text-parchment"
-                : "border-[#c6a45a]/55 bg-[#1a1610] text-muted"
+                ? "border-parchment bg-[#111111] text-parchment"
+                : "border-[#e6d000]/55 bg-[#0b0b0b] text-muted"
             }`}
           >
             Caps

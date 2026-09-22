@@ -46,7 +46,7 @@ export function StillPhoto({
         img.src =
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="320"><rect fill="#1a1610" width="100%" height="100%"/></svg>`,
+            `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="320"><rect fill="#0b0b0b" width="100%" height="100%"/></svg>`,
           );
       }}
     />

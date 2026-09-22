@@ -17,7 +17,7 @@ function StreamPage() {
         <p className="mt-2 max-w-2xl text-sm text-muted">
           Go-live notes. Encode in OBS. Cut on the clip bench. This desk does not log in or take a stream key.
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
       </header>
       <main id="content" className="mx-auto max-w-3xl px-5 py-6 md:px-8">
         <StreamDesk />

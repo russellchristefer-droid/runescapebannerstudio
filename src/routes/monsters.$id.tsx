@@ -29,7 +29,7 @@ function MonsterPage() {
           Bestiary · {row.slayer ? "Slayer" : "Monster"} · {game}
         </p>
         <h1 className="page-h1 site-title mt-1">{row.name}</h1>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#e6d000]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto max-w-3xl px-5 py-6 md:px-8">
         <OfficialPulse
@@ -40,11 +40,11 @@ function MonsterPage() {
           <StillPhoto
             src={src}
             alt={`${row.name} in ${game}`}
-            className="aspect-[21/9] w-full border border-[#c6a45a] bg-surface object-cover"
+            className="aspect-[21/9] w-full border border-[#e6d000] bg-surface object-cover"
             style={{ boxShadow: `inset 0 3px 0 0 ${monsterWash(row)}` }}
           />
         ) : (
-          <p className="border border-[#c6a45a] bg-surface px-3 py-10 text-center text-sm text-muted">Even the beast declined to appear.</p>
+          <p className="border border-[#e6d000] bg-surface px-3 py-10 text-center text-sm text-muted">Even the beast declined to appear.</p>
         )}
         <p className="mt-2 text-center font-[Fondamento] text-lg text-parchment">{note}</p>
         <p className="mt-1 text-center text-[11px] text-muted">{monsterStillLine(row)}</p>
