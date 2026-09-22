@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { SKILLS, type Skill } from "./skills";
 
 export type SkillBand = {
@@ -966,6 +967,31 @@ export function capeInk(name: string) {
 export function capeStyle(name: string): { "--cape": string; "--trim": string } {
   const { cloth } = capeColors(name);
   return { "--cape": cloth, "--trim": capeInk(name) };
+}
+
+function mix(hex: string, other: string, t: number) {
+  const read = (h: string) => {
+    const n = Number.parseInt(h.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  const [ar, ag, ab] = read(hex);
+  const [br, bg, bb] = read(other);
+  const ch = (a: number, b: number) => Math.round(a * (1 - t) + b * t).toString(16).padStart(2, "0");
+  return `#${ch(ar, br)}${ch(ag, bg)}${ch(ab, bb)}`;
+}
+
+/** Dark sheet in the cape's two colours. Cloth washes the field. The strip marks the type. */
+export function skillPageStyle(name: string): CSSProperties {
+  const { cloth } = capeColors(name);
+  const accent = capeInk(name);
+  return {
+    ...capeStyle(name),
+    "--skill-bg": mix(cloth, "#050505", 0.84),
+    "--skill-well": mix(cloth, "#0b0b0b", 0.74),
+    "--skill-line": cloth,
+    "--skill-accent": accent,
+    "--skill-muted": mix(accent, "#b7ad96", 0.55),
+  } as CSSProperties;
 }
 
 function keyOf(skill: Skill) {

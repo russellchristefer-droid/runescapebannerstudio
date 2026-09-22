@@ -631,6 +631,62 @@ a.skill-link:focus-visible {
   }
 }
 
+.skill-page {
+  background: var(--skill-bg, #050505);
+  color: var(--skill-fg, #f4f0e4);
+}
+.skill-page > header {
+  border-color: color-mix(in srgb, var(--skill-line, #e6d000) 45%, #050505);
+  background: color-mix(in srgb, var(--skill-bg, #050505) 88%, #000);
+}
+.skill-page-well {
+  background: var(--skill-well, #0b0b0b);
+  border: 1px solid color-mix(in srgb, var(--skill-line, #e6d000) 70%, #050505);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--skill-line, #e6d000) 22%, transparent),
+    inset 0 0 0 1px #000;
+}
+.skill-page h2,
+.skill-page .section-h2,
+.skill-page .text-parchment,
+.skill-page a.text-parchment,
+.skill-page .skill-band-name {
+  color: var(--skill-accent, #e6d000);
+  text-align: center;
+}
+.skill-page .section-h2::after {
+  background: linear-gradient(90deg, transparent, var(--skill-line, #e6d000), transparent);
+}
+.skill-page .text-muted,
+.skill-page .text-faint,
+.skill-page dd {
+  color: var(--skill-muted, #b7ad96);
+}
+.skill-page .rs-panel,
+.skill-page .skill-band {
+  border-color: color-mix(in srgb, var(--skill-line, #e6d000) 55%, #050505);
+  background: color-mix(in srgb, var(--skill-well, #0b0b0b) 65%, #000);
+  text-align: center;
+}
+.skill-page .skill-mark {
+  display: grid;
+  place-items: center;
+  width: 6.5rem;
+  height: 6.5rem;
+  margin: 0 auto;
+  border: 1px solid color-mix(in srgb, var(--skill-line, #e6d000) 65%, #050505);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--skill-line, #e6d000) 14%, #050505);
+  box-shadow: inset 0 0 0 1px #000;
+}
+.skill-rule {
+  background: linear-gradient(90deg, transparent, var(--skill-line, #e6d000), transparent);
+}
+.skill-page main p,
+.skill-page main dd,
+.skill-page main dt,
+.skill-page .skill-links {
+  text-align: center;
+}
 .god-page {
   background: var(--god-page-bg, #0c0a08);
   color: var(--god-page-fg, #ffff00);
