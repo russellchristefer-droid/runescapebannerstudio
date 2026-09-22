@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { PlaceChip, AppLink, godPath } from "./place-chip";
 import { GODS, type Edition, type God } from "@/lib/locations";
-import { godFromSlug, godInk } from "@/lib/gods";
+import { godFromSlug } from "@/lib/gods";
 import { PLACE_SECTIONS, type PlaceSection } from "./nav";
 
 export type { PlaceSection };
@@ -60,7 +60,6 @@ export function PlaceRail({
             key={name}
             href={godPath(name)}
             current={currentGod === name}
-            style={{ color: godInk(name) }}
           >
             {name}
           </PlaceChip>

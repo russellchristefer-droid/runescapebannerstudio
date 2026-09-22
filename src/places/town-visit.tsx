@@ -1,5 +1,4 @@
 import { UseOnBanner } from "@/desk/use-on-banner";
-import { godInk } from "@/lib/gods";
 import { localFight, nearbyTowns, regionAnchor, sisterTown } from "@/lib/town-doors";
 import type { Location } from "@/lib/locations";
 import { PlaceChip, godPath, townPath } from "./place-chip";
@@ -20,7 +19,7 @@ export function TownVisit({ loc }: { loc: Location }) {
           {row.name}
         </PlaceChip>
       ))}
-      <PlaceChip href={godPath(loc.god)} style={{ color: godInk(loc.god) }}>
+      <PlaceChip href={godPath(loc.god)}>
         {loc.god}
       </PlaceChip>
       {fight ? <PlaceChip href={fight.href}>{fight.label}</PlaceChip> : null}

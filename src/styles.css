@@ -398,6 +398,55 @@ figure.street,
   box-shadow: inset 0 0 0 1px #0b0a08, 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
+.god-chip {
+  --god: #c4a35a;
+  color: #f7f4ee;
+  background: #1a1510;
+  border: 1px solid var(--god);
+  box-shadow: 0 0 8px var(--god), inset 0 0 10px rgba(255, 255, 255, 0.08);
+}
+.god-chip-saradomin { --god: #4da3ff; }
+.god-chip-zamorak { --god: #ff3b3b; }
+.god-chip-guthix { --god: #39ff6a; }
+.god-chip-armadyl { --god: #d7f0ff; }
+.god-chip-bandos { --god: #e39a3c; }
+.god-chip-seren { --god: #7ef0ff; }
+.god-chip-zaros { --god: #c46cff; }
+.god-chip-sliske { --god: #c9b7ff; }
+.god-chip-tumeken { --god: #ffd24a; }
+.god-chip-elidinis { --god: #3fd0c9; }
+.god-chip-marimbo { --god: #ff7ad9; }
+
+a.rs-chip.god-chip,
+.rs-chip.god-chip {
+  color: #f7f4ee;
+  background: #1a1510;
+  border-color: var(--god);
+  box-shadow: 0 0 8px var(--god), inset 0 0 10px rgba(255, 255, 255, 0.08);
+}
+a.rs-chip.god-chip:hover,
+a.rs-chip.god-chip.rs-chip-on,
+a.rs-chip.god-chip[aria-current="page"] {
+  color: #fff;
+  background: color-mix(in srgb, var(--god) 20%, #1a1510);
+  border-color: var(--god);
+  box-shadow: 0 0 10px var(--god), inset 0 0 12px rgba(255, 255, 255, 0.1);
+}
+.rs-panel.god-chip {
+  border-color: var(--god);
+  box-shadow: 0 0 8px var(--god), inset 0 0 0 1px #0b0a08;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .god-chip,
+  a.rs-chip.god-chip,
+  a.rs-chip.god-chip:hover,
+  a.rs-chip.god-chip.rs-chip-on,
+  .rs-panel.god-chip {
+    box-shadow: none;
+  }
+}
+
 #bob-wotd {
   width: 96px;
   height: 96px;

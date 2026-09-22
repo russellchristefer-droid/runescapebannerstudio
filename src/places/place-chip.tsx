@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { GOD_SLUGS, godFromSlug, godInk } from "@/lib/gods";
+import { GOD_SLUGS, godFromSlug, godChipClass } from "@/lib/gods";
 import type { God } from "@/lib/locations";
 
 function sameOriginPath(href: string) {
@@ -38,12 +38,14 @@ export function PlaceChip({
   current?: boolean;
   style?: CSSProperties;
 }) {
+  const slug = href.startsWith("/gods/") ? href.replace(/^\/gods\//, "").split("/")[0] : "";
+  const god = slug ? godFromSlug(slug) : undefined;
   return (
     <AppLink
       href={href}
       current={current}
-      style={style}
-      className={`rs-chip min-h-11 min-w-11 text-xs [touch-action:manipulation] ${current ? "rs-chip-on" : ""}`}
+      style={god ? undefined : style}
+      className={`rs-chip min-h-11 min-w-11 text-xs [touch-action:manipulation] ${current ? "rs-chip-on" : ""} ${god ? godChipClass(god) : ""}`}
     >
       {children}
     </AppLink>
@@ -65,15 +67,11 @@ export function VisitPlaces({
   if (!chips.length) return null;
   return (
     <nav aria-label="Places to visit" className="flex flex-wrap gap-2">
-      {chips.map((item) => {
-        const slug = item.href.replace(/^\/gods\//, "");
-        const ink = item.color || (item.href.startsWith("/gods/") ? godInk(godFromSlug(slug) ?? item.label) : undefined);
-        return (
-          <PlaceChip key={item.href} href={item.href} current={item.current} style={ink ? { color: ink } : undefined}>
+      {chips.map((item) => (
+          <PlaceChip key={item.href} href={item.href} current={item.current} style={item.color && !item.href.startsWith("/gods/") ? { color: item.color } : undefined}>
             {item.label}
           </PlaceChip>
-        );
-      })}
+        ))}
     </nav>
   );
 }

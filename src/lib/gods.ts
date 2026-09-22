@@ -19,6 +19,30 @@ export function godInk(god: God | string) {
   return GOD_INK[god as God] ?? "#e0b45c";
 }
 
+/** Tight neon for god chips only. Titles keep GOD_INK. */
+export const GOD_NEON: Record<God, string> = {
+  Saradomin: "#4da3ff",
+  Zamorak: "#ff3b3b",
+  Guthix: "#39ff6a",
+  Armadyl: "#d7f0ff",
+  Bandos: "#e39a3c",
+  Seren: "#7ef0ff",
+  Zaros: "#c46cff",
+  Sliske: "#c9b7ff",
+  Tumeken: "#ffd24a",
+  Elidinis: "#3fd0c9",
+  Marimbo: "#ff7ad9",
+};
+
+export function godNeon(god: God | string) {
+  return GOD_NEON[god as God] ?? "#c4a35a";
+}
+
+export function godChipClass(god: God | string) {
+  const slug = GOD_SLUGS[god as God];
+  return slug ? `god-chip god-chip-${slug}` : "god-chip";
+}
+
 /** Dark field behind a still. Same hue as the prayer book, not a highlighter. */
 export const GOD_WASH: Record<God, string> = {
   Saradomin: "#122038",
