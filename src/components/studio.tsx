@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { ProductAsk } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TodayDesk } from "@/components/today-desk";
 import { TownHero } from "@/components/town-hero";
+import { OracleLine } from "@/components/oracle-line";
 import { StillPhoto } from "@/components/still-photo";
 import { paintRSYellow, ensurePlateFont, plateMetrics, putStillOnDesk, layoutPack, packBounds, pickRandom, loadStill, eraCaption, captionForSrc, FALLBACK } from "@/desk";
 import { loadStudioSave, writeStudioSave } from "@/desk/save";
@@ -1421,7 +1421,7 @@ export function Studio() {
       <EggToast />
       <SiteHeader skip={{ href: "#desk", label: "Skip to desk" }} />
       <TownHero onTown={(name, ed) => setHeroTown({ name, edition: ed })} />
-      <ProductAsk />
+      <OracleLine place={heroTown.name} edition={heroTown.edition} />
       <TodayDesk />
       <section className="page-band py-6">
         <h2 className="section-h2">Places to visit</h2>
