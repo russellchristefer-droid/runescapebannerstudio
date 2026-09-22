@@ -65,26 +65,29 @@ export function SiteHeader({
         </a>
       ) : null}
       <div className="rs-stone-header mb-3 px-1 py-1 text-center">
-        <p
-          className="cursor-default text-[10px] tracking-[0.2em] text-faint uppercase"
-          onClick={onMarkClick ?? (() => {
-            const now = Date.now();
-            if (now - pete.current.t > 2000) pete.current.n = 0;
-            pete.current.t = now;
-            pete.current.n += 1;
-            if (pete.current.n >= 7) {
-              pete.current.n = 0;
-              eggToast("You've got mail. (You haven't.)");
-            }
-          })}
-        >
-          Independent studio · not a Jagex product
-        </p>
-        <p className="mt-1">
-          <Link to="/" className="site-title page-h1 no-underline">
-            RuneScape Banner Studio
-          </Link>
-        </p>
+        <div className="studio-lockup">
+          <p
+            className="studio-kicker"
+            onClick={onMarkClick ?? (() => {
+              const now = Date.now();
+              if (now - pete.current.t > 2000) pete.current.n = 0;
+              pete.current.t = now;
+              pete.current.n += 1;
+              if (pete.current.n >= 7) {
+                pete.current.n = 0;
+                eggToast("You've got mail. (You haven't.)");
+              }
+            })}
+          >
+            Independent studio
+          </p>
+          <p className="studio-wordmark">
+            <Link to="/" className="site-title">
+              RuneScape Banner Studio
+            </Link>
+          </p>
+          <p className="studio-legal">Not a Jagex product</p>
+        </div>
         <UtcClock />
         <nav
           aria-label="Studio"
