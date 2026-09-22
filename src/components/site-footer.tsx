@@ -8,7 +8,7 @@ export const CASH_HANDLE = "$takemymoneypleaseok";
 
 export function SiteFooter() {
   return (
-    <footer className="mx-2 mb-2 mt-4 px-3 py-4 text-[11px] leading-relaxed text-faint md:px-8">
+    <footer className="mx-2 mb-2 mt-4 px-3 py-4 text-[11px] leading-relaxed text-faint md:px-8 rs-stone-header">
       <p>Independent desk. If a plate or clip saved you ten minutes — Cash App.</p>
       <nav className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-parchment" aria-label="Studio">
         <a href={CASH_APP} target="_blank" rel="noopener noreferrer">
