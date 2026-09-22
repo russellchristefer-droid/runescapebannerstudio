@@ -36,7 +36,9 @@ export function applySecurityHeaders(
   if (https) {
     put(headers, "Strict-Transport-Security", "max-age=15552000");
   }
-  if (path.startsWith("/assets/")) {
+  if (path === "/og.jpg" || path === "/x-banner.jpg") {
+    put(headers, "Cache-Control", "public, max-age=300, must-revalidate");
+  } else if (path.startsWith("/assets/")) {
     put(headers, "Cache-Control", "public, max-age=31536000, immutable");
   } else if (path.startsWith("/api/")) {
     put(headers, "Cache-Control", "no-store");

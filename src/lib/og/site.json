@@ -1,6 +1,8 @@
 {
   "title": "RuneScape Banner Studio",
+  "description": "Fan desk for Twitch 1200×480 plates and local 9:16 clips. Not a Jagex product.",
   "card": "custom",
   "type": "x:game",
-  "color": "100E0B"
+  "color": "050505",
+  "rev": "20260922i"
 }

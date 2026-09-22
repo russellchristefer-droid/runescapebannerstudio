@@ -20,8 +20,8 @@ export const Route = createRootRoute({
   head: () => {
     const host = publicAppHost();
     const origin = host ? `https://${host}` : "https://runescapebannerstudio.grok.me";
-    const xBanner = `${origin}/x-banner.jpg?v=20260922h`;
-    const ogImage = `${origin}/og.jpg?v=20260922h`;
+    const xBanner = `${origin}/x-banner.jpg?v=20260922i`;
+    const ogImage = `${origin}/og.jpg?v=20260922i`;
     const desc = "Fan desk for Twitch 1200×480 plates and local 9:16 clips. Not a Jagex product.";
     return {
     meta: [

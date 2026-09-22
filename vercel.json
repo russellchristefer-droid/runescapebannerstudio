@@ -19,11 +19,17 @@
     },
     {
       "source": "/og.jpg",
-      "headers": [{ "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" }]
+      "headers": [
+        { "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" },
+        { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+      ]
     },
     {
       "source": "/x-banner.jpg",
-      "headers": [{ "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" }]
+      "headers": [
+        { "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" },
+        { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+      ]
     },
     {
       "source": "/favicon.svg",
