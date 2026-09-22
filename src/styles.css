@@ -18,7 +18,7 @@
 }
 
 @theme {
-  --color-bg: #0c0b08;
+  --color-bg: #050505;
   --color-surface: #12110c;
   --color-raised: #1a1810;
   --color-fg: #e8d9a8;
@@ -53,20 +53,19 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scrollbar-gutter: stable;
-    scrollbar-color: #c4a35a #0c0b08;
+    scrollbar-color: #c4a35a #050505;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     overflow-x: clip;
-    background-color: var(--color-bg);
+    background-color: #050505;
     background-image:
-      radial-gradient(ellipse at 50% -6%, rgba(196, 163, 90, 0.12), transparent 48%),
-      radial-gradient(ellipse at 50% 108%, rgba(196, 163, 90, 0.12), transparent 46%),
-      url("/ui/rs-bricks.png");
-    background-size: auto, auto, 320px 176px;
-    background-repeat: no-repeat, no-repeat, repeat;
+      linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.55)),
+      url("/ui/rs-bricks.png?v=black");
+    background-size: auto, 320px 176px;
+    background-repeat: no-repeat, repeat;
     color: var(--color-fg);
     font-family: var(--font-sans);
     font-size: 16px;
@@ -94,9 +93,8 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(ellipse 90% 28% at 50% 0%, rgba(196, 163, 90, 0.16), transparent 60%),
-      radial-gradient(ellipse 90% 28% at 50% 100%, rgba(196, 163, 90, 0.16), transparent 60%);
-    opacity: 1;
+      radial-gradient(ellipse at 50% 18%, transparent 42%, #000 100%);
+    opacity: 0.45;
   }
 
   body > * {
@@ -294,7 +292,7 @@ header {
   background-color: #050505;
   background-image:
     linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.55)),
-    url("/ui/rs-bricks.png");
+    url("/ui/rs-bricks.png?v=black");
   background-size: auto, 320px 176px;
   background-repeat: no-repeat, repeat;
   image-rendering: pixelated;
