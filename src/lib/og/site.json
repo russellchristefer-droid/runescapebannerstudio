@@ -1,5 +1,6 @@
 {
   "title": "RuneScape Banner Studio",
   "card": "custom",
-  "type": "x:game"
+  "type": "x:game",
+  "color": "100E0B"
 }
