@@ -108,16 +108,7 @@ export function SiteHeader({
             </Link>
           </p>
           <div className="phat-row" aria-hidden="true">
-            {[
-              "white",
-              "yellow",
-              "blue",
-              "purple",
-              "red",
-              "green",
-              "black",
-              "brown",
-            ].map((hat) => (
+            {["white", "yellow", "blue", "purple", "red", "green", "black"].map((hat) => (
               <img key={hat} src={`/hats/${hat}-partyhat.png`} alt="" width={18} height={18} />
             ))}
           </div>
