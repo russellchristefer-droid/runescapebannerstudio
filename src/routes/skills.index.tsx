@@ -45,7 +45,7 @@ function SkillsPage() {
             PvP
           </Link>
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#39ff6a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#2db85a]/80" aria-hidden="true" />
         <div className="mt-3 flex flex-wrap justify-center gap-2">
           <button
             type="button"

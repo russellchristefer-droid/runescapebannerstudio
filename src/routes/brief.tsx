@@ -22,11 +22,11 @@ function BriefPage() {
         <BackLink />
         <h1 className="page-h1 site-title mt-1 text-center">Brief</h1>
         <p className="mt-2 text-center text-sm text-muted">What this desk is. What it stamps. What it will not pretend to be.</p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#39ff6a]/80" aria-hidden="true" />
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#2db85a]/80" aria-hidden="true" />
       </header>
       <main
         id="content"
-        className="prose-desk mx-auto mt-6 mb-8 flex max-w-[42rem] flex-col gap-6 border border-[#39ff6a] bg-[#0b0b0b] px-5 py-8 text-sm leading-[1.55] text-muted md:px-9"
+        className="prose-desk mx-auto mt-6 mb-8 flex max-w-[42rem] flex-col gap-6 border border-[#2db85a] bg-[#0b0b0b] px-5 py-8 text-sm leading-[1.55] text-muted md:px-9"
         style={{ boxShadow: "inset 0 0 0 1px #0b0a08, 0 8px 24px rgba(0,0,0,.35)" }}
       >
         <ul className="list-disc space-y-2 pl-5 text-fg">

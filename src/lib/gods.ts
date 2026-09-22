@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 export const GOD_INK: Record<God, string> = {
   Saradomin: "#3a6fd4",
   Zamorak: "#c62828",
-  Guthix: "#3d8b3d",
+  Guthix: "#2f7a3a",
   Armadyl: "#c5d4e8",
   Bandos: "#8b6914",
   Seren: "#5ec8d4",
@@ -24,7 +24,7 @@ export function godInk(god: God | string) {
 export const GOD_NEON: Record<God, string> = {
   Saradomin: "#4da3ff",
   Zamorak: "#ff3b3b",
-  Guthix: "#39ff6a",
+  Guthix: "#2db85a",
   Armadyl: "#d7f0ff",
   Bandos: "#e39a3c",
   Seren: "#7ef0ff",
@@ -53,7 +53,7 @@ export function godHueClass(god: God | string) {
 export const GOD_WASH: Record<God, string> = {
   Saradomin: "#122038",
   Zamorak: "#2a1214",
-  Guthix: "#142414",
+  Guthix: "#0c1c10",
   Armadyl: "#1c2430",
   Bandos: "#241c10",
   Seren: "#102428",
@@ -72,7 +72,7 @@ export function godWash(god: God | string) {
 export const GOD_PAGE: Record<God, { bg: string; well: string; fg: string; muted: string }> = {
   Saradomin: { bg: "#0c1628", well: "#121e34", fg: "#eef4ff", muted: "#9bb4d4" },
   Zamorak: { bg: "#160808", well: "#241010", fg: "#ffeaea", muted: "#c48a8a" },
-  Guthix: { bg: "#0a1610", well: "#122016", fg: "#e8f8ec", muted: "#8ab894" },
+  Guthix: { bg: "#06140c", well: "#0c1a12", fg: "#c8e8d0", muted: "#6a9a74" },
   Armadyl: { bg: "#101820", well: "#182430", fg: "#f4f8ff", muted: "#b7c8d8" },
   Bandos: { bg: "#18140c", well: "#241c10", fg: "#f4e6c8", muted: "#c4a06a" },
   Seren: { bg: "#081418", well: "#102428", fg: "#e8fbff", muted: "#8ec8d0" },

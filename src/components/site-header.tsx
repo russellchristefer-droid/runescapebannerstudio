@@ -128,7 +128,7 @@ export function SiteHeader({
             Menu
           </button>
           {menu ? (
-            <div className="mt-2 border border-[#39ff6a] bg-[#0b0b0b] p-2 text-sm text-parchment">
+            <div className="mt-2 border border-[#2db85a] bg-[#0b0b0b] p-2 text-sm text-parchment">
               <StudioNavLinks stacked onPick={() => setMenu(false)} />
             </div>
           ) : null}

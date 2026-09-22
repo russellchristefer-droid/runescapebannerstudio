@@ -21,11 +21,11 @@
   --color-bg: #050505;
   --color-surface: #0b0b0b;
   --color-raised: #111111;
-  --color-fg: #c8e8d0;
-  --color-muted: #7aaa84;
-  --color-faint: #5a7a62;
-  --color-line: #39ff6a;
-  --color-parchment: #8fe8a4;
+  --color-fg: #b4d8bc;
+  --color-muted: #6a9a74;
+  --color-faint: #4d7356;
+  --color-line: #2db85a;
+  --color-parchment: #6fcf84;
   --color-ink: #050505;
   --color-wood: #111111;
   --color-play: #9b1b1b;
@@ -53,7 +53,7 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scrollbar-gutter: stable;
-    scrollbar-color: #39ff6a #050505;
+    scrollbar-color: #2db85a #050505;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -296,11 +296,11 @@ header {
 
 .rs-stone-header {
   margin: 0.5rem 0.5rem 0.75rem;
-  border: 1px solid color-mix(in srgb, #39ff6a 60%, transparent);
+  border: 1px solid color-mix(in srgb, #2db85a 60%, transparent);
 }
 
 header {
-  border-bottom: 1px solid color-mix(in srgb, #39ff6a 60%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, #2db85a 60%, transparent);
 }
 
 .page-band {
@@ -449,7 +449,7 @@ figure.street,
 }
 
 .god-chip {
-  --god: #39ff6a;
+  --god: #2db85a;
   color: #f7f4ee;
   background: #0b0b0b;
   border: 1px solid var(--god);
@@ -457,7 +457,7 @@ figure.street,
 }
 .god-chip-saradomin { --god: #4da3ff; }
 .god-chip-zamorak { --god: #ff3b3b; }
-.god-chip-guthix { --god: #39ff6a; }
+.god-chip-guthix { --god: #2db85a; }
 .god-chip-armadyl { --god: #d7f0ff; }
 .god-chip-bandos { --god: #e39a3c; }
 .god-chip-seren { --god: #7ef0ff; }
@@ -488,7 +488,7 @@ a.rs-chip.god-chip[aria-current="page"] {
 }
 
 .town-card {
-  --god: #39ff6a;
+  --god: #2db85a;
 }
 .town-card:hover,
 .town-card:focus-within {
@@ -538,19 +538,19 @@ a.rs-chip.god-chip[aria-current="page"] {
   color: var(--god-page-fg, #ffff00);
 }
 .god-page > header {
-  border-color: color-mix(in srgb, var(--god-page-line, #39ff6a) 45%, #0b0a08);
+  border-color: color-mix(in srgb, var(--god-page-line, #2db85a) 45%, #0b0a08);
   background: color-mix(in srgb, var(--god-page-bg, #0c0a08) 88%, #000);
 }
 .god-page-well {
   background: var(--god-page-well, #0b0b0b);
-  border: 1px solid var(--god-page-line, #39ff6a);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--god-page-line, #39ff6a) 28%, transparent),
+  border: 1px solid var(--god-page-line, #2db85a);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--god-page-line, #2db85a) 28%, transparent),
     inset 0 0 0 1px #0b0a08;
 }
 .god-page h2,
 .god-page .text-parchment,
 .god-page a.text-parchment {
-  color: var(--god-page-accent, #39ff6a);
+  color: var(--god-page-accent, #2db85a);
 }
 .god-page .text-muted,
 .god-page .text-faint {
@@ -560,7 +560,7 @@ a.rs-chip.god-chip[aria-current="page"] {
   color: var(--god-page-fg, #ffff00);
 }
 .god-page .border-line {
-  border-color: color-mix(in srgb, var(--god-page-line, #39ff6a) 55%, #0b0a08);
+  border-color: color-mix(in srgb, var(--god-page-line, #2db85a) 55%, #0b0a08);
 }
 .god-page a.god-town-door {
   display: flex;
@@ -570,13 +570,13 @@ a.rs-chip.god-chip[aria-current="page"] {
   gap: 0.2rem;
   min-height: 44px;
   padding: 0.55rem 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--god-page-line, #39ff6a) 55%, #0b0a08);
+  border: 1px solid color-mix(in srgb, var(--god-page-line, #2db85a) 55%, #0b0a08);
   background: color-mix(in srgb, var(--god-page-well, #0b0b0b) 80%, #000);
   color: var(--god-page-fg, #ffff00);
   box-shadow: none;
   text-align: left;
 }
 .god-page a.god-town-door:hover {
-  border-color: var(--god-page-line, #39ff6a);
-  box-shadow: 0 0 8px var(--god-page-line, #39ff6a);
+  border-color: var(--god-page-line, #2db85a);
+  box-shadow: 0 0 8px var(--god-page-line, #2db85a);
 }

@@ -17,12 +17,12 @@ function EditPage() {
     <div className="min-h-dvh bg-bg text-fg">
       <SiteHeader skip={{ href: "#content", label: "Skip to clip editor" }} />
       <main id="content" className="mx-auto max-w-[90rem] px-3 py-6 md:px-8">
-        <div className="overflow-hidden rounded-md border border-[#39ff6a] bg-[#0b0b0b] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
+        <div className="overflow-hidden rounded-md border border-[#2db85a] bg-[#0b0b0b] shadow-[inset_0_1px_8px_rgba(0,0,0,0.45)]">
           <div className="flex flex-wrap items-baseline justify-between gap-3 px-4 py-3">
             <h1 className="page-h1 m-0 text-left">Clip Editor</h1>
             <p className="text-[11px] tracking-wide text-muted">Same studio as the banner desk. Local files. Not live.</p>
           </div>
-          <div className="h-px bg-[#39ff6a]/80" aria-hidden="true" />
+          <div className="h-px bg-[#2db85a]/80" aria-hidden="true" />
           <ClipBench />
         </div>
         <ol className="mt-4 list-decimal space-y-1 pl-5 text-sm text-muted">
