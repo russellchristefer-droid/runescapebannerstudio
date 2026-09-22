@@ -6,17 +6,16 @@ export const Route = createFileRoute("/clan-wars")({
   head: () =>
     pageMeta(
       "Clan Wars",
-      "Two clients. Two doors. Do not mix the sheets.",
+      "The portal is the law. The money fights are usually somewhere else.",
     ),
   component: ClanWarsPage,
 });
 
 const PLACES = [
-  { href: "/pvp", label: "PvP", external: false },
-  { href: "/towns", label: "Towns", external: false },
-  { href: "/towns/osrsedge", label: "Edgeville", external: false },
-  { href: "#osrs", label: "Ferox (OS)", external: false },
-  { href: "#rs3", label: "Grotto (RS3)", external: false },
+  { href: "/pvp", label: "PvP" },
+  { href: "/towns/osrsedge", label: "Edgeville" },
+  { href: "#osrs", label: "Ferox notes" },
+  { href: "#rs3", label: "Grotto notes" },
 ] as const;
 
 function Chip({ href, label }: { href: string; label: string }) {
@@ -42,7 +41,7 @@ function ClanWarsPage() {
         <BackLink />
         <h1 className="page-h1 mt-1">Clan Wars</h1>
         <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
-          Two clients. Two doors. Do not mix the sheets.
+          The portal is the law. The money fights are usually somewhere else.
         </p>
         <nav className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Places to visit">
           {PLACES.map((p) => (
@@ -148,6 +147,105 @@ function ClanWarsPage() {
           </div>
         </section>
 
+        <section className="flex flex-col gap-3">
+          <h2 className="section-h2">Wars people actually watch</h2>
+          <p className="text-center text-sm text-muted">
+            Not this origin. Not Jagex Support. Public record.
+          </p>
+          <div className="grid gap-3 lg:grid-cols-3">
+            <article className="rs-panel p-4">
+              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Clan pile</h3>
+              <p className="mt-2 text-center text-[10px] text-muted">In the game. Scene names, not a ranking.</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Free-to-play and members piles still happen at Clan Wars and on the ditch.
+                Names that show up on public wars: Reign of Terror (ROT), Infliction, CWC, TF.
+                Whoever is calling the next world is the rest of the list.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Odablock hosted a public free-to-play spectacle against ROT, CWC, TF, and
+                Infliction. The title was 500 versus 500. The world filled and they restarted.
+                That is a show war. It is not the rated door.
+              </p>
+              <p className="mt-3 text-center text-sm">
+                <a
+                  className="text-parchment"
+                  href="https://www.youtube.com/watch?v=rS_ob_TvQ4w"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Public upload
+                </a>
+              </p>
+            </article>
+            <article className="rs-panel p-4">
+              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Creator payouts</h3>
+              <p className="mt-2 text-center text-[10px] text-muted">A purse on a stream. Not Ferox.</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Crusader Classic 2026. Public clips and posts said Odablock beat PetaOSRS
+                in the finale for $5,000.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                EVScape has run creator battle-royale fields with the prize in the title.
+                One public one was $20,000, with Odablock on the card.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                These are staged fights with a purse. They are not the Ferox rated door.
+              </p>
+              <p className="mt-3 text-center text-sm">
+                <a
+                  className="text-parchment"
+                  href="https://www.youtube.com/shorts/JFjapFMT0iw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Crusader finale
+                </a>
+                {" · "}
+                <a
+                  className="text-parchment"
+                  href="https://www.youtube.com/watch?v=Gkyo8b34ljA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  EVScape purse
+                </a>
+              </p>
+            </article>
+            <article className="rs-panel p-4">
+              <h3 className="site-title mx-auto block w-full text-center text-sm no-underline">Deadman All Stars</h3>
+              <p className="mt-2 text-center text-[10px] text-muted">A stage. Not your live world.</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Jagex put Season 3 on a LAN at the Rosemont Theatre, Chicago, 20 June 2026.
+                Special instance. Not the world you log into.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Official result: Team Dino Nuggets. Dino, B0aty, 61M, Sick Nerd, MMORPG.
+                They beat Rhys Rhinos in the final. The rest of the official field was
+                Odablock Warriors, Framed Friends, Westham Weasels, and Purpp Rebels.
+              </p>
+              <p className="mt-3 text-center text-sm">
+                <a
+                  className="text-parchment"
+                  href="https://www.jagex.com/news/dino-nuggets-takes-the-crown-in-an-epic-old-school-runescape-all-stars-live-final"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Jagex recap
+                </a>
+                {" · "}
+                <a
+                  className="text-parchment"
+                  href="https://secure.runescape.com/m=news/deadman-all-stars-season-3-finale---live-now?oldschool=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Official news
+                </a>
+              </p>
+            </article>
+          </div>
+        </section>
+
         <section id="called" className="rs-panel scroll-mt-20 p-4">
           <h2 className="section-h2">How a fight is called</h2>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
@@ -247,7 +345,11 @@ function ClanWarsPage() {
               , not these doors.
             </li>
           </ol>
-          <p className="mt-4 text-center text-sm">
+          <p className="mt-4 text-center text-sm text-muted">
+            Wiki for the current portals. This desk does not run a prize pool and does not
+            rank clans. The names above are identification from public wars and streams.
+          </p>
+          <p className="mt-3 text-center text-sm">
             <a
               className="text-parchment"
               href="https://oldschool.runescape.wiki/w/Clan_Wars"
