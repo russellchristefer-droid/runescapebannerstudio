@@ -26,7 +26,6 @@ function SkillPage() {
         <p className="eyebrow mt-4 text-center text-[10px] uppercase tracking-[0.18em] text-muted">Skills · {game}</p>
         <h1 className="page-h1 site-title skill-page-title mt-1">{row.skill.name}</h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-sm leading-relaxed text-muted">{row.deck}</p>
-        <span className="skill-rule mx-auto mt-3 block h-px w-24" aria-hidden="true" />
       </header>
       <main id="content" className="skill-page-well mx-auto mt-6 mb-8 max-w-2xl rounded-md px-5 py-6 md:px-8">
         <div className="skill-mark">

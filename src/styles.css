@@ -136,8 +136,8 @@
   }
 
   ::selection {
-    background: rgba(230, 208, 0, 0.35);
-    color: var(--color-fg);
+    background: color-mix(in srgb, var(--color-line) 42%, transparent);
+    color: #fff8e0;
   }
 
   @media print {
@@ -519,8 +519,30 @@ a.rs-chip.god-chip[aria-current="page"] {
   box-shadow: 0 0 8px var(--god), inset 0 0 0 1px #0b0a08;
 }
 
+.gods-index,
+.min-h-dvh.bg-bg {
+  --flow: var(--color-line);
+  background-color: #050505;
+  background-image: radial-gradient(
+    ellipse 80% 22rem at 50% -1rem,
+    color-mix(in srgb, var(--flow) 22%, transparent),
+    transparent 70%
+  );
+}
 .gods-index h1.page-h1 {
   color: #f3e6c8;
+}
+
+a,
+.rs-chip,
+.rs-panel,
+.god-altar,
+.region-card {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 .god-stage {
   display: flex;
@@ -1043,12 +1065,18 @@ a.skill-link:focus-visible {
   }
 }
 .skill-page {
-  background: var(--skill-bg, #050505);
+  --flow: var(--skill-line, #e6d000);
+  background-color: #050505;
+  background-image: radial-gradient(
+    ellipse 90% 26rem at 50% -2rem,
+    color-mix(in srgb, var(--flow) 38%, transparent),
+    transparent 72%
+  );
   color: var(--skill-fg, #f4f0e4);
 }
 .skill-page > header {
-  border-color: color-mix(in srgb, var(--skill-line, #e6d000) 45%, #050505);
-  background: color-mix(in srgb, var(--skill-bg, #050505) 88%, #000);
+  background: transparent;
+  border-color: transparent;
 }
 .skill-page-well {
   background: var(--skill-well, #0b0b0b);
@@ -1099,12 +1127,28 @@ a.skill-link:focus-visible {
   text-align: center;
 }
 .town-page {
-  background: color-mix(in srgb, var(--region, #5c2d7a) 16%, #050505);
+  --flow: var(--region, #5c2d7a);
+  background-color: #050505;
+  background-image: radial-gradient(
+    ellipse 90% 26rem at 50% -2rem,
+    color-mix(in srgb, var(--flow) 42%, transparent),
+    transparent 72%
+  );
   color: #f4f0e4;
 }
 .town-page > header {
-  border-color: color-mix(in srgb, var(--region, #5c2d7a) 55%, #050505);
-  background: color-mix(in srgb, var(--region, #5c2d7a) 14%, #050505);
+  background: transparent;
+  border-color: transparent;
+}
+.town-page > header::after,
+.god-page > header::after,
+.skill-page > header::after {
+  content: "";
+  display: block;
+  width: min(24rem, 68%);
+  height: 1px;
+  margin: 1.1rem auto 0;
+  background: linear-gradient(90deg, transparent, var(--flow, var(--color-line)), transparent);
 }
 .town-page-well {
   background: color-mix(in srgb, var(--region, #5c2d7a) 10%, #0b0b0b);
@@ -1135,12 +1179,18 @@ a.skill-link:focus-visible {
   border-radius: 1px;
 }
 .god-page {
-  background: var(--god-page-bg, #0c0a08);
+  --flow: var(--god-page-line, #c4a35a);
+  background-color: #050505;
+  background-image: radial-gradient(
+    ellipse 90% 28rem at 50% -2rem,
+    color-mix(in srgb, var(--flow) 40%, transparent),
+    transparent 72%
+  );
   color: var(--god-page-fg, #ffff00);
 }
 .god-page > header {
-  border-color: color-mix(in srgb, var(--god-page-line, #c4a35a) 45%, #0b0a08);
-  background: color-mix(in srgb, var(--god-page-bg, #0c0a08) 88%, #000);
+  background: transparent;
+  border-color: transparent;
 }
 .god-page-well {
   background: var(--god-page-well, #0b0b0b);

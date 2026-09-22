@@ -64,11 +64,6 @@ function TownNotePage() {
         ) : (
           <p className="mt-1 text-sm text-muted">{note.region}</p>
         )}
-        <span
-          className="mx-auto mt-2 block h-px w-24"
-          style={{ background: banner ? banner.ink : "#c4a35a" }}
-          aria-hidden="true"
-        />
         <div className="mt-3">
           <PlaceRail section="towns" />
         </div>
