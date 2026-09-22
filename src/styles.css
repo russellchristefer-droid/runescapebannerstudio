@@ -577,7 +577,7 @@ a.rs-chip.god-chip[aria-current="page"] {
   width: 100%;
   background: #050505;
   object-fit: contain;
-  object-position: center bottom;
+  object-position: center center;
 }
 .god-row-altar .god-still {
   aspect-ratio: 3 / 4;
