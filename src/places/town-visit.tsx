@@ -10,7 +10,7 @@ export function TownVisit({ loc }: { loc: Location }) {
   const region = loc.region.replace(/\s·\sOSRS$/, "");
   const sisterLabel = loc.edition === "OSRS" ? "Same name in RuneScape" : "Same name in Old School";
   return (
-    <nav aria-label="Places to visit" className="flex flex-wrap gap-2">
+    <nav aria-label="Places to visit" className="town-visit">
       <UseOnBanner src={loc.viewA} edition={loc.edition} placeId={loc.id} />
       {sister ? <PlaceChip href={townPath(sister.id)}>{sisterLabel}</PlaceChip> : null}
       <PlaceChip href={`/towns#${regionAnchor(loc.region)}`}>{region}</PlaceChip>

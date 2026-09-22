@@ -99,11 +99,13 @@ function TownIndex() {
               className="region-band"
               style={{ "--region": banner.primary, "--region-ink": banner.ink, "--region-accent": banner.accent } as CSSProperties}
             >
-              <h2 className="region-band-title mb-3">
-                <img src={`/banners/${banner.slug}.png`} alt="" width={24} height={16} className="region-flag" />
-                {label}
+              <h2 className="region-band-title">
+                <span>
+                  <img src={`/banners/${banner.slug}.png`} alt="" width={24} height={16} className="region-flag" />
+                  {label}
+                </span>
               </h2>
-              <PlaceGrid>
+              <PlaceGrid className="town-grid">
                 {rows.map((loc) => (
                   <PlaceCard
                     key={loc.id}

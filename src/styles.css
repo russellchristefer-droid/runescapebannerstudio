@@ -553,19 +553,136 @@ a.rs-chip.god-chip[aria-current="page"] {
   text-shadow: none;
   filter: none;
 }
+.region-band {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 .region-band-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  margin: 0;
   color: var(--color-fg);
   text-align: center;
   letter-spacing: 0.14em;
   font-size: 11px;
+}
+.region-band-title > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 16px;
 }
 .region-band-title::after {
   content: "";
   display: block;
   width: 4.5rem;
   height: 2px;
-  margin: 0.45rem auto 0;
+  margin: 0;
   background: var(--region-ink, var(--region, #c4a35a));
+}
+.town-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+@media (min-width: 640px) {
+  .town-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.town-grid > .town-slot {
+  display: flex;
+  min-width: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 292px;
+}
+.town-grid .region-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.town-grid .region-card img,
+.town-grid .region-card .aspect-video {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+  flex: 0 0 auto;
+  object-fit: cover;
+}
+.town-grid .town-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  width: auto;
+  min-height: 2.7rem;
+  margin: 8px 8px 0;
+  padding: 0 4px;
+  overflow: hidden;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+  text-align: center;
+}
+.town-grid .town-meta {
+  min-height: 1.25rem;
+  margin: 4px 8px 0;
+  padding: 0 4px;
+  overflow: hidden;
+  line-height: 1.25rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.town-grid .town-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: auto;
+  padding: 8px;
+}
+.region-band-title .region-flag {
+  margin-right: 0;
+  vertical-align: middle;
+}
+@media (max-width: 639px) {
+  .town-grid .town-actions {
+    grid-template-columns: 1fr;
+  }
+}
+.town-grid .town-actions .rs-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 6px 4px;
+  font-size: 12px;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+}
+.town-visit {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 8px;
+}
+.town-visit .rs-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  text-align: center;
 }
 
 .skill-card {

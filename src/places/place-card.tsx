@@ -58,7 +58,7 @@ export function PlaceCard({
   const canBanner = Boolean(src && edition && placeId);
   if (!src) return null;
   return (
-    <li className="[content-visibility:auto] [contain-intrinsic-size:auto_220px]">
+    <li className={kind === "Town" ? "town-slot" : "[content-visibility:auto] [contain-intrinsic-size:auto_220px]"}>
       <div
         className={`rs-panel overflow-hidden rounded-md ${
           kind === "God"
@@ -100,10 +100,14 @@ export function PlaceCard({
             />
           )}
           <span
-            className="site-title mx-auto block w-full px-2 pt-1.5 text-center text-sm no-underline"
+            className={
+              kind === "Town"
+                ? "site-title town-name"
+                : "site-title mx-auto block w-full px-2 pt-1.5 text-center text-sm no-underline"
+            }
             style={
               banner
-                ? { display: "block", width: "100%", textAlign: "center" }
+                ? undefined
                 : { color: hue, display: "block", width: "100%", textAlign: "center" }
             }
           >
@@ -111,7 +115,7 @@ export function PlaceCard({
           </span>
         </AppLink>
         {kind === "Town" && god ? (
-          <p className="w-full px-2 pb-1 text-center text-[10px]">
+          <p className="town-meta w-full px-2 text-center text-[10px]">
             <span className="text-muted">{(region ?? "").replace(/\s·\sOSRS$/, "")}</span>
             {region ? " · " : ""}
             <span style={{ color: godNeon(god) }}>{god}</span>
@@ -124,7 +128,7 @@ export function PlaceCard({
           </p>
         )}
         {canBanner ? (
-          <div className="flex flex-wrap justify-center gap-1 px-2 pb-2">
+          <div className={kind === "Town" ? "town-actions" : "flex flex-wrap justify-center gap-1 px-2 pb-2"}>
             <AppLink href={href} className="rs-chip min-h-11 text-xs">
               Open
             </AppLink>
@@ -138,6 +142,6 @@ export function PlaceCard({
   );
 }
 
-export function PlaceGrid({ children }: { children: React.ReactNode }) {
-  return <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">{children}</ul>;
+export function PlaceGrid({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <ul className={`grid grid-cols-2 gap-2 sm:grid-cols-3 ${className}`}>{children}</ul>;
 }
