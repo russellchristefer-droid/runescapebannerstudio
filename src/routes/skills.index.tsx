@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { AppLink } from "@/places/place-chip";
-import { SKILL_GUIDES, loadSkillCanon, saveSkillCanon, type SkillGuide } from "@/lib/skill-guides";
+import { SKILL_GUIDES, type SkillGuide } from "@/lib/skill-guides";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/skills/")({
@@ -10,59 +10,29 @@ export const Route = createFileRoute("/skills/")({
   component: SkillsPage,
 });
 
-type Canon = "OSRS" | "RS3";
-
 function SkillsPage() {
   const [q, setQ] = useState("");
-  const [canon, setCanon] = useState<Canon>(() => (typeof window === "undefined" ? "OSRS" : loadSkillCanon()));
   const needle = q.trim().toLowerCase();
-  const rows = SKILL_GUIDES.filter((row) => row.skill.editions.includes(canon)).filter(
+  const osrs = SKILL_GUIDES.filter((row) => row.skill.editions.includes("OSRS")).filter(
     (row) => !needle || row.skill.name.toLowerCase().includes(needle),
   );
-  const title = canon === "OSRS" ? "Old School RuneScape" : "RuneScape";
-  function pickCanon(next: Canon) {
-    setCanon(next);
-    saveSkillCanon(next);
-  }
+  const rs3 = SKILL_GUIDES.filter((row) => row.skill.editions.includes("RS3")).filter(
+    (row) => !needle || row.skill.name.toLowerCase().includes(needle),
+  );
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Skills</h1>
-        <p className="mt-2 mx-auto max-w-2xl text-center text-sm text-muted">
-          Pick one edition. Open a skill for unlocks, cost, early / mid / late methods, what to wear, and the mistake
-          that burns the stack.
+        <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-muted">
+          Two clients. Open a skill for the route: unlock, cost, early / mid / late, what to wear, and the mistake that
+          burns the hour.
         </p>
-        <p className="mt-1 mx-auto max-w-2xl text-center text-sm text-muted">
+        <p className="mx-auto mt-1 max-w-2xl text-center text-sm text-muted">
           XP rates move. Use the live wiki for the number. This page is the route.
         </p>
-        <p className="mt-1 text-center text-sm">
-          <Link to="/monsters" className="text-parchment">
-            Bestiary
-          </Link>
-          {" · "}
-          <Link to="/pvp" className="text-parchment">
-            PvP
-          </Link>
-        </p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
-        <div className="mt-3 flex flex-wrap justify-center gap-2">
-          <button
-            type="button"
-            aria-pressed={canon === "OSRS"}
-            className={`rs-chip min-h-11 text-xs ${canon === "OSRS" ? "rs-chip-on" : ""}`}
-            onClick={() => pickCanon("OSRS")}
-          >
-            Old School
-          </button>
-          <button
-            type="button"
-            aria-pressed={canon === "RS3"}
-            className={`rs-chip min-h-11 text-xs ${canon === "RS3" ? "rs-chip-on" : ""}`}
-            onClick={() => pickCanon("RS3")}
-          >
-            RuneScape
-          </button>
+        <div className="mt-3 flex justify-center">
           <input
             type="search"
             value={q}
@@ -73,22 +43,31 @@ function SkillsPage() {
           />
         </div>
       </header>
-      <main className="mx-auto max-w-4xl px-5 py-6 md:px-8">
-        <h2 className="section-h2 mb-4 text-center">
-          {title}
-          <span className="ml-2 text-[11px] font-normal text-faint">{rows.length}</span>
-        </h2>
-        {rows.length ? (
-          <ul className="grid grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 md:grid-cols-4">
-            {rows.map((row) => (
-              <SkillTile key={`${canon}-${row.slug}`} row={row} game={title} />
-            ))}
-          </ul>
-        ) : (
-          <p className="text-center text-sm text-muted">Nothing here. Clear search.</p>
-        )}
+      <main className="mx-auto max-w-5xl px-5 py-6 md:px-8">
+        <SkillGrid id="osrs" title="Old School" rows={osrs} />
+        <SkillGrid id="rs3" title="RuneScape" rows={rs3} />
       </main>
     </div>
+  );
+}
+
+function SkillGrid({ id, title, rows }: { id: string; title: string; rows: SkillGuide[] }) {
+  return (
+    <section id={id} className="mb-10">
+      <h2 className="section-h2 mb-4 text-center">
+        {title}
+        <span className="ml-2 text-[11px] font-normal text-faint">{rows.length}</span>
+      </h2>
+      {rows.length ? (
+        <ul className="grid grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 md:grid-cols-4">
+          {rows.map((row) => (
+            <SkillTile key={row.slug} row={row} game={title} />
+          ))}
+        </ul>
+      ) : (
+        <p className="text-center text-sm text-muted">Nothing here. Clear search.</p>
+      )}
+    </section>
   );
 }
 
@@ -97,7 +76,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
     <li className="w-full max-w-[11rem]">
       <AppLink
         href={`/skills/${row.slug}`}
-        className="rs-panel flex h-full min-h-[10.5rem] flex-col items-center justify-center gap-2 rounded-md px-3 py-4 text-center hover:border-line"
+        className="rs-panel flex h-full min-h-[12rem] flex-col items-center justify-center gap-2 rounded-md px-3 py-4 text-center hover:border-line"
       >
         <span className="flex h-16 w-16 items-center justify-center">
           <img
@@ -112,6 +91,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
         </span>
         <span className="site-title block w-full text-center text-sm leading-tight">{row.skill.name}</span>
         <span className="px-1 text-[10px] leading-snug text-muted">{row.tagline}</span>
+        <span className="mt-1 rounded-md border border-line px-2 py-1 text-[10px] text-parchment">Open guide</span>
       </AppLink>
     </li>
   );

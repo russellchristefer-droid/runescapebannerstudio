@@ -26,7 +26,7 @@ function SkillPage() {
           Skills · {game}
         </p>
         <h1 className="page-h1 site-title mt-1">{row.skill.name}</h1>
-        <p className="mt-2 text-center text-sm text-muted">{row.tagline}</p>
+        <p className="mx-auto mt-3 max-w-xl text-center text-sm leading-relaxed text-muted">{row.deck}</p>
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto max-w-3xl px-5 py-6 md:px-8">
