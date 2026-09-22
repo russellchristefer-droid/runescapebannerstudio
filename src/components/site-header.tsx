@@ -107,6 +107,20 @@ export function SiteHeader({
               RuneScape Banner Studio
             </Link>
           </p>
+          <div className="phat-row" aria-hidden="true">
+            {[
+              "white",
+              "yellow",
+              "blue",
+              "purple",
+              "red",
+              "green",
+              "black",
+              "brown",
+            ].map((hat) => (
+              <img key={hat} src={`/hats/${hat}-partyhat.png`} alt="" width={18} height={18} />
+            ))}
+          </div>
           <p className="studio-legal">Not a Jagex product</p>
         </div>
         <UtcClock />

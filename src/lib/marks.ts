@@ -50,6 +50,7 @@ export const MARKS: Mark[] = [
   { id: "mark-osrs-phat-red", name: "Red partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-red.png", group: "hat" },
   { id: "mark-osrs-phat-purple", name: "Purple partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-purple.png", group: "hat" },
   { id: "mark-osrs-phat-black", name: "Black partyhat", editions: ["OSRS", "RS3"], src: "/marks/osrs-partyhat-black.png", group: "hat" },
+  { id: "mark-osrs-phat-brown", name: "Brown partyhat", editions: ["OSRS", "RS3"], src: "/hats/brown-partyhat.png", group: "hat" },
   { id: "mark-rs3-im", name: "Ironman", editions: ["RS3"], src: "/marks/rs3-ironman.svg", group: "account" },
   { id: "mark-rs3-hcim", name: "Hardcore ironman", editions: ["RS3"], src: "/marks/rs3-hcim.svg", group: "account" },
   { id: "mark-rs3-uim", name: "Ultimate ironman", editions: ["RS3"], src: "/marks/rs3-uim.svg", group: "account" },
