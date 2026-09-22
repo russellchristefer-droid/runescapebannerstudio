@@ -17,9 +17,49 @@ const RS3_OWN = new Set([
   "necromancy",
 ]);
 
-export function skillLevelCap(_id: string, pack: "OSRS" | "RS3") {
-  if (pack === "RS3") return 120;
+const RS3_120 = new Set([
+  "dungeoneering",
+  "invention",
+  "slayer",
+  "herblore",
+  "farming",
+  "archaeology",
+  "necromancy",
+  "thieving",
+  "construction",
+]);
+
+const RS3_110 = new Set([
+  "mining",
+  "smithing",
+  "woodcutting",
+  "fletching",
+  "firemaking",
+  "runecraft",
+  "crafting",
+  "hunter",
+]);
+
+const RS3_ELITE = new Set(["invention", "archaeology", "necromancy"]);
+
+function bareSkill(id: string) {
+  return id.toLowerCase().replace(/^rs3-/, "");
+}
+
+/** In-game level where new content stops. */
+export function skillRealCap(id: string, pack: "OSRS" | "RS3") {
+  if (pack === "OSRS") return 99;
+  const bare = bareSkill(id);
+  if (RS3_120.has(bare)) return 120;
+  if (RS3_110.has(bare)) return 110;
   return 99;
+}
+
+/** Highest number the hiscores or virtual toggle will show. */
+export function skillLevelCap(id: string, pack: "OSRS" | "RS3") {
+  if (pack === "OSRS") return 126;
+  if (RS3_ELITE.has(bareSkill(id))) return 150;
+  return 126;
 }
 
 function osrs(name: string): Skill {
@@ -110,7 +150,10 @@ export function skillIdForHiscore(skillName: string, pack: "OSRS" | "RS3") {
 }
 
 export function sanitizeSkillLevel(raw: string, cap: number) {
-  const n = parseInt(String(raw).replace(/\D/g, ""), 10);
-  if (!Number.isFinite(n) || n < 1) return "";
-  return String(Math.min(cap, n));
+  const digits = String(raw).replace(/\D/g, "").slice(0, 3);
+  if (!digits) return "";
+  const n = parseInt(digits, 10);
+  if (!Number.isFinite(n)) return "";
+  if (n > cap) return String(cap);
+  return String(n);
 }

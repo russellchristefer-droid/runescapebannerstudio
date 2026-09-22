@@ -16,7 +16,7 @@ import { safeZoneRects, zoneForPlate, type SafeZone } from "@/lib/bannerFeatures
 import { MARKS, MARK_SIDE, markContainRect } from "@/lib/marks";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
 import { godHueClass, godNeon } from "@/lib/gods";
-import { sanitizeSkillLevel, skillIdForHiscore, skillLevelCap, SKILLS } from "@/lib/skills";
+import { sanitizeSkillLevel, skillIdForHiscore, skillLevelCap, skillRealCap, SKILLS } from "@/lib/skills";
 import {
   BANNER_SIZES,
   migrateBannerSizeId,
@@ -2208,13 +2208,24 @@ export function Studio() {
               <input
                 value={skillPicks.find((item) => item.id === pickedSkill)?.level ?? ""}
                 inputMode="numeric"
-                className="h-8 w-12 rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-1 text-sm text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
+                maxLength={3}
+                title={`1–${skillLevelCap(pickedSkill, skillPack)} · real ${skillRealCap(pickedSkill, skillPack)}`}
+                className="skill-level"
+                onPointerDown={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
                 onChange={(e) => {
                   const cap = skillLevelCap(pickedSkill, skillPack);
                   const next = sanitizeSkillLevel(e.target.value, cap);
-                  setSkillPicks((cur) =>
-                    cur.map((item) => (item.id === pickedSkill ? { ...item, level: next } : item)),
-                  );
+                  setBoardLevels((cur) => ({
+                    ...cur,
+                    [skillPack]: { ...cur[skillPack], [pickedSkill]: next },
+                  }));
+                  setSkillPicks((cur) => {
+                    const mapped = cur.map((item) => (item.id === pickedSkill ? { ...item, level: next } : item));
+                    skillPicksRef.current = mapped;
+                    return mapped;
+                  });
+                  requestPaint();
                 }}
               />
             </label>
@@ -2322,11 +2333,18 @@ export function Studio() {
                       aria-label={`${skill.name} level`}
                       inputMode="numeric"
                       value={pick?.level ?? boardLevels[skillPack][skill.id] ?? ""}
-                      placeholder="—"
+                      placeholder={String(skillRealCap(skill.id, skillPack))}
+                      title={`${skill.name}. Real ${skillRealCap(skill.id, skillPack)}. Virtual ${cap}.`}
                       maxLength={3}
-                      className="h-6 w-8 rounded-sm border border-[#c4a35a]/35 bg-[#0b0b0b] px-0 text-center text-[10px] tabular-nums text-parchment outline-none ring-0 focus-visible:border-[#c4a35a]"
+                      className="skill-level"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onKeyDown={(e) => e.stopPropagation()}
                       onChange={(e) => {
                         const next = sanitizeSkillLevel(e.target.value, cap);
+                        setBoardLevels((cur) => ({
+                          ...cur,
+                          [skillPack]: { ...cur[skillPack], [skill.id]: next },
+                        }));
                         setSkillPicks((cur) => {
                           const existing = cur.find((item) => item.id === skill.id);
                           if (existing) {
