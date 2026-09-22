@@ -18,16 +18,16 @@
 }
 
 @theme {
-  --color-bg: #050505;
-  --color-surface: #12110c;
-  --color-raised: #1a1810;
+  --color-bg: #0c0d12;
+  --color-surface: #14151c;
+  --color-raised: #1a1b24;
   --color-fg: #e8d9a8;
   --color-muted: #b5a07a;
   --color-faint: #8d7a58;
   --color-line: #c4a35a;
   --color-parchment: #e2c37a;
   --color-ink: #0c0b08;
-  --color-wood: #111111;
+  --color-wood: #14151c;
   --color-play: #9b1b1b;
 
   --radius-sm: 4px;
@@ -53,17 +53,17 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scrollbar-gutter: stable;
-    scrollbar-color: #c4a35a #050505;
+    scrollbar-color: #c4a35a #0c0d12;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     overflow-x: clip;
-    background-color: #050505;
+    background-color: #0c0d12;
     background-image:
-      linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.55)),
-      url("/ui/rs-bricks.png?v=black");
+      linear-gradient(180deg, rgba(12, 13, 18, 0.15), rgba(12, 13, 18, 0.4)),
+      url("/ui/rs-bricks.png?v=night");
     background-size: auto, 320px 176px;
     background-repeat: no-repeat, repeat;
     color: var(--color-fg);
@@ -80,7 +80,7 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.07;
+    opacity: 0.08;
     background-image: url("/ui/grain.png");
     background-repeat: repeat;
     background-size: 128px 128px;
@@ -93,7 +93,7 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(ellipse at 50% 18%, transparent 42%, #000 100%);
+      radial-gradient(ellipse at 50% 18%, transparent 42%, #08090e 100%);
     opacity: 0.45;
   }
 
@@ -289,10 +289,10 @@ h1.studio-wordmark {
 
 .rs-stone-header,
 header {
-  background-color: #050505;
+  background-color: #0c0d12;
   background-image:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.55)),
-    url("/ui/rs-bricks.png?v=black");
+    linear-gradient(180deg, rgba(12, 13, 18, 0.15), rgba(12, 13, 18, 0.4)),
+    url("/ui/rs-bricks.png?v=night");
   background-size: auto, 320px 176px;
   background-repeat: no-repeat, repeat;
   image-rendering: pixelated;
@@ -358,7 +358,7 @@ pre,
 code {
   font-family: ui-monospace, monospace;
   color: #e8d5a3;
-  background: #0b0b0b;
+  background: #14151c;
 }
 
 .sr-only {
@@ -372,7 +372,7 @@ code {
 .plate-skeleton {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #0b0b0b 0%, #161600 50%, #0b0b0b 100%);
+  background: linear-gradient(90deg, #14151c 0%, #161600 50%, #14151c 100%);
   background-size: 200% 100%;
   animation: plate-sheen 1.2s linear infinite;
 }
@@ -380,7 +380,7 @@ code {
 @media (prefers-reduced-motion: reduce) {
   .plate-skeleton {
     animation: none;
-    background: #0b0b0b;
+    background: #14151c;
   }
 }
 
@@ -406,7 +406,7 @@ a.min-h-11:not(.site-title):not([class*="bg-play"]) {
   padding: 10px 16px;
   border: 1px solid var(--color-line);
   border-radius: 6px;
-  background: #16120c;
+  background: #1a1b24;
   color: var(--color-fg);
   box-shadow: inset 0 1px 0 rgba(232, 217, 168, 0.12), 0 1px 0 #000;
 }
@@ -420,7 +420,7 @@ a.min-h-11:not(.site-title):hover,
 button.min-h-11:not([class*="bg-play"]):not([class*="bg-line"]):active:not(:disabled),
 a.min-h-11:not(.site-title):active,
 .rs-chip:active:not(:disabled) {
-  background: #080808;
+  background: #101118;
 }
 
 .rs-chip-on,
@@ -441,7 +441,7 @@ input.skill-level {
   padding: 0 2px;
   border: 1px solid color-mix(in srgb, var(--color-line) 55%, transparent);
   border-radius: 4px;
-  background: #0b0b0b;
+  background: #14151c;
   color: var(--color-parchment);
   text-align: center;
   font-size: 16px;
@@ -459,7 +459,7 @@ textarea {
   padding: 10px 16px;
   border: 1px solid var(--color-line);
   border-radius: 6px;
-  background: #16120c;
+  background: #1a1b24;
   color: var(--color-fg);
   box-shadow: inset 0 1px 0 rgba(232, 217, 168, 0.12), 0 1px 0 #000;
 }
@@ -468,7 +468,7 @@ textarea {
 .desk-preview-well,
 figure.street,
 .overflow-hidden.rounded-md.border.border-line {
-  background: #0b0b0b;
+  background: #14151c;
   border: 1px solid var(--color-line);
   border-radius: 6px;
   box-shadow: inset 0 0 0 1px #000, inset 0 1px 0 rgba(196, 163, 90, 0.12), 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -483,7 +483,7 @@ footer {
 .god-chip {
   --god: #c4a35a;
   color: #f7f4ee;
-  background: #0b0b0b;
+  background: #14151c;
   border: 1px solid var(--god);
   box-shadow: 0 0 8px var(--god), inset 0 0 10px rgba(255, 255, 255, 0.08);
 }
@@ -502,7 +502,7 @@ footer {
 a.rs-chip.god-chip,
 .rs-chip.god-chip {
   color: #f7f4ee;
-  background: #0b0b0b;
+  background: #14151c;
   border-color: var(--god);
   box-shadow: 0 0 8px var(--god), inset 0 0 10px rgba(255, 255, 255, 0.08);
 }
@@ -510,19 +510,19 @@ a.rs-chip.god-chip:hover,
 a.rs-chip.god-chip.rs-chip-on,
 a.rs-chip.god-chip[aria-current="page"] {
   color: #fff;
-  background: color-mix(in srgb, var(--god) 20%, #0b0b0b);
+  background: color-mix(in srgb, var(--god) 20%, #14151c);
   border-color: var(--god);
   box-shadow: 0 0 10px var(--god), inset 0 0 12px rgba(255, 255, 255, 0.1);
 }
 .rs-panel.god-chip {
   border-color: var(--god);
-  box-shadow: 0 0 8px var(--god), inset 0 0 0 1px #0b0a08;
+  box-shadow: 0 0 8px var(--god), inset 0 0 0 1px #14151c;
 }
 
 .gods-index,
 .min-h-dvh.bg-bg {
   --flow: var(--color-line);
-  background-color: #050505;
+  background-color: #0c0d12;
   background-image: radial-gradient(
     ellipse 80% 22rem at 50% -1rem,
     color-mix(in srgb, var(--flow) 22%, transparent),
@@ -583,7 +583,7 @@ a,
   min-width: 0;
   overflow: hidden;
   text-decoration: none;
-  background: #050505;
+  background: #0c0d12;
   border: 2px solid var(--god, #c4a35a);
   border-radius: 6px;
   box-shadow: 0 0 10px var(--god, #c4a35a);
@@ -595,7 +595,7 @@ a,
 .god-still {
   display: block;
   width: 100%;
-  background: #050505;
+  background: #0c0d12;
   object-fit: contain;
   object-position: center center;
 }
@@ -1066,7 +1066,7 @@ a.skill-link:focus-visible {
 }
 .skill-page {
   --flow: var(--skill-line, #e6d000);
-  background-color: #050505;
+  background-color: #0c0d12;
   background-image: radial-gradient(
     ellipse 90% 26rem at 50% -2rem,
     color-mix(in srgb, var(--flow) 38%, transparent),
@@ -1079,8 +1079,8 @@ a.skill-link:focus-visible {
   border-color: transparent;
 }
 .skill-page-well {
-  background: var(--skill-well, #0b0b0b);
-  border: 1px solid color-mix(in srgb, var(--skill-line, #e6d000) 70%, #050505);
+  background: var(--skill-well, #14151c);
+  border: 1px solid color-mix(in srgb, var(--skill-line, #e6d000) 70%, #0c0d12);
   box-shadow: 0 0 18px color-mix(in srgb, var(--skill-line, #e6d000) 22%, transparent),
     inset 0 0 0 1px #000;
 }
@@ -1102,8 +1102,8 @@ a.skill-link:focus-visible {
 }
 .skill-page .rs-panel,
 .skill-page .skill-band {
-  border-color: color-mix(in srgb, var(--skill-line, #e6d000) 55%, #050505);
-  background: color-mix(in srgb, var(--skill-well, #0b0b0b) 65%, #000);
+  border-color: color-mix(in srgb, var(--skill-line, #e6d000) 55%, #0c0d12);
+  background: color-mix(in srgb, var(--skill-well, #14151c) 65%, #0c0d12);
   text-align: center;
 }
 .skill-page .skill-mark {
@@ -1112,9 +1112,9 @@ a.skill-link:focus-visible {
   width: 6.5rem;
   height: 6.5rem;
   margin: 0 auto;
-  border: 1px solid color-mix(in srgb, var(--skill-line, #e6d000) 65%, #050505);
+  border: 1px solid color-mix(in srgb, var(--skill-line, #e6d000) 65%, #0c0d12);
   border-radius: 6px;
-  background: color-mix(in srgb, var(--skill-line, #e6d000) 14%, #050505);
+  background: color-mix(in srgb, var(--skill-line, #e6d000) 14%, #0c0d12);
   box-shadow: inset 0 0 0 1px #000;
 }
 .skill-rule {
@@ -1128,7 +1128,7 @@ a.skill-link:focus-visible {
 }
 .town-page {
   --flow: var(--region, #5c2d7a);
-  background-color: #050505;
+  background-color: #0c0d12;
   background-image: radial-gradient(
     ellipse 90% 26rem at 50% -2rem,
     color-mix(in srgb, var(--flow) 42%, transparent),
@@ -1151,7 +1151,7 @@ a.skill-link:focus-visible {
   background: linear-gradient(90deg, transparent, var(--flow, var(--color-line)), transparent);
 }
 .town-page-well {
-  background: color-mix(in srgb, var(--region, #5c2d7a) 10%, #0b0b0b);
+  background: color-mix(in srgb, var(--region, #5c2d7a) 10%, #14151c);
   border: 1px solid color-mix(in srgb, var(--region-ink, var(--region, #5c2d7a)) 70%, #111);
   box-shadow: 0 0 14px color-mix(in srgb, var(--region-accent, #3d9e3d) 22%, transparent);
 }
@@ -1180,7 +1180,7 @@ a.skill-link:focus-visible {
 }
 .god-page {
   --flow: var(--god-page-line, #c4a35a);
-  background-color: #050505;
+  background-color: #0c0d12;
   background-image: radial-gradient(
     ellipse 90% 28rem at 50% -2rem,
     color-mix(in srgb, var(--flow) 40%, transparent),
@@ -1193,10 +1193,10 @@ a.skill-link:focus-visible {
   border-color: transparent;
 }
 .god-page-well {
-  background: var(--god-page-well, #0b0b0b);
+  background: var(--god-page-well, #14151c);
   border: 1px solid var(--god-page-line, #c4a35a);
   box-shadow: 0 0 14px color-mix(in srgb, var(--god-page-line, #c4a35a) 28%, transparent),
-    inset 0 0 0 1px #0b0a08;
+    inset 0 0 0 1px #14151c;
 }
 .god-page h2,
 .god-page .text-parchment,
@@ -1211,7 +1211,7 @@ a.skill-link:focus-visible {
   color: var(--god-page-fg, #ffff00);
 }
 .god-page .border-line {
-  border-color: color-mix(in srgb, var(--god-page-line, #c4a35a) 55%, #0b0a08);
+  border-color: color-mix(in srgb, var(--god-page-line, #c4a35a) 55%, #14151c);
 }
 .god-page a.god-town-door {
   display: flex;
@@ -1221,8 +1221,8 @@ a.skill-link:focus-visible {
   gap: 0.2rem;
   min-height: 44px;
   padding: 0.55rem 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--god-page-line, #c4a35a) 55%, #0b0a08);
-  background: color-mix(in srgb, var(--god-page-well, #0b0b0b) 80%, #000);
+  border: 1px solid color-mix(in srgb, var(--god-page-line, #c4a35a) 55%, #14151c);
+  background: color-mix(in srgb, var(--god-page-well, #14151c) 80%, #0c0d12);
   color: var(--god-page-fg, #ffff00);
   box-shadow: none;
   text-align: left;

@@ -1027,8 +1027,8 @@ export function skillPageStyle(name: string): CSSProperties {
   const accent = capeInk(name);
   return {
     ...capeStyle(name),
-    "--skill-bg": mix(cloth, "#050505", 0.84),
-    "--skill-well": mix(cloth, "#0b0b0b", 0.74),
+    "--skill-bg": mix(cloth, "#0c0d12", 0.84),
+    "--skill-well": mix(cloth, "#14151c", 0.74),
     "--skill-line": cloth,
     "--skill-accent": accent,
     "--skill-muted": mix(accent, "#b7ad96", 0.55),
