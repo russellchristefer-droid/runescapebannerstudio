@@ -63,6 +63,7 @@ function StudioMark({ bleed }: { bleed: boolean }) {
   if (!bleed) return <>{MARK}</>;
   return (
     <>
+      <span className="bleed-spray" aria-hidden="true" />
       {MARK.split("").map((ch, i) =>
         ch === " " ? (
           <span key={i} className="bleed-gap">
