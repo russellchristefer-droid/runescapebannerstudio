@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import { BackLink } from "@/components/back-link";
 import { OfficialPulse } from "@/components/official-pulse";
 import { pageMeta } from "@/lib/page-title";
-import { sisterSkill, skillGuideById, capeNeon, type SkillBand } from "@/lib/skill-guides";
+import { sisterSkill, skillGuideById, capeStyle, type SkillBand } from "@/lib/skill-guides";
 
 export const Route = createFileRoute("/skills/$id")({
   head: ({ params }) => {
@@ -26,7 +26,7 @@ function SkillPage() {
         <p className="eyebrow text-center text-[10px] uppercase tracking-[0.18em] text-muted">Skills · {game}</p>
         <h1
           className="page-h1 site-title skill-page-title mt-1"
-          style={{ "--cape": capeNeon(row.skill.name) } as CSSProperties}
+          style={capeStyle(row.skill.name) as CSSProperties}
         >
           {row.skill.name}
         </h1>
@@ -102,7 +102,7 @@ function SkillPage() {
                 to="/skills/$id"
                 params={{ id: sister.slug }}
                 className="skill-link text-parchment"
-                style={{ "--cape": capeNeon(sister.skill.name) } as CSSProperties}
+                style={capeStyle(sister.skill.name) as CSSProperties}
               >
                 {sister.skill.editions.includes("OSRS") ? "Old School" : "RuneScape"}
               </Link>

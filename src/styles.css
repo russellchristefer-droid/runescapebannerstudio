@@ -538,11 +538,6 @@ a.rs-chip.god-chip[aria-current="page"] {
 .skill-card {
   --cape: #e6d000;
 }
-.skill-card:hover,
-.skill-card:focus-visible {
-  border-color: var(--cape);
-  box-shadow: 0 0 8px var(--cape), inset 0 0 10px rgba(255, 255, 255, 0.08);
-}
 .skill-card .site-title,
 h1.skill-page-title {
   display: block;
@@ -552,8 +547,8 @@ h1.skill-page-title {
   align-self: stretch;
   text-align: center;
   overflow-wrap: anywhere;
-  color: var(--cape, #e6d000);
-  text-shadow: 0 0 10px color-mix(in srgb, var(--cape, #e6d000) 45%, transparent);
+  color: var(--trim, #e6d000);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--trim, #e6d000) 45%, transparent);
 }
 .skill-card .site-title {
   font-size: 0.95rem;
@@ -565,7 +560,7 @@ h1.skill-page-title:hover {
   font-size: clamp(1.35rem, 4vw, 2rem);
   letter-spacing: 0.04em;
   line-height: 1.15;
-  color: var(--cape, #e6d000);
+  color: var(--trim, #e6d000);
 }
 .skill-card .skill-hook {
   display: block;
@@ -574,9 +569,14 @@ h1.skill-page-title:hover {
   text-align: center;
   overflow-wrap: anywhere;
 }
+.skill-card:hover,
+.skill-card:focus-visible {
+  border-color: var(--cape);
+  box-shadow: 0 0 10px var(--cape), 0 0 16px var(--trim);
+}
 .skill-card:hover .site-title,
 .skill-card:focus-visible .site-title {
-  color: var(--cape, #fff);
+  color: var(--trim, #fff);
   text-shadow: 0 0 10px var(--cape);
 }
 .skill-card:hover .skill-open,
@@ -586,8 +586,8 @@ h1.skill-page-title:hover {
 }
 a.skill-link:hover,
 a.skill-link:focus-visible {
-  color: var(--cape, #e6d000);
-  text-shadow: 0 0 8px var(--cape, #e6d000);
+  color: var(--trim, #e6d000);
+  text-shadow: 0 0 8px var(--trim, #e6d000);
 }
 
 @media (prefers-reduced-motion: reduce) {

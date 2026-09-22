@@ -903,43 +903,69 @@ const RS3_NOTE: Record<string, Note> = {
   },
 };
 
-/** Skillcape cloth, bright enough to glow on black the way a god chip does. */
-const CAPE_NEON: Record<string, string> = {
-  Attack: "#ff3b3b",
-  Strength: "#f4fff8",
-  Defence: "#b7c4d4",
-  Ranged: "#39ff6a",
-  Prayer: "#ffe9a8",
-  Magic: "#4da3ff",
-  Runecraft: "#ffd24a",
-  Construction: "#ffe14a",
-  Hitpoints: "#ff4d5a",
-  Constitution: "#ff4d5a",
-  Agility: "#6aa6ff",
-  Herblore: "#2db85a",
-  Thieving: "#c46cff",
-  Crafting: "#e39a3c",
-  Fletching: "#8fd18a",
-  Slayer: "#ff6b6b",
-  Hunter: "#e39a3c",
-  Mining: "#d7a15a",
-  Smithing: "#d5dde6",
-  Fishing: "#4da3ff",
-  Cooking: "#fff6ea",
-  Firemaking: "#ff7a2a",
-  Woodcutting: "#c4844a",
-  Farming: "#b6e36a",
-  Sailing: "#5ec8ff",
-  Summoning: "#3fd0c9",
-  Dungeoneering: "#e07a4a",
-  Divination: "#7ef0ff",
-  Invention: "#ffc107",
-  Archaeology: "#ffd24a",
-  Necromancy: "#c6ffb0",
+/** Trimmed skillcape. Cloth is the body. Trim is the strip. Not the badge. */
+const CAPE: Record<string, { cloth: string; trim: string }> = {
+  Attack: { cloth: "#9a1c22", trim: "#f0c93a" },
+  Strength: { cloth: "#1f8a45", trim: "#c4492a" },
+  Defence: { cloth: "#3a5ea8", trim: "#e6e2c0" },
+  Ranged: { cloth: "#3d7a28", trim: "#a56b32" },
+  Prayer: { cloth: "#b7b3ae", trim: "#f0d23a" },
+  Magic: { cloth: "#8a867c", trim: "#2a3ad0" },
+  Runecraft: { cloth: "#8d8d90", trim: "#e0a020" },
+  Construction: { cloth: "#7a7468", trim: "#d0892a" },
+  Hitpoints: { cloth: "#c4232a", trim: "#f0e0c8" },
+  Constitution: { cloth: "#e6d7b8", trim: "#d41818" },
+  Agility: { cloth: "#1d2f8a", trim: "#8a3a28" },
+  Herblore: { cloth: "#0e6b28", trim: "#f0d23a" },
+  Thieving: { cloth: "#6a2a78", trim: "#1a1a1a" },
+  Crafting: { cloth: "#6b4a28", trim: "#f0d23a" },
+  Fletching: { cloth: "#0e5c62", trim: "#f0d23a" },
+  Slayer: { cloth: "#1c1c1c", trim: "#8e1a1a" },
+  Hunter: { cloth: "#6a6840", trim: "#3a2a18" },
+  Mining: { cloth: "#4a4a32", trim: "#5aa0b0" },
+  Smithing: { cloth: "#4e4a32", trim: "#f0d23a" },
+  Fishing: { cloth: "#6a8ea4", trim: "#f0d23a" },
+  Cooking: { cloth: "#6a2a8a", trim: "#a33a22" },
+  Firemaking: { cloth: "#c4842a", trim: "#f0d23a" },
+  Woodcutting: { cloth: "#a48448", trim: "#2f6b3a" },
+  Farming: { cloth: "#1f7a32", trim: "#b6e06a" },
+  Sailing: { cloth: "#163a6b", trim: "#e2c15a" },
+  Summoning: { cloth: "#8a8a96", trim: "#f0d23a" },
+  Dungeoneering: { cloth: "#6b3a18", trim: "#e8b48a" },
+  Divination: { cloth: "#5a36c4", trim: "#3ef0f0" },
+  Invention: { cloth: "#e6c200", trim: "#2f9ae6" },
+  Archaeology: { cloth: "#f2f2f6", trim: "#1a1a1a" },
+  Necromancy: { cloth: "#1a1a1a", trim: "#a020e0" },
 };
 
-export function capeNeon(name: string) {
-  return CAPE_NEON[name] ?? "#e6d000";
+export function capeColors(name: string) {
+  return CAPE[name] ?? { cloth: "#e6d000", trim: "#fff4b0" };
+}
+
+function luma(hex: string) {
+  const n = Number.parseInt(hex.slice(1), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function lift(hex: string, min = 120) {
+  if (luma(hex) >= min) return hex;
+  const n = Number.parseInt(hex.slice(1), 16);
+  const scale = min / Math.max(luma(hex), 8);
+  const ch = (c: number) => Math.min(255, Math.round(c * scale)).toString(16).padStart(2, "0");
+  return `#${ch((n >> 16) & 255)}${ch((n >> 8) & 255)}${ch(n & 255)}`;
+}
+
+/** Title is the strip. A black strip is lifted so it can be read. Hover stays the cloth. */
+export function capeInk(name: string) {
+  return lift(capeColors(name).trim);
+}
+
+export function capeStyle(name: string): { "--cape": string; "--trim": string } {
+  const { cloth } = capeColors(name);
+  return { "--cape": cloth, "--trim": capeInk(name) };
 }
 
 function keyOf(skill: Skill) {

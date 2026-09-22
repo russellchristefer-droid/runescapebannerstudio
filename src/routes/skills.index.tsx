@@ -2,7 +2,7 @@ import { useState, type CSSProperties } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { AppLink } from "@/places/place-chip";
-import { SKILL_GUIDES, capeNeon, type SkillGuide } from "@/lib/skill-guides";
+import { SKILL_GUIDES, capeStyle, type SkillGuide } from "@/lib/skill-guides";
 import { pageMeta } from "@/lib/page-title";
 
 export const Route = createFileRoute("/skills/")({
@@ -77,7 +77,7 @@ function SkillTile({ row, game }: { row: SkillGuide; game: string }) {
       <AppLink
         href={`/skills/${row.slug}`}
         className="skill-card rs-panel flex h-full min-h-[12rem] flex-col items-center justify-center gap-2 rounded-md px-3 py-4 text-center"
-        style={{ "--cape": capeNeon(row.skill.name) } as CSSProperties}
+        style={capeStyle(row.skill.name) as CSSProperties}
       >
         <span className="flex h-16 w-16 items-center justify-center">
           <img
