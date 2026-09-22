@@ -1,7 +1,7 @@
 /** Top rail — the desk, not a wiki sitemap. */
 export const STUDIO_NAV = [
   ["/", "Banner Studio"],
-  ["/edit", "Clips"],
+  ["/edit", "Clip Bench"],
   ["/towns", "Towns"],
   ["/gods", "Gods"],
   ["/bosses", "Bosses"],

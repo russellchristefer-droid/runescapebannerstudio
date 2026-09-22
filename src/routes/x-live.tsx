@@ -316,7 +316,7 @@ function XLivePage() {
             <li>
               Stop Streaming in OBS, then End in Live Studio. After a kc, cut on{" "}
               <Link to="/edit" className="text-parchment">
-                Clips
+                Clip Bench
               </Link>
               .
             </li>
@@ -433,7 +433,7 @@ function XLivePage() {
           {" · "}
           <Link to="/discord">Discord</Link>
           {" · "}
-          <Link to="/edit">Clips</Link>
+          <Link to="/edit">Clip Bench</Link>
           {" · "}
           <Link to="/">Desk</Link>
         </p>
