@@ -20,8 +20,8 @@ export const Route = createRootRoute({
   head: () => {
     const host = publicAppHost();
     const origin = host ? `https://${host}` : "";
-    const xBanner = origin ? `${origin}/x-banner.jpg?v=20260922` : "";
-    const ogImage = origin ? `${origin}/og.jpg?v=20260922` : "";
+    const xBanner = origin ? `${origin}/x-banner.jpg?v=20260922g` : "";
+    const ogImage = origin ? `${origin}/og.jpg?v=20260922g` : "";
     const desc =
       "RuneScape Banner Studio. Independent fan desk for Old School RuneScape and RuneScape banners. Not a Jagex product.";
     return {
@@ -30,7 +30,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: APP_NAME },
       { name: "description", content: desc },
-      { name: "theme-color", content: "#0c0a08" },
+      { name: "theme-color", content: "#06140c" },
       { name: "color-scheme", content: "dark" },
       { name: "robots", content: "index,follow" },
       { name: "referrer", content: "strict-origin-when-cross-origin" },
