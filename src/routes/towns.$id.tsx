@@ -1,4 +1,5 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { useState } from "react";
 import { BackLink } from "@/components/back-link";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { townNote } from "@/lib/town-notes";
@@ -6,8 +7,8 @@ import { LOCATIONS, townStillLine, type Location } from "@/lib/locations";
 import { godInk } from "@/lib/gods";
 import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
-import { citizenFor } from "@/data/citizens";
-import { streetLine } from "@/data/streetTalk";
+import { citizenForSpeaker } from "@/data/citizens";
+import { streetFlipRemain, streetLine } from "@/data/streetTalk";
 import { OfficialPulse } from "@/components/official-pulse";
 import { PlaceRail } from "@/components/place-rail";
 import { UseOnBanner } from "@/components/use-on-banner";
@@ -175,40 +176,36 @@ function SisterPlace({
 function StreetAndHour({ loc, wiki }: { loc: (typeof LOCATIONS)[number]; wiki?: string }) {
   const now = useVisibleNow(1_000);
   const game = loc.edition === "OSRS" ? "osrs" : "rs3";
-  const line = streetLine(loc.id, game, now);
+  const bit = streetLine(loc.id, game, now);
   const notice = noticeFor(loc.id, game);
-  const citizen = citizenFor(loc.id, game, now);
-  const gameLabel = game === "osrs" ? "Old School RuneScape" : "RuneScape";
-  const alt = `${citizen.role} of ${loc.name}, ${gameLabel}`;
+  const citizen = citizenForSpeaker(loc.id, game, bit.speaker, now);
+  const [headGone, setHeadGone] = useState(false);
   return (
     <>
       <h2 className="text-sm font-semibold text-parchment">From the street</h2>
-      <figure className="citizen-cite flex flex-wrap items-center gap-3">
-        {citizen.src ? (
+      <figure className="street citizen-cite flex flex-wrap items-center gap-3">
+        {citizen.src && !headGone ? (
           <img
             src={citizen.src}
-            alt={alt}
+            alt=""
             width={72}
             height={72}
             loading="lazy"
             decoding="async"
             className="h-[72px] w-[72px] shrink-0 object-contain object-bottom"
-            onError={(e) => {
-              e.currentTarget.remove();
-            }}
+            onError={() => setHeadGone(true)}
           />
         ) : null}
         <blockquote
           className="min-w-[12rem] flex-1 text-sm leading-snug text-parchment/80"
           style={{ fontFamily: "Fondamento, serif" }}
         >
-          “{line}”
+          <strong>{bit.speaker}.</strong> {bit.line}
         </blockquote>
         <figcaption className="w-full text-[11px] text-muted">
-          {citizen.role} · {gameLabel}
+          From the street · flips in {streetFlipRemain(now)}
         </figcaption>
       </figure>
-      <p className="text-xs text-faint">Fan flavour.</p>
       <h2 className="text-sm font-semibold text-parchment">This hour</h2>
       {notice ? (
         <p className="text-sm text-muted">

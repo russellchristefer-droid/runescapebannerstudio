@@ -9,8 +9,12 @@ function c(role: string, src?: string): Citizen {
 
 const OSRS: Record<string, Citizen[]> = {
   osrslumbridge: [
-    c("Duke's clerk", "/stills/osrs/citizens/lumbridge-1.png"),
-    c("Town guard", "/stills/osrs/citizens/lumbridge-2.png"),
+    c("Guard", "/stills/osrs/citizens/lumbridge-2.png"),
+    c("Man", "/stills/osrs/citizens/lumbridge-1.png"),
+    c("Cook"),
+    c("Miller"),
+    c("Fisher"),
+    c("Guide"),
   ],
   osrsfalador: [c("White Knight", "/stills/osrs/citizens/falador-1.png")],
   osrsvarrock: [
@@ -27,13 +31,30 @@ const OSRS: Record<string, Citizen[]> = {
   osrscath: [c("Fisher", "/stills/osrs/citizens/catherby-1.png")],
   osrsard: [c("Knight of Ardougne", "/stills/osrs/citizens/ardougne-1.png")],
   osrsyan: [c("Wizard", "/stills/osrs/citizens/yanille-1.png")],
-  osrsprif: [c("Elven door-warden", "/stills/osrs/citizens/prifddinas-1.png")],
+  osrsprif: [
+    c("Elf", "/stills/osrs/citizens/prifddinas-1.png"),
+    c("Guard", "/stills/osrs/citizens/prifddinas-1.png"),
+    c("Singer", "/stills/osrs/citizens/prifddinas-1.png"),
+    c("Warden", "/stills/osrs/citizens/prifddinas-1.png"),
+  ],
+  osrscani: [
+    c("Guard"),
+    c("Resident"),
+    c("Canifis guard"),
+    c("Innkeep"),
+    c("Tanner"),
+    c("Wolf"),
+  ],
 };
 
 const RS3: Record<string, Citizen[]> = {
   lumbridge: [
-    c("Duke's clerk", "/stills/rs3/citizens/lumbridge-1.png"),
-    c("Town guard", "/stills/rs3/citizens/lumbridge-2.png"),
+    c("Guard", "/stills/rs3/citizens/lumbridge-2.png"),
+    c("Woman", "/stills/rs3/citizens/lumbridge-1.png"),
+    c("Foreman"),
+    c("Miller"),
+    c("Sexton"),
+    c("Porter"),
   ],
   falador: [c("White Knight", "/stills/rs3/citizens/falador-1.png")],
   varrock: [
@@ -46,7 +67,21 @@ const RS3: Record<string, Citizen[]> = {
   ],
   draynor: [c("Market guard", "/stills/rs3/citizens/draynor-1.png")],
   alkharid: [c("Palace guard", "/stills/rs3/citizens/alkharid-1.png")],
-  prifddinas: [c("Elven door-warden", "/stills/rs3/citizens/prifddinas-1.png")],
+  prifddinas: [
+    c("Clerk", "/stills/rs3/citizens/prifddinas-1.png"),
+    c("Ithell worker", "/stills/rs3/citizens/prifddinas-1.png"),
+    c("Guard", "/stills/rs3/citizens/prifddinas-1.png"),
+    c("Singer", "/stills/rs3/citizens/prifddinas-1.png"),
+    c("Warden", "/stills/rs3/citizens/prifddinas-1.png"),
+  ],
+  canifis: [
+    c("Guard"),
+    c("Innkeep"),
+    c("Resident"),
+    c("Tanner"),
+    c("Watch"),
+    c("Wolf"),
+  ],
 };
 
 const APE_OSRS: Citizen[] = [
@@ -75,6 +110,15 @@ const GOBLIN_RS3: Citizen[] = [
 
 const GOBLIN_SLUGS = new Set(["goblin", "osrsgob", "goblinvillage"]);
 
+const NO_HUMAN_DEFAULT = new Set([
+  ...APE_SLUGS,
+  ...GOBLIN_SLUGS,
+  "osrscani",
+  "canifis",
+  "osrsprif",
+  "prifddinas",
+]);
+
 const DEFAULT_OSRS: Citizen[] = [
   c("Guard", "/stills/osrs/citizens/_default-0.png"),
   c("Stallholder", "/stills/osrs/citizens/_default-1.png"),
@@ -89,6 +133,7 @@ export function citizenPool(id: string, game: "osrs" | "rs3"): Citizen[] {
   if (APE_SLUGS.has(id)) return game === "osrs" ? APE_OSRS : APE_RS3;
   if (GOBLIN_SLUGS.has(id)) return game === "osrs" ? GOBLIN_OSRS : GOBLIN_RS3;
   const named = game === "osrs" ? OSRS[id] : RS3[id];
+  if (NO_HUMAN_DEFAULT.has(id)) return named?.length ? named : [c("Local")];
   const fallback = game === "osrs" ? DEFAULT_OSRS : DEFAULT_RS3;
   const base = named?.length ? named : [];
   const seen = new Set(base.map((row) => row.src ?? row.role));
@@ -101,4 +146,19 @@ export function citizenFor(id: string, game: "osrs" | "rs3", now = Date.now()): 
   const pool = citizenPool(id, game);
   const slot = Math.floor(now / 300000);
   return pool[slot % pool.length]!;
+}
+
+export function citizenForSpeaker(
+  id: string,
+  game: "osrs" | "rs3",
+  speaker: string,
+  now = Date.now(),
+): Citizen {
+  const pool = citizenPool(id, game);
+  const key = speaker.toLowerCase();
+  const hit = pool.find((row) => {
+    const role = row.role.toLowerCase();
+    return role.includes(key) || key.includes(role.split(" ")[0] ?? "");
+  });
+  return hit ?? citizenFor(id, game, now);
 }
