@@ -4,7 +4,7 @@ import { BackLink } from "@/components/back-link";
 import { useVisibleNow } from "@/hooks/use-visible-now";
 import { townNote } from "@/lib/town-notes";
 import { LOCATIONS, townStillLine, type Location } from "@/lib/locations";
-import { godInk } from "@/lib/gods";
+import { godInk, godNeon, godPageStyle } from "@/lib/gods";
 import { placeLore } from "@/lib/place-lore";
 import { noticeFor } from "@/data/townNotices";
 import { citizenForSpeaker } from "@/data/citizens";
@@ -34,27 +34,44 @@ function TownNotePage() {
   const note = townNote(id);
   const loc = LOCATIONS.find((item) => item.id === id) ?? LOCATIONS.find((item) => item.name === note?.title);
   if (!note) throw notFound();
+  const sheet = loc ? godPageStyle(loc.god) : undefined;
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className={loc ? "god-page min-h-dvh" : "min-h-dvh bg-bg text-fg"} style={sheet}>
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
-        <h1 className="page-h1 site-title mt-1">{note.title}</h1>
+        <h1
+          className="page-h1 site-title mt-1"
+          style={loc ? { color: godInk(loc.god) } : undefined}
+        >
+          {note.title}
+        </h1>
         {loc ? (
           <p className="mt-1 text-center text-sm text-muted">
             {loc.region.replace(/\s·\sOSRS$/, "")} ·{" "}
-            <AppLink href={godPath(loc.god)} className="no-underline" style={{ color: godInk(loc.god) }}>
+            <AppLink href={godPath(loc.god)} className="no-underline" style={{ color: godNeon(loc.god) }}>
               {loc.god}
             </AppLink>
           </p>
         ) : (
           <p className="mt-1 text-sm text-muted">{note.region}</p>
         )}
-        <span className="mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
+        <span
+          className="mt-2 block h-px w-24"
+          style={{ background: loc ? godNeon(loc.god) : "#c6a45a" }}
+          aria-hidden="true"
+        />
         <div className="mt-3">
           <PlaceRail section="towns" />
         </div>
       </header>
-      <main id="content" className="mx-auto flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8">
+      <main
+        id="content"
+        className={
+          loc
+            ? "god-page-well mx-auto mt-6 mb-8 flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8"
+            : "mx-auto flex max-w-3xl flex-col gap-5 px-5 py-6 md:px-8"
+        }
+      >
         <OfficialPulse
           note="Official wiki for this street. Official news wins."
           links={townWikiLinks(note.title, loc)}
