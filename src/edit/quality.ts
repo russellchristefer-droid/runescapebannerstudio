@@ -61,15 +61,11 @@ export function qualityForSize(w: number, h: number): QualityPreset {
   return QUALITY.banner;
 }
 
-/** Chip canvas, never upscale a smaller source. Keeps the crop ratio. */
-export function exportBox(chipW: number, chipH: number, srcW: number, srcH: number) {
-  const cw = even(chipW);
-  const ch = even(chipH);
-  const sw = Math.max(16, srcW || cw);
-  const sh = Math.max(16, srcH || ch);
-  if (sw >= cw || sh >= ch) return { w: cw, h: ch };
-  const s = Math.min(sw / cw, sh / ch);
-  return { w: even(Math.max(16, Math.round(cw * s))), h: even(Math.max(16, Math.round(ch * s))) };
+/** Chip canvas. Encode at the crop, cover the source into it. Never the preview box. */
+export function exportBox(chipW: number, chipH: number, srcW?: number, srcH?: number) {
+  void srcW;
+  void srcH;
+  return { w: even(chipW), h: even(chipH) };
 }
 
 export function applyPack(q: { w: number; h: number; fps?: number }, pack: Pack = "balanced"): QualityPreset {

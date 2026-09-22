@@ -75,14 +75,12 @@ test("TikTok 9:16 is 1080×1920 at 30 fps; Balanced is 6.5 Mbps VBR", () => {
   assert.equal(FORMAT.banner.w, 1200);
 });
 
-test("export box never upscales a small source", () => {
+test("export box is always the chip — 9:16 stays 1080×1920", () => {
   assert.deepEqual(exportBox(1080, 1920, 1920, 1080), { w: 1080, h: 1920 });
-  const phone = exportBox(1080, 1920, 720, 1280);
-  assert.equal(phone.w, 720);
-  assert.equal(phone.h, 1280);
-  const tiny = exportBox(1920, 1080, 640, 360);
-  assert.ok(tiny.w <= 640);
-  assert.ok(tiny.h <= 360);
+  assert.deepEqual(exportBox(1080, 1920, 720, 1280), { w: 1080, h: 1920 });
+  assert.deepEqual(exportBox(1080, 1920, 540, 960), { w: 1080, h: 1920 });
+  assert.deepEqual(exportBox(1920, 1080, 640, 360), { w: 1920, h: 1080 });
+  assert.deepEqual(exportBox(1200, 480, 400, 160), { w: 1200, h: 480 });
 });
 
 test("clip file name is christefer-1 plus size", () => {

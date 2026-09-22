@@ -9,7 +9,7 @@ import { attachSound, detachSound, setMute, setGain, setFade, armFades, soundTra
 import { canEncodeMp4 } from "./encode-mp4";
 import { canWebCodecs, encodeClip } from "./webcodecsExport";
 import { exportMp4 } from "./muxExport";
-import { applyPack, exportBox, drawHi, LADDER, pickRecorderMime, qualityForSize, type Pack } from "./quality";
+import { applyPack, drawHi, LADDER, pickRecorderMime, type Pack } from "./quality";
 import { seekTo, SeekError } from "./seekSafe";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
 import {
@@ -234,9 +234,8 @@ export function ClipBench() {
       bannerImg.current = painted.bitmap;
       bannerNat.current = { w: painted.w, h: painted.h };
       setOverlay((cur) => {
-        const next = cur === "off" ? "lower" : cur;
-        if (!bannerLay.current) snapBanner(next === "top" ? "top" : "lower");
-        return next;
+        if (cur !== "off" && !bannerLay.current) snapBanner(cur === "top" ? "top" : "lower");
+        return cur;
       });
     };
     void pinLive();
@@ -369,11 +368,12 @@ export function ClipBench() {
         if (hold.height !== h) hold.height = h;
         hold.getContext("2d")?.drawImage(canvas, 0, 0);
       }
-    } else if (lastVid.current && lastVid.current.width) {
+    } else if (lastVid.current && lastVid.current.width && video?.src) {
       ctx.drawImage(lastVid.current, 0, 0, w, h);
     } else {
       ctx.fillStyle = "#0b0a08";
       ctx.fillRect(0, 0, w, h);
+      if (!forFile) return;
     }
     const t = (video?.currentTime || s.now);
     const fadeInSec = (s.fadeIn / Math.max(1, s.fps)) / Math.max(0.25, s.speed);
@@ -1329,14 +1329,13 @@ export function ClipBench() {
     if (!canEncodeMp4() && !mime) throw new Error("mime");
     const inT = Math.max(0, Math.min(inPoint, video.duration - 0.05));
     const outT = Math.max(inT + 0.05, Math.min(outPoint || video.duration, video.duration));
-    const chip = qualityForSize(w, h);
-    const box = exportBox(chip.w, chip.h, video.videoWidth || chip.w, video.videoHeight || chip.h);
-    const q = applyPack(box, pack);
+    const q = applyPack({ w, h, fps: 30 }, pack);
     const canvas = document.createElement("canvas");
     canvas.width = q.w;
     canvas.height = q.h;
     canvas.style.position = "fixed";
     canvas.style.left = "-9999px";
+    canvas.setAttribute("data-export", `${q.w}x${q.h}`);
     document.body.appendChild(canvas);
     canvas.getContext("2d", { alpha: false, willReadFrequently: true });
     const overlayOn = paintArgs.current.overlay !== "off" && Boolean(bannerImg.current);
@@ -1684,11 +1683,12 @@ export function ClipBench() {
           <div className="min-w-0">
             <div
               className="relative mx-auto w-full overflow-hidden bg-[#120f0c]"
-              style={{ aspectRatio: `${size.w} / ${size.h}`, maxHeight: 360 }}
+              style={{ aspectRatio: `${size.w} / ${size.h}`, maxHeight: 480 }}
               data-state={ready}
+              data-export={`${size.w}x${size.h}`}
             >
               {ready === "empty" || ready === "loading" || ready === "error" ? (
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#120f0c]">
                   <p className="text-sm text-muted">
                     {ready === "empty"
                       ? "No clip. Upload a file you own."
@@ -1716,7 +1716,9 @@ export function ClipBench() {
               />
               <canvas
                 ref={canvasRef}
-                className="relative z-[1] block h-full w-full touch-none object-contain"
+                className={`relative z-[1] block h-full w-full touch-none object-contain ${
+                  ready === "empty" || ready === "loading" || ready === "error" ? "invisible" : ""
+                }`}
                 onPointerDown={onBannerPointerDown}
                 onPointerMove={onBannerPointerMove}
                 onPointerUp={onBannerPointerUp}
