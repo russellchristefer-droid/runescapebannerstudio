@@ -18,15 +18,15 @@
 }
 
 @theme {
-  --color-bg: #050505;
-  --color-surface: #0b0b0b;
-  --color-raised: #111111;
+  --color-bg: #0c0b08;
+  --color-surface: #12110c;
+  --color-raised: #1a1810;
   --color-fg: #e8d9a8;
   --color-muted: #b5a07a;
   --color-faint: #8d7a58;
   --color-line: #c4a35a;
   --color-parchment: #e2c37a;
-  --color-ink: #050505;
+  --color-ink: #0c0b08;
   --color-wood: #111111;
   --color-play: #9b1b1b;
 
@@ -53,7 +53,7 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scrollbar-gutter: stable;
-    scrollbar-color: #c4a35a #050505;
+    scrollbar-color: #c4a35a #0c0b08;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -62,14 +62,10 @@
     overflow-x: clip;
     background-color: var(--color-bg);
     background-image:
-      radial-gradient(ellipse at 50% -8%, rgba(255, 72, 12, 0.22), transparent 44%),
-      radial-gradient(ellipse at 18% 8%, rgba(255, 150, 40, 0.10), transparent 32%),
-      radial-gradient(ellipse at 82% 10%, rgba(92, 48, 180, 0.10), transparent 30%),
-      radial-gradient(ellipse at 50% 108%, rgba(255, 72, 12, 0.22), transparent 44%),
-      radial-gradient(ellipse at 18% 92%, rgba(255, 150, 40, 0.10), transparent 32%),
-      radial-gradient(ellipse at 82% 90%, rgba(92, 48, 180, 0.10), transparent 30%),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='88' viewBox='0 0 160 88'%3E%3Crect fill='%23050505' width='160' height='88'/%3E%3Cg fill='none' stroke='%232a1408' stroke-width='1.5'%3E%3Crect x='1' y='1' width='52' height='28' fill='%23140c08'/%3E%3Crect x='55' y='1' width='64' height='28' fill='%23100810'/%3E%3Crect x='121' y='1' width='38' height='28' fill='%2318100c'/%3E%3Crect x='1' y='31' width='38' height='26' fill='%230c0808'/%3E%3Crect x='41' y='31' width='70' height='26' fill='%23160c10'/%3E%3Crect x='113' y='31' width='46' height='26' fill='%23120a08'/%3E%3Crect x='1' y='59' width='72' height='28' fill='%23140a0c'/%3E%3Crect x='75' y='59' width='44' height='28' fill='%230a0608'/%3E%3Crect x='121' y='59' width='38' height='28' fill='%23180c14'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: auto, auto, auto, auto, auto, auto, 160px 88px;
+      radial-gradient(ellipse at 50% -6%, rgba(196, 163, 90, 0.18), transparent 48%),
+      radial-gradient(ellipse at 50% 108%, rgba(196, 163, 90, 0.16), transparent 46%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='88' viewBox='0 0 160 88'%3E%3Crect fill='%23100e0b' width='160' height='88'/%3E%3Cg fill='none' stroke='%233a3020' stroke-width='2'%3E%3Crect x='1' y='1' width='52' height='28' fill='%231c1812'/%3E%3Crect x='55' y='1' width='64' height='28' fill='%23241e16'/%3E%3Crect x='121' y='1' width='38' height='28' fill='%23181410'/%3E%3Crect x='1' y='31' width='38' height='26' fill='%2316110c'/%3E%3Crect x='41' y='31' width='70' height='26' fill='%23201a14'/%3E%3Crect x='113' y='31' width='46' height='26' fill='%231a1610'/%3E%3Crect x='1' y='59' width='72' height='28' fill='%231e1913'/%3E%3Crect x='75' y='59' width='44' height='28' fill='%23140f0b'/%3E%3Crect x='121' y='59' width='38' height='28' fill='%23221c16'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: auto, auto, 160px 88px;
     color: var(--color-fg);
     font-family: var(--font-sans);
     font-size: 16px;
@@ -97,13 +93,9 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(ellipse 90% 42% at 50% -8%, rgba(255, 78, 8, 0.34), transparent 52%),
-      radial-gradient(ellipse 36% 28% at 22% 0%, rgba(255, 170, 50, 0.16), transparent 60%),
-      radial-gradient(ellipse 34% 26% at 78% 0%, rgba(110, 42, 210, 0.14), transparent 58%),
-      radial-gradient(ellipse 90% 42% at 50% 108%, rgba(255, 78, 8, 0.34), transparent 52%),
-      radial-gradient(ellipse 36% 28% at 22% 100%, rgba(255, 170, 50, 0.16), transparent 60%),
-      radial-gradient(ellipse 34% 26% at 78% 100%, rgba(110, 42, 210, 0.14), transparent 58%),
-      radial-gradient(ellipse at 50% 50%, transparent 52%, #000 100%);
+      radial-gradient(ellipse 90% 40% at 50% -8%, rgba(196, 163, 90, 0.22), transparent 55%),
+      radial-gradient(ellipse 90% 40% at 50% 108%, rgba(196, 163, 90, 0.20), transparent 55%),
+      radial-gradient(ellipse at 50% 50%, transparent 55%, #0a0806 100%);
     animation: none;
     opacity: 0.85;
   }
@@ -297,12 +289,12 @@
 
 .rs-stone-header,
 header {
-  background-color: #0b0b0b;
+  background-color: #1a1610;
   background-image:
-    radial-gradient(ellipse at 50% 0%, rgba(255, 78, 8, 0.18), transparent 58%),
-    radial-gradient(ellipse at 82% 0%, rgba(110, 42, 210, 0.12), transparent 50%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='88' viewBox='0 0 160 88'%3E%3Crect fill='%230b0b0b' width='160' height='88'/%3E%3Cg fill='none' stroke='%232a1408' stroke-width='1.5'%3E%3Crect x='1' y='1' width='52' height='28' fill='%23140c08'/%3E%3Crect x='55' y='1' width='64' height='28' fill='%23100810'/%3E%3Crect x='121' y='1' width='38' height='28' fill='%2318100c'/%3E%3Crect x='1' y='31' width='38' height='26' fill='%230c0808'/%3E%3Crect x='41' y='31' width='70' height='26' fill='%23160c10'/%3E%3Crect x='113' y='31' width='46' height='26' fill='%23120a08'/%3E%3Crect x='1' y='59' width='72' height='28' fill='%23140a0c'/%3E%3Crect x='75' y='59' width='44' height='28' fill='%230a0608'/%3E%3Crect x='121' y='59' width='38' height='28' fill='%23180c14'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: auto, auto, 160px 88px;
+    linear-gradient(180deg, rgba(196, 163, 90, 0.16), rgba(10, 8, 6, 0.35) 40%, rgba(10, 8, 6, 0.55)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='88' viewBox='0 0 160 88'%3E%3Crect fill='%231a1610' width='160' height='88'/%3E%3Cg fill='none' stroke='%233a3020' stroke-width='2'%3E%3Crect x='1' y='1' width='52' height='28' fill='%23241e16'/%3E%3Crect x='55' y='1' width='64' height='28' fill='%232c261c'/%3E%3Crect x='121' y='1' width='38' height='28' fill='%23201a14'/%3E%3Crect x='1' y='31' width='38' height='26' fill='%231c1812'/%3E%3Crect x='41' y='31' width='70' height='26' fill='%2328211a'/%3E%3Crect x='113' y='31' width='46' height='26' fill='%23241e18'/%3E%3Crect x='1' y='59' width='72' height='28' fill='%23221c16'/%3E%3Crect x='75' y='59' width='44' height='28' fill='%23181410'/%3E%3Crect x='121' y='59' width='38' height='28' fill='%232a241c'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: auto, 160px 88px;
+  box-shadow: inset 0 1px 0 rgba(232, 217, 168, 0.18), inset 0 -8px 18px rgba(0, 0, 0, 0.4);
 }
 
 .rs-stone-header {
