@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StillPhoto } from "@/components/still-photo";
 import { UseOnBanner } from "@/desk/use-on-banner";
-import { godChipClass, godInk, godNeon } from "@/lib/gods";
+import { godChipClass, godHueClass, godInk, godNeon } from "@/lib/gods";
 import type { Edition } from "@/lib/locations";
 import { AppLink, bossPath, townPath } from "./place-chip";
 
@@ -50,7 +50,11 @@ export function PlaceCard({
   if (!src) return null;
   return (
     <li className="[content-visibility:auto] [contain-intrinsic-size:auto_220px]">
-      <div className={`rs-panel overflow-hidden rounded-md hover:border-[#e2c37a] ${kind === "God" ? godChipClass(name) : ""}`}>
+      <div
+        className={`rs-panel overflow-hidden rounded-md ${
+          kind === "God" ? godChipClass(name) : kind === "Town" && god ? `town-card ${godHueClass(god)}` : "hover:border-[#e2c37a]"
+        }`}
+      >
         <AppLink href={href} className="block [touch-action:manipulation]">
           {gone ? (
             <span className="flex aspect-video w-full items-center justify-center bg-[#1a1610] text-[11px] text-faint">

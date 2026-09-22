@@ -44,6 +44,11 @@ export function godChipClass(god: God | string) {
   return slug ? `god-chip god-chip-${slug}` : "god-chip";
 }
 
+export function godHueClass(god: God | string) {
+  const slug = GOD_SLUGS[god as God];
+  return slug ? `god-chip-${slug}` : "";
+}
+
 /** Dark field behind a still. Same hue as the prayer book, not a highlighter. */
 export const GOD_WASH: Record<God, string> = {
   Saradomin: "#122038",

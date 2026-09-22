@@ -14,7 +14,7 @@ import { stillIndex } from "@/lib/still-clock";
 import { safeZoneRects, zoneForPlate, type SafeZone } from "@/lib/bannerFeatures";
 import { MARKS, MARK_SIDE, markContainRect } from "@/lib/marks";
 import { IMAGE_COMPRESS } from "@/lib/image-compress";
-import { godNeon } from "@/lib/gods";
+import { godHueClass, godNeon } from "@/lib/gods";
 import { sanitizeSkillLevel, skillIdForHiscore, skillLevelCap, SKILLS } from "@/lib/skills";
 import {
   BANNER_SIZES,
@@ -1450,7 +1450,14 @@ export function Studio() {
             const src = stillAllowed(raw, loc.edition) ? raw : loc.viewA;
             const href = loc.kind === "boss" ? bossPath(loc.id) : townPath(loc.id);
             return (
-              <div key={loc.id} className="rs-panel overflow-hidden rounded-md hover:border-[#e2c37a]" data-place-card data-slug={loc.id}>
+              <div
+                key={loc.id}
+                className={`rs-panel overflow-hidden rounded-md ${
+                  loc.kind === "town" ? `town-card ${godHueClass(loc.god)}` : "hover:border-[#e2c37a]"
+                }`}
+                data-place-card
+                data-slug={loc.id}
+              >
                 <AppLink href={href} className="block [touch-action:manipulation]">
                   <StillPhoto
                     src={src}

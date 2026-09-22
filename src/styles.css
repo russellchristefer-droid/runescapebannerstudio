@@ -437,13 +437,34 @@ a.rs-chip.god-chip[aria-current="page"] {
   box-shadow: 0 0 8px var(--god), inset 0 0 0 1px #0b0a08;
 }
 
+.town-card {
+  --god: #c4a35a;
+}
+.town-card:hover,
+.town-card:focus-within {
+  border-color: var(--god);
+  box-shadow: 0 0 8px var(--god), inset 0 0 10px rgba(255, 255, 255, 0.08);
+}
+.town-card:hover .site-title,
+.town-card:focus-within .site-title {
+  text-shadow: 0 0 10px var(--god);
+  filter: brightness(1.12);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .god-chip,
   a.rs-chip.god-chip,
   a.rs-chip.god-chip:hover,
   a.rs-chip.god-chip.rs-chip-on,
-  .rs-panel.god-chip {
+  .rs-panel.god-chip,
+  .town-card:hover,
+  .town-card:focus-within {
     box-shadow: none;
+  }
+  .town-card:hover .site-title,
+  .town-card:focus-within .site-title {
+    text-shadow: none;
+    filter: none;
   }
 }
 
