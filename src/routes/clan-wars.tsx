@@ -5,24 +5,25 @@ import { pageMeta } from "@/lib/page-title";
 export const Route = createFileRoute("/clan-wars")({
   head: () =>
     pageMeta(
-      "Clan Wars",
-      "The portal is the law. The money fights are usually somewhere else.",
+      "Fight Pits",
+      "TzHaar built a bowl. Last one standing. Tokkul, not a flag.",
     ),
   component: ClanWarsPage,
 });
 
 const PLACES = [
-  { href: "/pvp", label: "PvP" },
-  { href: "/towns/osrsedge", label: "Edgeville" },
+  { href: "#pits", label: "Pits" },
+  { href: "#doors", label: "Portals" },
   { href: "https://oldschool.runescape.wiki/w/Ferox_Enclave", label: "Ferox" },
   { href: "https://runescape.wiki/w/Gamers%27_Grotto", label: "Grotto" },
+  { href: "/pvp", label: "PvP" },
 ] as const;
 
 function Chip({ href, label }: { href: string; label: string }) {
   const cls = "rs-chip min-h-11 text-xs";
-  if (href.startsWith("http")) {
+  if (href.startsWith("http") || href.startsWith("#")) {
     return (
-      <a href={href} className={cls} target="_blank" rel="noopener noreferrer">
+      <a href={href} className={cls} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
         {label}
       </a>
     );
@@ -39,9 +40,14 @@ function ClanWarsPage() {
     <div className="cw-page min-h-dvh">
       <header className="page-band px-5 py-5">
         <BackLink />
-        <h1 className="page-h1 mt-1">Clan Wars</h1>
+        <h1 className="page-h1 mt-1">Fight Pits</h1>
         <p className="cw-deck mx-auto mt-2 max-w-2xl text-center text-sm">
-          The portal is the law. The money fights are usually somewhere else.
+          TzHaar built a bowl. Last one standing. Tokkul, not a flag.
+        </p>
+        <p className="mt-3 text-center">
+          <a href="#doors" className="rs-chip min-h-11 text-xs">
+            Clan Wars portals
+          </a>
         </p>
         <nav className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Places to visit">
           {PLACES.map((p) => (
@@ -51,7 +57,117 @@ function ClanWarsPage() {
       </header>
 
       <main className="page-band flex flex-col gap-8 px-5 py-6">
-        <section className="grid gap-3 sm:grid-cols-2">
+        <section id="pits" className="scroll-mt-20">
+          <div className="grid gap-3 lg:grid-cols-3">
+            <article className="rs-panel overflow-hidden">
+              <img
+                src="/pits/mor-ul-rek.jpg"
+                alt="Old School Fight Pit in Mor Ul Rek"
+                width={1200}
+                height={750}
+                decoding="async"
+                className="aspect-video w-full object-cover"
+              />
+              <h2 className="site-title mx-auto block w-full px-3 pt-2 text-center text-sm no-underline">Mor Ul Rek</h2>
+              <p className="px-3 pb-3 text-center text-[10px] text-muted">Old School · the red bowl</p>
+            </article>
+            <article className="rs-panel overflow-hidden">
+              <img
+                src="/pits/bowl.jpg"
+                alt="The Fight Pit bowl"
+                width={1600}
+                height={876}
+                loading="lazy"
+                decoding="async"
+                className="aspect-video w-full object-cover"
+              />
+              <h2 className="site-title mx-auto block w-full px-3 pt-2 text-center text-sm no-underline">The bowl</h2>
+              <p className="px-3 pb-3 text-center text-[10px] text-muted">RuneScape · inside the circle</p>
+            </article>
+            <article className="rs-panel overflow-hidden">
+              <img
+                src="/pits/tzhaar-city.jpg"
+                alt="Fight Pit in TzHaar City"
+                width={1600}
+                height={951}
+                loading="lazy"
+                decoding="async"
+                className="aspect-video w-full object-cover"
+              />
+              <h2 className="site-title mx-auto block w-full px-3 pt-2 text-center text-sm no-underline">TzHaar City</h2>
+              <p className="px-3 pb-3 text-center text-[10px] text-muted">RuneScape · the city pit</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="rs-panel p-4 text-center">
+          <h2 className="section-h2">The bowl</h2>
+          <h3 className="mt-4 text-sm">19 September 2005</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            Fight Pits land with the TzHaar. The update is called Massive minigame — Fight Pits.
+            You walk in. You do not leave until one body stands. The last name wears a red skull.
+            Tokkul is the purse, counted off the combat levels you put down. Your items stay.
+            This is not a clan portal.
+          </p>
+          <h3 className="mt-5 text-sm">The city under the volcano</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            TzHaar are not humans in a costume. They are lava with a law.
+            The pit is how they measure a fighter without breaking the city.
+            Fight Cave is you against waves. The Inferno is a later cave.
+            The Elder Kiln and the TokHaar are a different fight. Do not mix those rules into this bowl.
+          </p>
+          <h3 className="mt-5 text-sm">How a leader settled it</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            A wipe costs the clan name. A lot of leaders would not pay that for one argument.
+            They sent one fighter. Sometimes the whole clan walked into the circle and stayed until one skull was left.
+            No flag. No purple contract. The argument ended when the champion walked out.
+            That habit is older than Ferox. The coloured door came in December 2007, when captains wanted terms instead of a circle.
+            This is how players used the bowl. It is not a Jagex rule.
+          </p>
+          <h3 className="mt-5 text-sm">Old School — Mor Ul Rek</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            West of the inner city. Fairy ring BLP, or the minigame teleport.
+            The public activity world is 362. The bag stays.
+            The bowl fills on a clock. Tz-Kih at ninety seconds. Then Tz-Kek, Tok-Xil, Ket-Zek, then TzTok-Jad.
+            At eleven and a half minutes the gas hits every tick.
+            The skull lasts about an hour. It falls off if you teleport, change a weapon, pray overhead, hop, log out, or take a hit from a monster.
+            Wiki for the live clock. Do not paste Ferox doors onto this bowl.
+          </p>
+          <h3 className="mt-5 text-sm">RuneScape — TzHaar City</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            Same bowl. Later grammar. TokKul-Zo is the fast door. Death is safe.
+            On 13 May 2008 the waiting room was not safe. That was the day TokTz-Ket-Dill came out.
+            People lost bags. It was fixed the same day, and the abuse was banned.
+            That hour is history. It is not the rule now.
+            On 17 March 2009 the entrance was put back. A global pit existed from June 2011 to February 2012, then left.
+            The kiln is still not this pit.
+          </p>
+          <h3 className="mt-5 text-sm">What the pit is not</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            Not Clan Wars. Not Castle Wars. Not Deadman All Stars. Not a creator purse.
+            A pit is a circle. A clan war is a contract on a coloured door.
+          </p>
+          <h3 className="mt-5 text-sm">Champion</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            One name at a time. Tokkul in the purse. No team flag.
+          </p>
+          <p className="mt-4 text-sm">
+            <a className="text-parchment" href="https://oldschool.runescape.wiki/w/TzHaar_Fight_Pit" target="_blank" rel="noopener noreferrer">
+              Old School wiki
+            </a>
+            {" · "}
+            <a className="text-parchment" href="https://runescape.wiki/w/TzHaar_Fight_Pit" target="_blank" rel="noopener noreferrer">
+              RuneScape wiki
+            </a>
+          </p>
+        </section>
+
+        <section id="doors" className="scroll-mt-20">
+          <h2 className="section-h2">Clan Wars</h2>
+          <p className="mx-auto mb-3 max-w-xl text-center text-sm text-muted">
+            The portal is the law. The money fights are usually somewhere else.
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
           <article id="osrs" className="rs-panel scroll-mt-20 overflow-hidden">
             <img
               src="/clan-wars/osrs-ferox.png"
@@ -88,6 +204,7 @@ function ClanWarsPage() {
               <li>Purple is the war. Red is dangerous FFA.</li>
             </ul>
           </article>
+          </div>
         </section>
 
         <section className="rs-panel p-4">
@@ -257,8 +374,7 @@ function ClanWarsPage() {
             turn Protect Item on. Do not mix the ability bar and Legacy in one pile.
           </p>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted">
-            Fight Pits is a different game. Last one standing, no captain, no wall.
-            Old School is the TzHaar bowl at Mor Ul Rek. RuneScape is the same bowl in TzHaar City.
+            The bowl is above this. Last one standing. No captain. No wall.
           </p>
         </section>
 
