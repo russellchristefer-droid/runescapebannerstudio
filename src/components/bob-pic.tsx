@@ -10,11 +10,11 @@ export function BobPic({
   id?: string;
 }) {
   const gif = edition === "rs3" ? "/bob/bob-rs3.gif?v=2" : "/bob/bob-osrs.gif?v=2";
-  const [src, setSrc] = useState(gif);
+  const [src, setSrc] = useState(STILL);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const apply = () => setSrc(mq.matches ? STILL : gif);
+    const mq = window.matchMedia("(min-width: 900px) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const apply = () => setSrc(mq.matches ? gif : STILL);
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
@@ -27,6 +27,7 @@ export function BobPic({
       width={96}
       height={96}
       src={src}
+      decoding="async"
       onError={(e) => {
         if (!e.currentTarget.src.includes("bob-still.png")) {
           e.currentTarget.onerror = null;

@@ -545,9 +545,6 @@ a.rs-chip.god-chip[aria-current="page"] {
     animation: none;
     opacity: 0.82;
   }
-  #bob-wotd {
-    content: url("/bob/bob-still.png");
-  }
 }
 
 .god-page {
