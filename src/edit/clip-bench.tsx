@@ -531,8 +531,10 @@ export function ClipBench() {
     const canvas = canvasRef.current;
     const video = videoRef.current;
     if (!canvas) return;
-    const preview = previewSize(size.w, size.h);
-    paint(canvas, video, true, preview.w, preview.h);
+    canvas.width = size.w;
+    canvas.height = size.h;
+    canvas.setAttribute("data-export", `${size.w}x${size.h}`);
+    paint(canvas, video, true, size.w, size.h);
   }, [aspect, size.w, size.h, overlay, hasStill, hasClip, stillShape]);
 
   useEffect(() => {

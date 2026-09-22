@@ -9,6 +9,7 @@ import { paintRSYellow, ensurePlateFont, plateMetrics, putStillOnDesk, layoutPac
 import { loadStudioSave, writeStudioSave } from "@/desk/save";
 import { saveClipBanner } from "@/desk/clip-banner";
 import { deskSharePath, readDeskQuery } from "@/desk/desk-link";
+import { UseOnBanner } from "@/desk/use-on-banner";
 import { PlaceRail } from "@/places";
 import { stillIndex } from "@/lib/still-clock";
 import { safeZoneRects, zoneForPlate, type SafeZone } from "@/lib/bannerFeatures";
@@ -392,12 +393,25 @@ export function Studio() {
       return null;
     });
     setSceneReady(true);
-    putStillOnDesk({ stillSrc: cardSrc, locationId: id, edition: loc?.edition });
+    putStillOnDesk({ stillSrc: cardSrc, locationId: id, edition: loc?.edition, hush: true });
     if (typeof document !== "undefined") {
       document.getElementById("desk")?.scrollIntoView({ block: "start", behavior: "smooth" });
       canvasRef.current?.focus();
     }
   }
+
+  const applyStillRef = useRef(applyStill);
+  applyStillRef.current = applyStill;
+  useEffect(() => {
+    const onStill = (event: Event) => {
+      const detail = (event as CustomEvent<{ stillSrc?: string; locationId?: string }>).detail;
+      if (!detail?.stillSrc) return;
+      const id = (detail.locationId as LocationId | undefined) ?? locationId;
+      applyStillRef.current(id, "a", detail.stillSrc);
+    };
+    window.addEventListener("rsbs:desk-still", onStill);
+    return () => window.removeEventListener("rsbs:desk-still", onStill);
+  }, [locationId]);
 
   const catalog = [...SKILLS, ...MARKS, ...customMarks.map((mark) => ({
     id: mark.id,
@@ -1478,6 +1492,12 @@ export function Studio() {
                     {loc.region.replace(/\s·\sOSRS$/, "")} · {loc.god}
                   </p>
                 </AppLink>
+                <div className="flex flex-wrap justify-center gap-1 px-2 pb-2">
+                  <AppLink href={href} className="rs-chip min-h-11 text-xs">
+                    Open
+                  </AppLink>
+                  <UseOnBanner src={src} edition={loc.edition} placeId={loc.id} />
+                </div>
               </div>
             );
           })}

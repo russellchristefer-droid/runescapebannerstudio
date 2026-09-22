@@ -16,6 +16,7 @@ export function putStillOnDesk(input: {
   stillSrc: string;
   locationId?: string;
   edition?: Edition;
+  hush?: boolean;
 }) {
   const prev = readDesk();
   writeStudioSave({
@@ -24,6 +25,9 @@ export function putStillOnDesk(input: {
     locationId: input.locationId ?? prev.locationId,
     edition: input.edition ?? prev.edition,
   });
+  if (!input.hush && typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("rsbs:desk-still", { detail: input }));
+  }
 }
 
 export function deskName() {
