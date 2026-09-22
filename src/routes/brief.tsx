@@ -25,6 +25,11 @@ function BriefPage() {
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c6a45a]/80" aria-hidden="true" />
       </header>
       <main id="content" className="prose-desk mx-auto flex max-w-3xl flex-col gap-6 px-5 py-6 text-sm text-muted md:px-8">
+        <ul className="list-disc space-y-2 pl-5 text-fg">
+          <li>Twitch / YouTube / 9:16 plates from a town still</li>
+          <li>Local clip bench · file stays on this machine</li>
+          <li>Independent fan desk · not Jagex</li>
+        </ul>
         <section>
           <h2 className="section-h2">What it is</h2>
           <p>

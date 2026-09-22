@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { ProductAsk } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TodayDesk } from "@/components/today-desk";
 import { TownHero } from "@/components/town-hero";
-import { OracleLine } from "@/components/oracle-line";
 import { StillPhoto } from "@/components/still-photo";
 import { paintRSYellow, ensurePlateFont, plateMetrics, putStillOnDesk, layoutPack, packBounds, pickRandom, loadStill, eraCaption, captionForSrc, FALLBACK } from "@/desk";
 import { loadStudioSave, writeStudioSave } from "@/desk/save";
@@ -1421,7 +1421,7 @@ export function Studio() {
       <EggToast />
       <SiteHeader skip={{ href: "#desk", label: "Skip to desk" }} />
       <TownHero onTown={(name, ed) => setHeroTown({ name, edition: ed })} />
-      <OracleLine place={heroTown.name} edition={heroTown.edition} />
+      <ProductAsk />
       <TodayDesk />
       <section className="page-band py-6">
         <h2 className="section-h2">Places to visit</h2>
@@ -2696,12 +2696,8 @@ export function Studio() {
           <p className="max-w-sm text-center text-sm text-parchment">
             {postieLineAt(peteNow)}
           </p>
-          <p className="max-w-md text-center text-xs text-muted">
-            One JPEG per crop. Size is the chip you pick, or the download under it.
-          </p>
           <p className="text-center text-xs text-parchment">
-            <Link to="/edit">Clip Editor</Link>
-            {" · 9:16 for TikTok"}
+            Need a 9:16 for TikTok? <Link to="/edit">Clip bench</Link>.
           </p>
           <div className="flex flex-wrap justify-center gap-1">
             {BANNER_SIZES.map((box) => (

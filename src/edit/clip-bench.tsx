@@ -2124,8 +2124,7 @@ export function ClipBench() {
         </p>
         {status.startsWith("Saved") && !busy ? (
           <p className="px-3 pb-2 text-[11px] text-parchment">
-            <Link to="/">Banner Studio</Link>
-            {" · Twitch plate"}
+            Need the Twitch plate? <Link to="/" hash="desk">Banner desk</Link>.
           </p>
         ) : null}
         {busy ? (
