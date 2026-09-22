@@ -291,9 +291,9 @@ h1.studio-wordmark {
 
 .rs-stone-header,
 header {
-  background-color: #1a120c;
+  background-color: #050505;
   background-image:
-    linear-gradient(180deg, rgba(12, 10, 8, 0.2), rgba(12, 10, 8, 0.45)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.55)),
     url("/ui/rs-bricks.png");
   background-size: auto, 320px 176px;
   background-repeat: no-repeat, repeat;
