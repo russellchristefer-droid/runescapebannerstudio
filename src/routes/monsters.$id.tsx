@@ -55,8 +55,9 @@ function MonsterPage() {
             style={
               dragon
                 ? {
-                    backgroundColor: "#070707",
-                    backgroundImage: `radial-gradient(ellipse at 50% 70%, ${hue} 0%, color-mix(in srgb, ${hue} 40%, #070707) 48%, #050505 80%), repeating-linear-gradient(128deg, transparent 0 14px, rgba(255,255,255,0.045) 14px 15px)`,
+                    objectFit: "contain",
+                    backgroundColor: hue,
+                    backgroundImage: `radial-gradient(ellipse at 50% 58%, color-mix(in srgb, ${hue} 62%, white) 0%, ${hue} 42%, color-mix(in srgb, ${hue} 48%, #120c08) 100%)`,
                   }
                 : { boxShadow: `inset 0 3px 0 0 ${hue}` }
             }

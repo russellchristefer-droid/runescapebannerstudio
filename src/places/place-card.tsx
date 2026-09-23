@@ -135,8 +135,9 @@ export function PlaceCard({
               style={
                 field && wash
                   ? {
-                      backgroundColor: "#070707",
-                      backgroundImage: `radial-gradient(ellipse at 50% 72%, ${wash} 0%, color-mix(in srgb, ${wash} 42%, #070707) 46%, #050505 78%), repeating-linear-gradient(128deg, transparent 0 11px, rgba(255,255,255,0.05) 11px 12px)`,
+                      objectFit: "contain",
+                      backgroundColor: wash,
+                      backgroundImage: `radial-gradient(ellipse at 50% 58%, color-mix(in srgb, ${wash} 62%, white) 0%, ${wash} 42%, color-mix(in srgb, ${wash} 48%, #120c08) 100%)`,
                     }
                   : wash
                     ? { boxShadow: `inset 0 3px 0 0 ${wash}` }

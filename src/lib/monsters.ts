@@ -23,6 +23,7 @@ export function monsterStillSrc(row: Pick<Monster, "edition" | "slug">) {
   const game = row.edition === "OSRS" ? "osrs" : "rs3";
   const slug = row.slug.replace(/-/g, "");
   const file = slug === "warpedterrobird" ? "warpedterrorbird" : slug;
+  if (row.slug.includes("dragon")) return `/stills/${game}/beast-${file}.png?v=13`;
   return `/stills/${game}/beast-${file}.jpg?v=12`;
 }
 
