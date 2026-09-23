@@ -99,9 +99,7 @@ export function PlaceCard({
       className={
         kind === "Town"
           ? "town-slot"
-          : kind === "Boss"
-            ? "boss-slot"
-            : "[content-visibility:auto] [contain-intrinsic-size:auto_220px]"
+          : "[content-visibility:auto] [contain-intrinsic-size:auto_220px]"
       }
     >
       <div
@@ -110,9 +108,7 @@ export function PlaceCard({
             ? godChipClass(name)
             : kind === "Town"
               ? "town-card region-card"
-              : kind === "Boss"
-                ? "boss-card"
-                : "hover:border-line"
+              : "hover:border-line"
         }`}
         style={
           banner
@@ -126,17 +122,8 @@ export function PlaceCard({
       >
         <AppLink href={href} className="block [touch-action:manipulation]">
           {gone ? (
-            <span className="boss-card-still flex items-center justify-center text-[11px] text-faint">
+            <span className="grid aspect-video w-full place-items-center text-[11px] text-faint">
               Still needed
-            </span>
-          ) : kind === "Boss" ? (
-            <span className="boss-card-still">
-              <StillPhoto
-                src={src}
-                alt={alt}
-                className="boss-card-img"
-                onError={() => setGone(true)}
-              />
             </span>
           ) : (
             <StillPhoto
@@ -153,11 +140,6 @@ export function PlaceCard({
               onError={() => setGone(true)}
             />
           )}
-          {kind === "Boss" ? (
-            <span className="boss-card-name" style={hue ? { color: hue } : undefined}>
-              {name}
-            </span>
-          ) : (
           <span
             className={
               kind === "Town"
@@ -172,19 +154,8 @@ export function PlaceCard({
           >
             {name}
           </span>
-          )}
         </AppLink>
-        {kind === "Boss" ? (
-          <div className="boss-card-meta">
-            {caption ? (
-              <p>{caption}</p>
-            ) : (
-              <p>
-                {kind} · {game}
-              </p>
-            )}
-          </div>
-        ) : kind === "Town" && god ? (
+        {kind === "Town" && god ? (
           <p className="town-meta w-full px-2 text-center text-[10px]">
             <span className="text-muted">{(region ?? "").replace(/\s·\sOSRS$/, "")}</span>
             {region ? " · " : ""}
@@ -198,7 +169,7 @@ export function PlaceCard({
           </p>
         )}
         {canBanner ? (
-          <div className={kind === "Town" ? "town-actions" : kind === "Boss" ? "boss-card-actions" : "flex flex-wrap justify-center gap-1 px-2 pb-2"}>
+          <div className={kind === "Town" ? "town-actions" : "flex flex-wrap justify-center gap-1 px-2 pb-2"}>
             <AppLink href={href} className="rs-chip min-h-11 text-xs">
               Open
             </AppLink>
