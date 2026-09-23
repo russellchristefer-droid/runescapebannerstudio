@@ -58,6 +58,42 @@ export function PlaceCard({
   const [gone, setGone] = useState(false);
   const canBanner = Boolean(src && edition && placeId);
   if (!src) return null;
+  if (kind === "Boss") {
+    return (
+      <li className="boss-slot">
+        <article className="boss-card">
+          <AppLink href={href} className="boss-card-still">
+            {gone ? (
+              <span className="boss-card-empty">Still needed</span>
+            ) : (
+              <img
+                src={src}
+                alt={alt}
+                className="boss-card-img"
+                loading="lazy"
+                decoding="async"
+                onError={() => setGone(true)}
+              />
+            )}
+          </AppLink>
+          <AppLink href={href} className="boss-card-name" style={hue ? { color: hue } : undefined}>
+            {name}
+          </AppLink>
+          <p className="boss-card-line">{caption || `${game}`}</p>
+          <div className="boss-card-actions">
+            {canBanner ? (
+              <>
+                <AppLink href={href} className="rs-chip">
+                  Open
+                </AppLink>
+                <UseOnBanner src={src} edition={edition!} placeId={placeId!} />
+              </>
+            ) : null}
+          </div>
+        </article>
+      </li>
+    );
+  }
   return (
     <li
       className={

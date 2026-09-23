@@ -38,7 +38,7 @@ function BossIndex() {
       </header>
       <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
         {rows.length ? (
-          <PlaceGrid>
+          <PlaceGrid className="boss-grid">
             {rows.map((note) => {
               const loc = LOCATIONS.find((item) => item.id === note.id);
               return (
