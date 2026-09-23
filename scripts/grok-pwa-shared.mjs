@@ -338,10 +338,10 @@ function shareRev(site = {}) {
   return /^[A-Za-z0-9._-]{1,40}$/.test(rev) ? rev : "";
 }
 
-function withShareRev(url, rev) {
-  if (!rev) return url;
-  const join = url.includes("?") ? "&" : "?";
-  return `${url}${join}v=${encodeURIComponent(rev)}`;
+function stampSharePath(asset, rev) {
+  if (!rev) return asset;
+  const path = asset.startsWith("/") ? asset : `/${asset}`;
+  return path.replace(/(\.[a-zA-Z0-9]+)$/, `-${rev}$1`);
 }
 
 export function grokOgHeadTags({
@@ -368,23 +368,26 @@ export function grokOgHeadTags({
     const asset = resolveOgCardAsset(site, cwd);
     const custom = Boolean(asset);
     const rev = shareRev(site);
+    const stamped = custom ? stampSharePath(asset.startsWith("/") ? asset : `/${asset}`, rev) : "";
     let image = custom
-      ? withShareRev(
-          `https://${publicHost}${asset.startsWith("/") ? asset : `/${asset}`}`,
-          rev,
-        )
+      ? `https://${publicHost}${stamped}`
       : `${ogServiceUrl()}/v1/card.png?host=${encodeURIComponent(publicHost)}&title=${encodeURIComponent(title)}`;
     const color = !custom ? placeholderCardColor(site) : "";
     if (color) image += `&color=${encodeURIComponent(color)}`;
     tags.push(`<meta property="og:image" content="${escapeHtml(image)}">`);
+    tags.push(`<meta property="og:image:secure_url" content="${escapeHtml(image)}">`);
+    if (custom) {
+      tags.push(
+        `<meta property="og:image:type" content="${stamped.endsWith(".png") ? "image/png" : "image/jpeg"}">`,
+      );
+    }
     tags.push(`<meta property="og:image:width" content="1200">`);
     tags.push(`<meta property="og:image:height" content="630">`);
+    tags.push(`<meta name="twitter:image" content="${escapeHtml(image)}">`);
     const banner = String(site.banner ?? "").trim();
     if (banner) {
-      const bannerUrl = withShareRev(
-        `https://${publicHost}${banner.startsWith("/") ? banner : `/${banner}`}`,
-        rev,
-      );
+      const bannerPath = stampSharePath(banner.startsWith("/") ? banner : `/${banner}`, rev);
+      const bannerUrl = `https://${publicHost}${bannerPath}`;
       tags.push(`<meta property="x:game:image" content="${escapeHtml(bannerUrl)}">`);
       tags.push(`<meta property="x:game:image:width" content="1200">`);
       tags.push(`<meta property="x:game:image:height" content="264">`);

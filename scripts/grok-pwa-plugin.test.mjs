@@ -129,8 +129,9 @@ test("site.rev cache-busts the share card Discord already stored", () => {
     cwd: mkdtempSync(join(tmpdir(), "grok-og-rev-")),
     site: { title: "Wild Race", card: "custom", image: "/og.jpg", banner: "/x-banner.jpg", rev: "20260923a" },
   });
-  assert.match(out, /property="og:image" content="https:\/\/wild-race\.grok\.me\/og\.jpg\?v=20260923a"/);
-  assert.match(out, /property="x:game:image" content="https:\/\/wild-race\.grok\.me\/x-banner\.jpg\?v=20260923a"/);
+  assert.match(out, /property="og:image" content="https:\/\/wild-race\.grok\.me\/og-20260923a\.jpg"/);
+  assert.match(out, /name="twitter:image" content="https:\/\/wild-race\.grok\.me\/og-20260923a\.jpg"/);
+  assert.match(out, /property="x:game:image" content="https:\/\/wild-race\.grok\.me\/x-banner-20260923a\.jpg"/);
 });
 
 test("a baked site.image is treated as a custom card", () => {

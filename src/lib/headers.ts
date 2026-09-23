@@ -13,7 +13,7 @@ export const SECURITY_HEADERS: Record<string, string> = {
   "X-DNS-Prefetch-Control": "off",
 };
 
-const SHARE = /^\/(og\.jpg|x-banner\.jpg|favicon\.svg|__grok\/)/;
+const SHARE = /^\/(?:og(?:-[A-Za-z0-9._-]+)?\.(?:jpg|png)|x-banner(?:-[A-Za-z0-9._-]+)?\.jpg|favicon\.svg|__grok\/)/;
 
 function put(
   headers: { set?(name: string, value: string): unknown; setHeader?(name: string, value: string): unknown },
@@ -36,7 +36,7 @@ export function applySecurityHeaders(
   if (https) {
     put(headers, "Strict-Transport-Security", "max-age=15552000");
   }
-  if (path === "/og.jpg" || path === "/x-banner.jpg") {
+  if (/^\/og(?:-|\.)/.test(path) || /^\/x-banner/.test(path)) {
     put(headers, "Cache-Control", "public, max-age=300, must-revalidate");
   } else if (path.startsWith("/assets/")) {
     put(headers, "Cache-Control", "public, max-age=31536000, immutable");

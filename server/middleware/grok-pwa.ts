@@ -69,6 +69,26 @@ export default async function grokPwaMiddleware(
 
   const path = event.url.pathname;
   const urlWithQuery = path + event.url.search;
+  const cardRev = String(
+    (grokOgIdentity as { site?: { rev?: string } }).site?.rev ?? "",
+  ).trim();
+  const ua = event.req.headers.get("user-agent") ?? "";
+  if (
+    cardRev &&
+    /discordbot/i.test(ua) &&
+    isDocumentPath(path) &&
+    !event.url.searchParams.has("card")
+  ) {
+    const params = new URLSearchParams(event.url.search);
+    params.set("card", cardRev);
+    return new Response(null, {
+      status: 307,
+      headers: {
+        location: `${path}?${params.toString()}`,
+        "cache-control": "no-store",
+      },
+    });
+  }
 
   if (path === "/__grok/manifest.webmanifest" || path === "/__grok/manifest.json") {
     return new Response(renderWebManifest(requestHost(event)), {
