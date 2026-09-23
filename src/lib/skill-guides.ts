@@ -945,39 +945,39 @@ const RS3_NOTE: Record<string, Note> = {
   },
 };
 
-/** Trimmed skillcape. Cloth is the body. Trim is the strip. Not the badge. */
+/** Trimmed skillcape. Cloth is the body. Trim is the strip. Sampled from the cape, not a guess. */
 const CAPE: Record<string, { cloth: string; trim: string }> = {
-  Attack: { cloth: "#9a1c22", trim: "#f0c93a" },
-  Strength: { cloth: "#1f8a45", trim: "#c4492a" },
-  Defence: { cloth: "#3a5ea8", trim: "#e6e2c0" },
-  Ranged: { cloth: "#3d7a28", trim: "#a56b32" },
-  Prayer: { cloth: "#b7b3ae", trim: "#f0d23a" },
-  Magic: { cloth: "#8a867c", trim: "#2a3ad0" },
-  Runecraft: { cloth: "#8d8d90", trim: "#e0a020" },
-  Construction: { cloth: "#7a7468", trim: "#d0892a" },
-  Hitpoints: { cloth: "#c4232a", trim: "#f0e0c8" },
-  Constitution: { cloth: "#e6d7b8", trim: "#d41818" },
-  Agility: { cloth: "#1d2f8a", trim: "#8a3a28" },
-  Herblore: { cloth: "#0e6b28", trim: "#f0d23a" },
-  Thieving: { cloth: "#6a2a78", trim: "#1a1a1a" },
-  Crafting: { cloth: "#6b4a28", trim: "#f0d23a" },
-  Fletching: { cloth: "#0e5c62", trim: "#f0d23a" },
-  Slayer: { cloth: "#1c1c1c", trim: "#8e1a1a" },
-  Hunter: { cloth: "#6a6840", trim: "#3a2a18" },
-  Mining: { cloth: "#4a4a32", trim: "#5aa0b0" },
-  Smithing: { cloth: "#4e4a32", trim: "#f0d23a" },
-  Fishing: { cloth: "#6a8ea4", trim: "#f0d23a" },
-  Cooking: { cloth: "#6a2a8a", trim: "#a33a22" },
-  Firemaking: { cloth: "#c4842a", trim: "#f0d23a" },
-  Woodcutting: { cloth: "#a48448", trim: "#2f6b3a" },
-  Farming: { cloth: "#1f7a32", trim: "#b6e06a" },
-  Sailing: { cloth: "#163a6b", trim: "#e2c15a" },
-  Summoning: { cloth: "#8a8a96", trim: "#f0d23a" },
-  Dungeoneering: { cloth: "#6b3a18", trim: "#e8b48a" },
-  Divination: { cloth: "#5a36c4", trim: "#3ef0f0" },
-  Invention: { cloth: "#e6c200", trim: "#2f9ae6" },
-  Archaeology: { cloth: "#f2f2f6", trim: "#1a1a1a" },
-  Necromancy: { cloth: "#1a1a1a", trim: "#a020e0" },
+  Attack: { cloth: "#8c1010", trim: "#d4b030" },
+  Strength: { cloth: "#0c7a48", trim: "#d42018" },
+  Defence: { cloth: "#4878a8", trim: "#d8d0a0" },
+  Ranged: { cloth: "#487818", trim: "#a06028" },
+  Prayer: { cloth: "#d0d0d0", trim: "#e0c040" },
+  Magic: { cloth: "#8a8470", trim: "#3030a8" },
+  Runecraft: { cloth: "#9a9a9a", trim: "#d09028" },
+  Construction: { cloth: "#8a8468", trim: "#d09028" },
+  Hitpoints: { cloth: "#d42018", trim: "#d0d0d0" },
+  Constitution: { cloth: "#d4c0a0", trim: "#d02020" },
+  Agility: { cloth: "#1e2878", trim: "#8a3824" },
+  Herblore: { cloth: "#0e7a18", trim: "#e0c030" },
+  Thieving: { cloth: "#7a3068", trim: "#1a1a1a" },
+  Crafting: { cloth: "#7a5a30", trim: "#e0b020" },
+  Fletching: { cloth: "#0e6868", trim: "#e0b020" },
+  Slayer: { cloth: "#1c1c1c", trim: "#a01010" },
+  Hunter: { cloth: "#6a6840", trim: "#4a2818" },
+  Mining: { cloth: "#5a5840", trim: "#4aa0b8" },
+  Smithing: { cloth: "#4a4830", trim: "#e0b020" },
+  Fishing: { cloth: "#6a98b8", trim: "#e0b020" },
+  Cooking: { cloth: "#6a2878", trim: "#c02020" },
+  Firemaking: { cloth: "#d07018", trim: "#e8c040" },
+  Woodcutting: { cloth: "#b08040", trim: "#2a7a38" },
+  Farming: { cloth: "#1a7a30", trim: "#b0d070" },
+  Sailing: { cloth: "#205070", trim: "#685040" },
+  Summoning: { cloth: "#9090a8", trim: "#e0c040" },
+  Dungeoneering: { cloth: "#8a4010", trim: "#e8b888" },
+  Divination: { cloth: "#6838d0", trim: "#40e8e8" },
+  Invention: { cloth: "#e6c018", trim: "#20a0e0" },
+  Archaeology: { cloth: "#e4e4ee", trim: "#1a1a1a" },
+  Necromancy: { cloth: "#161616", trim: "#b020e8" },
 };
 
 export function capeColors(name: string) {
@@ -1000,47 +1000,18 @@ function lift(hex: string, min = 120) {
   return `#${ch((n >> 16) & 255)}${ch((n >> 8) & 255)}${ch(n & 255)}`;
 }
 
-/** Title is the strip. A black strip is lifted so it can be read. Hover stays the cloth. */
-const SHEET: Record<string, string> = {
-  Attack: "#c41a1a",
-  Strength: "#c45a1a",
-  Defence: "#3d8a3d",
-  Ranged: "#5a8a3d",
-  Prayer: "#e8d9a8",
-  Magic: "#4a6adf",
-  Runecraft: "#d4b84a",
-  Construction: "#8a5a3a",
-  Hitpoints: "#a31a1a",
-  Agility: "#3daaaa",
-  Herblore: "#4a8a3a",
-  Thieving: "#6a6a7a",
-  Crafting: "#b48a5a",
-  Fletching: "#8aaa3d",
-  Slayer: "#3d5a3d",
-  Hunter: "#8a7a3d",
-  Mining: "#8a8a8a",
-  Smithing: "#6a7a8a",
-  Fishing: "#3a6aaa",
-  Cooking: "#c46a1a",
-  Firemaking: "#d45a1a",
-  Woodcutting: "#3d7a3d",
-  Farming: "#5a9a3d",
-  Sailing: "#2a5a6a",
-  Summoning: "#c46a2a",
-  Dungeoneering: "#c46a8a",
-  Divination: "#8ab4d4",
-  Invention: "#c8c8c0",
-  Archaeology: "#b49a6a",
-  Necromancy: "#7a4aaa",
-};
+function show(hex: string) {
+  return luma(hex) >= 48 ? hex : lift(hex, 48);
+}
 
+/** Title is the strip. A black strip is lifted so it can be read. Hover stays the cloth. */
 export function capeInk(name: string) {
-  return SHEET[name] ?? lift(capeColors(name).trim);
+  return lift(capeColors(name).trim);
 }
 
 export function capeStyle(name: string): { "--cape": string; "--trim": string } {
-  const hue = SHEET[name] ?? capeColors(name).cloth;
-  return { "--cape": hue, "--trim": capeInk(name) };
+  const { cloth, trim } = capeColors(name);
+  return { "--cape": show(cloth), "--trim": lift(trim) };
 }
 
 function mix(hex: string, other: string, t: number) {
@@ -1056,13 +1027,13 @@ function mix(hex: string, other: string, t: number) {
 
 /** Dark sheet in the cape's two colours. Cloth washes the field. The strip marks the type. */
 export function skillPageStyle(name: string): CSSProperties {
-  const hue = SHEET[name] ?? capeColors(name).cloth;
+  const cloth = show(capeColors(name).cloth);
   const accent = capeInk(name);
   return {
     ...capeStyle(name),
-    "--skill-bg": mix(hue, "#101218", 0.9),
+    "--skill-bg": mix(cloth, "#101218", 0.82),
     "--skill-well": "#161820",
-    "--skill-line": hue,
+    "--skill-line": cloth,
     "--skill-accent": accent,
     "--skill-muted": mix(accent, "#b7ad96", 0.45),
   } as CSSProperties;
