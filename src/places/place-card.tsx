@@ -82,8 +82,17 @@ export function PlaceCard({
       >
         <AppLink href={href} className="block [touch-action:manipulation]">
           {gone ? (
-            <span className="flex aspect-video w-full items-center justify-center bg-[#0b0b0b] text-[11px] text-faint">
+            <span className="boss-card-still flex items-center justify-center text-[11px] text-faint">
               Still needed
+            </span>
+          ) : kind === "Boss" ? (
+            <span className="boss-card-still">
+              <StillPhoto
+                src={src}
+                alt={alt}
+                className="boss-card-img"
+                onError={() => setGone(true)}
+              />
             </span>
           ) : (
             <StillPhoto
@@ -100,6 +109,14 @@ export function PlaceCard({
               onError={() => setGone(true)}
             />
           )}
+          {kind === "Boss" ? (
+            <h2
+              className="boss-card-name"
+              style={hue ? { color: hue } : undefined}
+            >
+              {name}
+            </h2>
+          ) : (
           <span
             className={
               kind === "Town"
@@ -114,6 +131,7 @@ export function PlaceCard({
           >
             {name}
           </span>
+          )}
         </AppLink>
         {kind === "Town" && god ? (
           <p className="town-meta w-full px-2 text-center text-[10px]">

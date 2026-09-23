@@ -1264,7 +1264,9 @@ a.skill-link:focus-visible {
   text-align: center;
   letter-spacing: 0.08em;
   color: #f0d9c8;
-  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-size: 2rem;
+  line-height: 1.15;
+  font-weight: 600;
 }
 .boss-sub {
   margin: 0.4rem 0 0;
@@ -1326,8 +1328,21 @@ a.skill-link:focus-visible {
   object-fit: cover;
   object-position: center center;
 }
-.bosses-atlas .rs-panel p {
-  min-height: 2.6em;
+.bosses-atlas .boss-card-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.6rem;
+  margin: 0.6rem 0 0.25rem;
+  padding: 0 0.35rem;
+  font-family: Cinzel, "Source Serif 4", Palatino, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-wrap: balance;
 }
 .bosses-atlas,
 .boss-page {
