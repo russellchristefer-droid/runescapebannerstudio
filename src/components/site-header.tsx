@@ -61,11 +61,13 @@ export function SiteHeader({
   children,
   skip,
   asHeading = false,
+  clock = true,
 }: {
   onMarkClick?: () => void;
   children?: ReactNode;
   skip?: { href: string; label: string };
   asHeading?: boolean;
+  clock?: boolean;
 }) {
   const pete = useRef({ n: 0, t: 0 });
   const [menu, setMenu] = useState(false);
@@ -124,7 +126,7 @@ export function SiteHeader({
           </div>
           <p className="studio-legal">Not a Jagex product</p>
         </div>
-        <UtcClock />
+        {clock ? <UtcClock /> : null}
         <div className="mt-2 hidden md:block">
           <StudioNavLinks />
         </div>

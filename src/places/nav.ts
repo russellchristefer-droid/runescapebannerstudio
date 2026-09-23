@@ -4,14 +4,13 @@ export const GAME_NAV = [
   ["/gods", "Gods"],
   ["/bosses", "Bosses"],
   ["/pvp", "PvP"],
-  ["/monsters", "Bestiary"],
-  ["/skills", "Skills"],
+  ["/clan-wars", "Clan Wars"],
 ] as const;
 
 /** The product. Legal lives in the footer. */
 export const STUDIO_NAV = [
-  ["/", "Banner Studio"],
-  ["/edit", "Clip Editor"],
+  ["/", "Banner desk"],
+  ["/edit", "Clip bench"],
   ["/brief", "Brief"],
 ] as const;
 

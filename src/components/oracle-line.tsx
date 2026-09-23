@@ -19,17 +19,11 @@ export function OracleLine({
     rememberBobPlace(game, slug);
   }, [game, slug]);
   const word = bobWord(now);
-  const date = new Date(now).toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "short",
-    timeZone: "UTC",
-  });
   return (
     <div className="page-band py-6">
-      <figure className="bob mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3">
+      <figure className="bob mx-auto flex w-full max-w-xl items-center justify-center gap-4 px-3">
         <BobPic id="bob-wotd" edition={game} />
-        <div className="min-w-[12rem] flex-1 text-center">
+        <div className="min-w-0 flex-1 text-center">
           <p className="bob-word text-sm leading-snug text-parchment/80">
             <span className="mr-1 text-[11px] text-muted">Bob teaches</span>
             <strong className="font-semibold text-parchment">{word.t}</strong>
@@ -37,11 +31,9 @@ export function OracleLine({
             <span style={{ fontFamily: "Fondamento, serif" }}> — {word.g}</span>
           </p>
         </div>
-        <figcaption className="w-full text-center text-[11px] text-muted">Bob the Cat</figcaption>
       </figure>
       <p className="mt-2 text-center text-[11px] text-muted">Kept by a player who looks first and banks second.</p>
       <p className="mt-1 text-center text-[11px] text-faint">Word turns every thirty seconds. New list at midnight UTC.</p>
-      <p className="mt-2 text-center text-xs text-muted">Today · {date}</p>
     </div>
   );
 }

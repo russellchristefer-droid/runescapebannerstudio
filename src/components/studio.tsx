@@ -1442,9 +1442,9 @@ export function Studio() {
   });
 
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className="home-desk min-h-dvh text-fg">
       <EggToast />
-      <SiteHeader asHeading skip={{ href: "#desk", label: "Skip to desk" }} />
+      <SiteHeader asHeading clock={false} skip={{ href: "#desk", label: "Skip to desk" }} />
       <TownHero onTown={(name, ed) => setHeroTown({ name, edition: ed })} />
       <OracleLine place={heroTown.name} edition={heroTown.edition} />
       <TodayDesk />
