@@ -45,7 +45,7 @@ function MonsterPage() {
         />
         {src && dragon ? (
           <span className="dragon-stage block aspect-[21/9] w-full overflow-hidden border border-[color:var(--dragon)]" style={{ "--dragon": hue } as CSSProperties}>
-            <StillPhoto src={src} alt={`${row.name} in ${game}`} className="aspect-[21/9] w-full object-contain" />
+            <StillPhoto src={src} alt={`${row.name} in ${game}`} className="h-full w-full object-contain" />
           </span>
         ) : src ? (
           <StillPhoto

@@ -129,7 +129,7 @@ export function PlaceCard({
             </span>
           ) : field && wash ? (
             <span className="dragon-stage block aspect-video w-full" style={{ "--dragon": wash } as CSSProperties}>
-              <StillPhoto src={src} alt={alt} className="aspect-video w-full object-contain" onError={() => setGone(true)} />
+              <StillPhoto src={src} alt={alt} className="h-full w-full object-contain" onError={() => setGone(true)} />
             </span>
           ) : (
             <StillPhoto
