@@ -545,7 +545,6 @@ a.rs-chip.god-chip[aria-current="page"] {
   box-shadow: 0 0 8px var(--god), inset 0 0 0 1px #14151c;
 }
 
-.gods-index,
 .min-h-dvh.bg-bg {
   --flow: var(--color-line);
   background-color: #0c0d12;
@@ -555,8 +554,23 @@ a.rs-chip.god-chip[aria-current="page"] {
     transparent 70%
   );
 }
-.gods-index h1.page-h1 {
-  color: #f3e6c8;
+.gods-index.min-h-dvh,
+.god-page {
+  --g-bg: #0e0d12;
+  --g-ink: #efe6c8;
+  background-color: var(--god-page-bg, var(--g-bg));
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 18px),
+    url("/ui/temple-grain.png");
+  background-repeat: repeat;
+  background-size: auto, 220px 220px;
+  background-blend-mode: normal, soft-light;
+  color: var(--g-ink);
+}
+.gods-index h1.page-h1,
+.gods-index h1.page-h1.site-title,
+.gods-index h1.page-h1.site-title:hover {
+  color: #efe6c8;
 }
 
 a,
@@ -609,7 +623,7 @@ a,
   min-width: 0;
   overflow: hidden;
   text-decoration: none;
-  background: #0c0d12;
+  background: #16141c;
   border: 2px solid var(--god, #c4a35a);
   border-radius: 6px;
   box-shadow: 0 0 10px var(--god, #c4a35a);
@@ -621,7 +635,7 @@ a,
 .god-still {
   display: block;
   width: 100%;
-  background: #0c0d12;
+  background: #16141c;
   object-fit: contain;
   object-position: center center;
 }
@@ -1295,24 +1309,30 @@ a.skill-link:focus-visible {
   border-radius: 1px;
 }
 .god-page {
-  --flow: var(--god-page-line, #c4a35a);
-  background-color: #0c0d12;
-  background-image: radial-gradient(
-    ellipse 90% 28rem at 50% -2rem,
-    color-mix(in srgb, var(--flow) 40%, transparent),
-    transparent 72%
-  );
-  color: var(--god-page-fg, #ffff00);
+  color: var(--god-page-fg, #efe6c8);
 }
 .god-page > header {
   background: transparent;
   border-color: transparent;
+  text-align: center;
+}
+.god-page > header p {
+  text-align: center;
+}
+.god-page h1.site-title,
+.god-page h1.site-title:hover {
+  color: var(--god-page-line, #c4a35a);
 }
 .god-page-well {
-  background: var(--god-page-well, #14151c);
+  background: color-mix(in srgb, #16141c 90%, transparent);
   border: 1px solid var(--god-page-line, #c4a35a);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--god-page-line, #c4a35a) 28%, transparent),
-    inset 0 0 0 1px #14151c;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--god-page-line, #c4a35a) 22%, transparent);
+}
+.god-figure-still {
+  display: block;
+  border: 2px solid var(--god-page-line, #c4a35a);
+  border-radius: 6px;
+  box-shadow: 0 0 10px var(--god-page-line, #c4a35a);
 }
 .god-page h2,
 .god-page .text-parchment,

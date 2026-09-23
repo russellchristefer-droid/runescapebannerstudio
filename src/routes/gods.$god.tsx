@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useRef } from "react";
 import { useEggGestures } from "@/hooks/use-egg-gestures";
-import { GOD_BRIEFS, GOD_HOME, godFromSlug, godInk, godPageStyle, godWash } from "@/lib/gods";
+import { GOD_BRIEFS, GOD_HOME, godFromSlug, godPageStyle, godWash } from "@/lib/gods";
 import { godStill, godStillLine } from "@/lib/god-stills";
 import { LOCATIONS } from "@/lib/locations";
 import { BackLink } from "@/components/back-link";
@@ -30,9 +30,7 @@ function GodPage() {
     <div className="god-page min-h-dvh" style={godPageStyle(god)}>
       <header className="border-b px-5 py-5 md:px-8">
         <BackLink />
-        <h1 className="page-h1 site-title mt-1" style={{ color: godInk(god) }}>
-          {brief.god}
-        </h1>
+        <h1 className="page-h1 site-title mt-1">{brief.god}</h1>
         <p className="mt-1 text-sm text-parchment">{brief.title}</p>
         <div className="mt-3">
           <PlaceRail section="gods" />
@@ -70,6 +68,35 @@ function GodPage() {
             <p className="text-sm text-muted">Still needed — RuneScape.</p>
           )}
         </div>
+        {(osrsHome || rs3Home) ? (
+          <p className="flex flex-wrap justify-center gap-3 text-sm">
+            {osrsHome && osrsStill ? (
+              <UseOnBanner src={osrsStill} edition="OSRS" placeId={osrsHome} label="Use on banner · Old School" />
+            ) : null}
+            {rs3Home && rs3Still ? (
+              <UseOnBanner src={rs3Still} edition="RS3" placeId={rs3Home} label="Use on banner · RuneScape" />
+            ) : null}
+          </p>
+        ) : null}
+        <section>
+          <h2 className="mb-3 text-center text-sm font-medium text-muted">Places to visit</h2>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {towns.map((loc) => (
+              <AppLink
+                key={loc.id}
+                href={townPath(loc.id)}
+                className="god-town-door [touch-action:manipulation]"
+              >
+                <span className="block font-medium">{loc.name}</span>
+                <span className="mt-0.5 block text-xs text-faint">
+                  {loc.edition === "OSRS" ? "OSRS" : "RS3"}
+                  {" · "}
+                  {loc.region.replace(/\s·\sOSRS$/, "")}
+                </span>
+              </AppLink>
+            ))}
+          </div>
+        </section>
         <p className="text-sm text-muted">{brief.summary}</p>
         <section>
           <h2 className="mb-2 text-sm tracking-[0.16em] text-parchment">
@@ -135,35 +162,6 @@ function GodPage() {
             </Link>
           </p>
         ) : null}
-        {(osrsHome || rs3Home) ? (
-          <p className="flex flex-wrap gap-3 text-sm">
-            {osrsHome && osrsStill ? (
-              <UseOnBanner src={osrsStill} edition="OSRS" placeId={osrsHome} label="Use on banner · Old School" />
-            ) : null}
-            {rs3Home && rs3Still ? (
-              <UseOnBanner src={rs3Still} edition="RS3" placeId={rs3Home} label="Use on banner · RuneScape" />
-            ) : null}
-          </p>
-        ) : null}
-        <section>
-          <h2 className="mb-3 text-sm font-medium text-muted">Towns</h2>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {towns.map((loc) => (
-              <AppLink
-                key={loc.id}
-                href={townPath(loc.id)}
-                className="god-town-door [touch-action:manipulation]"
-              >
-                <span className="block font-medium">{loc.name}</span>
-                <span className="mt-0.5 block text-xs text-faint">
-                  {loc.edition === "OSRS" ? "OSRS" : "RS3"}
-                  {" · "}
-                  {loc.region.replace(/\s·\sOSRS$/, "")}
-                </span>
-              </AppLink>
-            ))}
-          </div>
-        </section>
         <p className="text-xs text-faint">Fan desk notes. Live page: the official wiki for this game.</p>
         <Link to="/" className="text-sm text-parchment">
           Back to banners
@@ -181,8 +179,8 @@ function GodFigure({ src, alt, caption, wash }: { src: string; alt: string; capt
       <img
         src={src}
         alt={alt}
-        className="aspect-video w-full rounded-md border border-line object-contain"
-        style={{ backgroundColor: wash ?? "#1c1812" }}
+        className="god-figure-still aspect-video w-full object-contain"
+        style={{ backgroundColor: wash ?? "#16141c" }}
         loading="lazy"
         decoding="async"
       />
