@@ -1295,27 +1295,47 @@ a.skill-link:focus-visible {
   text-align: left;
 }
 .bosses-atlas main ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
   align-items: stretch;
 }
-.bosses-atlas main ul > li {
+@media (min-width: 640px) {
+  .bosses-atlas main ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.bosses-atlas main ul > li,
+.bosses-atlas .boss-slot {
   display: flex;
   width: 100%;
   min-width: 0;
+  height: auto;
+  content-visibility: visible;
 }
-.bosses-atlas .rs-panel {
+.bosses-atlas .boss-card,
+.bosses-atlas .boss-card:hover,
+.bosses-atlas .boss-card:focus-within {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
+  background: #1a1416;
+  border: 1px solid #8a3030;
+  border-radius: 6px;
+  box-shadow: none;
+  transform: none;
 }
 .boss-card-still {
   position: relative;
   display: block;
   width: 100%;
   height: 0;
-  padding-bottom: 56.25%;
+  padding-bottom: 62.5%;
   overflow: hidden;
   background: #070707;
+  border: 0;
+  box-shadow: none;
 }
 .boss-card-still img,
 .boss-card-img {
@@ -1343,6 +1363,30 @@ a.skill-link:focus-visible {
   letter-spacing: 0.04em;
   text-align: center;
   text-wrap: balance;
+}
+.bosses-atlas .boss-card-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 2.9rem;
+  padding: 0 0.4rem 0.35rem;
+}
+.bosses-atlas .boss-card-meta p {
+  min-height: 2rem;
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.3;
+  text-align: center;
+  color: #cbb8a4;
+}
+.bosses-atlas .boss-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-top: auto;
+  min-height: 3rem;
+  padding: 0 0.5rem 0.5rem;
 }
 .bosses-atlas,
 .boss-page {
