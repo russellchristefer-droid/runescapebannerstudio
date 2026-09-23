@@ -118,12 +118,9 @@ export function PlaceCard({
             />
           )}
           {kind === "Boss" ? (
-            <h2
-              className="boss-card-name"
-              style={hue ? { color: hue } : undefined}
-            >
+            <span className="boss-card-name" style={hue ? { color: hue } : undefined}>
               {name}
-            </h2>
+            </span>
           ) : (
           <span
             className={

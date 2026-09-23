@@ -1298,20 +1298,20 @@ a.skill-link:focus-visible {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-  align-items: stretch;
+  align-items: start;
 }
 @media (min-width: 640px) {
   .bosses-atlas main ul {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-.bosses-atlas main ul > li,
 .bosses-atlas .boss-slot {
   display: flex;
   width: 100%;
   min-width: 0;
-  height: auto;
-  content-visibility: visible;
+  min-height: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
 }
 .bosses-atlas .boss-card,
 .bosses-atlas .boss-card:hover,
@@ -1320,18 +1320,28 @@ a.skill-link:focus-visible {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
   background: #1a1416;
   border: 1px solid #8a3030;
   border-radius: 6px;
   box-shadow: none;
   transform: none;
 }
+.bosses-atlas .boss-card > a {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
 .boss-card-still {
   position: relative;
   display: block;
+  flex: 1 1 auto;
   width: 100%;
-  height: 0;
-  padding-bottom: 62.5%;
+  height: auto;
+  min-height: 0;
+  padding: 0;
   overflow: hidden;
   background: #070707;
   border: 0;
@@ -1349,31 +1359,28 @@ a.skill-link:focus-visible {
   object-position: center center;
 }
 .bosses-atlas .boss-card-name {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  flex: 0 0 2.4rem;
   width: 100%;
-  min-height: 2.6rem;
-  margin: 0.6rem 0 0.25rem;
-  padding: 0 0.35rem;
+  margin: 0;
+  padding: 0.35rem 0.4rem 0;
+  overflow: hidden;
   font-family: Cinzel, "Source Serif 4", Palatino, serif;
-  font-size: 1.35rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
+  line-height: 1.15;
   text-align: center;
-  text-wrap: balance;
 }
 .bosses-atlas .boss-card-meta {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  min-height: 2.9rem;
-  padding: 0 0.4rem 0.35rem;
+  display: block;
+  flex: 0 0 2.2rem;
+  min-height: 0;
+  padding: 0.15rem 0.4rem 0;
+  overflow: hidden;
 }
 .bosses-atlas .boss-card-meta p {
-  min-height: 2rem;
   margin: 0;
+  overflow: hidden;
   font-size: 0.7rem;
   line-height: 1.3;
   text-align: center;
@@ -1381,12 +1388,13 @@ a.skill-link:focus-visible {
 }
 .bosses-atlas .boss-card-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex: 0 0 3.1rem;
+  flex-wrap: nowrap;
   justify-content: center;
+  align-items: center;
   gap: 0.25rem;
-  margin-top: auto;
-  min-height: 3rem;
-  padding: 0 0.5rem 0.5rem;
+  min-height: 0;
+  padding: 0 0.4rem 0.45rem;
 }
 .bosses-atlas,
 .boss-page {
