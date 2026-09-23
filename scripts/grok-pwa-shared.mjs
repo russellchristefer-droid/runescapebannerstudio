@@ -14,7 +14,6 @@ const SHARE_META_KEYS = new Set([
   "og:title",
   "og:description",
   "og:image",
-  "og:image:secure_url",
   "og:image:width",
   "og:image:height",
   "og:type",
@@ -334,6 +333,17 @@ function applyCustomCardFromFs(site, cwd) {
   return { ...site, card: "custom", image: disk };
 }
 
+function shareRev(site = {}) {
+  const rev = String(site.rev ?? "").trim();
+  return /^[A-Za-z0-9._-]{1,40}$/.test(rev) ? rev : "";
+}
+
+function withShareRev(url, rev) {
+  if (!rev) return url;
+  const join = url.includes("?") ? "&" : "?";
+  return `${url}${join}v=${encodeURIComponent(rev)}`;
+}
+
 export function grokOgHeadTags({
   host = "",
   appName = DEFAULT_APP_NAME,
@@ -357,22 +367,24 @@ export function grokOgHeadTags({
   if (publicHost) {
     const asset = resolveOgCardAsset(site, cwd);
     const custom = Boolean(asset);
-    const rev = String(site.rev ?? "").trim();
-    const bust = rev ? `?v=${encodeURIComponent(rev)}` : "";
+    const rev = shareRev(site);
     let image = custom
-      ? `https://${publicHost}${asset.startsWith("/") ? asset : `/${asset}`}${bust}`
+      ? withShareRev(
+          `https://${publicHost}${asset.startsWith("/") ? asset : `/${asset}`}`,
+          rev,
+        )
       : `${ogServiceUrl()}/v1/card.png?host=${encodeURIComponent(publicHost)}&title=${encodeURIComponent(title)}`;
     const color = !custom ? placeholderCardColor(site) : "";
     if (color) image += `&color=${encodeURIComponent(color)}`;
     tags.push(`<meta property="og:image" content="${escapeHtml(image)}">`);
-    tags.push(`<meta property="og:image:secure_url" content="${escapeHtml(image)}">`);
     tags.push(`<meta property="og:image:width" content="1200">`);
     tags.push(`<meta property="og:image:height" content="630">`);
-    tags.push(`<meta name="twitter:image" content="${escapeHtml(image)}">`);
-    tags.push(`<meta name="twitter:title" content="${escapeHtml(title)}">`);
     const banner = String(site.banner ?? "").trim();
     if (banner) {
-      const bannerUrl = `https://${publicHost}${banner.startsWith("/") ? banner : `/${banner}`}${bust}`;
+      const bannerUrl = withShareRev(
+        `https://${publicHost}${banner.startsWith("/") ? banner : `/${banner}`}`,
+        rev,
+      );
       tags.push(`<meta property="x:game:image" content="${escapeHtml(bannerUrl)}">`);
       tags.push(`<meta property="x:game:image:width" content="1200">`);
       tags.push(`<meta property="x:game:image:height" content="264">`);

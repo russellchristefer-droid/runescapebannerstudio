@@ -123,6 +123,16 @@ test("does not duplicate twitter:card or og:title", () => {
   assert.equal(twice.split('property="og:title"').length - 1, 1);
 });
 
+test("site.rev cache-busts the share card Discord already stored", () => {
+  const out = injectGrokPwaHead("<html><head></head></html>", {
+    host: "wild-race.grok.me",
+    cwd: mkdtempSync(join(tmpdir(), "grok-og-rev-")),
+    site: { title: "Wild Race", card: "custom", image: "/og.jpg", banner: "/x-banner.jpg", rev: "20260923a" },
+  });
+  assert.match(out, /property="og:image" content="https:\/\/wild-race\.grok\.me\/og\.jpg\?v=20260923a"/);
+  assert.match(out, /property="x:game:image" content="https:\/\/wild-race\.grok\.me\/x-banner\.jpg\?v=20260923a"/);
+});
+
 test("a baked site.image is treated as a custom card", () => {
   const out = injectGrokPwaHead("<html><head></head></html>", {
     host: "wild-race.grok.me",
