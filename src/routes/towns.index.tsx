@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
@@ -18,17 +18,16 @@ const REGION_ORDER = [
   "Misthalin",
   "Asgarnia",
   "Kandarin",
-  "Morytania",
   "Kharidian",
-  "Tirannwn",
-  "Fremennik",
+  "Morytania",
   "Great Kourend",
   "Varlamore",
+  "Tirannwn",
+  "Fremennik",
   "Southern Sea",
   "Lost City",
   "Lumbridge Swamp",
-  "Wilderness",
-  "Forinthry",
+  "Varrock",
   "God Wars",
   "The Heart",
   "Underworld",
@@ -38,8 +37,46 @@ const REGION_ORDER = [
   "Otherworld",
   "PvM hub",
   "Abyss",
-  "Varrock",
+  "Wilderness",
+  "Forinthry",
 ];
+
+const CIVIC: Record<string, string> = {
+  Misthalin: "Capital Lumbridge · stone and river",
+  Asgarnia: "Capital Falador · white stone",
+  Kandarin: "Capital Ardougne · east and west",
+  Kharidian: "Capital Al Kharid · the desert gate",
+  Morytania: "Canifis · the swamp road",
+  "Great Kourend": "Five houses · Kourend Castle",
+  Varlamore: "Capital Civitas illa Fortis",
+  Tirannwn: "Capital Prifddinas · crystal",
+  Fremennik: "Capital Rellekka · the longhall",
+  "Southern Sea": "Marim · Ape Atoll",
+  "Lost City": "Zanaris · the other side of the ring",
+  Wilderness: "No capital · the ditch",
+  Forinthry: "No capital · the ditch",
+};
+
+function polityName(region: string) {
+  if (region === "Burtrope") return "Burthorpe";
+  if (region === "Great Kourend") return "Kourend";
+  return region;
+}
+
+function RegionSeal({ slug, name }: { slug: string; name: string }) {
+  const [gone, setGone] = useState(false);
+  if (gone) return null;
+  return (
+    <img
+      src={`/banners/${slug}.png`}
+      alt={name}
+      width={64}
+      height={64}
+      className="region-seal"
+      onError={() => setGone(true)}
+    />
+  );
+}
 
 function listedTowns(edition: Location["edition"]) {
   return LOCATIONS.filter(
@@ -87,31 +124,22 @@ function TownIndex() {
           <PlaceRail section="towns" edition={edition} onEdition={setEdition} />
         </div>
       </header>
-      <main className="mx-auto flex max-w-5xl flex-col gap-8 px-5 py-6 md:px-8">
+      <main className="mx-auto flex w-full max-w-[72rem] flex-col px-5 py-2 md:px-8">
         {groups.length ? (
           groups.map(([region, rows]) => {
             const banner = bannerFor(region);
             const cloth = clothFor(region);
-            const label = region === "Burtrope" ? "Burthorpe" : region;
+            const label = polityName(region);
             return (
             <section
               key={region}
               id={regionAnchor(region)}
               className="region-band"
-              style={{ "--region": cloth.line, "--region-ink": cloth.line, "--region-accent": cloth.accent } as CSSProperties}
+              style={{ "--region-ink": cloth.line, "--region-accent": cloth.accent } as CSSProperties}
             >
-              <h2 className="region-band-title">
-                {hasBanner(region) ? (
-                  <img
-                    src={`/banners/${banner.slug}.png`}
-                    alt=""
-                    className="region-banner"
-                    width={160}
-                    height={148}
-                  />
-                ) : null}
-                <span>{label}</span>
-              </h2>
+              {hasBanner(region) ? <RegionSeal slug={banner.slug} name={label} /> : null}
+              <h2 className="region-band-title">{label}</h2>
+              <p className="region-civic">{CIVIC[region] ?? "Streets of this ground."}</p>
               <PlaceGrid className="town-grid">
                 {rows.map((loc) => (
                   <PlaceCard
