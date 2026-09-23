@@ -45,6 +45,28 @@ const REAL = new Set([
   "wilderness",
 ]);
 
+const MEADOW = { bg: "#12160f", panel: "#1a1f16", line: "#8aa35a", accent: "#e8e0c4" };
+
+/** Kingdom cloth. Not the infernal cape. */
+const CLOTH: Record<string, { bg: string; panel: string; line: string; accent: string }> = {
+  misthalin: { bg: "#1a1220", panel: "#24182c", line: "#6b3d8c", accent: "#3d9e3d" },
+  asgarnia: { bg: "#121820", panel: "#1a2430", line: "#6a8eae", accent: "#e8eef4" },
+  kandarin: { bg: "#10180e", panel: "#182418", line: "#3d7a44", accent: "#d4b84a" },
+  morytania: { bg: "#141410", panel: "#1c1c14", line: "#5a6a38", accent: "#8a9a4a" },
+  kharidian: { bg: "#1c1608", panel: "#2a2010", line: "#c9a227", accent: "#1a1a1a" },
+  tirannwn: { bg: "#0e1818", panel: "#142424", line: "#7ef0ff", accent: "#3a6a6a" },
+  fremennik: { bg: "#14161a", panel: "#1c2026", line: "#8a96a4", accent: "#c5d0da" },
+  kourend: { bg: "#16120a", panel: "#221c10", line: "#c4a35a", accent: "#6a4a20" },
+  varlamore: { bg: "#1a120c", panel: "#261810", line: "#e8b86d", accent: "#6b3a24" },
+  "southern-sea": { bg: "#16120e", panel: "#241c16", line: "#ff7ad9", accent: "#4a2a18" },
+  "lost-city": { bg: "#16101c", panel: "#221828", line: "#e6a0ff", accent: "#3a2458" },
+  wilderness: { bg: "#140c0c", panel: "#1c1212", line: "#8a3030", accent: "#c4a35a" },
+};
+
+export function clothFor(region: string | undefined) {
+  return CLOTH[bannerFor(region).slug] ?? MEADOW;
+}
+
 export function hasBanner(region: string | undefined) {
   return REAL.has(bannerFor(region).slug);
 }
@@ -67,10 +89,15 @@ export function bannerFor(region: string | undefined): RegionBanner {
 
 export function regionPageStyle(region: string | undefined, godInk?: string): CSSProperties {
   const b = bannerFor(region);
+  const c = clothFor(region);
   return {
     "--region": b.primary,
-    "--region-accent": b.accent,
-    "--region-ink": b.ink,
-    "--god-ink": godInk ?? b.accent,
+    "--region-accent": c.accent,
+    "--region-ink": c.line,
+    "--town-bg": c.bg,
+    "--town-panel": c.panel,
+    "--town-line": c.line,
+    "--town-accent": c.accent,
+    "--god-ink": godInk ?? c.accent,
   } as CSSProperties;
 }

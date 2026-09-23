@@ -4,7 +4,7 @@ import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
 import { PlaceRail, usePlaceFilter } from "@/components/place-rail";
 import { LOCATIONS, townHasStill, townRegionHead, townStillLine, type Location } from "@/lib/locations";
-import { bannerFor, hasBanner } from "@/lib/region-banners";
+import { bannerFor, clothFor, hasBanner } from "@/lib/region-banners";
 import { regionAnchor } from "@/lib/town-doors";
 import { townNote } from "@/lib/town-notes";
 import { pageMeta } from "@/lib/page-title";
@@ -75,14 +75,14 @@ function TownIndex() {
   const groups = byRegion(listedTowns(edition));
   const game = edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className="towns-atlas min-h-dvh">
       <header className="section-head px-5 pt-2 md:px-8">
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Towns</h1>
         <p className="mt-2 max-w-2xl text-center text-sm text-muted">
           Two grammars. Same name is not the same street. Pick a client first. The guard on the card talks for that game only.
         </p>
-        <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
+        <span className="towns-rule" aria-hidden="true" />
         <div className="mt-3">
           <PlaceRail section="towns" edition={edition} onEdition={setEdition} />
         </div>
@@ -91,13 +91,14 @@ function TownIndex() {
         {groups.length ? (
           groups.map(([region, rows]) => {
             const banner = bannerFor(region);
+            const cloth = clothFor(region);
             const label = region === "Burtrope" ? "Burthorpe" : region;
             return (
             <section
               key={region}
               id={regionAnchor(region)}
               className="region-band"
-              style={{ "--region": banner.primary, "--region-ink": banner.ink, "--region-accent": banner.accent } as CSSProperties}
+              style={{ "--region": cloth.line, "--region-ink": cloth.line, "--region-accent": cloth.accent } as CSSProperties}
             >
               <h2 className="region-band-title">
                 {hasBanner(region) ? (

@@ -55,7 +55,7 @@ function TownNotePage() {
         </h1>
         {loc && banner ? (
           <p className="mt-1 text-center text-sm text-muted">
-            <span style={{ color: banner.ink }}>{loc.region.replace(/\s·\sOSRS$/, "").replace(/\s·\sRuneScape$/, "")}</span>
+            <span style={{ color: "var(--town-line)" }}>{loc.region.replace(/\s·\sOSRS$/, "").replace(/\s·\sRuneScape$/, "")}</span>
             {" · "}
             <AppLink href={godPath(loc.god)} className="town-god no-underline">
               {loc.god}

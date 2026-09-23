@@ -2,7 +2,7 @@ import { useState, type CSSProperties } from "react";
 import { StillPhoto } from "@/components/still-photo";
 import { UseOnBanner } from "@/desk/use-on-banner";
 import { godChipClass, godHueClass, godInk, godNeon } from "@/lib/gods";
-import { bannerFor } from "@/lib/region-banners";
+import { bannerFor, clothFor } from "@/lib/region-banners";
 import type { Edition } from "@/lib/locations";
 import { AppLink, bossPath, townPath } from "./place-chip";
 
@@ -45,8 +45,9 @@ export function PlaceCard({
   placeId?: string;
 }) {
   const banner = kind === "Town" ? bannerFor(region) : null;
-  const hue = banner
-    ? banner.ink
+  const cloth = kind === "Town" ? clothFor(region) : null;
+  const hue = cloth
+    ? cloth.line
     : (kind === "Town" || kind === "Boss") && god
       ? godNeon(god)
       : kind === "God"
@@ -73,8 +74,8 @@ export function PlaceCard({
           banner
             ? ({
                 "--region": banner.primary,
-                "--region-accent": banner.accent,
-                "--region-ink": banner.ink,
+                "--region-accent": cloth?.accent ?? "#8aa35a",
+                "--region-ink": cloth?.line ?? "#8aa35a",
               } as CSSProperties)
             : undefined
         }

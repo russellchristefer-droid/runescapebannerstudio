@@ -1193,14 +1193,40 @@ a.skill-link:focus-visible {
   text-align: center;
 }
 .town-page {
-  --flow: var(--region, #5c2d7a);
-  background-color: #0c0d12;
-  background-image: radial-gradient(
-    ellipse 90% 26rem at 50% -2rem,
-    color-mix(in srgb, var(--flow) 42%, transparent),
-    transparent 72%
-  );
-  color: #f4f0e4;
+  background: var(--town-bg, #12160f);
+  color: #e8e0c4;
+}
+.towns-atlas {
+  background: #12160f;
+  color: #e8e0c4;
+}
+.towns-atlas h1.page-h1,
+.towns-atlas h1.page-h1.site-title,
+.towns-atlas h1.page-h1.site-title:hover {
+  color: #e8e0c4;
+}
+.towns-atlas .towns-rule {
+  display: block;
+  width: 6rem;
+  height: 1px;
+  margin: 0.5rem auto 0;
+  background: #8aa35a;
+}
+.towns-atlas .region-band-title {
+  color: #e8e0c4;
+}
+.towns-atlas .rs-panel.region-card {
+  background: #1a1f16;
+  border-color: #8aa35a;
+  box-shadow: none;
+}
+.towns-atlas .rs-panel.region-card:hover,
+.towns-atlas .rs-panel.region-card:focus-within {
+  border-color: var(--region-accent, #8aa35a);
+  box-shadow: none;
+}
+.towns-atlas .text-muted {
+  color: #c5cbb0;
 }
 .town-page > header {
   background: transparent;
@@ -1217,13 +1243,16 @@ a.skill-link:focus-visible {
   background: linear-gradient(90deg, transparent, var(--flow, var(--color-line)), transparent);
 }
 .town-page-well {
-  background: color-mix(in srgb, var(--region, #5c2d7a) 10%, #14151c);
-  border: 1px solid color-mix(in srgb, var(--region-ink, var(--region, #5c2d7a)) 70%, #111);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--region-accent, #3d9e3d) 22%, transparent);
+  background: var(--town-panel, #1a1f16);
+  border: 1px solid var(--town-line, #8aa35a);
+  box-shadow: none;
 }
 .town-page h1.site-title,
 .town-page h1.site-title:hover {
-  color: var(--region-ink, var(--region));
+  color: var(--town-line, #e8e0c4);
+}
+.town-page > header::after {
+  background: linear-gradient(90deg, transparent, var(--town-line, #8aa35a), transparent);
 }
 .town-page a.town-god,
 .town-page a.town-god:hover {
@@ -1231,9 +1260,9 @@ a.skill-link:focus-visible {
   text-shadow: 0 0 8px color-mix(in srgb, var(--god-ink, #fff) 55%, transparent);
 }
 .town-page .rs-chip:hover:not(.god-chip) {
-  border-color: var(--region-accent);
-  background: color-mix(in srgb, var(--region-accent) 18%, #111);
-  color: #fff;
+  border-color: var(--town-line, #8aa35a);
+  background: color-mix(in srgb, var(--town-accent, #e8e0c4) 22%, var(--town-panel, #1a1f16));
+  color: #f4f0e4;
 }
 .region-flag {
   display: inline-block;
