@@ -1306,13 +1306,25 @@ a.skill-link:focus-visible {
   width: 100%;
   height: 100%;
 }
-.bosses-atlas .rs-panel img,
-.bosses-atlas .rs-panel .aspect-video {
-  aspect-ratio: 16 / 9;
+.boss-card-still {
+  position: relative;
+  display: block;
   width: 100%;
-  height: auto;
-  object-fit: contain;
-  background: #000;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  background: #070707;
+}
+.boss-card-still img,
+.boss-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: center center;
 }
 .bosses-atlas .rs-panel p {
   min-height: 2.6em;
