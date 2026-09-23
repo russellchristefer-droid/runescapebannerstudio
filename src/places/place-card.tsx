@@ -127,22 +127,16 @@ export function PlaceCard({
             <span className="grid aspect-video w-full place-items-center text-[11px] text-faint">
               Still needed
             </span>
+          ) : field && wash ? (
+            <span className="dragon-stage block aspect-video w-full" style={{ "--dragon": wash } as CSSProperties}>
+              <StillPhoto src={src} alt={alt} className="aspect-video w-full object-contain" onError={() => setGone(true)} />
+            </span>
           ) : (
             <StillPhoto
               src={src}
               alt={alt}
-              className={`aspect-video w-full object-cover ${field ? "object-contain" : "bg-surface"}`}
-              style={
-                field && wash
-                  ? {
-                      objectFit: "contain",
-                      backgroundColor: wash,
-                      backgroundImage: `radial-gradient(ellipse at 50% 58%, color-mix(in srgb, ${wash} 62%, white) 0%, ${wash} 42%, color-mix(in srgb, ${wash} 48%, #120c08) 100%)`,
-                    }
-                  : wash
-                    ? { boxShadow: `inset 0 3px 0 0 ${wash}` }
-                    : undefined
-              }
+              className="aspect-video w-full bg-surface object-cover"
+              style={wash ? { boxShadow: `inset 0 3px 0 0 ${wash}` } : undefined}
               onError={() => setGone(true)}
             />
           )}

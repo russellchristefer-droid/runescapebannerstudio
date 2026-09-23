@@ -43,24 +43,16 @@ function MonsterPage() {
           note="Official wiki for this creature. Official news wins."
           links={[{ label: `${row.name} · ${game} wiki`, href: row.wiki }]}
         />
-        {src ? (
+        {src && dragon ? (
+          <span className="dragon-stage block aspect-[21/9] w-full overflow-hidden border border-[color:var(--dragon)]" style={{ "--dragon": hue } as CSSProperties}>
+            <StillPhoto src={src} alt={`${row.name} in ${game}`} className="aspect-[21/9] w-full object-contain" />
+          </span>
+        ) : src ? (
           <StillPhoto
             src={src}
             alt={`${row.name} in ${game}`}
-            className={
-              dragon
-                ? "aspect-[21/9] w-full border border-[color:var(--dragon)] object-contain"
-                : "aspect-[21/9] w-full border border-[#c4a35a] bg-surface object-cover"
-            }
-            style={
-              dragon
-                ? {
-                    objectFit: "contain",
-                    backgroundColor: hue,
-                    backgroundImage: `radial-gradient(ellipse at 50% 58%, color-mix(in srgb, ${hue} 62%, white) 0%, ${hue} 42%, color-mix(in srgb, ${hue} 48%, #120c08) 100%)`,
-                  }
-                : { boxShadow: `inset 0 3px 0 0 ${hue}` }
-            }
+            className="aspect-[21/9] w-full border border-[#c4a35a] bg-surface object-cover"
+            style={{ boxShadow: `inset 0 3px 0 0 ${hue}` }}
           />
         ) : (
           <p className="border border-[#c4a35a] bg-surface px-3 py-10 text-center text-sm text-muted">Even the beast declined to appear.</p>
