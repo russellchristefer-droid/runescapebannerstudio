@@ -24,7 +24,7 @@ function BossIndex() {
     return true;
   });
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className="bosses-atlas min-h-dvh">
       <header className="section-head px-5 pt-2 md:px-8">
         <BackLink />
         <h1 className="page-h1 mt-1">Bosses</h1>

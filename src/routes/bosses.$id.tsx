@@ -1,4 +1,5 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import type { CSSProperties } from "react";
 import { BackLink } from "@/components/back-link";
 import { BossSheet } from "@/components/boss-sheet";
 import { noteFor, bossWash } from "@/lib/boss-notes";
@@ -25,8 +26,21 @@ function BossNotePage() {
   const loc = LOCATIONS.find((item) => item.id === id);
   if (!note || !sheet || !loc) throw notFound();
   const game = note.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
+  const floor =
+    loc.god === "Saradomin" ? "#0c1420"
+    : loc.god === "Zamorak" ? "#1a0a0a"
+    : loc.god === "Guthix" ? "#0c160e"
+    : loc.god === "Armadyl" ? "#10141a"
+    : loc.god === "Bandos" ? "#16120a"
+    : loc.god === "Seren" ? "#0c1818"
+    : loc.god === "Zaros" ? "#140e1a"
+    : loc.god === "Sliske" ? "#121018"
+    : loc.god === "Tumeken" ? "#16140a"
+    : loc.god === "Elidinis" ? "#0c1616"
+    : loc.god === "Marimbo" ? "#160e12"
+    : "#120e10";
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className="boss-page min-h-dvh" style={{ "--boss-bg": floor } as CSSProperties}>
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <h1 className="page-h1 mt-1">{note.title}</h1>

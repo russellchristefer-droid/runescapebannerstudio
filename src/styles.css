@@ -304,7 +304,11 @@ header {
   border: 1px solid color-mix(in srgb, #c4a35a 60%, transparent);
 }
 .home-desk {
-  background: #0c0d12;
+  background-color: #0c0d12;
+  background-image: url("/ui/home-cloth.png");
+  background-repeat: repeat;
+  background-size: 140px 140px;
+  background-blend-mode: overlay;
 }
 .home-desk .rs-stone-header,
 .home-desk .page-band {
@@ -1179,15 +1183,15 @@ a.skill-link:focus-visible {
     text-shadow: none;
   }
 }
-.skill-page {
-  --flow: var(--skill-line, #e6d000);
-  background-color: #0c0d12;
-  background-image: radial-gradient(
-    ellipse 90% 26rem at 50% -2rem,
-    color-mix(in srgb, var(--flow) 38%, transparent),
-    transparent 72%
-  );
-  color: var(--skill-fg, #f4f0e4);
+.skill-page,
+.skills-atlas {
+  --flow: var(--skill-line, #c4a35a);
+  background-color: var(--skill-bg, #101218);
+  background-image: url("/ui/skill-weave.png");
+  background-repeat: repeat;
+  background-size: 120px 120px;
+  background-blend-mode: overlay;
+  color: #e7e2d4;
 }
 .skill-page > header {
   background: transparent;
@@ -1239,6 +1243,55 @@ a.skill-link:focus-visible {
 .skill-page main dd,
 .skill-page main dt,
 .skill-page .skill-links {
+  text-align: center;
+}
+.bosses-atlas,
+.boss-page {
+  background-color: var(--boss-bg, #120e10);
+  background-image: url("/ui/steel-grain.png");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  background-blend-mode: soft-light;
+  color: #f0d9c8;
+}
+.bosses-atlas .rs-panel,
+.boss-page .rs-panel {
+  background-color: #1a1416;
+  border-color: #8a3030;
+}
+.bestiary-atlas,
+.monster-page {
+  background-color: #10140e;
+  background-image: url("/ui/field-grain.png");
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  background-blend-mode: overlay;
+  color: #e4e0c4;
+}
+.bestiary-atlas .rs-panel,
+.monster-page .rs-panel {
+  background-color: #171c14;
+  border-color: #6a8f3d;
+}
+.monster-page > header,
+.boss-page > header {
+  text-align: center;
+}
+  display: inline-block;
+  margin: 0.45rem auto 0;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #6a8f3d;
+  color: #10140e;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.skills-atlas h1.page-h1,
+.bosses-atlas h1.page-h1,
+.bestiary-atlas h1.page-h1,
+.boss-page h1.page-h1,
+.monster-page h1.page-h1 {
   text-align: center;
 }
 .towns-atlas {

@@ -22,13 +22,14 @@ function MonsterPage() {
   const note = monsterLead(row);
   const lore = monsterLore(row);
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className="monster-page min-h-dvh">
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <p className="eyebrow text-center text-[10px] uppercase tracking-[0.18em] text-muted">
           Bestiary · {row.slayer ? "Slayer" : "Monster"} · {game}
         </p>
         <h1 className="page-h1 site-title mt-1">{row.name}</h1>
+        {row.slayer ? <p className="slayer-badge">Slayer</p> : null}
         <span className="mx-auto mt-2 block h-px w-24 bg-[#c4a35a]/80" aria-hidden="true" />
       </header>
       <main className="mx-auto max-w-3xl px-5 py-6 md:px-8">

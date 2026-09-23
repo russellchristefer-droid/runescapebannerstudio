@@ -59,7 +59,7 @@ function BestiaryPage() {
   const osrs = rows.filter((row) => row.edition === "OSRS");
   const rs3 = rows.filter((row) => row.edition === "RS3");
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className="bestiary-atlas min-h-dvh">
       <header className="section-head px-5 pt-2 md:px-8">
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Bestiary</h1>

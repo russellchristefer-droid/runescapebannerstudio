@@ -34,7 +34,7 @@ function SkillPage() {
             alt={`${row.skill.name} in ${game}`}
             width={72}
             height={72}
-            className="h-16 w-16 object-contain"
+            className="h-12 w-12 object-contain"
           />
         </div>
         {row.moving ? (

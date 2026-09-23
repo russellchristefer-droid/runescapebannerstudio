@@ -20,7 +20,7 @@ function SkillsPage() {
     (row) => !needle || row.skill.name.toLowerCase().includes(needle),
   );
   return (
-    <div className="min-h-dvh bg-bg text-fg">
+    <div className="skills-atlas min-h-dvh">
       <header className="section-head px-5 pt-2 md:px-8">
         <BackLink />
         <h1 className="page-h1 site-title mt-1">Skills</h1>

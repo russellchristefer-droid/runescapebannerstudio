@@ -1001,13 +1001,46 @@ function lift(hex: string, min = 120) {
 }
 
 /** Title is the strip. A black strip is lifted so it can be read. Hover stays the cloth. */
+const SHEET: Record<string, string> = {
+  Attack: "#c41a1a",
+  Strength: "#c45a1a",
+  Defence: "#3d8a3d",
+  Ranged: "#5a8a3d",
+  Prayer: "#e8d9a8",
+  Magic: "#4a6adf",
+  Runecraft: "#d4b84a",
+  Construction: "#8a5a3a",
+  Hitpoints: "#a31a1a",
+  Agility: "#3daaaa",
+  Herblore: "#4a8a3a",
+  Thieving: "#6a6a7a",
+  Crafting: "#b48a5a",
+  Fletching: "#8aaa3d",
+  Slayer: "#3d5a3d",
+  Hunter: "#8a7a3d",
+  Mining: "#8a8a8a",
+  Smithing: "#6a7a8a",
+  Fishing: "#3a6aaa",
+  Cooking: "#c46a1a",
+  Firemaking: "#d45a1a",
+  Woodcutting: "#3d7a3d",
+  Farming: "#5a9a3d",
+  Sailing: "#2a5a6a",
+  Summoning: "#c46a2a",
+  Dungeoneering: "#c46a8a",
+  Divination: "#8ab4d4",
+  Invention: "#c8c8c0",
+  Archaeology: "#b49a6a",
+  Necromancy: "#7a4aaa",
+};
+
 export function capeInk(name: string) {
-  return lift(capeColors(name).trim);
+  return SHEET[name] ?? lift(capeColors(name).trim);
 }
 
 export function capeStyle(name: string): { "--cape": string; "--trim": string } {
-  const { cloth } = capeColors(name);
-  return { "--cape": cloth, "--trim": capeInk(name) };
+  const hue = SHEET[name] ?? capeColors(name).cloth;
+  return { "--cape": hue, "--trim": capeInk(name) };
 }
 
 function mix(hex: string, other: string, t: number) {
@@ -1023,15 +1056,15 @@ function mix(hex: string, other: string, t: number) {
 
 /** Dark sheet in the cape's two colours. Cloth washes the field. The strip marks the type. */
 export function skillPageStyle(name: string): CSSProperties {
-  const { cloth } = capeColors(name);
+  const hue = SHEET[name] ?? capeColors(name).cloth;
   const accent = capeInk(name);
   return {
     ...capeStyle(name),
-    "--skill-bg": mix(cloth, "#0c0d12", 0.84),
-    "--skill-well": mix(cloth, "#14151c", 0.74),
-    "--skill-line": cloth,
+    "--skill-bg": mix(hue, "#101218", 0.9),
+    "--skill-well": "#161820",
+    "--skill-line": hue,
     "--skill-accent": accent,
-    "--skill-muted": mix(accent, "#b7ad96", 0.55),
+    "--skill-muted": mix(accent, "#b7ad96", 0.45),
   } as CSSProperties;
 }
 
