@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
-DEFAULT_STILL = PUBLIC / "Falador.png"
+DEFAULT_STILL = PUBLIC / "Falador.jpg"
 DEFAULT_OUT = ROOT / "banner-1200x480.jpg"
 
 

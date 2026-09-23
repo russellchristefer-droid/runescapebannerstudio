@@ -59,7 +59,7 @@ describe("security headers", () => {
 
   it("keeps town stills warm and hashed assets immutable", () => {
     const town = new Map<string, string>();
-    applySecurityHeaders(town, "/Falador.png");
+    applySecurityHeaders(town, "/Falador.jpg");
     assert.equal(
       town.get("Cache-Control"),
       "public, max-age=604800, stale-while-revalidate=86400",

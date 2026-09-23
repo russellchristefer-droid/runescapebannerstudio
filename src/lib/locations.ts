@@ -77,15 +77,15 @@ export function stillAllowed(path: string, edition: Edition) {
 const SHARP_TOWN: Record<string, string> = {
   falador: "/locations/rs3-falador-a.jpg",
   osrsfalador: "/locations/osrs-falador-a.jpg",
-  canifis: "/Canifis.png",
-  catherby: "/Catherby.png",
-  daemonheim: "/Daemonheim.png",
-  menaphos: "/Menaphos.png",
-  portsarim: "/Port_Sarim.png",
-  prifddinas: "/Prifddinas.png",
-  taverley: "/Taverley.png",
-  burthorpe: "/Burthorpe.png",
-  lostgrove: "/The_Lost_Grove.png",
+  canifis: "/Canifis.jpg",
+  catherby: "/Catherby.jpg",
+  daemonheim: "/Daemonheim.jpg",
+  menaphos: "/Menaphos.jpg",
+  portsarim: "/Port_Sarim.jpg",
+  prifddinas: "/Prifddinas.jpg",
+  taverley: "/Taverley.jpg",
+  burthorpe: "/Burthorpe.jpg",
+  lostgrove: "/The_Lost_Grove.jpg",
 };
 
 /** Same-origin town plates that exist in public/. Card and plate share this path. */

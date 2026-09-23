@@ -5,7 +5,7 @@ Not the website editor. The live bench stays in the browser.
 
   python3 clip_bench.py public/media/poh.mp4 --in 0 --out 3 --write clip.mp4
   python3 clip_bench.py clip.mp4 --size 9:16 --pack balanced --write clip.mp4
-  python3 clip_bench.py clip.mp4 --still public/Falador.png --write clip.mp4
+  python3 clip_bench.py clip.mp4 --still public/Falador.jpg --write clip.mp4
 
 Writes H.264 + AAC MP4 (TikTok / Twitch / X). Needs ffmpeg on PATH.
 Picks a hardware encoder when ffmpeg has one (NVENC, QSV, AMF, VideoToolbox), else libx264.

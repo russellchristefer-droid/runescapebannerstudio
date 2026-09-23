@@ -6,15 +6,15 @@ Clip bench uses NVENC, QSV, AMF, or VideoToolbox when ffmpeg has the encoder, el
 
 ```bash
 sudo apt install -y python3-pil ffmpeg
-python3 sidecars/still_desk.py --still public/Falador.png --name Christefer --out /tmp/banner.jpg
+python3 sidecars/still_desk.py --still public/Falador.jpg --name Christefer --out /tmp/banner.jpg
 python3 sidecars/clip_bench.py public/media/poh.mp4 --in 0 --out 3 --write /tmp/clip.mp4 --mute --pack balanced
-python3 sidecars/clip_bench.py public/media/poh.mp4 --in 0 --out 3 --still public/Falador.png --write /tmp/clip.mp4
+python3 sidecars/clip_bench.py public/media/poh.mp4 --in 0 --out 3 --still public/Falador.jpg --write /tmp/clip.mp4
 ```
 
 Same through the wrappers:
 
 ```bash
-sidecars/kali/still-compositor.sh --still public/Falador.png --name Christefer
+sidecars/kali/still-compositor.sh --still public/Falador.jpg --name Christefer
 sidecars/kali/clip-bench.sh public/media/poh.mp4 --in 0 --out 3 --mute
 ```
 

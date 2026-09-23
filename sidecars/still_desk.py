@@ -3,8 +3,8 @@
 
 Not the website desk. The live compositor stays in the browser.
 
-  python3 still_desk.py --still public/Falador.png --name Christefer
-  python3 still_desk.py --size 1280x720 --still public/Falador.png --out banner.jpg
+  python3 still_desk.py --still public/Falador.jpg --name Christefer
+  python3 still_desk.py --size 1280x720 --still public/Falador.jpg --out banner.jpg
 
 Needs Pillow:  python3 -m pip install pillow
 """
@@ -125,7 +125,7 @@ def compose(still: Path, name: str, out: Path, size_id: str, skills: list[str]) 
 
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Python still compositor sidecar.")
-    p.add_argument("--still", type=Path, default=PUBLIC / "Falador.png")
+    p.add_argument("--still", type=Path, default=PUBLIC / "Falador.jpg")
     p.add_argument("--name", default="")
     p.add_argument("--size", default="1200x480", choices=list(SIZES))
     p.add_argument("--out", type=Path, default=ROOT / "banner-desk.jpg")

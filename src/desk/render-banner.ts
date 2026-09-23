@@ -89,7 +89,7 @@ export async function renderDeskBanner(): Promise<DeskBannerStill | null> {
   const stillSrc =
     saved.stillSrc ||
     (loc ? (saved.view === "b" && loc.viewB ? loc.viewB : loc.viewA) : "") ||
-    "/Falador.png";
+    "/Falador.jpg";
   const picks = saved.skillPicks ?? [];
   const hasName = Boolean((saved.streamer ?? "").trim());
   if (!stillSrc && !hasName && !picks.length) return null;
@@ -98,7 +98,7 @@ export async function renderDeskBanner(): Promise<DeskBannerStill | null> {
   try {
     still = await loadImage(stillSrc);
   } catch {
-    still = await loadImage("/Falador.png");
+    still = await loadImage("/Falador.jpg");
   }
   const icons = (
     await Promise.all(

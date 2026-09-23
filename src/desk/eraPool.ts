@@ -18,22 +18,22 @@ export const ERA_POOL: Record<Era, EraStill[]> = {
     { src: "/era/rs2/draynor.jpg", era: "rs2", name: "Draynor" },
   ],
   osrs: [
-    { src: "/Falador.png", era: "osrs", name: "Falador" },
-    { src: "/Canifis.png", era: "osrs", name: "Canifis" },
-    { src: "/Catherby.png", era: "osrs", name: "Catherby" },
-    { src: "/Port_Sarim.png", era: "osrs", name: "Port Sarim" },
-    { src: "/Taverley.png", era: "osrs", name: "Taverley" },
-    { src: "/Burthorpe.png", era: "osrs", name: "Burthorpe" },
+    { src: "/Falador.jpg", era: "osrs", name: "Falador" },
+    { src: "/Canifis.jpg", era: "osrs", name: "Canifis" },
+    { src: "/Catherby.jpg", era: "osrs", name: "Catherby" },
+    { src: "/Port_Sarim.jpg", era: "osrs", name: "Port Sarim" },
+    { src: "/Taverley.jpg", era: "osrs", name: "Taverley" },
+    { src: "/Burthorpe.jpg", era: "osrs", name: "Burthorpe" },
   ],
   rs3: [
-    { src: "/Prifddinas.png", era: "rs3", name: "Prifddinas" },
-    { src: "/Menaphos.png", era: "rs3", name: "Menaphos" },
-    { src: "/Daemonheim.png", era: "rs3", name: "Daemonheim" },
-    { src: "/The_Lost_Grove.png", era: "rs3", name: "The Lost Grove" },
+    { src: "/Prifddinas.jpg", era: "rs3", name: "Prifddinas" },
+    { src: "/Menaphos.jpg", era: "rs3", name: "Menaphos" },
+    { src: "/Daemonheim.jpg", era: "rs3", name: "Daemonheim" },
+    { src: "/The_Lost_Grove.jpg", era: "rs3", name: "The Lost Grove" },
   ],
 };
 
-export const FALLBACK = "/Falador.png";
+export const FALLBACK = "/Falador.jpg";
 
 const ERA_LABEL: Record<Era, string> = {
   classic: "Classic",
@@ -59,7 +59,7 @@ export function captionForSrc(src: string) {
   const path = src.replace(/^https?:\/\/[^/]+/i, "").split("?")[0];
   const hit = allEraSrcs().find((row) => row.src === path || path.endsWith(row.src));
   if (hit) return eraCaption(hit);
-  if (path.endsWith("/Falador.png") || path.includes("osrs-falador-a")) return "OSRS · Falador";
+  if (path.endsWith("/Falador.jpg") || path.includes("osrs-falador-a")) return "OSRS · Falador";
   if (path.includes("rs3-falador-a") || path.endsWith("/locations/falador.jpg")) return "RuneScape · Falador";
   return "";
 }
