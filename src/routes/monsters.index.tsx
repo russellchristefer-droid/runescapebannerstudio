@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 import { PlaceCard, PlaceGrid } from "@/components/place-card";
-import { MONSTERS, monsterStillLine, monsterStillSrc, monsterWash } from "@/lib/monsters";
+import { MONSTERS, isDragon, monsterStillLine, monsterStillSrc, monsterWash } from "@/lib/monsters";
 import { familyLore } from "@/lib/monster-lore";
 import { pageMeta } from "@/lib/page-title";
 import type { Edition } from "@/lib/locations";
@@ -170,6 +170,7 @@ function GameBlock({ id, title, edition, rows }: { id: string; title: string; ed
                   game={title}
                   caption={monsterStillLine(row)}
                   wash={monsterWash(row)}
+                  field={isDragon(row)}
                   edition={row.edition}
                   placeId={row.placeId ?? row.id}
                 />

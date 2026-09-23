@@ -27,7 +27,49 @@ export function monsterStillSrc(row: Pick<Monster, "edition" | "slug">) {
 }
 
 /** Quiet field colour behind the still. Dragons keep their own hue. */
+export function isDragon(row: Pick<Monster, "slug" | "name">) {
+  return `${row.slug} ${row.name}`.toLowerCase().includes("dragon");
+}
+
+/** The colour the dragon actually is. Same hue in both clients. */
+export function dragonHue(row: Pick<Monster, "slug" | "name">) {
+  const key = `${row.slug} ${row.name}`.toLowerCase();
+  const table: [string, string][] = [
+    ["brutal green", "#146b28"],
+    ["baby green", "#3d9a48"],
+    ["green dragon", "#1f8a34"],
+    ["brutal blue", "#163e96"],
+    ["baby blue", "#4a86f0"],
+    ["blue dragon", "#1d5fe0"],
+    ["brutal red", "#a31e12"],
+    ["baby red", "#f05a3a"],
+    ["red dragon", "#d62818"],
+    ["brutal black", "#5c1818"],
+    ["baby black", "#7a3a44"],
+    ["black dragon", "#6a2228"],
+    ["bronze", "#d4842a"],
+    ["iron dragon", "#9aa3ad"],
+    ["steel", "#4e6274"],
+    ["mithril", "#2aa4cc"],
+    ["adamant", "#12c46a"],
+    ["rune dragon", "#3556e0"],
+    ["lava", "#ff4d12"],
+    ["frost", "#5ed4ef"],
+    ["celestial", "#8aa6ff"],
+    ["dragonstone", "#d45aee"],
+    ["onyx", "#6a2844"],
+    ["hydrix", "#e23a86"],
+    ["orikalkum", "#e86a18"],
+    ["gemstone", "#9a58d4"],
+  ];
+  for (const [needle, hue] of table) {
+    if (key.includes(needle)) return hue;
+  }
+  return "#e07028";
+}
+
 export function monsterWash(row: Pick<Monster, "slug" | "name">) {
+  if (isDragon(row)) return dragonHue(row);
   const key = `${row.slug} ${row.name}`.toLowerCase();
   if (key.includes("red dragon")) return "#2a1510";
   if (key.includes("blue dragon")) return "#101b2e";

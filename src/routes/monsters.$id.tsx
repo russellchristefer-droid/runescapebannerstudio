@@ -1,7 +1,8 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import type { CSSProperties } from "react";
 import { BackLink } from "@/components/back-link";
 import { StillPhoto } from "@/components/still-photo";
-import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillLine, monsterStillSrc, monsterTaskLine, monsterWatchLine, monsterWash, sisterMonster } from "@/lib/monsters";
+import { monsterById, monsterHuntLine, monsterKillLine, monsterSlayerLink, monsterStillLine, monsterStillSrc, monsterTaskLine, monsterWatchLine, monsterWash, isDragon, sisterMonster } from "@/lib/monsters";
 import { monsterLead, monsterLore } from "@/lib/monster-lore";
 import { UseOnBanner } from "@/components/use-on-banner";
 import { OfficialPulse } from "@/components/official-pulse";
@@ -21,8 +22,13 @@ function MonsterPage() {
   const sister = sisterMonster(row);
   const note = monsterLead(row);
   const lore = monsterLore(row);
+  const dragon = isDragon(row);
+  const hue = monsterWash(row);
   return (
-    <div className="monster-page min-h-dvh">
+    <div
+      className={dragon ? "monster-page dragon-den min-h-dvh" : "monster-page min-h-dvh"}
+      style={dragon ? ({ "--dragon": hue } as CSSProperties) : undefined}
+    >
       <header className="border-b border-line px-5 py-5 md:px-8">
         <BackLink />
         <p className="eyebrow text-center text-[10px] uppercase tracking-[0.18em] text-muted">
@@ -41,8 +47,19 @@ function MonsterPage() {
           <StillPhoto
             src={src}
             alt={`${row.name} in ${game}`}
-            className="aspect-[21/9] w-full border border-[#c4a35a] bg-surface object-cover"
-            style={{ boxShadow: `inset 0 3px 0 0 ${monsterWash(row)}` }}
+            className={
+              dragon
+                ? "aspect-[21/9] w-full border border-[color:var(--dragon)] object-contain"
+                : "aspect-[21/9] w-full border border-[#c4a35a] bg-surface object-cover"
+            }
+            style={
+              dragon
+                ? {
+                    backgroundColor: "#070707",
+                    backgroundImage: `radial-gradient(ellipse at 50% 70%, ${hue} 0%, color-mix(in srgb, ${hue} 40%, #070707) 48%, #050505 80%), repeating-linear-gradient(128deg, transparent 0 14px, rgba(255,255,255,0.045) 14px 15px)`,
+                  }
+                : { boxShadow: `inset 0 3px 0 0 ${hue}` }
+            }
           />
         ) : (
           <p className="border border-[#c4a35a] bg-surface px-3 py-10 text-center text-sm text-muted">Even the beast declined to appear.</p>

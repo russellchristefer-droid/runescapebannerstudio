@@ -1440,6 +1440,15 @@ a.skill-link:focus-visible {
   background-blend-mode: overlay;
   color: #e4e0c4;
 }
+.dragon-den {
+  background-color: #0c0e0c;
+  background-image:
+    radial-gradient(ellipse 90% 36% at 50% 0%, color-mix(in srgb, var(--dragon, #e07028) 42%, transparent), transparent 72%),
+    url("/ui/field-grain.png");
+  background-repeat: no-repeat, repeat;
+  background-size: auto, 160px 160px;
+  background-blend-mode: normal, overlay;
+}
 .bestiary-atlas .rs-panel,
 .monster-page .rs-panel {
   background-color: #171c14;

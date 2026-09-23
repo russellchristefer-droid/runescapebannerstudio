@@ -117,7 +117,9 @@ export function PlaceCard({
                 "--region-accent": cloth?.accent ?? "#8aa35a",
                 "--region-ink": cloth?.line ?? "#8aa35a",
               } as CSSProperties)
-            : undefined
+            : field && wash
+              ? { borderColor: wash }
+              : undefined
         }
       >
         <AppLink href={href} className="block [touch-action:manipulation]">
@@ -132,7 +134,10 @@ export function PlaceCard({
               className={`aspect-video w-full object-cover ${field ? "object-contain" : "bg-surface"}`}
               style={
                 field && wash
-                  ? { backgroundColor: wash }
+                  ? {
+                      backgroundColor: "#070707",
+                      backgroundImage: `radial-gradient(ellipse at 50% 72%, ${wash} 0%, color-mix(in srgb, ${wash} 42%, #070707) 46%, #050505 78%), repeating-linear-gradient(128deg, transparent 0 11px, rgba(255,255,255,0.05) 11px 12px)`,
+                    }
                   : wash
                     ? { boxShadow: `inset 0 3px 0 0 ${wash}` }
                     : undefined
