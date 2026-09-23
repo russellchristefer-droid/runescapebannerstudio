@@ -3,6 +3,7 @@ export const GAME_NAV = [
   ["/towns", "Towns"],
   ["/gods", "Gods"],
   ["/bosses", "Bosses"],
+  ["/monsters", "Bestiary"],
   ["/pvp", "PvP"],
   ["/clan-wars", "Clan Wars"],
 ] as const;
