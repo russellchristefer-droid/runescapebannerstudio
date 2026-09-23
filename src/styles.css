@@ -1441,23 +1441,24 @@ a.skill-link:focus-visible {
   color: #e4e0c4;
 }
 .dragon-stage {
-  display: grid;
-  overflow: hidden;
-  padding: 14px;
   background-color: #070605;
   background-image: radial-gradient(
-    ellipse at 50% 70%,
-    color-mix(in srgb, var(--dragon, #c45a1a) 72%, #1a120c) 0%,
-    color-mix(in srgb, var(--dragon, #c45a1a) 28%, #070605) 100%
+    ellipse at 50% 68%,
+    color-mix(in srgb, var(--dragon, #c45a1a) 28%, #1a120c) 0%,
+    color-mix(in srgb, var(--dragon, #c45a1a) 10%, #070605) 58%,
+    #050403 100%
   );
 }
 .dragon-stage img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #0a0908;
-  filter: contrast(1.06) saturate(1.08);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.55);
+  filter:
+    contrast(1.18)
+    saturate(1.4)
+    drop-shadow(0 0 1px #000)
+    drop-shadow(0 0 2px #000)
+    drop-shadow(0 16px 14px rgba(0, 0, 0, 0.92));
 }
 .dragon-den {
   background-color: #0c0e0c;
