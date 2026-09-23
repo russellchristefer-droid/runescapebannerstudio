@@ -1294,13 +1294,36 @@ a.skill-link:focus-visible {
 .boss-guide {
   text-align: left;
 }
+.boss-hall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 1.5rem 0 1.25rem;
+  border-bottom: 1px solid rgba(138, 48, 48, 0.45);
+}
+.boss-hall-title {
+  margin: 0;
+  text-align: center;
+  font-family: Cinzel, "Source Serif 4", Palatino, serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  color: #f0d9c8;
+}
+.boss-hall-line {
+  margin: 0.35rem 0 0;
+  max-width: 36rem;
+  text-align: center;
+  color: #cbb8a4;
+  font-size: 0.85rem;
+}
 .boss-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
-  align-items: start;
+  align-items: stretch;
   width: 100%;
-  margin: 0;
+  margin: 1rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -1318,9 +1341,9 @@ a.skill-link:focus-visible {
 }
 .boss-grid .boss-card {
   display: grid;
-  grid-template-rows: 168px 46px 34px 48px;
+  grid-template-rows: 168px 58px 34px 48px;
   width: 100%;
-  height: 296px;
+  height: 308px;
   margin: 0;
   overflow: hidden;
   box-sizing: border-box;
@@ -1367,7 +1390,7 @@ a.skill-link:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 46px;
+  height: 58px;
   margin: 0;
   padding: 0 8px;
   overflow: hidden;

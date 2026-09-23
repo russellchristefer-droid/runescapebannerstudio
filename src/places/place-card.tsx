@@ -59,6 +59,7 @@ export function PlaceCard({
   const canBanner = Boolean(src && edition && placeId);
   if (!src) return null;
   if (kind === "Boss") {
+    if (gone) return null;
     return (
       <li className="boss-slot">
         <article className="boss-card">

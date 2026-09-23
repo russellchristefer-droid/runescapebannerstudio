@@ -75,6 +75,14 @@ const SISTER_WIKI: Partial<Record<string, { label: string; href: string }>> = {
   kril: { label: "K'ril Tsutsaroth · RuneScape wiki", href: "https://runescape.wiki/w/K%27ril_Tsutsaroth" },
   zilyana: { label: "Commander Zilyana · RuneScape wiki", href: "https://runescape.wiki/w/Commander_Zilyana" },
   kq: { label: "Kalphite Queen · RuneScape wiki", href: "https://runescape.wiki/w/Kalphite_Queen" },
+  kbd: { label: "King Black Dragon · RuneScape wiki", href: "https://runescape.wiki/w/King_Black_Dragon" },
+  rs3graardor: { label: "General Graardor · OSRS wiki", href: "https://oldschool.runescape.wiki/w/General_Graardor" },
+  rs3kree: { label: "Kree'arra · OSRS wiki", href: "https://oldschool.runescape.wiki/w/Kree%27arra" },
+  rs3kril: { label: "K'ril Tsutsaroth · OSRS wiki", href: "https://oldschool.runescape.wiki/w/K%27ril_Tsutsaroth" },
+  rs3zilyana: { label: "Commander Zilyana · OSRS wiki", href: "https://oldschool.runescape.wiki/w/Commander_Zilyana" },
+  rs3nex: { label: "Nex · OSRS wiki", href: "https://oldschool.runescape.wiki/w/Nex" },
+  rs3kq: { label: "Kalphite Queen · OSRS wiki", href: "https://oldschool.runescape.wiki/w/Kalphite_Queen" },
+  rs3kbd: { label: "King Black Dragon · OSRS wiki", href: "https://oldschool.runescape.wiki/w/King_Black_Dragon" },
 };
 
 const UNOFFICIAL: Partial<Record<string, { label: string; href: string }>> = {
@@ -1655,6 +1663,17 @@ function fallbackRs3(note: BossNote): Rs3Desk {
     };
   }
   const enrageIds = new Set(["telos", "kerapac", "zamorakboss", "ambassador", "glacor", "araxxor"]);
+  if (note.id.startsWith("rs3")) {
+    return {
+      bar: ["Confirm the ability bar on the wiki for this fight"],
+      revolution: "This client. Do not paste an Old School prayer book here.",
+      familiar: "The familiar the wiki lists, or none.",
+      pocket: "The pocket the wiki lists for the style you brought.",
+      relic: "The relic the page lists. Leave a guess home.",
+      camp: "Camp the style the RuneScape page lists. Same name is not the same room.",
+      ultimates: "The ultimate the wiki lists, on a clean window. Do not invent one.",
+    };
+  }
   return {
     bar: ["Touch of Death", "Soul Sap", "Finger of Death", "Death Skulls", "Volley of Souls", "Bloat", "Freedom", "Reflect", "Resonance", "Disrupt"],
     revolution: "Revolution until the mechanic is boring. Full manual only if that is your log.",

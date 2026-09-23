@@ -1,16 +1,17 @@
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 import { BackLink } from "@/components/back-link";
 import { BossSheet } from "@/components/boss-sheet";
 import { noteFor } from "@/lib/boss-notes";
 import { sheetFor } from "@/lib/boss-sheets";
-import { LOCATIONS } from "@/lib/locations";
+import { LOCATIONS, type Edition } from "@/lib/locations";
 import { pageMeta } from "@/lib/page-title";
 import { godNeon } from "@/lib/gods";
 import { PlaceRail } from "@/components/place-rail";
 import { UseOnBanner } from "@/components/use-on-banner";
-import { VisitPlaces, godPath, townPath } from "@/components/place-chip";
+import { PlaceChip, bossPath, godPath, townPath } from "@/components/place-chip";
 import { townNote } from "@/lib/town-notes";
+import { MONSTERS } from "@/lib/monsters";
 
 export const Route = createFileRoute("/bosses/$id")({
   head: ({ params }) => {
@@ -26,19 +27,20 @@ function BossNotePage() {
   const sheet = sheetFor(id);
   const loc = LOCATIONS.find((item) => item.id === id);
   if (!note || !sheet || !loc) throw notFound();
+  const god = note.id === "royal" ? undefined : loc.god;
   const game = note.edition === "OSRS" ? "Old School RuneScape" : "RuneScape";
   const floor =
-    loc.god === "Saradomin" ? "#0c1420"
-    : loc.god === "Zamorak" ? "#1a0a0a"
-    : loc.god === "Guthix" ? "#0c160e"
-    : loc.god === "Armadyl" ? "#10141a"
-    : loc.god === "Bandos" ? "#16120a"
-    : loc.god === "Seren" ? "#0c1818"
-    : loc.god === "Zaros" ? "#140e1a"
-    : loc.god === "Sliske" ? "#121018"
-    : loc.god === "Tumeken" ? "#16140a"
-    : loc.god === "Elidinis" ? "#0c1616"
-    : loc.god === "Marimbo" ? "#160e12"
+    god === "Saradomin" ? "#0c1420"
+    : god === "Zamorak" ? "#1a0a0a"
+    : god === "Guthix" ? "#0c160e"
+    : god === "Armadyl" ? "#10141a"
+    : god === "Bandos" ? "#16120a"
+    : god === "Seren" ? "#0c1818"
+    : god === "Zaros" ? "#140e1a"
+    : god === "Sliske" ? "#121018"
+    : god === "Tumeken" ? "#16140a"
+    : god === "Elidinis" ? "#0c1616"
+    : god === "Marimbo" ? "#160e12"
     : "#120e10";
   return (
     <div className="boss-page min-h-dvh" style={{ "--boss-bg": floor } as CSSProperties}>
@@ -61,29 +63,17 @@ function BossNotePage() {
           {game}
           {" · "}
           {sheet.role}
-          {loc.god ? (
+          {god ? (
             <>
               {" · "}
-              <span style={{ color: godNeon(loc.god) }}>{loc.god}</span>
+              <span style={{ color: godNeon(god) }}>{god}</span>
             </>
           ) : null}
         </p>
         <span className="boss-rule" aria-hidden="true" />
         <section className="boss-visit">
           <h2 className="sr-only">Places to visit</h2>
-          <VisitPlaces
-            items={[
-              { href: "/monsters", label: "Bestiary" },
-              { href: godPath(loc.god), label: loc.god },
-              ...LOCATIONS.filter((row) => row.kind === "town" && row.god === loc.god && townNote(row.id))
-                .slice(0, 4)
-                .map((row) => ({ href: townPath(row.id), label: row.name })),
-            ]}
-          />
-          <div className="mt-3 flex justify-center">
-            <UseOnBanner src={loc.viewA} edition={loc.edition} placeId={loc.id} />
-          </div>
-          <SisterBoss name={loc.name} edition={loc.edition} id={loc.id} />
+          <BossVisit id={loc.id} name={loc.name} edition={loc.edition} god={god} title={note.title} src={loc.viewA} />
         </section>
         <div className="boss-guide">
           <BossSheet sheet={sheet} />
@@ -93,24 +83,98 @@ function BossNotePage() {
   );
 }
 
-function SisterBoss({
+/** The plated town that is the door. No chip when that street is not on the atlas. */
+const BOSS_DOOR: Record<string, string> = {
+  rs3graardor: "heart",
+  rs3kril: "heart",
+  rs3zilyana: "heart",
+  rs3kree: "heart",
+  rs3nex: "heart",
+  helwyr: "heart",
+  vindicta: "heart",
+  gregorovic: "heart",
+  aod: "heart",
+  telos: "heart",
+  kq: "osrsshan",
+  rs3kq: "shantay",
+  kk: "sophanem",
+  kbd: "osrsedge",
+  rs3kbd: "edgeville",
+  chaosel: "osrsedge",
+  vetion: "osrsedge",
+  calvarion: "osrsedge",
+  callisto: "osrsedge",
+  artio: "osrsedge",
+  venenatis: "osrsedge",
+  spindel: "osrsedge",
+  scorpia: "osrsedge",
+  crazyarch: "osrsedge",
+  fanatic: "osrsedge",
+  corp: "osrsedge",
+  kraken: "osrspisc",
+  cerberus: "osrstav",
+  guardians: "osrscani",
+  smoke: "osrspoll",
+  hydra: "shayzien",
+  cox: "shayzien",
+  yama: "shayzien",
+  sarachnis: "hosidius",
+  vorkath: "osrsrel",
+  tob: "osrsmeiyer",
+  gauntlet: "osrsprif",
+  jad: "osrsmor",
+  inferno: "osrsmor",
+  mole: "osrsfalador",
+  scurrius: "osrsvarrock",
+  nightmare: "osrsslepe",
+  colosseum: "fortis",
+  huey: "osrscamtorum",
+  amox: "osrscamtorum",
+  kerapac: "anachronia",
+  raksha: "anachronia",
+  glacor: "senntisten",
+  croesus: "senntisten",
+  zamorakboss: "senntisten",
+  rasial: "cityofum",
+  sanctum: "cityofum",
+  solak: "lostgrove",
+  qbd: "falls",
+  araxxor: "canifis",
+  zuk: "morulrek",
+  ambassador: "daemonheim",
+};
+
+function BossVisit({
+  id,
   name,
   edition,
-  id,
+  god,
+  title,
+  src,
 }: {
-  name: string;
-  edition: "OSRS" | "RS3";
   id: string;
+  name: string;
+  edition: Edition;
+  god?: (typeof LOCATIONS)[number]["god"];
+  title: string;
+  src: string;
 }) {
   const sister = LOCATIONS.find(
-    (item) => item.kind === "boss" && item.name === name && item.edition !== edition && item.id !== id,
+    (item) => item.kind === "boss" && item.name === name && item.edition !== edition && item.id !== id && noteFor(item.id),
   );
-  if (!sister) return null;
+  const doorId = BOSS_DOOR[id];
+  const door = doorId
+    ? LOCATIONS.find((item) => item.id === doorId && item.kind === "town" && item.edition === edition && townNote(item.id))
+    : undefined;
+  const beast = MONSTERS.find((row) => row.edition === edition && row.name.toLowerCase() === title.toLowerCase());
+  const sisterLabel = edition === "OSRS" ? "Same name in RuneScape" : "Same name in Old School";
   return (
-    <p className="mt-4 text-center text-sm">
-      <Link to="/bosses/$id" params={{ id: sister.id }} className="text-parchment">
-        {edition === "OSRS" ? "Same name in RuneScape" : "Same name in Old School RuneScape"}
-      </Link>
-    </p>
+    <nav aria-label="Places to visit" className="town-visit">
+      <UseOnBanner src={src} edition={edition} placeId={id} />
+      {sister ? <PlaceChip href={bossPath(sister.id)}>{sisterLabel}</PlaceChip> : null}
+      {door ? <PlaceChip href={townPath(door.id)}>{door.name}</PlaceChip> : null}
+      {god ? <PlaceChip href={godPath(god)}>{god}</PlaceChip> : null}
+      {beast ? <PlaceChip href={`/monsters/${beast.id}`}>Bestiary</PlaceChip> : null}
+    </nav>
   );
 }
