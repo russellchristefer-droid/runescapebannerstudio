@@ -799,6 +799,441 @@ const EXTRA_LORE: Record<string, string[]> = {
   ],
 };
 
+const ADDED: Record<string, TownNote> = {
+  osrsdraynor: {
+    title: "Draynor Village",
+    region: "Misthalin · OSRS",
+    lore: [
+      "Willows, the bank, and the manor on the hill. Count Draynor’s crypt is under that house.",
+      "Vampyre Slayer starts with Morgan. The quiet is not quiet. Lumbridge is east.",
+    ],
+  },
+  osrsbarb: {
+    title: "Barbarian Village",
+    region: "Misthalin · OSRS",
+    lore: [
+      "Gunnarsgrunn. The river crossing between Varrock and the west road.",
+      "Firemaking and fishing live with the barbarians. The village is the bridge, not a city.",
+    ],
+  },
+  osrsdig: {
+    title: "Digsite",
+    region: "Misthalin · OSRS",
+    lore: [
+      "The exam, then the pits east of Varrock. Bones and the winch.",
+      "Not a second city. A dig with a gate. The museum is in Varrock.",
+    ],
+  },
+  osrsrim: {
+    title: "Rimmington",
+    region: "Asgarnia · OSRS",
+    lore: [
+      "The well, the chemist, and the walk to Port Sarim. The mine is south.",
+      "Player houses start here if you have the level. The village is the road, not the mine.",
+    ],
+  },
+  osrscam: {
+    title: "Camelot",
+    region: "Kandarin · OSRS",
+    lore: [
+      "The castle next to Seers’ Village. The bank is in Seers, not in the keep.",
+      "Knights of the Round Table. Teleport lands you in the courtyard. The village is the street.",
+    ],
+  },
+  osrshemen: {
+    title: "Hemenster",
+    region: "Kandarin · OSRS",
+    lore: [
+      "The village on the Fishing Guild road. The guild is the door with the level.",
+      "Not Catherby. A smaller dock and the ranger. East Ardougne is south.",
+    ],
+  },
+  osrskhaz: {
+    title: "Port Khazard",
+    region: "Kandarin · OSRS",
+    lore: [
+      "General Khazard’s dock. The fight arena is the other door.",
+      "The port is the contract. Don’t mix it with Ardougne’s market.",
+    ],
+  },
+  osrstgv: {
+    title: "Tree Gnome Village",
+    region: "Kandarin · OSRS",
+    lore: [
+      "The maze, the battlefield, and the spirit tree. This is not the stronghold.",
+      "Khazard’s war left the ground. The village is the tree, not the canopy city.",
+    ],
+  },
+  osrspisc: {
+    title: "Piscatoris",
+    region: "Kandarin · OSRS",
+    lore: [
+      "The fishing colony north of the stronghold. Swan Song is the door if you want the colony proper.",
+      "Falconry is the hill. The colony is the dock.",
+    ],
+  },
+  osrspoll: {
+    title: "Pollnivneach",
+    region: "Kharidian · OSRS",
+    lore: [
+      "The smoke town. Bandits, the magic carpet, and the mayor’s house.",
+      "The desert starts at Shantay. Pollnivneach is the first street that keeps a bar.",
+    ],
+  },
+  osrsnardah: {
+    title: "Nardah",
+    region: "Kharidian · OSRS",
+    lore: [
+      "Elidinis’s town. The shrine is the water. The carpet comes from Pollnivneach.",
+      "Don’t drink the well until the quest says the curse is done.",
+    ],
+  },
+  osrsshan: {
+    title: "Shantay Pass",
+    region: "Kharidian · OSRS",
+    lore: [
+      "The gate. Shantay takes the toll and the waterskins.",
+      "Al Kharid is behind you. The desert is the other side of the pass.",
+    ],
+  },
+  osrsphas: {
+    title: "Port Phasmatys",
+    region: "Morytania · OSRS",
+    lore: [
+      "The ghost dock. Ectofuntus and the inn that does not serve the living well.",
+      "Priest in Peril opened the swamp. This port is further east. Canifis is not this street.",
+    ],
+  },
+  osrsmort: {
+    title: "Mort'ton",
+    region: "Morytania · OSRS",
+    lore: [
+      "The ruined town. Shades under the temple. The serum is the work.",
+      "Not Burgh de Rott. Mort’ton is the wreck you repair, not the town you hold.",
+    ],
+  },
+  osrsburgh: {
+    title: "Burgh de Rott",
+    region: "Morytania · OSRS",
+    lore: [
+      "The town on the swamp road after In Aid of the Myreque. The gate is the lesson.",
+      "Meiyerditch is through the walls. Don’t walk there in the wrong clothes.",
+    ],
+  },
+  osrsmeiyer: {
+    title: "Meiyerditch",
+    region: "Morytania · OSRS",
+    lore: [
+      "The ghetto under Darkmeyer. Vyrewatch on the walls. The Myreque hide in the floors.",
+      "A Darkness of Hallowvale is the door. This is not Canifis.",
+    ],
+  },
+  osrsslepe: {
+    title: "Slepe",
+    region: "Morytania · OSRS",
+    lore: [
+      "The church town on the river. The Nightmare sleeps under the sisterhood.",
+      "The street is the church and the boats. The boss is not the town.",
+    ],
+  },
+  osrsdark: {
+    title: "Darkmeyer",
+    region: "Morytania · OSRS",
+    lore: [
+      "The vyre capital. Sins of the Father opens the streets if you wear the right colours.",
+      "Meiyerditch is the ghetto below. Darkmeyer is the city. Canifis is a village.",
+    ],
+  },
+  osrsking: {
+    title: "Kingstown",
+    region: "Great Kourend · OSRS",
+    lore: [
+      "The statue square where the five houses meet. Kourend Castle is the building.",
+      "Not a sixth house. The civic ground between Hosidius, Shayzien, and the rest.",
+    ],
+  },
+  osrswinter: {
+    title: "Wintertodt Camp",
+    region: "Great Kourend · OSRS",
+    lore: [
+      "A camp, not a house. The fire in the north. Warmth is the mechanic.",
+      "Do not file it as a city. You come for the braziers and you leave.",
+    ],
+  },
+  osrscamtorum: {
+    title: "Cam Torum",
+    region: "Varlamore · OSRS",
+    lore: [
+      "The dwarven city under Varlamore. The mine is the street.",
+      "Fortis is the capital. Cam Torum is the underground house.",
+    ],
+  },
+  osrsaldarin: {
+    title: "Aldarin",
+    region: "Varlamore · OSRS",
+    lore: [
+      "The coastal town. The voyage west can end on this dock.",
+      "Not Fortis. A smaller street and the sea.",
+    ],
+  },
+  osrskastori: {
+    title: "Kastori",
+    region: "Varlamore · OSRS",
+    lore: [
+      "The hunter town. Quetzals and the hills, not a second forum.",
+      "Fortis is the capital. Kastori is the camp that became a street.",
+    ],
+  },
+  osrslletya: {
+    title: "Lletya",
+    region: "Tirannwn · OSRS",
+    lore: [
+      "The refugee camp. Song of the Elves is the door to the city after.",
+      "Prifddinas is later. This street is the camp in the trees.",
+    ],
+  },
+  osrstyras: {
+    title: "Tyras Camp",
+    region: "Tirannwn · OSRS",
+    lore: [
+      "The camp in the forest. Iorwerth is not this gate.",
+      "Regicide is the road. The camp is the human door in Tirannwn.",
+    ],
+  },
+  osrsneit: {
+    title: "Neitiznot",
+    region: "Fremennik · OSRS",
+    lore: [
+      "The island of the bridge. The burgher’s hall and the yak hide.",
+      "Jatizso is the other side. The argument is the bridge.",
+    ],
+  },
+  osrsjat: {
+    title: "Jatizso",
+    region: "Fremennik · OSRS",
+    lore: [
+      "The other Fremennik isle. The mines and the other burgher.",
+      "Neitiznot is across the bridge. Don’t mix the two halls.",
+    ],
+  },
+  osrsmisc: {
+    title: "Miscellania",
+    region: "Fremennik · OSRS",
+    lore: [
+      "The kingdom on the rock. Throne of Miscellania is the door.",
+      "Managing the subjects is the work. Rellekka is the mainland dock.",
+    ],
+  },
+  osrslunar: {
+    title: "Lunar Isle",
+    region: "Fremennik · OSRS",
+    lore: [
+      "The moon isle. Lunar Diplomacy is the door. Seal of passage or you do not land.",
+      "Not Rellekka. A different law and a different bank.",
+    ],
+  },
+  osrskeld: {
+    title: "Keldagrim",
+    region: "Fremennik · OSRS",
+    lore: [
+      "The dwarf city under the mountain. The consortium halls and the blast furnace.",
+      "The river boat from the station. Leave a surface title at the door.",
+    ],
+  },
+  osrsmusa: {
+    title: "Musa Point",
+    region: "Karamja · OSRS",
+    lore: [
+      "The banana dock. The boat from Port Sarim lands here.",
+      "Brimhaven is the other port. Musa is the first sand.",
+    ],
+  },
+  osrsbrim: {
+    title: "Brimhaven",
+    region: "Karamja · OSRS",
+    lore: [
+      "The pirate port. The agility arena is inland. The charter is the other boat.",
+      "Not Musa Point. A town with a bar and a dungeon mouth.",
+    ],
+  },
+  osrsshilo: {
+    title: "Shilo Village",
+    region: "Karamja · OSRS",
+    lore: [
+      "The village past the cart. Shilo Village is the quest and the gate.",
+      "Brimhaven is the port. Shilo is the street you earn.",
+    ],
+  },
+  osrstai: {
+    title: "Tai Bwo Wannai",
+    region: "Karamja · OSRS",
+    lore: [
+      "The village in the jungle. Broodoo and the hardwood grove.",
+      "Not a bank town. The cleanup is the work. Keep to the fence.",
+    ],
+  },
+  osrsmor: {
+    title: "Mor Ul Rek",
+    region: "Karamja · OSRS",
+    lore: [
+      "The city in the volcano. The Fight Pits are the bowl. Tokkul is the coin.",
+      "Not a human port. TzHaar law. The ferry from the mainland is the door.",
+    ],
+  },
+  barbarian: {
+    title: "Barbarian Village",
+    region: "Misthalin",
+    lore: [
+      "Gunnarsgrunn on the later stones. The same river crossing.",
+      "The village is the bridge between Varrock and the west. Leave a city title home.",
+    ],
+  },
+  digsite: {
+    title: "Digsite",
+    region: "Misthalin",
+    lore: [
+      "The dig east of Varrock. The exam is still the door.",
+      "Not a district of the palace. Pits, a winch, and the museum’s work.",
+    ],
+  },
+  hemenster: {
+    title: "Hemenster",
+    region: "Kandarin",
+    lore: [
+      "The village and the Fishing Guild. Not Catherby’s range.",
+      "East Ardougne is the city. Hemenster is the dock on the road.",
+    ],
+  },
+  khazard: {
+    title: "Port Khazard",
+    region: "Kandarin",
+    lore: [
+      "General Khazard’s dock. The fight arena is the other door.",
+      "Ardougne’s market is not this port. The contract is Khazard’s.",
+    ],
+  },
+  gnomevillage: {
+    title: "Tree Gnome Village",
+    region: "Kandarin",
+    lore: [
+      "The village, not the stronghold. The maze and the spirit tree.",
+      "The canopy city is a different door. Don’t walk into the wrong tree.",
+    ],
+  },
+  falls: {
+    title: "Baxtorian Falls",
+    region: "Kandarin",
+    lore: [
+      "The waterfall. The house is behind the water if you have the quest.",
+      "A place, not a city. The raft is the road.",
+    ],
+  },
+  piscatoris: {
+    title: "Piscatoris",
+    region: "Kandarin",
+    lore: [
+      "The fishing colony. Swan Song is the door on the later client too.",
+      "North of the stronghold. Falconry is the hill, the colony is the dock.",
+    ],
+  },
+  pollnivneach: {
+    title: "Pollnivneach",
+    region: "Kharidian",
+    lore: [
+      "The smoke town. Carpets leave from here. Bandits keep the street.",
+      "Menaphos is the later city. Pollnivneach is the desert town that was already here.",
+    ],
+  },
+  nardah: {
+    title: "Nardah",
+    region: "Kharidian",
+    lore: [
+      "Elidinis’s town. The shrine is the water.",
+      "The carpet from Pollnivneach. Don’t drink the cursed well.",
+    ],
+  },
+  shantay: {
+    title: "Shantay Pass",
+    region: "Kharidian",
+    lore: [
+      "The toll and the waterskins. The desert starts after the gate.",
+      "Al Kharid is the city behind you. The pass is not a second palace.",
+    ],
+  },
+  burgh: {
+    title: "Burgh de Rott",
+    region: "Morytania",
+    lore: [
+      "The town that holds the swamp road. The Myreque’s door.",
+      "Meiyerditch is through the walls. Canifis is a different swamp.",
+    ],
+  },
+  meiyerditch: {
+    title: "Meiyerditch",
+    region: "Morytania",
+    lore: [
+      "The ghetto under the vyre city. The walls are the law.",
+      "Darkmeyer is above. This street is the one you sneak.",
+    ],
+  },
+  tyras: {
+    title: "Tyras Camp",
+    region: "Tirannwn",
+    lore: [
+      "Port Tyras on the later client. The camp in the forest.",
+      "Prifddinas is the crystal city. This is the human door.",
+    ],
+  },
+  miscellania: {
+    title: "Miscellania",
+    region: "Fremennik",
+    lore: [
+      "The rock kingdom. The throne and the subjects.",
+      "Rellekka is the mainland. This is the other crown.",
+    ],
+  },
+  lunar: {
+    title: "Lunar Isle",
+    region: "Fremennik",
+    lore: [
+      "The moon isle. The seal is the door.",
+      "Not the longhall. A different law and a different bank.",
+    ],
+  },
+  musa: {
+    title: "Musa Point",
+    region: "Karamja",
+    lore: [
+      "The banana dock. The boat from Port Sarim still lands here.",
+      "Brimhaven is the other port. Musa is the first sand.",
+    ],
+  },
+  brimhaven: {
+    title: "Brimhaven",
+    region: "Karamja",
+    lore: [
+      "The pirate port. The arena and the dungeon mouth.",
+      "Not Musa Point. A town with a bar.",
+    ],
+  },
+  shilo: {
+    title: "Shilo Village",
+    region: "Karamja",
+    lore: [
+      "The village past the cart. The gate is the quest.",
+      "Brimhaven is the port. Shilo is the street you earn.",
+    ],
+  },
+  morulrek: {
+    title: "TzHaar City",
+    region: "Karamja",
+    lore: [
+      "The city in the volcano on the later client. The same bowl, later grammar.",
+      "Tokkul and the pits. Not a human port. Fight Cave and the kiln are other doors.",
+    ],
+  },
+};
+
 function fillEssay(id: string, note: TownNote): TownNote {
   const osrs =
     id.startsWith("osrs") ||
@@ -821,6 +1256,6 @@ function fillEssay(id: string, note: TownNote): TownNote {
 }
 
 export function townNote(id: string): TownNote | undefined {
-  const raw = OSRS[id] ?? SHARED[id];
+  const raw = OSRS[id] ?? SHARED[id] ?? ADDED[id];
   return raw ? fillEssay(id, raw) : undefined;
 }

@@ -23,6 +23,7 @@ const NAMED: Record<string, Pair> = {
   "Great Kourend": { primary: "#2fbf62", accent: "#f2f2f2", slug: "kourend" },
   Varlamore: { primary: "#e6c25a", accent: "#d4897a", slug: "varlamore" },
   "Southern Sea": { primary: "#c49a8c", accent: "#5c4038", slug: "southern-sea" },
+  Karamja: { primary: "#2f6b3c", accent: "#d4b84a", slug: "karamja" },
   "Lost City": { primary: "#e7b4c6", accent: "#f4f0e8", slug: "lost-city" },
   Wilderness: { primary: "#d0d0d0", accent: "#3a3a3a", slug: "wilderness" },
   Forinthry: { primary: "#d0d0d0", accent: "#3a3a3a", slug: "wilderness" },
@@ -59,6 +60,7 @@ const CLOTH: Record<string, { bg: string; panel: string; line: string; accent: s
   kourend: { bg: "#16120a", panel: "#221c10", line: "#c4a35a", accent: "#6a4a20" },
   varlamore: { bg: "#1a120c", panel: "#261810", line: "#e8b86d", accent: "#6b3a24" },
   "southern-sea": { bg: "#16120e", panel: "#241c16", line: "#ff7ad9", accent: "#4a2a18" },
+  karamja: { bg: "#10180e", panel: "#182418", line: "#3d7a44", accent: "#d4b84a" },
   "lost-city": { bg: "#16101c", panel: "#221828", line: "#e6a0ff", accent: "#3a2458" },
   wilderness: { bg: "#140c0c", panel: "#1c1212", line: "#8a3030", accent: "#c4a35a" },
 };

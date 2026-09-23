@@ -24,6 +24,7 @@ const REGION_ORDER = [
   "Varlamore",
   "Tirannwn",
   "Fremennik",
+  "Karamja",
   "Southern Sea",
   "Lost City",
   "Lumbridge Swamp",
@@ -44,7 +45,7 @@ const REGION_ORDER = [
 const CIVIC: Record<string, string> = {
   Misthalin: "Capital Lumbridge · stone and river",
   Asgarnia: "Capital Falador · white stone",
-  Kandarin: "Capital Ardougne · east and west",
+  Kandarin: "Capital East Ardougne · east and west",
   Kharidian: "Capital Al Kharid · the desert gate",
   Morytania: "Canifis · the swamp road",
   "Great Kourend": "Five houses · Kourend Castle",
@@ -52,6 +53,7 @@ const CIVIC: Record<string, string> = {
   Tirannwn: "Capital Prifddinas · crystal",
   Fremennik: "Capital Rellekka · the longhall",
   "Southern Sea": "Marim · Ape Atoll",
+  Karamja: "Musa Point · the banana dock",
   "Lost City": "Zanaris · the other side of the ring",
   Wilderness: "No capital · the ditch",
   Forinthry: "No capital · the ditch",
@@ -164,6 +166,11 @@ function TownIndex() {
         ) : (
           <p className="text-center text-sm text-muted">Nothing on that filter.</p>
         )}
+        <section id="wilderness" className="region-band" style={{ "--region-ink": "#8a3030", "--region-accent": "#c4a35a" } as CSSProperties}>
+          <RegionSeal slug="wilderness" name="Wilderness" />
+          <h2 className="region-band-title">Wilderness</h2>
+          <p className="region-civic">No capital. The ditch begins at Edgeville.</p>
+        </section>
       </main>
     </div>
   );
