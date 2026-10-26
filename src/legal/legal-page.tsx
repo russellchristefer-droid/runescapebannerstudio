@@ -2,9 +2,6 @@ import { type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { BackLink } from "@/components/back-link";
 
-/** Bump when a Public record still is replaced so phones drop the old file. */
-const RECORD = "20260914d";
-
 export function LegalPage() {
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -18,9 +15,9 @@ export function LegalPage() {
         >
           <h1 className="page-h1 m-0 text-left">Legal</h1>
           <p className="mt-2 text-xs tracking-[0.08em] text-[#c4a35a]">
-            RuneScape Banner Studio · runescapebannerstudio.grok.me
+            RuneScape Banner Studio · XDruid I [Alpha] · runescapebannerstudio.grok.me
           </p>
-          <p className="mt-1 text-xs text-faint">Effective 22 September 2026</p>
+          <p className="mt-1 text-xs text-faint">Effective 26 October 2026</p>
           <p className="mt-4 text-sm text-muted">
             This page is a notice, not a contract for hire and not legal advice.
           </p>
@@ -28,18 +25,19 @@ export function LegalPage() {
           <nav aria-label="On this page" className="mt-6 flex flex-wrap gap-x-3 gap-y-1 text-xs text-parchment">
             <a href="#operator">1. Operator</a>
             <a href="#nature">2. Nature</a>
-            <a href="#jagex">3. Jagex</a>
-            <a href="#marks">4. Marks</a>
-            <a href="#data">5. Data</a>
-            <a href="#warranty">6. Warranty</a>
-            <a href="#liability">7. Liability</a>
-            <a href="#takedown">8. Takedown</a>
-            <a href="#record">9. Exhibits</a>
+            <a href="#xdruid">3. XDruid I</a>
+            <a href="#jagex">4. Jagex</a>
+            <a href="#marks">5. Marks</a>
+            <a href="#data">6. Data</a>
+            <a href="#warranty">7. Warranty</a>
+            <a href="#liability">8. Liability</a>
+            <a href="#takedown">9. Takedown</a>
           </nav>
 
           <Clause id="operator" n="1" title="Operator">
             <p>
               The <Term>Operator</Term> of the <Term>Studio</Term> is Christefer Lee Russell-Barnett.
+              The Studio operates RuneScape Banner Studio and develops XDruid I [Alpha] (also known as Assay Homestead / Druidi).
             </p>
             <dl className="mt-4 grid gap-3 sm:grid-cols-2">
               <Fact label="Mail (takedown)">
@@ -57,6 +55,16 @@ export function LegalPage() {
                   https://runescapebannerstudio.grok.me/
                 </a>
               </Fact>
+              <Fact label="XDruid I">
+                <a
+                  className="text-parchment"
+                  href="https://xdruidi.grok.me/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  https://xdruidi.grok.me/
+                </a>
+              </Fact>
               <Fact label="Tips">
                 <a
                   className="text-parchment"
@@ -66,18 +74,21 @@ export function LegalPage() {
                 >
                   https://cash.app/$takemymoneypleaseok
                 </a>
-                <span className="mt-1 block text-xs text-faint">Optional. Not a sale of Jagex property.</span>
+                <span className="mt-1 block text-xs text-faint">Optional. Not a sale of any third-party property.</span>
               </Fact>
             </dl>
             <p className="mt-4">
               Takedown and operator correspondence is to be sent to{" "}
               <strong className="font-semibold text-fg">russell.christefer@gmail.com</strong> only.
             </p>
+            <p className="mt-3 text-xs text-faint">
+              Original work, assets, and code of XDruid I [Alpha] and the Studio tools are © 2026 Christefer Lee Russell-Barnett / RuneScape Banner Studio. All rights reserved where applicable.
+            </p>
           </Clause>
 
           <Clause id="nature" n="2" title="Nature of the service">
             <p>
-              The Studio is a free identification <Term>Desk</Term> and a local <Term>Clip bench</Term>.
+              RuneScape Banner Studio is a free identification <Term>Desk</Term> and a local <Term>Clip bench</Term>.
               It is not a game, not a game client, not Jagex Support, not a bank, not a marketplace,
               and not a live studio.
             </p>
@@ -88,14 +99,34 @@ export function LegalPage() {
             </p>
           </Clause>
 
-          <Clause id="jagex" n="3" title="Jagex intellectual property">
+          <Clause id="xdruid" n="3" title="XDruid I [Alpha]">
+            <p>
+              XDruid I [Alpha] (Assay Homestead / Druidi) is an independent original game developed by the Studio.
+              It is a SNES-style homestead / farming life sim played in a desktop browser. It is not affiliated with,
+              endorsed by, or connected to Jagex or RuneScape.
+            </p>
+            <p className="mt-3">
+              The game is an alpha / work in progress. The yard, gates, spells, days, and systems can change between builds.
+              There is no warranty and no promise of save compatibility across versions. Saves are stored locally in the browser
+              on the user’s device. No account is required for ordinary play. Do not store passwords or private information in the game.
+            </p>
+            <p className="mt-3">
+              Original game art, code, and design belong to the Operator / Studio. Third-party pixel art (such as certain fish and rod icons)
+              is used only within the game and is not offered for separate reuse or redistribution. Do not extract or redistribute third-party assets.
+            </p>
+            <p className="mt-3 text-xs text-faint">
+              Live at https://xdruidi.grok.me/ · GitHub: russellchristefer-droid/XDruidI--ALPHA-PUBLIC
+            </p>
+          </Clause>
+
+          <Clause id="jagex" n="4" title="Jagex intellectual property">
             <p>
               RuneScape®, Old School RuneScape®, RuneScape Classic, RuneScape: Dragonwilds™, Jagex®,
               Gielinor, skill icons, marks, partyhats, and in-game stills belong to Jagex Limited or
-              its licensors. Shown here for identification.
+              its licensors. Shown on the Banner Studio desk for identification only.
             </p>
             <p className="mt-3">
-              Created using intellectual property belonging to Jagex Limited under the terms of
+              Banner Studio content is created using intellectual property belonging to Jagex Limited under the terms of
               Jagex's Fan Content Policy. This content is not endorsed by or affiliated with Jagex.
               Identification only. If Jagex or a rights holder asks for a file to come down, it comes
               down.
@@ -112,7 +143,7 @@ export function LegalPage() {
             </p>
           </Clause>
 
-          <Clause id="marks" n="4" title="Other marks">
+          <Clause id="marks" n="5" title="Other marks">
             <p>
               RuneLite (BSD-2-Clause) and Alt1 Toolkit are third-party tools. The Studio does not
               ship them. GitHub sidecars are fan add-ons: they do not click, they are not on Plugin
@@ -122,9 +153,9 @@ export function LegalPage() {
             </p>
           </Clause>
 
-          <Clause id="data" n="5" title="Data and exports">
+          <Clause id="data" n="6" title="Data and exports">
             <p>
-              No account is required. Desk JPEGs and clip MP4s stay on the user’s device unless the
+              No account is required for the Banner Studio desk. Desk JPEGs and clip MP4s stay on the user’s device unless the
               user uploads them elsewhere. Do not export a Bank PIN.
             </p>
             <p className="mt-3">
@@ -137,21 +168,21 @@ export function LegalPage() {
             </p>
           </Clause>
 
-          <Clause id="warranty" n="6" title="Warranty">
+          <Clause id="warranty" n="7" title="Warranty">
             <p>
-              THE STUDIO IS PROVIDED “AS IS”. The Operator makes no warranty of uptime, accuracy,
-              fitness for a particular purpose, or income.
+              THE STUDIO AND XDRUID I [ALPHA] ARE PROVIDED “AS IS”. The Operator makes no warranty of uptime, accuracy,
+              fitness for a particular purpose, save compatibility, or income.
             </p>
           </Clause>
 
-          <Clause id="liability" n="7" title="Limitation of liability">
+          <Clause id="liability" n="8" title="Limitation of liability">
             <p>
               To the maximum extent permitted by law, the Operator is not liable for indirect or
-              consequential loss arising from use of a free fan desk.
+              consequential loss arising from use of the free fan desk or the alpha game.
             </p>
           </Clause>
 
-          <Clause id="takedown" n="8" title="Takedown">
+          <Clause id="takedown" n="9" title="Takedown">
             <p>
               Write{" "}
               <a className="font-semibold text-parchment" href="mailto:russell.christefer@gmail.com">
@@ -161,169 +192,10 @@ export function LegalPage() {
             </p>
           </Clause>
 
-          <section id="record" className="mt-8 border-t border-[#c4a35a]/40 pt-6">
-            <h2 className="mb-1 font-serif text-lg tracking-wide text-fg">
-              <span className="mr-2 font-serif text-sm text-[#c4a35a]">9.</span>
-              Operator exhibits
-            </h2>
-            <p className="mb-4 text-xs uppercase tracking-[0.14em] text-faint">
-              Operator personal record. Not Jagex. Not part of the desk product. Not an endorsement.
-            </p>
-            <ul className="flex flex-col divide-y divide-line/40 overflow-hidden rounded-md border border-line">
-              <RecordLink
-                href="https://jmail.world"
-                name="Jmail"
-                note="Public Epstein-file archive. Official site."
-                label="jmail.world"
-              />
-              <RecordLink
-                href="https://trumpepsteinreadingroom.com"
-                name="Trump & Epstein Memorial Reading Room"
-                note="Institute for Primary Facts. Official site."
-                label="trumpepsteinreadingroom.com"
-              />
-              <RecordLink
-                href="https://worldcrimesyndicate.blogspot.com/2020/03/drumpf.html"
-                name="World Crime Syndicate"
-                note="Third-party essay, March 2020."
-                label="blogspot"
-              />
-              <RecordLink
-                href="https://commons.wikimedia.org/wiki/File:Elon_Musk_claims_Donald_Trump_is_in_the_Epstein_Files.png"
-                name="Wikimedia Commons"
-                note="Public-domain still of an X post, 5 June 2025."
-                label="commons"
-              />
-            </ul>
-
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
-              <Exhibit
-                mark="A"
-                caption={
-                  <>
-                    Commons still. Source:{" "}
-                    <a
-                      className="text-parchment"
-                      href="https://x.com/elonmusk/status/1930703865801810022"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      @elonmusk
-                    </a>
-                    , 5 June 2025.
-                  </>
-                }
-              >
-                <a
-                  href={`/legal/elon-musk-x-2025-06-05.png?v=${RECORD}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <img
-                    src={`/legal/elon-musk-x-2025-06-05.png?v=${RECORD}`}
-                    alt="Wikimedia Commons still of an X post by Elon Musk dated 5 June 2025."
-                    width={1492}
-                    height={802}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-auto w-full max-w-full"
-                  />
-                </a>
-              </Exhibit>
-              <Exhibit mark="B" caption="Operator stamp, 5 June 2025. Screenshot_20250605_174900_Truth Social.png.">
-                <a
-                  href={`/legal/truth-social-2025-06-05.png?v=${RECORD}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <img
-                    src={`/legal/truth-social-2025-06-05.png?v=${RECORD}`}
-                    alt="Device stamp: 5 June 2025, 5:49 PM, Screenshot_20250605_174900_Truth Social.png."
-                    width={640}
-                    height={800}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-auto w-full max-w-full"
-                  />
-                </a>
-              </Exhibit>
-            </div>
-
-            <Exhibit
-              className="mt-4"
-              mark="C"
-              caption="Third-party chart of Jeffrey Epstein's network. Click for the full still."
-            >
-              <a
-                href={`/legal/epstein-network-map.jpg?v=${RECORD}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block overflow-x-auto"
-              >
-                <img
-                  src={`/legal/epstein-network-map.jpg?v=${RECORD}`}
-                  alt="Third-party investigative chart of Jeffrey Epstein's network."
-                  width={1600}
-                  height={1600}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-auto w-full max-w-full"
-                />
-              </a>
-            </Exhibit>
-
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
-              <Exhibit mark="D" caption="CIA threats. Operator still of an email, 14 September 2026.">
-                <a
-                  href={`/legal/cia-threats-2026-09-14.png?v=${RECORD}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <img
-                    src={`/legal/cia-threats-2026-09-14.png?v=${RECORD}`}
-                    alt="Operator still of an email dated 14 September 2026, labelled CIA threats."
-                    width={720}
-                    height={1280}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-auto w-full max-w-full"
-                  />
-                </a>
-              </Exhibit>
-              <Exhibit mark="E" caption="Epstein Island. Operator clip from the water. Controls only — no autoplay.">
-                <video
-                  className="aspect-video w-full bg-black"
-                  controls
-                  playsInline
-                  preload="metadata"
-                  poster={`/legal/epstein-island.jpg?v=${RECORD}`}
-                  src={`/legal/epstein-island.mp4?v=${RECORD}`}
-                >
-                  Your browser cannot play this clip.{" "}
-                  <a className="text-parchment" href={`/legal/epstein-island.mp4?v=${RECORD}`}>
-                    Download the file
-                  </a>
-                  .
-                </video>
-              </Exhibit>
-            </div>
-          </section>
-
-          <p className="mt-8 text-[11px] text-faint">
-            <a
-              href="https://www.subgenius.com/"
-              className="text-faint"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Church of the SubGenius
-            </a>
-          </p>
-          <p className="mt-3 text-parchment">
+          <p className="mt-8 text-parchment">
             <Link to="/">Desk</Link>
+            {" · "}
+            <a href="https://xdruidi.grok.me/" target="_blank" rel="noopener noreferrer">XDruid I</a>
             {" · "}
             <a href="mailto:russell.christefer@gmail.com">russell.christefer@gmail.com</a>
           </p>
@@ -365,56 +237,5 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
       <dt className="text-[10px] tracking-[0.14em] text-faint uppercase">{label}</dt>
       <dd className="mt-1 break-all text-sm">{children}</dd>
     </div>
-  );
-}
-
-function RecordLink({
-  href,
-  name,
-  note,
-  label,
-}: {
-  href: string;
-  name: string;
-  note: string;
-  label: string;
-}) {
-  return (
-    <li>
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex min-h-11 items-center justify-between gap-3 bg-bg/40 px-3 py-3"
-      >
-        <span>
-          <span className="block text-sm font-medium text-fg">{name}</span>
-          <span className="text-xs text-muted">{note}</span>
-        </span>
-        <span className="shrink-0 text-xs tracking-[0.08em] text-parchment uppercase">{label}</span>
-      </a>
-    </li>
-  );
-}
-
-function Exhibit({
-  mark,
-  caption,
-  children,
-  className = "",
-}: {
-  mark: string;
-  caption: ReactNode;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <figure className={`overflow-hidden rounded-md border border-line bg-bg ${className}`}>
-      <div className="flex items-center justify-between border-b border-line px-3 py-1.5">
-        <span className="text-[10px] tracking-[0.16em] text-parchment uppercase">Exhibit {mark}</span>
-      </div>
-      {children}
-      <figcaption className="border-t border-line px-3 py-2 text-xs text-faint">{caption}</figcaption>
-    </figure>
   );
 }
