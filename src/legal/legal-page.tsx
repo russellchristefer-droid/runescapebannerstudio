@@ -45,6 +45,12 @@ export function LegalPage() {
                   russell.christefer@gmail.com
                 </a>
               </Fact>
+              <Fact label="Legal team (XDruid I)">
+                <a className="font-semibold text-parchment" href="mailto:Jck307@hotmail.com">
+                  Jck307@hotmail.com
+                </a>
+                <span className="mt-1 block text-xs text-faint">Tory Voight</span>
+              </Fact>
               <Fact label="Origin">
                 <a
                   className="text-parchment"
@@ -80,6 +86,11 @@ export function LegalPage() {
             <p className="mt-4">
               Takedown and operator correspondence is to be sent to{" "}
               <strong className="font-semibold text-fg">russell.christefer@gmail.com</strong> only.
+            </p>
+            <p className="mt-3">
+              Legal correspondence for XDruid I [Alpha] may be directed to the legal team at{" "}
+              <a className="font-semibold text-parchment" href="mailto:Jck307@hotmail.com">Jck307@hotmail.com</a>
+              {" "}(Tory Voight).
             </p>
             <p className="mt-3 text-xs text-faint">
               Original work, assets, and code of XDruid I [Alpha] and the Studio tools are © 2026 Christefer Lee Russell-Barnett / RuneScape Banner Studio. All rights reserved where applicable.
